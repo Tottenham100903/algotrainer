@@ -447,22 +447,6 @@ const dataStructureQuestions = [
     explanation: "Resizing hält den Load Factor klein und stabilisiert erwartete O(1)-Operationen.",
   },
   {
-    topic: "Tiefensuche",
-    scenarioHtml: '<div class="ds-graph"><span>A: B, C</span><span>B: D</span><span>C: E</span><span>D: -</span><span>E: -</span></div>',
-    question: "DFS startet bei A und besucht Nachbarn in angegebener Reihenfolge. Welche Reihenfolge entsteht?",
-    choices: ["A, B, D, C, E", "A, C, E, B, D", "A, B, C, D, E", "D, B, E, C, A"],
-    answer: "A, B, D, C, E",
-    explanation: "DFS geht zuerst so tief wie möglich über B nach D und kehrt dann zu C/E zurück.",
-  },
-  {
-    topic: "Tiefensuche",
-    scenarioHtml: '<div class="ds-graph"><span>Stack: A</span><span>visited: ∅</span><span>Graph kann Zyklen enthalten</span></div>',
-    question: "Warum braucht DFS eine visited-Menge?",
-    choices: ["Um Zyklen nicht endlos zu besuchen", "Um den Graphen automatisch zu sortieren", "Um einen Min-Heap zu bauen", "Um Hash-Kollisionen zu verhindern"],
-    answer: "Um Zyklen nicht endlos zu besuchen",
-    explanation: "Bei Zyklen kann DFS sonst immer wieder dieselben Knoten erreichen.",
-  },
-  {
     topic: "Min-Heap",
     scenarioHtml: '<div class="ds-heap"><span>4</span><span>9</span><span>7</span><span>15</span><span>12</span></div>',
     question: "Welches Element steht bei einem gültigen Min-Heap immer an der Wurzel?",
@@ -503,6 +487,42 @@ const dataStructureQuestions = [
     explanation: "Eine Queue arbeitet nach FIFO: Das zuerst eingefügte Element wird zuerst entfernt.",
   },
 ];
+
+const graphAlgorithmSteps = {
+  bfs: [
+    { visited: [], active: "A", note: "Start bei A. Eine Queue speichert die als Nächstes zu besuchenden Knoten." },
+    { visited: ["A"], active: "B", note: "A ist besucht. B und C werden in die Queue gelegt." },
+    { visited: ["A", "B"], active: "C", note: "B ist besucht. D und E kommen hinter C in die Queue." },
+    { visited: ["A", "B", "C"], active: "D", note: "C ist besucht. Bereits vorgemerkte Knoten werden nicht doppelt eingereiht." },
+    { visited: ["A", "B", "C", "D", "E", "F"], active: "F", note: "BFS ist fertig: A, B, C, D, E, F." },
+  ],
+  dfs: [
+    { visited: [], active: "A", note: "Start bei A. DFS folgt einem Pfad so tief wie möglich." },
+    { visited: ["A"], active: "B", note: "Von A geht es zuerst zu B." },
+    { visited: ["A", "B"], active: "D", note: "Von B folgt DFS dem unbesuchten Nachbarn D." },
+    { visited: ["A", "B", "D"], active: "F", note: "F ist erreicht. Danach geht DFS zurück zum letzten Knoten mit offenem Nachbarn." },
+    { visited: ["A", "B", "D", "F", "E", "C"], active: "C", note: "DFS ist fertig: A, B, D, F, E, C." },
+  ],
+  dijkstra: [
+    { visited: [], active: "A", note: "Start: Distanz A = 0, alle anderen Distanzen sind unendlich." },
+    { visited: ["A"], active: "C", note: "Nach A: B = 4 und C = 2. C hat die kleinste vorläufige Distanz." },
+    { visited: ["A", "C"], active: "E", note: "Über C verbessert sich E auf 3. E wird als Nächstes fest gewählt." },
+    { visited: ["A", "C", "E"], active: "B", note: "Über E ergeben sich weitere Kandidaten; B bleibt mit Distanz 4 der nächste Knoten." },
+    { visited: ["A", "C", "E", "B", "F", "D"], active: "D", note: "Alle kürzesten Distanzen ab A sind bestimmt." },
+  ],
+  backtracking: [
+    { visited: [], active: "A", note: "Gesucht ist ein Weg von A nach F. Wir probieren den ersten möglichen Zweig." },
+    { visited: ["A"], active: "B", note: "A → B wird gewählt." },
+    { visited: ["A", "B"], active: "D", note: "B → D wird ausprobiert." },
+    { visited: ["A", "B", "D"], active: "F", note: "D → F erreicht das Ziel. Der gefundene Weg lautet A → B → D → F." },
+  ],
+  floyd: [
+    { visited: [], active: "A", note: "Der Matrixausschnitt A bis D startet mit direkten Kantengewichten.", matrix: "    A  B  C  D\nA   0  4  2  ∞\nB   4  0  ∞  3\nC   2  ∞  0  ∞\nD   ∞  3  ∞  0" },
+    { visited: ["A"], active: "B", note: "A wird als Zwischenknoten zugelassen. Prüfe für jedes Paar den Weg über A.", matrix: "    A  B  C  D\nA   0  4  2  ∞\nB   4  0  6  3\nC   2  6  0  ∞\nD   ∞  3  ∞  0" },
+    { visited: ["A", "B"], active: "C", note: "B verbessert unter anderem den Weg von A nach D.", matrix: "    A  B  C  D\nA   0  4  2  7\nB   4  0  6  3\nC   2  6  0  9\nD   7  3  9  0" },
+    { visited: ["A", "B", "C", "D"], active: "D", note: "Nach allen Zwischenknoten enthält die Matrix die kürzesten Distanzen aller Paare.", matrix: "    A  B  C  D\nA   0  4  2  7\nB   4  0  6  3\nC   2  6  0  9\nD   7  3  9  0" },
+  ],
+};
 
 class AVLNode {
   constructor(value) {
@@ -624,6 +644,9 @@ const state = {
   sortQuestion: null,
   dataStructureQuestion: null,
   dataStructureTopic: "Training",
+  stackQueueMode: "stack",
+  stackQueueItems: ["A", "B", "C"],
+  graphStepIndex: 0,
   avlQuestion: null,
   showAVLPreview: false,
   sandboxTree: new AVLTree(),
@@ -675,6 +698,15 @@ const el = {
   dataStructureFeedback: document.getElementById("ds-feedback"),
   dataStructureCard: document.getElementById("data-structure-card"),
   dataStructureSectionTitle: document.getElementById("ds-section-title"),
+  stackQueueCard: document.getElementById("stack-queue-card"),
+  stackQueueMode: document.getElementById("sq-mode"),
+  stackQueueValue: document.getElementById("sq-value"),
+  stackQueueVisual: document.getElementById("sq-visual"),
+  stackQueueNote: document.getElementById("sq-note"),
+  graphCard: document.getElementById("graph-card"),
+  graphAlgorithm: document.getElementById("graph-algorithm"),
+  graphNote: document.getElementById("graph-note"),
+  graphMatrix: document.getElementById("graph-matrix"),
   avlQuizCard: document.getElementById("avl-quiz-card"),
   avlSandboxCard: document.getElementById("avl-sandbox-card"),
   avlOperation: document.getElementById("avl-operation"),
@@ -719,6 +751,13 @@ document.getElementById("check-ds-question").addEventListener("click", checkData
 document.querySelectorAll("[data-ds-topic]").forEach((button) => {
   button.addEventListener("click", () => setDataStructureTopic(button.dataset.dsTopic));
 });
+el.stackQueueMode.addEventListener("change", changeStackQueueMode);
+document.getElementById("sq-add").addEventListener("click", addStackQueueItem);
+document.getElementById("sq-remove").addEventListener("click", removeStackQueueItem);
+document.getElementById("sq-reset").addEventListener("click", resetStackQueue);
+document.getElementById("graph-next").addEventListener("click", nextGraphStep);
+document.getElementById("graph-reset").addEventListener("click", resetGraphVisualization);
+el.graphAlgorithm.addEventListener("change", resetGraphVisualization);
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
@@ -739,6 +778,8 @@ createMasterQuestion();
 resetSortValues();
 createSortQuestion();
 setDataStructureTopic("Training");
+renderStackQueue();
+resetGraphVisualization();
 createAVLQuestion();
 resetSandbox(true);
 syncMasterHelpVisibility();
@@ -1250,8 +1291,13 @@ function createDataStructureQuestion() {
 function setDataStructureTopic(topic) {
   state.dataStructureTopic = topic;
   const showAVL = topic === "AVL-Bäume";
+  const showStackQueue = topic === "Stacks & Queues";
+  const showGraph = topic === "Graphen";
+  const showQuiz = !showAVL && !showStackQueue && !showGraph;
 
-  el.dataStructureCard.classList.toggle("is-hidden", showAVL);
+  el.dataStructureCard.classList.toggle("is-hidden", !showQuiz);
+  el.stackQueueCard.classList.toggle("is-hidden", !showStackQueue);
+  el.graphCard.classList.toggle("is-hidden", !showGraph);
   el.avlQuizCard.classList.toggle("is-hidden", !showAVL);
   el.avlSandboxCard.classList.toggle("is-hidden", !showAVL);
 
@@ -1261,11 +1307,104 @@ function setDataStructureTopic(topic) {
     button.setAttribute("aria-pressed", String(active));
   });
 
-  if (!showAVL) {
+  if (showQuiz) {
     el.dataStructureSectionTitle.textContent =
       topic === "Training" ? "Datenstruktur-Training" : `${topic}-Training`;
     createDataStructureQuestion();
+  } else if (showStackQueue) {
+    renderStackQueue();
+  } else if (showGraph) {
+    resetGraphVisualization();
   }
+}
+
+function changeStackQueueMode() {
+  state.stackQueueMode = el.stackQueueMode.value;
+  state.stackQueueItems = ["A", "B", "C"];
+  renderStackQueue();
+}
+
+function addStackQueueItem() {
+  const value = el.stackQueueValue.value.trim();
+  if (!value) {
+    el.stackQueueNote.textContent = "Gib zuerst einen Wert ein.";
+    return;
+  }
+  state.stackQueueItems.push(value);
+  el.stackQueueValue.value = "";
+  el.stackQueueNote.textContent = state.stackQueueMode === "stack"
+    ? `${value} wurde oben auf den Stack gelegt.`
+    : `${value} wurde hinten in die Queue eingereiht.`;
+  renderStackQueue(false);
+}
+
+function removeStackQueueItem() {
+  if (!state.stackQueueItems.length) {
+    el.stackQueueNote.textContent = "Die Struktur ist bereits leer.";
+    return;
+  }
+  const index = state.stackQueueMode === "stack" ? state.stackQueueItems.length - 1 : 0;
+  const [removed] = state.stackQueueItems.splice(index, 1);
+  el.stackQueueNote.textContent = state.stackQueueMode === "stack"
+    ? `${removed} wurde per Pop entfernt.`
+    : `${removed} wurde per Dequeue entfernt.`;
+  renderStackQueue(false);
+}
+
+function resetStackQueue() {
+  state.stackQueueItems = ["A", "B", "C"];
+  el.stackQueueValue.value = "";
+  el.stackQueueNote.textContent = "";
+  renderStackQueue();
+}
+
+function renderStackQueue(resetNote = true) {
+  const isStack = state.stackQueueMode === "stack";
+  el.stackQueueMode.value = state.stackQueueMode;
+  document.getElementById("sq-add").textContent = isStack ? "Push" : "Enqueue";
+  document.getElementById("sq-remove").textContent = isStack ? "Pop" : "Dequeue";
+  el.stackQueueVisual.className = `sq-visual ${isStack ? "is-stack" : "is-queue"}`;
+  el.stackQueueVisual.innerHTML = state.stackQueueItems
+    .map((item, index) => {
+      const isNext = isStack ? index === state.stackQueueItems.length - 1 : index === 0;
+      return `<div class="sq-item${isNext ? " is-next" : ""}"><span>${escapeAttribute(item)}</span>${isNext ? "<small>als Nächstes</small>" : ""}</div>`;
+    })
+    .join("");
+  if (!state.stackQueueItems.length) {
+    el.stackQueueVisual.innerHTML = '<p class="tree-empty">(leer)</p>';
+  }
+  if (resetNote) {
+    el.stackQueueNote.textContent = isStack
+      ? "LIFO: Das oberste Element wird zuerst entfernt."
+      : "FIFO: Das vorderste Element wird zuerst entfernt.";
+  }
+}
+
+function resetGraphVisualization() {
+  state.graphStepIndex = 0;
+  renderGraphStep();
+}
+
+function nextGraphStep() {
+  const steps = graphAlgorithmSteps[el.graphAlgorithm.value];
+  state.graphStepIndex = Math.min(steps.length - 1, state.graphStepIndex + 1);
+  renderGraphStep();
+}
+
+function renderGraphStep() {
+  const algorithm = el.graphAlgorithm.value;
+  const steps = graphAlgorithmSteps[algorithm];
+  const step = steps[state.graphStepIndex];
+
+  document.querySelectorAll("[data-graph-node]").forEach((node) => {
+    const name = node.dataset.graphNode;
+    node.classList.toggle("is-visited", step.visited.includes(name));
+    node.classList.toggle("is-active", step.active === name);
+  });
+  el.graphNote.textContent = `Schritt ${state.graphStepIndex + 1} von ${steps.length}: ${step.note}`;
+  el.graphMatrix.classList.toggle("is-hidden", algorithm !== "floyd");
+  el.graphMatrix.textContent = step.matrix || "";
+  document.getElementById("graph-next").disabled = state.graphStepIndex >= steps.length - 1;
 }
 
 function checkDataStructureQuestion() {

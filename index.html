@@ -58,7 +58,7 @@
               <span>Daten</span>
               <span>strukturen</span>
             </strong>
-            <span class="module-copy">Listen, Hashmaps, DFS, Heaps und AVL-Bäume gezielt trainieren.</span>
+            <span class="module-copy">Listen, Graphen, Hashmaps, Stacks, Queues und AVL-Bäume gezielt trainieren.</span>
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
         </section>
@@ -289,7 +289,7 @@
           <div>
             <p class="eyebrow">Modul 4</p>
             <h1 class="module-title">Datenstrukturen</h1>
-            <p class="hero-copy">Wähle einen Bereich und trainiere Listen, Wörterbücher, Hashmaps, Tiefensuche, Heaps und AVL-Bäume gezielt.</p>
+            <p class="hero-copy">Wähle einen Bereich und trainiere Listen, Wörterbücher, Hashmaps, Graphen, Stacks, Queues und AVL-Bäume gezielt.</p>
           </div>
         </header>
 
@@ -299,7 +299,7 @@
           <button class="topic-nav-btn" type="button" data-ds-topic="Listen">Listen</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Wörterbücher">Wörterbücher</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Hashmaps">Hashmaps</button>
-          <button class="topic-nav-btn" type="button" data-ds-topic="Tiefensuche">Tiefensuche</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Graphen">Graphen</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Heaps">Heaps</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Stacks & Queues">Stacks &amp; Queues</button>
         </nav>
@@ -315,7 +315,7 @@
             </div>
 
             <p class="section-copy">
-              Übe typische Eigenschaften, Operationen und Denkfehler bei Listen, Wörterbüchern, Hashmaps, DFS und Heaps.
+              Übe typische Eigenschaften und Operationen bei Listen, Wörterbüchern, Hashmaps, Heaps, Stacks und Queues.
             </p>
 
             <div class="ds-layout">
@@ -335,6 +335,94 @@
             </div>
 
             <div id="ds-feedback" class="feedback" aria-live="polite"></div>
+          </section>
+
+          <section class="card module-grid-full is-hidden" id="stack-queue-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">LIFO und FIFO</p>
+                <h2>Stacks &amp; Queues visualisieren</h2>
+              </div>
+              <button id="sq-reset" class="secondary-btn" type="button">Zurücksetzen</button>
+            </div>
+
+            <div class="structure-controls">
+              <label>
+                Struktur
+                <select id="sq-mode">
+                  <option value="stack">Stack</option>
+                  <option value="queue">Queue</option>
+                </select>
+              </label>
+              <label>
+                Wert
+                <input id="sq-value" type="text" maxlength="8" placeholder="z. B. A">
+              </label>
+              <button id="sq-add" class="primary-btn" type="button">Push</button>
+              <button id="sq-remove" class="secondary-btn" type="button">Pop</button>
+            </div>
+
+            <div class="sq-stage">
+              <div id="sq-visual" class="sq-visual" aria-live="polite"></div>
+              <p id="sq-note" class="visual-note"></p>
+            </div>
+          </section>
+
+          <section class="card module-grid-full is-hidden" id="graph-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Graphalgorithmen</p>
+                <h2>Graphen Schritt für Schritt</h2>
+              </div>
+              <button id="graph-reset" class="secondary-btn" type="button">Zurücksetzen</button>
+            </div>
+
+            <div class="structure-controls">
+              <label>
+                Algorithmus
+                <select id="graph-algorithm">
+                  <option value="bfs">Breitensuche (BFS)</option>
+                  <option value="dfs">Tiefensuche (DFS)</option>
+                  <option value="dijkstra">Dijkstra</option>
+                  <option value="backtracking">Backtracking</option>
+                  <option value="floyd">Floyd-Warshall</option>
+                </select>
+              </label>
+              <button id="graph-next" class="primary-btn" type="button">Nächster Schritt</button>
+            </div>
+
+            <div class="graph-layout">
+              <svg id="graph-visual" class="graph-visual" viewBox="0 0 620 340" role="img" aria-label="Beispielgraph mit sechs Knoten">
+                <g class="graph-edges">
+                  <line x1="90" y1="170" x2="230" y2="75"></line>
+                  <line x1="90" y1="170" x2="230" y2="265"></line>
+                  <line x1="230" y1="75" x2="390" y2="65"></line>
+                  <line x1="230" y1="75" x2="390" y2="170"></line>
+                  <line x1="230" y1="265" x2="390" y2="170"></line>
+                  <line x1="390" y1="65" x2="530" y2="170"></line>
+                  <line x1="390" y1="170" x2="530" y2="170"></line>
+                  <line x1="230" y1="265" x2="530" y2="170"></line>
+                </g>
+                <g class="graph-weights">
+                  <text x="150" y="108">4</text><text x="150" y="245">2</text>
+                  <text x="308" y="58">3</text><text x="305" y="120">5</text>
+                  <text x="305" y="225">1</text><text x="462" y="102">2</text>
+                  <text x="455" y="160">3</text><text x="390" y="260">7</text>
+                </g>
+                <g class="graph-nodes">
+                  <g data-graph-node="A" transform="translate(90 170)"><circle r="27"></circle><text>A</text></g>
+                  <g data-graph-node="B" transform="translate(230 75)"><circle r="27"></circle><text>B</text></g>
+                  <g data-graph-node="C" transform="translate(230 265)"><circle r="27"></circle><text>C</text></g>
+                  <g data-graph-node="D" transform="translate(390 65)"><circle r="27"></circle><text>D</text></g>
+                  <g data-graph-node="E" transform="translate(390 170)"><circle r="27"></circle><text>E</text></g>
+                  <g data-graph-node="F" transform="translate(530 170)"><circle r="27"></circle><text>F</text></g>
+                </g>
+              </svg>
+              <div>
+                <p id="graph-note" class="visual-note"></p>
+                <div id="graph-matrix" class="graph-matrix is-hidden"></div>
+              </div>
+            </div>
           </section>
 
           <section class="card is-hidden" id="avl-quiz-card">

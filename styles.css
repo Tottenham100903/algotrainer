@@ -810,6 +810,162 @@ h2 {
   font-weight: 700;
 }
 
+.structure-controls {
+  display: flex;
+  align-items: end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.structure-controls label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.structure-controls input,
+.structure-controls select {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.sq-stage {
+  display: grid;
+  gap: 1rem;
+  min-height: 330px;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: radial-gradient(circle at top right, rgba(217, 95, 67, 0.09), transparent 40%), var(--surface-strong);
+}
+
+.sq-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 230px;
+}
+
+.sq-visual.is-stack {
+  flex-direction: column-reverse;
+}
+
+.sq-item {
+  display: grid;
+  place-items: center;
+  gap: 0.25rem;
+  min-width: 86px;
+  min-height: 64px;
+  padding: 0.7rem;
+  border: 2px solid rgba(13, 107, 95, 0.24);
+  border-radius: 14px;
+  background: #fffdf8;
+  box-shadow: 0 10px 22px rgba(31, 42, 48, 0.08);
+  animation: item-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sq-visual.is-stack .sq-item {
+  width: min(240px, 80%);
+}
+
+.sq-item.is-next {
+  border-color: var(--secondary);
+  background: rgba(217, 95, 67, 0.1);
+}
+
+.sq-item span {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.sq-item small {
+  color: var(--secondary);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.visual-note {
+  min-height: 1.5rem;
+  margin: 0;
+  color: var(--primary-strong);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.graph-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.6fr);
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.graph-visual {
+  width: 100%;
+  min-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: radial-gradient(circle at center, rgba(13, 107, 95, 0.07), transparent 60%), var(--surface-strong);
+}
+
+.graph-edges line {
+  stroke: rgba(31, 42, 48, 0.3);
+  stroke-width: 3;
+}
+
+.graph-weights text {
+  fill: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+}
+
+.graph-nodes circle {
+  fill: #fffdf8;
+  stroke: var(--primary);
+  stroke-width: 3;
+  transition: fill 280ms ease, stroke 280ms ease, filter 280ms ease;
+}
+
+.graph-nodes text {
+  fill: var(--text);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 700;
+}
+
+.graph-nodes .is-visited circle {
+  fill: rgba(13, 107, 95, 0.22);
+}
+
+.graph-nodes .is-active circle {
+  fill: rgba(217, 95, 67, 0.22);
+  stroke: var(--secondary);
+  filter: drop-shadow(0 7px 7px rgba(217, 95, 67, 0.25));
+}
+
+.graph-matrix {
+  margin-top: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface-strong);
+  font-family: "IBM Plex Mono", monospace;
+  white-space: pre;
+  line-height: 1.55;
+}
+
 .compact-choices {
   margin-top: 0;
 }
@@ -1094,6 +1250,18 @@ button:disabled {
   }
 }
 
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (max-width: 900px) {
   .page-shell {
     width: min(100% - 1.25rem, 1160px);
@@ -1128,7 +1296,8 @@ button:disabled {
   }
 
   .home-grid,
-  .module-grid {
+  .module-grid,
+  .graph-layout {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -1302,9 +1471,30 @@ button:disabled {
   }
 
   .sandbox-controls label,
-  .sandbox-controls button {
+  .sandbox-controls button,
+  .structure-controls label,
+  .structure-controls button {
     width: 100%;
     min-width: 0;
+  }
+
+  .structure-controls input,
+  .structure-controls select {
+    width: 100%;
+  }
+
+  .sq-visual.is-queue {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .graph-layout {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .graph-visual {
+    min-width: 560px;
   }
 
   .tree-canvas {
