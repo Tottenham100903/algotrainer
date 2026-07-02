@@ -338,8 +338,7 @@ class AVLTree {
 const state = {
   runtimeQuestion: null,
   avlQuestion: null,
-  showAVLPreview: true,
-  showTreeStats: true,
+  showAVLPreview: false,
   sandboxTree: new AVLTree(),
   sandboxHistory: [],
   sandboxFuture: [],
@@ -358,8 +357,7 @@ const el = {
   avlOptions: document.getElementById("avl-options"),
   avlFeedback: document.getElementById("avl-feedback"),
   avlPreviewPanel: document.getElementById("avl-preview-panel"),
-  avlPreviewToggle: document.getElementById("toggle-avl-preview"),
-  treeStatsToggle: document.getElementById("toggle-tree-stats"),
+  avlHelpToggle: document.getElementById("toggle-avl-help"),
   sandboxValue: document.getElementById("sandbox-value"),
   sandboxTree: document.getElementById("sandbox-tree"),
   sandboxLog: document.getElementById("sandbox-log"),
@@ -371,8 +369,7 @@ document.getElementById("new-runtime").addEventListener("click", createRuntimeQu
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
-el.avlPreviewToggle.addEventListener("click", toggleAVLPreview);
-el.treeStatsToggle.addEventListener("click", toggleTreeStats);
+el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
 el.avlOptions.addEventListener("change", () => previewAVLRotation(false));
 document.getElementById("sandbox-insert").addEventListener("click", () => mutateSandbox("insert"));
 document.getElementById("sandbox-delete").addEventListener("click", () => mutateSandbox("delete"));
@@ -389,7 +386,6 @@ createRuntimeQuestion();
 createAVLQuestion();
 resetSandbox(true);
 syncAVLPreviewVisibility();
-syncTreeStatsVisibility();
 
 function createRuntimeQuestion() {
   const pattern = sample(runtimePatterns);
@@ -441,8 +437,11 @@ function createAVLQuestion() {
     pivot: attempt.pivot,
     motionHint: "Ausgangslage vor der Rotation",
     animate: false,
+    showStats: false,
   });
   renderChoices(el.avlOptions, "avl", shuffle(["LL", "RR", "LR", "RL", "Keine Rotation"]));
+  state.showAVLPreview = false;
+  syncAVLPreviewVisibility();
   showPreviewPlaceholder();
   setFeedback(el.avlFeedback, "");
 }
@@ -469,6 +468,7 @@ function previewAVLRotation(forceReplay) {
     pivot: state.avlQuestion.pivot,
     motionHint: describeRotationPreview(selected, state.avlQuestion.pivot),
     replay: forceReplay,
+    showStats: true,
   });
 }
 
@@ -488,6 +488,7 @@ function applyAVLAnswer() {
       pivot: state.avlQuestion.pivot,
       motionHint: `Richtig: ${selected}. Der Ausgangsbaum wurde in den balancierten Endzustand rotiert.`,
       replay: true,
+      showStats: false,
     });
     if (state.showAVLPreview) {
       previewAVLRotation(true);
@@ -571,6 +572,7 @@ function renderSandbox(options = {}) {
     motionHint: options.motionHint || "AVL-Baum mit automatischer Balance",
     animate: options.animate !== false,
     replay: options.replay === true,
+    showStats: false,
   });
   el.sandboxLog.textContent = state.sandboxTree.log.slice(-12).join("\n");
 }
@@ -641,11 +643,13 @@ function showPreviewPlaceholder() {
   state.renderCache.delete(el.avlTreeAfter.id);
   const note = document.createElement("div");
   note.className = "tree-preview-note";
-  note.textContent = "Waehle eine Rotation aus, dann wird der Baum mit Bewegung umgebaut.";
+  note.textContent = state.showAVLPreview
+    ? "Waehle eine Rotation aus, dann siehst du hier die Hilfe mit Vorschau, Hoehe und Balancefaktor."
+    : "Tippe auf Hilfe, um die Vorschau mit Hoehe und Balancefaktor einzublenden.";
   el.avlTreeAfter.appendChild(note);
 }
 
-function toggleAVLPreview() {
+function toggleAVLHelp() {
   state.showAVLPreview = !state.showAVLPreview;
   syncAVLPreviewVisibility();
   if (state.showAVLPreview) {
@@ -657,24 +661,7 @@ function toggleAVLPreview() {
 
 function syncAVLPreviewVisibility() {
   el.avlPreviewPanel.classList.toggle("is-hidden", !state.showAVLPreview);
-  el.avlPreviewToggle.textContent = state.showAVLPreview ? "Vorschau ausblenden" : "Vorschau einblenden";
-}
-
-function toggleTreeStats() {
-  state.showTreeStats = !state.showTreeStats;
-  syncTreeStatsVisibility();
-}
-
-function syncTreeStatsVisibility() {
-  el.treeStatsToggle.textContent = state.showTreeStats ? "BF/H ausblenden" : "BF/H anzeigen";
-
-  document.querySelectorAll(".tree-stats").forEach((node) => {
-    node.classList.toggle("is-hidden", !state.showTreeStats);
-  });
-
-  document.querySelectorAll(".tree-value").forEach((node) => {
-    node.setAttribute("y", state.showTreeStats ? "-2" : "1");
-  });
+  el.avlHelpToggle.textContent = state.showAVLPreview ? "Hilfe ausblenden" : "Hilfe anzeigen";
 }
 
 function renderTree(container, root, options = {}) {
@@ -692,6 +679,7 @@ function renderTree(container, root, options = {}) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `0 0 ${layout.width} ${layout.height}`);
   svg.setAttribute("class", "tree-svg");
+  const showStats = options.showStats === true;
 
   const previous = state.renderCache.get(container.id) || { nodes: new Map(), edges: new Map() };
   const nodeVisuals = [];
@@ -718,8 +706,8 @@ function renderTree(container, root, options = {}) {
     circle.setAttribute("class", `tree-node-circle${node.isRoot ? " root" : ""}${node.isPivot ? " pivot" : ""}`);
     value.setAttribute("class", "tree-value");
     value.textContent = node.label;
-    value.setAttribute("y", state.showTreeStats ? "-2" : "1");
-    stats.setAttribute("class", `tree-stats${state.showTreeStats ? "" : " is-hidden"}`);
+    value.setAttribute("y", showStats ? "-2" : "1");
+    stats.setAttribute("class", `tree-stats${showStats ? "" : " is-hidden"}`);
     stats.textContent = `h=${node.height} bf=${node.balance}`;
     stats.setAttribute("y", "34");
 
@@ -745,7 +733,6 @@ function renderTree(container, root, options = {}) {
   }
 
   animateTreeVisuals(nodeVisuals, edgeVisuals, options.animate !== false, options.replay === true);
-  syncTreeStatsVisibility();
   state.renderCache.set(container.id, {
     nodes: new Map(layout.nodes.map((node) => [node.id, { x: node.x, y: node.y, parentId: node.parentId }])),
     edges: new Map(layout.edges.map((edge) => [edge.id, edge])),

@@ -78,21 +78,6 @@ h2 {
   line-height: 1.6;
 }
 
-.tree-preview-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.35rem;
-}
-
-.micro-btn {
-  min-height: 0;
-  padding: 0.45rem 0.8rem;
-  font-size: 0.85rem;
-  flex-shrink: 0;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -460,15 +445,6 @@ button:disabled {
 
   .hero {
     padding-inline: 0.1rem;
-  }
-
-  .tree-preview-head {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .tree-preview-head .micro-btn {
-    width: 100%;
   }
 
   .card {
