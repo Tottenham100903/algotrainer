@@ -593,6 +593,11 @@ button:disabled {
 }
 
 .rotation-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
   margin-top: 1rem;
   padding: 0.9rem 1rem;
   border: 1px solid rgba(217, 95, 67, 0.3);
@@ -602,6 +607,13 @@ button:disabled {
   font-weight: 700;
   line-height: 1.45;
   animation: notice-in 240ms ease;
+}
+
+.delete-node-btn {
+  min-height: 40px;
+  padding: 0.6rem 0.9rem;
+  background: var(--wrong);
+  color: white;
 }
 
 #sandbox-tree .tree-svg {
@@ -633,6 +645,19 @@ button:disabled {
   fill: #fffdf8;
   stroke: rgba(13, 107, 95, 0.25);
   stroke-width: 2;
+  transition: fill 180ms ease, stroke 180ms ease, filter 180ms ease;
+}
+
+.tree-node-interactive {
+  cursor: pointer;
+  outline: none;
+}
+
+.tree-node-interactive:hover .tree-node-circle,
+.tree-node-interactive:focus .tree-node-circle {
+  fill: rgba(217, 95, 67, 0.14);
+  stroke: var(--secondary);
+  filter: drop-shadow(0 6px 6px rgba(217, 95, 67, 0.2));
 }
 
 .tree-node-circle.root {

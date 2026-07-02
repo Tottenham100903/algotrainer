@@ -781,8 +781,8 @@ function applyAVLAnswer() {
   setFeedback(el.avlFeedback, `Noch nicht richtig. ${selected} führt nicht zum korrekten AVL-Endzustand.`, "wrong");
 }
 
-function mutateSandbox(mode) {
-  const value = Number(el.sandboxValue.value);
+function mutateSandbox(mode, explicitValue = null) {
+  const value = explicitValue ?? Number(el.sandboxValue.value);
   if (!Number.isInteger(value)) {
     state.sandboxTree.log.push("Bitte eine ganze Zahl eingeben.");
     renderSandbox({ animate: false, motionHint: "Nur ganze Zahlen sind erlaubt." });
@@ -823,6 +823,7 @@ function mutateSandbox(mode) {
     pivot: rotation.pivot,
     animate: false,
     showStats: false,
+    onNodeClick: offerSandboxDelete,
   });
   setSandboxAnimating(true);
   updateUndoRedoButtons();
@@ -837,6 +838,7 @@ function mutateSandbox(mode) {
       replay: true,
       duration: 1500,
       showStats: false,
+      onNodeClick: offerSandboxDelete,
     });
     state.sandboxAnimationTimer = setTimeout(() => {
       setSandboxAnimating(false);
@@ -895,6 +897,7 @@ function renderSandbox(options = {}) {
     animate: options.animate !== false,
     replay: options.replay === true,
     showStats: false,
+    onNodeClick: offerSandboxDelete,
   });
 }
 
@@ -1052,6 +1055,20 @@ function renderTree(container, root, options = {}) {
     stats.setAttribute("class", `tree-stats${showStats ? "" : " is-hidden"}`);
     stats.textContent = `h=${node.height} bf=${node.balance}`;
     stats.setAttribute("y", "34");
+
+    if (options.onNodeClick) {
+      group.setAttribute("class", "tree-node-interactive");
+      group.setAttribute("role", "button");
+      group.setAttribute("tabindex", "0");
+      group.setAttribute("aria-label", `Knoten ${node.label} zum Löschen auswählen`);
+      group.addEventListener("click", () => options.onNodeClick(Number(node.label)));
+      group.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          options.onNodeClick(Number(node.label));
+        }
+      });
+    }
 
     group.appendChild(circle);
     group.appendChild(value);
@@ -1363,6 +1380,23 @@ function setSandboxAnimating(isAnimating) {
 function hideSandboxRotationNotice() {
   el.sandboxRotationNotice.classList.add("is-hidden");
   el.sandboxRotationNotice.textContent = "";
+}
+
+function offerSandboxDelete(value) {
+  if (state.sandboxAnimating) {
+    return;
+  }
+
+  el.sandboxRotationNotice.replaceChildren();
+  const text = document.createElement("span");
+  text.textContent = `Knoten ${value} löschen?`;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "delete-node-btn";
+  button.textContent = "Knoten löschen";
+  button.addEventListener("click", () => mutateSandbox("delete", value));
+  el.sandboxRotationNotice.append(text, button);
+  el.sandboxRotationNotice.classList.remove("is-hidden");
 }
 
 function sample(items) {
