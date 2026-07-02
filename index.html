@@ -159,14 +159,27 @@ queue: [A, C, D]</pre>
                 <p class="section-label">Erklärung</p>
                 <h2>Master-Theorem systematisch anwenden</h2>
               </div>
-              <label class="master-case-select">
-                Dominanzregel
-                <select id="master-learn-case">
-                  <option value="case1">d &lt; log_b(a) – Rekursion dominiert</option>
-                  <option value="case2">d = log_b(a) – Gleichgewicht</option>
-                  <option value="case3">d &gt; log_b(a) – Zusatzarbeit dominiert</option>
-                </select>
-              </label>
+              <div class="master-case-select">
+                <p>Dominanzregel</p>
+                <input id="master-learn-case" type="hidden" value="case1">
+                <div class="master-rule-options" data-master-learn-options>
+                  <button class="master-rule-option is-active" type="button" data-master-learn-case="case1" aria-pressed="true">
+                    <span class="rule-main">d &lt; log<sub>b</sub>(a)</span>
+                    <span class="rule-detail">Rekursion dominiert</span>
+                    <span class="rule-formula">T(n) = O(n<sup>log<sub>b</sub>(a)</sup>)</span>
+                  </button>
+                  <button class="master-rule-option" type="button" data-master-learn-case="case2" aria-pressed="false">
+                    <span class="rule-main">d = log<sub>b</sub>(a)</span>
+                    <span class="rule-detail">Gleichgewicht</span>
+                    <span class="rule-formula">T(n) = O(n<sup>d</sup> log n)</span>
+                  </button>
+                  <button class="master-rule-option" type="button" data-master-learn-case="case3" aria-pressed="false">
+                    <span class="rule-main">d &gt; log<sub>b</sub>(a)</span>
+                    <span class="rule-detail">Zusatzarbeit dominiert</span>
+                    <span class="rule-formula">T(n) = O(n<sup>d</sup>)</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div class="master-general-form">
@@ -219,7 +232,7 @@ queue: [A, C, D]</pre>
                 <p class="mini-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
               </div>
               <div class="help-card">
-                <h3>2. log_b(a) berechnen</h3>
+                <h3>2. log<sub>b</sub>(a) berechnen</h3>
                 <p>Berechne log<sub>b</sub>(a). Dieser Exponent beschreibt, wie stark der rekursive Anteil wächst.</p>
               </div>
               <div class="help-card">
@@ -259,13 +272,25 @@ queue: [A, C, D]</pre>
               <section class="master-work-step">
                 <span>3</span>
                 <div>
-                  <p class="tree-label">d mit log_b(a) vergleichen</p>
-                  <select id="master-comparison">
-                    <option value="">Vergleich auswählen</option>
-                    <option value="d<p">d &lt; log_b(a) – Rekursion wächst stärker</option>
-                    <option value="d=p">d = log_b(a) – beide sind gleich stark</option>
-                    <option value="d>p">d &gt; log_b(a) – Zusatzarbeit wächst stärker</option>
-                  </select>
+                  <p class="tree-label">d mit log<sub>b</sub>(a) vergleichen</p>
+                  <input id="master-comparison" type="hidden" value="">
+                  <div class="master-rule-options master-rule-options-compact" data-master-comparison-options>
+                    <button class="master-rule-option" type="button" data-master-comparison="d&lt;p" aria-pressed="false">
+                      <span class="rule-main">d &lt; log<sub>b</sub>(a)</span>
+                      <span class="rule-detail">Rekursion wächst stärker</span>
+                      <span class="rule-formula">O(n<sup>log<sub>b</sub>(a)</sup>)</span>
+                    </button>
+                    <button class="master-rule-option" type="button" data-master-comparison="d=p" aria-pressed="false">
+                      <span class="rule-main">d = log<sub>b</sub>(a)</span>
+                      <span class="rule-detail">beide Anteile sind gleich stark</span>
+                      <span class="rule-formula">O(n<sup>d</sup> log n)</span>
+                    </button>
+                    <button class="master-rule-option" type="button" data-master-comparison="d&gt;p" aria-pressed="false">
+                      <span class="rule-main">d &gt; log<sub>b</sub>(a)</span>
+                      <span class="rule-detail">Zusatzarbeit wächst stärker</span>
+                      <span class="rule-formula">O(n<sup>d</sup>)</span>
+                    </button>
+                  </div>
                 </div>
               </section>
 
@@ -274,12 +299,24 @@ queue: [A, C, D]</pre>
                 <div>
                   <p class="tree-label">Dominanz und Ergebnis ableiten</p>
                   <div class="master-result-grid">
-                    <select id="master-case-select">
-                      <option value="">Dominanz auswählen</option>
-                      <option value="Fall 1">Rekursion dominiert</option>
-                      <option value="Fall 2">Gleichgewicht</option>
-                      <option value="Fall 3">Zusatzarbeit dominiert</option>
-                    </select>
+                    <input id="master-case-select" type="hidden" value="">
+                    <div class="master-rule-options master-rule-options-compact" data-master-case-options>
+                      <button class="master-rule-option" type="button" data-master-case="Fall 1" aria-pressed="false">
+                        <span class="rule-main">Rekursion dominiert</span>
+                        <span class="rule-detail">wenn d &lt; log<sub>b</sub>(a)</span>
+                        <span class="rule-formula">T(n) = O(n<sup>log<sub>b</sub>(a)</sup>)</span>
+                      </button>
+                      <button class="master-rule-option" type="button" data-master-case="Fall 2" aria-pressed="false">
+                        <span class="rule-main">Gleichgewicht</span>
+                        <span class="rule-detail">wenn d = log<sub>b</sub>(a)</span>
+                        <span class="rule-formula">T(n) = O(n<sup>d</sup> log n)</span>
+                      </button>
+                      <button class="master-rule-option" type="button" data-master-case="Fall 3" aria-pressed="false">
+                        <span class="rule-main">Zusatzarbeit dominiert</span>
+                        <span class="rule-detail">wenn d &gt; log<sub>b</sub>(a)</span>
+                        <span class="rule-formula">T(n) = O(n<sup>d</sup>)</span>
+                      </button>
+                    </div>
                     <form id="master-runtime-options" class="choices compact-choices"></form>
                   </div>
                   <p class="master-rule-hint">Merke: d &lt; log<sub>b</sub>(a) → O(n<sup>log<sub>b</sub>(a)</sup>), d = log<sub>b</sub>(a) → O(n<sup>d</sup> log n), d &gt; log<sub>b</sub>(a) → O(n<sup>d</sup>).</p>

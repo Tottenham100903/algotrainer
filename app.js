@@ -390,7 +390,7 @@ const masterMethodChoices = [
 ];
 
 const masterFlowChoices = [
-  "Master: log_b(a) berechnen und d mit log_b(a) vergleichen",
+  "Master: log<sub>b</sub>(a) berechnen und d mit log<sub>b</sub>(a) vergleichen",
   "Subtract: Rekurrenz entfalten und entstehende Summe auswerten",
   "Substitution: Vermutung wählen und durch Einsetzen/Induktion prüfen",
 ];
@@ -398,15 +398,15 @@ const masterFlowChoices = [
 const masterCaseChoices = [
   {
     value: "Fall 1",
-    label: "d < log_b(a): Rekursion dominiert",
+    label: "d &lt; log<sub>b</sub>(a): Rekursion dominiert",
   },
   {
     value: "Fall 2",
-    label: "d = log_b(a): Gleichgewicht",
+    label: "d = log<sub>b</sub>(a): Gleichgewicht",
   },
   {
     value: "Fall 3",
-    label: "d > log_b(a): Zusatzarbeit dominiert",
+    label: "d &gt; log<sub>b</sub>(a): Zusatzarbeit dominiert",
   },
   {
     value: "Nicht anwendbar",
@@ -1348,9 +1348,31 @@ el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 document.querySelectorAll("[data-master-section]").forEach((button) => {
   button.addEventListener("click", () => setMasterSection(button.dataset.masterSection));
 });
-el.masterLearnCase.addEventListener("change", () => {
+document.querySelector("[data-master-learn-options]").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-master-learn-case]");
+  if (!button) {
+    return;
+  }
+
+  setMasterChoice(el.masterLearnCase, "[data-master-learn-case]", button.dataset.masterLearnCase);
   state.masterLearnStep = 0;
   renderMasterLearning();
+});
+document.querySelector("[data-master-comparison-options]").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-master-comparison]");
+  if (!button) {
+    return;
+  }
+
+  setMasterChoice(el.masterComparison, "[data-master-comparison]", button.dataset.masterComparison);
+});
+document.querySelector("[data-master-case-options]").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-master-case]");
+  if (!button) {
+    return;
+  }
+
+  setMasterChoice(el.masterCaseSelect, "[data-master-case]", button.dataset.masterCase);
 });
 el.masterLearnPrev.addEventListener("click", () => changeMasterLearningStep(-1));
 el.masterLearnNext.addEventListener("click", () => changeMasterLearningStep(1));
@@ -1633,7 +1655,7 @@ function createMasterQuestion() {
   state.masterQuestion = { ...pattern, runtimeChoices };
   el.masterTitle.textContent = "Klausuraufgabe: Rekurrenz vollständig herleiten";
   el.masterRecurrence.innerHTML = `T(n) = ${pattern.a}T(<span class="frac"><span>n</span><span>${pattern.b}</span></span>) + ${pattern.c}n<sup>${pattern.d}</sup>`;
-  el.masterTask.textContent = "Dokumentiere jeden Rechenschritt: Parameter, log_b(a), Vergleich und O-Laufzeit.";
+  el.masterTask.innerHTML = "Dokumentiere jeden Rechenschritt: Parameter, log<sub>b</sub>(a), Vergleich und O-Laufzeit.";
   renderChoices(
     el.masterRuntimeOptions,
     "master-runtime",
@@ -1643,8 +1665,8 @@ function createMasterQuestion() {
     .forEach((input) => {
       input.value = "";
     });
-  el.masterComparison.value = "";
-  el.masterCaseSelect.value = "";
+  setMasterChoice(el.masterComparison, "[data-master-comparison]", "");
+  setMasterChoice(el.masterCaseSelect, "[data-master-case]", "");
   setFeedback(el.masterFeedback, "");
   el.masterSolution.classList.add("is-hidden");
   el.masterSolution.innerHTML = "";
@@ -1682,8 +1704,8 @@ function checkMasterQuestion() {
   const runtimeCorrect = selectedRuntime === state.masterQuestion.answer;
   const checks = [
     [parametersCorrect, "Parameter a, b, c und d"],
-    [pCorrect, "Wert log_b(a)"],
-    [comparisonCorrect, "Vergleich von d und log_b(a)"],
+    [pCorrect, "Vergleichsexponent"],
+    [comparisonCorrect, "Vergleich von d und dem Vergleichsexponenten"],
     [caseCorrect, "Dominanzregel"],
     [runtimeCorrect, "Laufzeit"],
   ];
@@ -1704,9 +1726,9 @@ function checkMasterQuestion() {
   }
 
   const comparisonLabels = {
-    "d<p": "d < log_b(a), also dominiert die Rekursion",
-    "d=p": "d = log_b(a), also herrscht Gleichgewicht",
-    "d>p": "d > log_b(a), also dominiert die Zusatzarbeit",
+    "d<p": "d &lt; log<sub>b</sub>(a), also dominiert die Rekursion",
+    "d=p": "d = log<sub>b</sub>(a), also herrscht Gleichgewicht",
+    "d>p": "d &gt; log<sub>b</sub>(a), also dominiert die Zusatzarbeit",
   };
   const dominanceLabels = {
     "Fall 1": "Rekursion dominiert",
@@ -3131,8 +3153,9 @@ function renderChoices(container, name, choices) {
   choices.forEach((choice) => {
     const value = typeof choice === "string" ? choice : choice.value;
     const labelText = typeof choice === "string" ? choice : choice.label;
+    const labelHtml = formatInlineMathLabel(labelText);
     const label = document.createElement("label");
-    label.innerHTML = `<input type="radio" name="${name}-choice" value="${escapeAttribute(value)}"><span>${labelText}</span>`;
+    label.innerHTML = `<input type="radio" name="${name}-choice" value="${escapeAttribute(value)}"><span>${labelHtml}</span>`;
     container.appendChild(label);
   });
 }
@@ -3159,6 +3182,21 @@ function formatOrderLabel(value) {
   return `O(${formatRuntimeLabel(value)})`;
 }
 
+function formatInlineMathLabel(value) {
+  const text = String(value);
+  if (text.includes("<")) {
+    return text;
+  }
+
+  return text
+    .replaceAll("n^log_2(3)", "n<sup>log<sub>2</sub>(3)</sup>")
+    .replaceAll("n^2 log^2 n", "n<sup>2</sup> log<sup>2</sup> n")
+    .replaceAll("n^2 log n", "n<sup>2</sup> log n")
+    .replaceAll("n^3", "n<sup>3</sup>")
+    .replaceAll("n^2", "n<sup>2</sup>")
+    .replaceAll("2^n", "2<sup>n</sup>");
+}
+
 function setFeedback(node, text, type = "") {
   node.textContent = text;
   node.className = `feedback${type ? ` ${type}` : ""}`;
@@ -3167,6 +3205,17 @@ function setFeedback(node, text, type = "") {
 function getSelectedValue(name) {
   const selected = document.querySelector(`input[name="${name}"]:checked`);
   return selected ? selected.value : "";
+}
+
+function setMasterChoice(input, buttonSelector, value) {
+  input.value = value;
+  document.querySelectorAll(buttonSelector).forEach((button) => {
+    const selected = button.dataset.masterLearnCase === value
+      || button.dataset.masterComparison === value
+      || button.dataset.masterCase === value;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
 }
 
 function showPreviewPlaceholder() {
