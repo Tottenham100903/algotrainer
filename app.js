@@ -475,6 +475,9 @@ const state = {
   sandboxTree: new AVLTree(),
   sandboxHistory: [],
   sandboxFuture: [],
+  sandboxAnimating: false,
+  sandboxAnimationTimer: null,
+  avlPreviewTimer: null,
   renderCache: new Map(),
 };
 
@@ -507,6 +510,10 @@ const el = {
   avlHelpToggle: document.getElementById("toggle-avl-help"),
   sandboxValue: document.getElementById("sandbox-value"),
   sandboxTree: document.getElementById("sandbox-tree"),
+  sandboxRotationNotice: document.getElementById("sandbox-rotation-notice"),
+  sandboxInsert: document.getElementById("sandbox-insert"),
+  sandboxDelete: document.getElementById("sandbox-delete"),
+  sandboxReset: document.getElementById("reset-sandbox"),
   sandboxUndo: document.getElementById("sandbox-undo"),
   sandboxRedo: document.getElementById("sandbox-redo"),
 };
@@ -675,6 +682,7 @@ function syncMasterHelpVisibility() {
 }
 
 function createAVLQuestion() {
+  clearTimeout(state.avlPreviewTimer);
   let attempt = null;
   let tries = 0;
   while ((!attempt || attempt.rotation === "Keine Rotation") && tries < 80) {
@@ -710,18 +718,36 @@ function previewAVLRotation(forceReplay) {
 
   const previewRoot = cloneNode(state.avlQuestion.beforeInvalidRoot);
   const rotated = applyNamedRotation(previewRoot, state.avlQuestion.pivot, selected);
-  if (forceReplay) {
+  clearTimeout(state.avlPreviewTimer);
+
+  if (!forceReplay) {
+    renderTree(el.avlTreeAfter, rotated, {
+      pivot: state.avlQuestion.pivot,
+      motionHint: describeRotationPreview(selected, state.avlQuestion.pivot),
+      showStats: true,
+    });
+    return;
+  }
+
+  renderTree(el.avlTreeAfter, cloneNode(state.avlQuestion.beforeInvalidRoot), {
+    pivot: state.avlQuestion.pivot,
+    animate: false,
+    showStats: true,
+  });
+
+  state.avlPreviewTimer = setTimeout(() => {
     state.renderCache.set(
       el.avlTreeAfter.id,
       layoutCacheFromRoot(state.avlQuestion.beforeInvalidRoot, state.avlQuestion.pivot),
     );
-  }
-  renderTree(el.avlTreeAfter, rotated, {
-    pivot: state.avlQuestion.pivot,
-    motionHint: describeRotationPreview(selected, state.avlQuestion.pivot),
-    replay: forceReplay,
-    showStats: true,
-  });
+    renderTree(el.avlTreeAfter, rotated, {
+      pivot: state.avlQuestion.pivot,
+      motionHint: describeRotationPreview(selected, state.avlQuestion.pivot),
+      replay: true,
+      duration: 1200,
+      showStats: true,
+    });
+  }, 450);
 }
 
 function applyAVLAnswer() {
@@ -763,6 +789,9 @@ function mutateSandbox(mode) {
     return;
   }
 
+  clearTimeout(state.sandboxAnimationTimer);
+  setSandboxAnimating(false);
+  const rootBeforeOperation = cloneNode(state.sandboxTree.root);
   pushSandboxHistory();
   state.sandboxFuture = [];
   const beforeLogLength = state.sandboxTree.log.length;
@@ -773,13 +802,53 @@ function mutateSandbox(mode) {
     state.sandboxTree.delete(value);
   }
 
-  const motion = sandboxMotionHint(mode, value, state.sandboxTree.log.slice(beforeLogLength));
+  const newEntries = state.sandboxTree.log.slice(beforeLogLength);
+  const rotation = latestRotationEntry(newEntries);
   el.sandboxValue.value = "";
-  renderSandbox({ motionHint: motion });
+
+  if (!rotation) {
+    hideSandboxRotationNotice();
+    renderSandbox();
+    updateUndoRedoButtons();
+    return;
+  }
+
+  const action = mode === "insert" ? "Hinzufügen" : "Löschen";
+  el.sandboxRotationNotice.textContent =
+    `Achtung: Beim ${action} von ${value} wird eine ${rotation.rotation}-Rotation an Knoten ${rotation.pivot} angewendet.`;
+  el.sandboxRotationNotice.classList.remove("is-hidden");
+
+  const beforeRotation = applyBSTOnly(rootBeforeOperation, value, mode);
+  renderTree(el.sandboxTree, beforeRotation, {
+    pivot: rotation.pivot,
+    animate: false,
+    showStats: false,
+  });
+  setSandboxAnimating(true);
   updateUndoRedoButtons();
+
+  state.sandboxAnimationTimer = setTimeout(() => {
+    state.renderCache.set(
+      el.sandboxTree.id,
+      layoutCacheFromRoot(beforeRotation, rotation.pivot),
+    );
+    renderTree(el.sandboxTree, state.sandboxTree.root, {
+      pivot: rotation.pivot,
+      replay: true,
+      duration: 1500,
+      showStats: false,
+    });
+    state.sandboxAnimationTimer = setTimeout(() => {
+      setSandboxAnimating(false);
+      updateUndoRedoButtons();
+    }, 1500);
+  }, 1100);
 }
 
 function resetSandbox(isInitial) {
+  clearTimeout(state.sandboxAnimationTimer);
+  setSandboxAnimating(false);
+  hideSandboxRotationNotice();
   if (!isInitial) {
     pushSandboxHistory();
     state.sandboxFuture = [];
@@ -802,6 +871,7 @@ function undoSandbox() {
   state.sandboxFuture.push(snapshotSandbox());
   const snapshot = state.sandboxHistory.pop();
   restoreSandboxSnapshot(snapshot);
+  hideSandboxRotationNotice();
   renderSandbox({ motionHint: "Undo: vorheriger Baumstand wiederhergestellt." });
   updateUndoRedoButtons();
 }
@@ -813,6 +883,7 @@ function redoSandbox() {
   state.sandboxHistory.push(snapshotSandbox());
   const snapshot = state.sandboxFuture.pop();
   restoreSandboxSnapshot(snapshot);
+  hideSandboxRotationNotice();
   renderSandbox({ motionHint: "Redo: der nächste Baumstand wurde erneut geladen." });
   updateUndoRedoButtons();
 }
@@ -925,6 +996,7 @@ function toggleAVLHelp() {
   if (state.showAVLPreview) {
     previewAVLRotation(true);
   } else {
+    clearTimeout(state.avlPreviewTimer);
     showPreviewPlaceholder();
   }
 }
@@ -1002,15 +1074,21 @@ function renderTree(container, root, options = {}) {
     container.appendChild(note);
   }
 
-  animateTreeVisuals(nodeVisuals, edgeVisuals, options.animate !== false, options.replay === true);
+  animateTreeVisuals(
+    nodeVisuals,
+    edgeVisuals,
+    options.animate !== false,
+    options.replay === true,
+    options.duration,
+  );
   state.renderCache.set(container.id, {
     nodes: new Map(layout.nodes.map((node) => [node.id, { x: node.x, y: node.y, parentId: node.parentId }])),
     edges: new Map(layout.edges.map((edge) => [edge.id, edge])),
   });
 }
 
-function animateTreeVisuals(nodeVisuals, edgeVisuals, animate, replay) {
-  const duration = animate ? 420 : 0;
+function animateTreeVisuals(nodeVisuals, edgeVisuals, animate, replay, requestedDuration) {
+  const duration = animate ? (requestedDuration || 420) : 0;
   const opacityStart = replay ? 0.4 : 0.65;
 
   if (!duration) {
@@ -1270,8 +1348,21 @@ function pushSandboxHistory() {
 }
 
 function updateUndoRedoButtons() {
-  el.sandboxUndo.disabled = state.sandboxHistory.length === 0;
-  el.sandboxRedo.disabled = state.sandboxFuture.length === 0;
+  el.sandboxUndo.disabled = state.sandboxAnimating || state.sandboxHistory.length === 0;
+  el.sandboxRedo.disabled = state.sandboxAnimating || state.sandboxFuture.length === 0;
+}
+
+function setSandboxAnimating(isAnimating) {
+  state.sandboxAnimating = isAnimating;
+  el.sandboxValue.disabled = isAnimating;
+  el.sandboxInsert.disabled = isAnimating;
+  el.sandboxDelete.disabled = isAnimating;
+  el.sandboxReset.disabled = isAnimating;
+}
+
+function hideSandboxRotationNotice() {
+  el.sandboxRotationNotice.classList.add("is-hidden");
+  el.sandboxRotationNotice.textContent = "";
 }
 
 function sample(items) {

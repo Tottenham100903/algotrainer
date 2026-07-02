@@ -26,7 +26,6 @@
 
         <section class="home-grid" aria-label="Module auswählen">
           <button class="module-tile module-tile-runtime" type="button" data-open-view="runtime">
-            <span class="module-kicker">01 / Analyse</span>
             <strong>
               <span>Lauf</span>
               <span>zeiten</span>
@@ -36,7 +35,6 @@
           </button>
 
           <button class="module-tile module-tile-master" type="button" data-open-view="master">
-            <span class="module-kicker">02 / Rekursion</span>
             <strong>
               <span>Master</span>
               <span>Theorem</span>
@@ -46,7 +44,6 @@
           </button>
 
           <button class="module-tile module-tile-avl" type="button" data-open-view="avl">
-            <span class="module-kicker">03 / Datenstrukturen</span>
             <strong>
               <span>AVL</span>
               <span>Bäume</span>
@@ -254,6 +251,8 @@
               <button id="sandbox-undo" class="secondary-btn" type="button">Undo</button>
               <button id="sandbox-redo" class="secondary-btn" type="button">Redo</button>
             </div>
+
+            <div id="sandbox-rotation-notice" class="rotation-notice is-hidden" aria-live="polite"></div>
 
             <div class="sandbox-layout">
               <div class="tree-canvas tree-canvas-large" id="sandbox-tree"></div>

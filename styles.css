@@ -592,6 +592,18 @@ button:disabled {
   margin-top: 1rem;
 }
 
+.rotation-notice {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(217, 95, 67, 0.3);
+  border-radius: 16px;
+  background: rgba(217, 95, 67, 0.1);
+  color: var(--wrong);
+  font-weight: 700;
+  line-height: 1.45;
+  animation: notice-in 240ms ease;
+}
+
 #sandbox-tree .tree-svg {
   min-height: 430px;
 }
@@ -694,6 +706,18 @@ button:disabled {
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
   }
 
   to {
