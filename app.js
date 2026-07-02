@@ -339,6 +339,7 @@ const state = {
   runtimeQuestion: null,
   avlQuestion: null,
   showAVLPreview: true,
+  showTreeStats: true,
   sandboxTree: new AVLTree(),
   sandboxHistory: [],
   sandboxFuture: [],
@@ -358,6 +359,7 @@ const el = {
   avlFeedback: document.getElementById("avl-feedback"),
   avlPreviewPanel: document.getElementById("avl-preview-panel"),
   avlPreviewToggle: document.getElementById("toggle-avl-preview"),
+  treeStatsToggle: document.getElementById("toggle-tree-stats"),
   sandboxValue: document.getElementById("sandbox-value"),
   sandboxTree: document.getElementById("sandbox-tree"),
   sandboxLog: document.getElementById("sandbox-log"),
@@ -370,6 +372,7 @@ document.getElementById("check-runtime").addEventListener("click", checkRuntimeQ
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlPreviewToggle.addEventListener("click", toggleAVLPreview);
+el.treeStatsToggle.addEventListener("click", toggleTreeStats);
 el.avlOptions.addEventListener("change", () => previewAVLRotation(false));
 document.getElementById("sandbox-insert").addEventListener("click", () => mutateSandbox("insert"));
 document.getElementById("sandbox-delete").addEventListener("click", () => mutateSandbox("delete"));
@@ -386,6 +389,7 @@ createRuntimeQuestion();
 createAVLQuestion();
 resetSandbox(true);
 syncAVLPreviewVisibility();
+syncTreeStatsVisibility();
 
 function createRuntimeQuestion() {
   const pattern = sample(runtimePatterns);
@@ -656,6 +660,23 @@ function syncAVLPreviewVisibility() {
   el.avlPreviewToggle.textContent = state.showAVLPreview ? "Vorschau ausblenden" : "Vorschau einblenden";
 }
 
+function toggleTreeStats() {
+  state.showTreeStats = !state.showTreeStats;
+  syncTreeStatsVisibility();
+}
+
+function syncTreeStatsVisibility() {
+  el.treeStatsToggle.textContent = state.showTreeStats ? "BF/H ausblenden" : "BF/H anzeigen";
+
+  document.querySelectorAll(".tree-stats").forEach((node) => {
+    node.classList.toggle("is-hidden", !state.showTreeStats);
+  });
+
+  document.querySelectorAll(".tree-value").forEach((node) => {
+    node.setAttribute("y", state.showTreeStats ? "-2" : "1");
+  });
+}
+
 function renderTree(container, root, options = {}) {
   container.innerHTML = "";
   if (!root) {
@@ -697,8 +718,8 @@ function renderTree(container, root, options = {}) {
     circle.setAttribute("class", `tree-node-circle${node.isRoot ? " root" : ""}${node.isPivot ? " pivot" : ""}`);
     value.setAttribute("class", "tree-value");
     value.textContent = node.label;
-    value.setAttribute("y", "-2");
-    stats.setAttribute("class", "tree-stats");
+    value.setAttribute("y", state.showTreeStats ? "-2" : "1");
+    stats.setAttribute("class", `tree-stats${state.showTreeStats ? "" : " is-hidden"}`);
     stats.textContent = `h=${node.height} bf=${node.balance}`;
     stats.setAttribute("y", "34");
 
@@ -724,6 +745,7 @@ function renderTree(container, root, options = {}) {
   }
 
   animateTreeVisuals(nodeVisuals, edgeVisuals, options.animate !== false, options.replay === true);
+  syncTreeStatsVisibility();
   state.renderCache.set(container.id, {
     nodes: new Map(layout.nodes.map((node) => [node.id, { x: node.x, y: node.y, parentId: node.parentId }])),
     edges: new Map(layout.edges.map((edge) => [edge.id, edge])),
