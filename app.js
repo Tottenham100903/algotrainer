@@ -359,6 +359,164 @@ const runtimePatterns = [
       };
     },
   },
+  {
+    title: "Lineare Suche analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def contains(values, target):",
+          "    for value in values:",
+          "        if value == target:",
+          "            return True",
+          "    return False",
+        ]),
+        answer: "O(n)",
+        explanation: "Im Worst Case wird jedes Element einmal geprüft.",
+      };
+    },
+  },
+  {
+    title: "Binäre Suche analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def binary_search(values, target):",
+          "    left = 0",
+          "    right = len(values) - 1",
+          "    while left <= right:",
+          "        mid = (left + right) // 2",
+          "        if values[mid] == target:",
+          "            return mid",
+          "        if values[mid] < target:",
+          "            left = mid + 1",
+          "        else:",
+          "            right = mid - 1",
+          "    return -1",
+        ]),
+        answer: "O(log n)",
+        explanation: "Der Suchbereich halbiert sich nach jedem Vergleich.",
+      };
+    },
+  },
+  {
+    title: "Selectionsort analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def selection_sort(values):",
+          "    n = len(values)",
+          "    for i in range(n):",
+          "        best = i",
+          "        for j in range(i + 1, n):",
+          "            if values[j] < values[best]:",
+          "                best = j",
+          "        values[i], values[best] = values[best], values[i]",
+          "    return values",
+        ]),
+        answer: "O(n^2)",
+        explanation: "Für jede Position wird der restliche unsortierte Bereich durchsucht.",
+      };
+    },
+  },
+  {
+    title: "Mergesort analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def merge_sort(values):",
+          "    if len(values) <= 1:",
+          "        return values",
+          "    mid = len(values) // 2",
+          "    left = merge_sort(values[:mid])",
+          "    right = merge_sort(values[mid:])",
+          "    return merge(left, right)",
+        ]),
+        answer: "O(n log n)",
+        explanation: "Es gibt logarithmisch viele Ebenen, und pro Ebene wird insgesamt linear gemischt.",
+      };
+    },
+  },
+  {
+    title: "Two-Pointer-Verfahren analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def has_pair_sum(values, target):",
+          "    left = 0",
+          "    right = len(values) - 1",
+          "    while left < right:",
+          "        current = values[left] + values[right]",
+          "        if current == target:",
+          "            return True",
+          "        if current < target:",
+          "            left += 1",
+          "        else:",
+          "            right -= 1",
+          "    return False",
+        ]),
+        answer: "O(n)",
+        explanation: "Jeder Zeiger bewegt sich nur in eine Richtung; zusammen gibt es höchstens linear viele Schritte.",
+      };
+    },
+  },
+  {
+    title: "Prefix-Sums analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def prefix_sums(values):",
+          "    prefix = [0]",
+          "    for value in values:",
+          "        prefix.append(prefix[-1] + value)",
+          "    return prefix",
+        ]),
+        answer: "O(n)",
+        explanation: "Jeder Eingabewert wird genau einmal verarbeitet.",
+      };
+    },
+  },
+  {
+    title: "Hashmap-Lookup analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def count_seen(values):",
+          "    seen = {}",
+          "    for value in values:",
+          "        if value in seen:",
+          "            seen[value] += 1",
+          "        else:",
+          "            seen[value] = 1",
+          "    return seen",
+        ]),
+        answer: "O(n)",
+        explanation: "Die Schleife läuft n-mal; Hashmap-Zugriffe sind im Durchschnitt O(1).",
+      };
+    },
+  },
+  {
+    title: "Breitensuche analysieren",
+    build() {
+      return {
+        code: asCode([
+          "from collections import deque",
+          "",
+          "def bfs(graph, start):",
+          "    queue = deque([start])",
+          "    visited = {start}",
+          "    while queue:",
+          "        node = queue.popleft()",
+          "        for neighbor in graph[node]:",
+          "            if neighbor not in visited:",
+          "                visited.add(neighbor)",
+          "                queue.append(neighbor)",
+          "    return visited",
+        ]),
+        answer: "O(V + E)",
+        explanation: "Jeder Knoten und jede Kante wird bei der Breitensuche höchstens konstant oft betrachtet.",
+      };
+    },
+  },
 ];
 
 const runtimeChoicesPool = [
@@ -369,6 +527,7 @@ const runtimeChoicesPool = [
   "O(n log n)",
   "O(n^2)",
   "O(2^n)",
+  "O(V + E)",
 ];
 
 const masterRuntimeChoicesPool = [
@@ -434,22 +593,99 @@ const masterTrainingConfigs = {
   "Divide and Conquer / Master-Theorem": {
     heading: "Master-Theorem trainieren",
     copy: "Löse die Rekurrenz wie in einer Klausur: Lies die Master-Parameter ab, berechne log<sub>b</sub>(a), wähle den Dominanzfall und leite daraus die Laufzeit her.",
+    task: "Bestimme a, b, c und d. Berechne log<sub>b</sub>(a), vergleiche d damit und leite den passenden Master-Fall ab.",
     flow: masterFlowChoices[0],
     caseValues: ["Fall 1", "Fall 2", "Fall 3"],
   },
   "Subtract and Conquer": {
     heading: "Subtract and Conquer trainieren",
     copy: "Löse die Rekurrenz durch Entfalten: Bestimme, wie die Eingabe kleiner wird, formuliere die entstehende Summe und leite daraus die Laufzeit her.",
+    task: "Entfalte die Rekurrenz: Bestimme Reduktion, Rekursionstiefe, entstehende Summe und daraus die Laufzeit.",
     flow: masterFlowChoices[1],
     caseValues: ["Lineare Entfaltung", "Logarithmische Entfaltung", "Geometrische Summe"],
   },
   Substitution: {
     heading: "Substitution trainieren",
     copy: "Löse die Rekurrenz über eine Vermutung: Wähle eine passende Schranke, setze sie für kleinere Eingaben ein und prüfe, ob die Ungleichung stabil bleibt.",
+    task: "Wähle eine plausible Schranke, setze die Induktionsannahme ein und prüfe die Bedingung für die Konstante.",
     flow: masterFlowChoices[2],
     caseValues: ["Lineare Substitution", "Exponentielle Substitution"],
   },
 };
+
+const masterPracticePatterns = [
+  {
+    recurrenceHtml: 'T(n) = 8T(<span class="frac"><span>n</span><span>2</span></span>) + 3n<sup>2</sup>',
+    a: 8, b: 2, c: 3, d: 2, p: 3, comparison: "d<p", caseName: "Fall 1", answer: "n^3",
+    explanation: "a = 8, b = 2, c = 3, d = 2 und log<sub>2</sub>(8) = 3. Weil d &lt; log<sub>b</sub>(a), dominiert die Rekursion.",
+  },
+  {
+    recurrenceHtml: 'T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + 5n',
+    a: 2, b: 2, c: 5, d: 1, p: 1, comparison: "d=p", caseName: "Fall 2", answer: "n log n",
+    explanation: "a = 2, b = 2, c = 5, d = 1 und log<sub>2</sub>(2) = 1. Bei Gleichheit kommt ein zusätzlicher Log-Faktor hinzu.",
+  },
+  {
+    recurrenceHtml: 'T(n) = 3T(<span class="frac"><span>n</span><span>3</span></span>) + 6n<sup>2</sup>',
+    a: 3, b: 3, c: 6, d: 2, p: 1, comparison: "d>p", caseName: "Fall 3", answer: "n^2",
+    explanation: "a = 3, b = 3, c = 6, d = 2 und log<sub>3</sub>(3) = 1. Weil d &gt; log<sub>b</sub>(a), dominiert die Zusatzarbeit.",
+  },
+  {
+    recurrenceHtml: 'T(n) = 9T(<span class="frac"><span>n</span><span>3</span></span>) + 2n<sup>2</sup>',
+    a: 9, b: 3, c: 2, d: 2, p: 2, comparison: "d=p", caseName: "Fall 2", answer: "n^2 log n",
+    explanation: "a = 9, b = 3, c = 2, d = 2 und log<sub>3</sub>(9) = 2. Der Gleichgewichtsfall liefert n<sup>2</sup> log n.",
+  },
+];
+
+const subtractPracticePatterns = [
+  {
+    recurrenceHtml: "T(n) = T(n - 1) + n",
+    reduction: "n - 1",
+    depth: "n",
+    expansion: "1 + 2 + ... + n",
+    caseName: "Lineare Entfaltung",
+    answer: "n^2",
+    explanation: "Die Rekurrenz sinkt pro Schritt um 1. Beim Entfalten entsteht die arithmetische Summe 1 + 2 + ... + n, also O(n<sup>2</sup>).",
+  },
+  {
+    recurrenceHtml: 'T(n) = T(<span class="frac"><span>n</span><span>2</span></span>) + 1',
+    reduction: "n / 2",
+    depth: "log n",
+    expansion: "1 + 1 + ... + 1 über log n Ebenen",
+    caseName: "Logarithmische Entfaltung",
+    answer: "log n",
+    explanation: "Die Eingabe halbiert sich pro Schritt. Dadurch gibt es logarithmisch viele Ebenen mit konstanter Arbeit.",
+  },
+  {
+    recurrenceHtml: 'T(n) = T(<span class="frac"><span>n</span><span>2</span></span>) + n',
+    reduction: "n / 2",
+    depth: "log n",
+    expansion: "n + n/2 + n/4 + ...",
+    caseName: "Geometrische Summe",
+    answer: "n",
+    explanation: "Die entstehende geometrische Summe ist durch ein konstantes Vielfaches von n beschränkt.",
+  },
+];
+
+const substitutionPracticePatterns = [
+  {
+    recurrenceHtml: 'T(n) = T(<span class="frac"><span>n</span><span>2</span></span>) + T(<span class="frac"><span>n</span><span>4</span></span>) + n',
+    guess: "T(n) ≤ c · n",
+    inserted: "c(n/2) + c(n/4) + n ≤ c · n",
+    condition: "c ≥ 4",
+    caseName: "Lineare Substitution",
+    answer: "n",
+    explanation: "Mit T(k) ≤ c · k folgt T(n) ≤ 3cn/4 + n. Für c ≥ 4 bleibt die lineare Schranke stabil.",
+  },
+  {
+    recurrenceHtml: "T(n) = T(n - 1) + T(n - 2) + 1",
+    guess: "T(n) ≤ c · 2^n",
+    inserted: "c2^(n-1) + c2^(n-2) + 1 ≤ c2^n",
+    condition: "c groß genug",
+    caseName: "Exponentielle Substitution",
+    answer: "2^n",
+    explanation: "Die beiden fast gleich großen Teilprobleme lassen sich durch eine exponentielle Schranke abfangen.",
+  },
+];
 
 const masterPatterns = [
   {
@@ -731,6 +967,42 @@ const masterLearnCases = {
       ["Einsetzen", "Dann gilt T(n) ≤ c2<sup>n-1</sup> + c2<sup>n-2</sup> + 1 = (3/4)c2<sup>n</sup> + 1."],
       ["Ergebnis ableiten", "Der zusätzliche konstante Term wird für großes n von c2<sup>n</sup> geschluckt. Damit ist T(n) = O(2<sup>n</sup>) eine passende obere Schranke."],
     ],
+  },
+};
+
+const masterLearnTopics = {
+  "Divide and Conquer / Master-Theorem": {
+    formula: 'T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup>',
+    summary: "Nutze das Master-Theorem, wenn die Rekurrenz aus a gleich großen Teilproblemen der Größe n/b und einer polynomialen Zusatzarbeit c · n^d besteht.",
+    tiles: [
+      ["a", "Anzahl der rekursiven Teilprobleme"],
+      ["b", "Verkleinerungsfaktor der Eingabe"],
+      ["c", "konstanter Faktor der Zusatzarbeit"],
+      ["d", "Exponent der Zusatzarbeit n<sup>d</sup>"],
+    ],
+    lessons: [masterLearnCases.case1, masterLearnCases.case2, masterLearnCases.case3],
+  },
+  "Subtract and Conquer": {
+    formula: "T(n) = T(n - k) + g(n) oder T(n) = T(n / b) + g(n)",
+    summary: "Nutze Subtract and Conquer, wenn pro Schritt nur ein Teilproblem weiterläuft. Die Laufzeit entsteht durch Entfalten der Rekurrenz als Summe über die Ebenen.",
+    tiles: [
+      ["Schritt", "Wie stark wird n kleiner?"],
+      ["Tiefe", "Wie viele Rekursionsschritte entstehen?"],
+      ["Kosten", "Welche Zusatzarbeit g(n) fällt pro Ebene an?"],
+      ["Summe", "Welche Reihe entsteht beim Entfalten?"],
+    ],
+    lessons: [masterLearnCases["subtract-sum"], masterLearnCases["subtract-shrink"]],
+  },
+  Substitution: {
+    formula: "Vermutung einsetzen: T(k) ≤ Schranke(k)",
+    summary: "Nutze Substitution, wenn du eine Schranke beweisen möchtest oder die Rekurrenz nicht sauber in ein Standardschema passt. Du vermutest eine Laufzeit und zeigst, dass sie nach dem Einsetzen stabil bleibt.",
+    tiles: [
+      ["Vermutung", "Welche O-Schranke ist plausibel?"],
+      ["Einsetzen", "Ersetze rekursive Terme durch die Induktionsannahme"],
+      ["Konstante", "Wähle c so, dass die Ungleichung aufgeht"],
+      ["Beweis", "Basisfall und Induktionsschritt sichern die Schranke"],
+    ],
+    lessons: [masterLearnCases["substitution-linear"], masterLearnCases["substitution-branch"]],
   },
 };
 
@@ -1310,12 +1582,9 @@ const el = {
   masterTrainingHeading: document.getElementById("master-training-heading"),
   masterTrainingCopy: document.getElementById("master-training-copy"),
   masterTrainingTopic: document.getElementById("master-training-topic"),
-  masterMethodOptions: document.getElementById("master-method-options"),
-  masterFlowOptions: document.getElementById("master-flow-options"),
-  masterCaseOptions: document.getElementById("master-case-options"),
-  masterRuntimeOptions: document.getElementById("master-runtime-options"),
   masterFeedback: document.getElementById("master-feedback"),
   masterSolution: document.getElementById("master-solution"),
+  masterLearnOverview: document.getElementById("master-learn-overview"),
   masterLearnCard: document.getElementById("master-learn-card"),
   masterTrainingCard: document.getElementById("master-card"),
   masterLearnCase: document.getElementById("master-learn-case"),
@@ -1324,6 +1593,7 @@ const el = {
   masterLearnCount: document.getElementById("master-learn-count"),
   masterLearnPrev: document.getElementById("master-learn-prev"),
   masterLearnNext: document.getElementById("master-learn-next"),
+  masterWorkflow: document.getElementById("master-workflow"),
   sortAlgorithm: document.getElementById("sort-algorithm"),
   sortBars: document.getElementById("sort-bars"),
   sortNote: document.getElementById("sort-note"),
@@ -1715,79 +1985,40 @@ function checkRuntimeQuestion() {
 }
 
 function createMasterQuestion() {
-  const topicPatterns = masterPatterns.filter(
-    (item) => item.method === state.masterTrainingTopic,
-  );
-  const pattern = sample(topicPatterns);
   const config = getMasterTrainingConfig();
+  const pools = {
+    "Divide and Conquer / Master-Theorem": masterPracticePatterns,
+    "Subtract and Conquer": subtractPracticePatterns,
+    Substitution: substitutionPracticePatterns,
+  };
+  const pattern = sample(pools[state.masterTrainingTopic] || masterPracticePatterns);
   const runtimeChoices = shuffle([
     pattern.answer,
     ...shuffle(masterRuntimeChoicesPool.filter((item) => item !== pattern.answer)).slice(0, 3),
   ]);
-  const methodChoices = shuffle(masterMethodChoices);
-  const flowChoices = shuffle([
-    config.flow,
-    ...masterFlowChoices.filter((choice) => choice !== config.flow),
-  ]);
-  const scopedCaseChoices = masterCaseChoices.filter((choice) => (
-    config.caseValues.includes(choice.value)
-  ));
-  const caseChoices = shuffle([
-    masterCaseChoices.find((choice) => choice.value === pattern.caseName),
-    ...shuffle(scopedCaseChoices.filter((choice) => choice.value !== pattern.caseName)).slice(0, 3),
-  ]);
 
   state.masterQuestion = {
     ...pattern,
+    method: state.masterTrainingTopic,
     flow: config.flow,
     runtimeChoices,
-    methodChoices,
-    flowChoices,
-    caseChoices,
   };
   syncMasterTrainingTopic();
   el.masterTitle.textContent = `Klausuraufgabe: ${config.heading}`;
   el.masterRecurrence.innerHTML = pattern.recurrenceHtml;
-  el.masterTask.innerHTML = "Dokumentiere jeden Rechenschritt passend zu diesem Verfahren.";
-  renderChoices(el.masterMethodOptions, "master-method", methodChoices);
-  renderChoices(el.masterFlowOptions, "master-flow", flowChoices);
-  renderChoices(el.masterCaseOptions, "master-case", caseChoices);
-  renderChoices(
-    el.masterRuntimeOptions,
-    "master-runtime",
-    runtimeChoices.map((choice) => ({ value: choice, label: formatOrderLabel(choice) })),
-  );
+  el.masterTask.innerHTML = config.task;
+  renderMasterWorkflow(runtimeChoices);
   setFeedback(el.masterFeedback, "");
   el.masterSolution.classList.add("is-hidden");
   el.masterSolution.innerHTML = "";
 }
 
 function checkMasterQuestion() {
-  const selectedMethod = getSelectedValue("master-method-choice");
-  const selectedFlow = getSelectedValue("master-flow-choice");
-  const selectedCase = getSelectedValue("master-case-choice");
   const selectedRuntime = getSelectedValue("master-runtime-choice");
-
-  if (
-    !selectedMethod
-    || !selectedFlow
-    || !selectedCase
-    || !selectedRuntime
-  ) {
-    setFeedback(el.masterFeedback, "Bearbeite zuerst alle vier Schritte der Herleitung.", "wrong");
+  const checks = buildMasterApplicationChecks(selectedRuntime);
+  if (!checks) {
     return;
   }
-
-  const methodCorrect = selectedMethod === state.masterQuestion.method;
-  const flowCorrect = selectedFlow === state.masterQuestion.flow;
-  const caseCorrect = selectedCase === state.masterQuestion.caseName;
-  const runtimeCorrect = selectedRuntime === state.masterQuestion.answer;
-  const checks = [
-    [methodCorrect, "Verfahren"],
-    [flowCorrect, "Rechenweg"],
-    [caseCorrect, "Fall oder Begründung"],
-    [runtimeCorrect, "Laufzeit"],
-  ];
   const firstError = checks.find((check) => !check[0]);
 
   if (!firstError) {
@@ -1807,13 +2038,243 @@ function checkMasterQuestion() {
   el.masterSolution.innerHTML = `
     <p class="tree-label">Musterlösung</p>
     <ol>
-      <li><strong>Verfahren:</strong> ${state.masterQuestion.method}.</li>
-      <li><strong>Rechenweg:</strong> ${state.masterQuestion.flow}.</li>
-      <li><strong>Begründung:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
-      <li><strong>Folgern:</strong> ${state.masterQuestion.explanation} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+      ${renderMasterSolutionSteps()}
     </ol>
   `;
   el.masterSolution.classList.remove("is-hidden");
+}
+
+function renderMasterWorkflow(runtimeChoices) {
+  const topic = state.masterTrainingTopic;
+
+  if (topic === "Divide and Conquer / Master-Theorem") {
+    el.masterWorkflow.innerHTML = `
+      <section class="master-work-step">
+        <span>1</span>
+        <div>
+          <p class="tree-label">Parameter selbst ablesen</p>
+          <div class="master-parameter-inputs">
+            <label>a<input id="master-input-a" type="number" min="1" inputmode="numeric"></label>
+            <label>b<input id="master-input-b" type="number" min="2" inputmode="numeric"></label>
+            <label>c<input id="master-input-c" type="number" min="1" inputmode="numeric"></label>
+            <label>d<input id="master-input-d" type="number" min="0" inputmode="numeric"></label>
+          </div>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>2</span>
+        <div>
+          <p class="tree-label">Vergleichsexponent berechnen</p>
+          <label class="master-calculation-input">log<sub>b</sub>(a) =
+            <input id="master-input-p" type="number" min="0" step="0.001" inputmode="decimal" placeholder="z. B. 2">
+          </label>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>3</span>
+        <div>
+          <p class="tree-label">d mit log<sub>b</sub>(a) vergleichen</p>
+          <form id="master-comparison-options" class="choices compact-choices"></form>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>4</span>
+        <div>
+          <p class="tree-label">Fall und Laufzeit ableiten</p>
+          <form id="master-case-options" class="choices compact-choices"></form>
+          <form id="master-runtime-options" class="choices compact-choices"></form>
+        </div>
+      </section>
+    `;
+    renderChoices(document.getElementById("master-comparison-options"), "master-comparison", [
+      { value: "d<p", label: "d &lt; log<sub>b</sub>(a)" },
+      { value: "d=p", label: "d = log<sub>b</sub>(a)" },
+      { value: "d>p", label: "d &gt; log<sub>b</sub>(a)" },
+    ]);
+    renderChoices(document.getElementById("master-case-options"), "master-case", masterCaseChoices.slice(0, 3));
+  } else if (topic === "Subtract and Conquer") {
+    el.masterWorkflow.innerHTML = `
+      <section class="master-work-step">
+        <span>1</span>
+        <div>
+          <p class="tree-label">Reduktion erkennen</p>
+          <label class="master-calculation-input">n wird zu
+            <input id="subtract-reduction" type="text" placeholder="z. B. n - 1">
+          </label>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>2</span>
+        <div>
+          <p class="tree-label">Rekursionstiefe bestimmen</p>
+          <label class="master-calculation-input">Tiefe =
+            <input id="subtract-depth" type="text" placeholder="z. B. n oder log n">
+          </label>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>3</span>
+        <div>
+          <p class="tree-label">Entstehende Summe auswählen</p>
+          <form id="subtract-expansion-options" class="choices compact-choices"></form>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>4</span>
+        <div>
+          <p class="tree-label">Laufzeit ableiten</p>
+          <form id="master-runtime-options" class="choices compact-choices"></form>
+        </div>
+      </section>
+    `;
+    renderChoices(document.getElementById("subtract-expansion-options"), "subtract-expansion", shuffle([
+      state.masterQuestion.expansion,
+      "1 + 1 + ... + 1 über n Ebenen",
+      "n + n + ... + n über log n Ebenen",
+      "n<sup>2</sup> + n + 1",
+    ]).map((label) => ({ value: label, label })));
+  } else {
+    el.masterWorkflow.innerHTML = `
+      <section class="master-work-step">
+        <span>1</span>
+        <div>
+          <p class="tree-label">Schranke vermuten</p>
+          <label class="master-calculation-input">Vermutung
+            <input id="substitution-guess" type="text" placeholder="z. B. T(n) <= c · n">
+          </label>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>2</span>
+        <div>
+          <p class="tree-label">Induktionsannahme einsetzen</p>
+          <form id="substitution-inserted-options" class="choices compact-choices"></form>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>3</span>
+        <div>
+          <p class="tree-label">Bedingung für die Konstante prüfen</p>
+          <label class="master-calculation-input">Bedingung
+            <input id="substitution-condition" type="text" placeholder="z. B. c >= 4">
+          </label>
+        </div>
+      </section>
+      <section class="master-work-step">
+        <span>4</span>
+        <div>
+          <p class="tree-label">Laufzeit ableiten</p>
+          <form id="master-runtime-options" class="choices compact-choices"></form>
+        </div>
+      </section>
+    `;
+    renderChoices(document.getElementById("substitution-inserted-options"), "substitution-inserted", shuffle([
+      state.masterQuestion.inserted,
+      "c(n - 1) + n ≤ c · n",
+      "2c(n/2) + n ≤ c · n",
+      "c2^n + 1 ≤ c · n",
+    ]).map((label) => ({ value: label, label })));
+  }
+
+  renderChoices(
+    document.getElementById("master-runtime-options"),
+    "master-runtime",
+    runtimeChoices.map((choice) => ({ value: choice, label: formatOrderLabel(choice) })),
+  );
+}
+
+function buildMasterApplicationChecks(selectedRuntime) {
+  if (!selectedRuntime) {
+    setFeedback(el.masterFeedback, "Leite zuerst die Laufzeit ab.", "wrong");
+    return null;
+  }
+
+  if (state.masterTrainingTopic === "Divide and Conquer / Master-Theorem") {
+    const inputs = ["a", "b", "c", "d", "p"].map((key) => document.getElementById(`master-input-${key}`));
+    if (inputs.some((input) => !input || input.value.trim() === "")) {
+      setFeedback(el.masterFeedback, "Fülle zuerst alle Parameter und den Vergleichsexponenten aus.", "wrong");
+      return null;
+    }
+
+    const values = {
+      a: Number(document.getElementById("master-input-a").value),
+      b: Number(document.getElementById("master-input-b").value),
+      c: Number(document.getElementById("master-input-c").value),
+      d: Number(document.getElementById("master-input-d").value),
+      p: Number(document.getElementById("master-input-p").value),
+    };
+    const selectedComparison = getSelectedValue("master-comparison-choice");
+    const selectedCase = getSelectedValue("master-case-choice");
+
+    return [
+      [["a", "b", "c", "d"].every((key) => values[key] === state.masterQuestion[key]), "Parameter a, b, c und d"],
+      [Math.abs(values.p - state.masterQuestion.p) < 0.01, "Vergleichsexponent"],
+      [selectedComparison === state.masterQuestion.comparison, "Vergleich von d und dem Vergleichsexponenten"],
+      [selectedCase === state.masterQuestion.caseName, "Master-Fall"],
+      [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
+    ];
+  }
+
+  if (state.masterTrainingTopic === "Subtract and Conquer") {
+    const reduction = document.getElementById("subtract-reduction").value;
+    const depth = document.getElementById("subtract-depth").value;
+    const expansion = getSelectedValue("subtract-expansion-choice");
+
+    if (!reduction.trim() || !depth.trim() || !expansion) {
+      setFeedback(el.masterFeedback, "Bestimme zuerst Reduktion, Tiefe und entstehende Summe.", "wrong");
+      return null;
+    }
+
+    return [
+      [sameMathText(reduction, state.masterQuestion.reduction), "Reduktion der Eingabe"],
+      [sameMathText(depth, state.masterQuestion.depth), "Rekursionstiefe"],
+      [expansion === state.masterQuestion.expansion, "entstehende Summe"],
+      [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
+    ];
+  }
+
+  const guess = document.getElementById("substitution-guess").value;
+  const inserted = getSelectedValue("substitution-inserted-choice");
+  const condition = document.getElementById("substitution-condition").value;
+
+  if (!guess.trim() || !inserted || !condition.trim()) {
+    setFeedback(el.masterFeedback, "Fülle zuerst Vermutung, Einsetzen und Bedingung aus.", "wrong");
+    return null;
+  }
+
+  return [
+    [sameMathText(guess, state.masterQuestion.guess), "vermutete Schranke"],
+    [inserted === state.masterQuestion.inserted, "eingesetzte Induktionsannahme"],
+    [sameMathText(condition, state.masterQuestion.condition), "Bedingung für die Konstante"],
+    [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
+  ];
+}
+
+function renderMasterSolutionSteps() {
+  if (state.masterTrainingTopic === "Divide and Conquer / Master-Theorem") {
+    return `
+      <li><strong>Parameter:</strong> a=${state.masterQuestion.a}, b=${state.masterQuestion.b}, c=${state.masterQuestion.c}, d=${state.masterQuestion.d}.</li>
+      <li><strong>Berechnen:</strong> log<sub>${state.masterQuestion.b}</sub>(${state.masterQuestion.a}) = ${state.masterQuestion.p}.</li>
+      <li><strong>Fall:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
+      <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+    `;
+  }
+
+  if (state.masterTrainingTopic === "Subtract and Conquer") {
+    return `
+      <li><strong>Reduktion:</strong> ${state.masterQuestion.reduction}; dadurch entsteht Tiefe ${state.masterQuestion.depth}.</li>
+      <li><strong>Entfalten:</strong> ${state.masterQuestion.expansion}.</li>
+      <li><strong>Einordnen:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
+      <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+    `;
+  }
+
+  return `
+    <li><strong>Vermutung:</strong> ${formatInlineMathLabel(state.masterQuestion.guess)}.</li>
+    <li><strong>Einsetzen:</strong> ${formatInlineMathLabel(state.masterQuestion.inserted)}.</li>
+    <li><strong>Bedingung:</strong> ${state.masterQuestion.condition}.</li>
+    <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+  `;
 }
 
 function toggleMasterHelp() {
@@ -1862,26 +2323,40 @@ function setMasterSection(section) {
 }
 
 function changeMasterLearningStep(direction) {
-  const lesson = masterLearnCases[el.masterLearnCase.value];
+  const topic = masterLearnTopics[el.masterLearnCase.value];
+  const steps = topic.lessons.flatMap((lesson) => lesson.steps);
   state.masterLearnStep = Math.max(
     0,
-    Math.min(lesson.steps.length - 1, state.masterLearnStep + direction),
+    Math.min(steps.length - 1, state.masterLearnStep + direction),
   );
   renderMasterLearning();
 }
 
 function renderMasterLearning() {
-  const lesson = masterLearnCases[el.masterLearnCase.value];
-  if (!lesson) {
+  const topic = masterLearnTopics[el.masterLearnCase.value];
+  if (!topic) {
     return;
   }
 
-  el.masterLearnExample.innerHTML = `
-    <p class="tree-label">Beispiel</p>
-    <p class="recurrence-line">${lesson.formula}</p>
-    <p class="operation-subline">${lesson.parameters} · Ergebnis: ${lesson.result}</p>
+  el.masterLearnOverview.innerHTML = `
+    <p class="tree-label">Grundidee</p>
+    <p class="master-main-formula">${topic.formula}</p>
+    <div class="master-parameter-grid">
+      ${topic.tiles.map(([title, text]) => `<p><strong>${title}</strong><span>${text}</span></p>`).join("")}
+    </div>
+    <p class="section-copy">${topic.summary}</p>
   `;
-  el.masterLearnSteps.innerHTML = lesson.steps
+  el.masterLearnExample.innerHTML = `
+    <p class="tree-label">Fälle und Beispiele</p>
+    ${topic.lessons.map((lesson) => `
+      <div class="master-example-row">
+        <p class="recurrence-line">${lesson.formula}</p>
+        <p class="operation-subline">${lesson.parameters} · Ergebnis: ${lesson.result}</p>
+      </div>
+    `).join("")}
+  `;
+  const steps = topic.lessons.flatMap((lesson) => lesson.steps);
+  el.masterLearnSteps.innerHTML = steps
     .map(([title, text], index) => `
       <article class="master-learn-step${index <= state.masterLearnStep ? " is-visible" : ""}${index === state.masterLearnStep ? " is-current" : ""}">
         <strong>${index + 1}</strong>
@@ -1889,9 +2364,9 @@ function renderMasterLearning() {
       </article>
     `)
     .join("");
-  el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
+  el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${steps.length}`;
   el.masterLearnPrev.disabled = state.masterLearnStep === 0;
-  el.masterLearnNext.disabled = state.masterLearnStep === lesson.steps.length - 1;
+  el.masterLearnNext.disabled = state.masterLearnStep === steps.length - 1;
 }
 
 function resetSortValues() {
@@ -2261,7 +2736,7 @@ function renderSortInfo() {
     <div><strong>Idee</strong><span>${algorithm.idea}</span></div>
     <div><strong>Stabil</strong><span>${algorithm.stable}</span></div>
     <div><strong>In-place</strong><span>${algorithm.inPlace}</span></div>
-    <div><strong>Laufzeit</strong><span>Best ${algorithm.runtimes.best}, Average ${algorithm.runtimes.average}, Worst ${algorithm.runtimes.worst}</span></div>
+    <div><strong>Laufzeit</strong><span>Best ${formatInlineMathLabel(algorithm.runtimes.best)}, Average ${formatInlineMathLabel(algorithm.runtimes.average)}, Worst ${formatInlineMathLabel(algorithm.runtimes.worst)}</span></div>
   `;
 }
 
@@ -3274,6 +3749,24 @@ function formatMasterCaseLabel(value) {
   return match ? match.label : value;
 }
 
+function sameMathText(actual, expected) {
+  return normalizeMathText(actual) === normalizeMathText(expected);
+}
+
+function normalizeMathText(value) {
+  return String(value)
+    .toLowerCase()
+    .replaceAll("≤", "<=")
+    .replaceAll("≥", ">=")
+    .replaceAll("·", "")
+    .replaceAll(" ", "")
+    .replace(/^o\((.*)\)$/u, "$1")
+    .replaceAll("log(n)", "logn")
+    .replaceAll("t(n)", "tn")
+    .replaceAll("c*n", "cn")
+    .replaceAll("c·n", "cn");
+}
+
 function formatInlineMathLabel(value) {
   const text = String(value);
   if (text.includes("<")) {
@@ -3281,7 +3774,11 @@ function formatInlineMathLabel(value) {
   }
 
   return text
+    .replace(/2\^\(([^)]+)\)/g, "2<sup>$1</sup>")
+    .replace(/n\^\(([^)]+)\)/g, "n<sup>$1</sup>")
     .replaceAll("n^log_2(3)", "n<sup>log<sub>2</sub>(3)</sup>")
+    .replaceAll("n^log_2(8)", "n<sup>log<sub>2</sub>(8)</sup>")
+    .replaceAll("n^log_3(9)", "n<sup>log<sub>3</sub>(9)</sup>")
     .replaceAll("n^2 log^2 n", "n<sup>2</sup> log<sup>2</sup> n")
     .replaceAll("n^2 log n", "n<sup>2</sup> log n")
     .replaceAll("n^3", "n<sup>3</sup>")
@@ -3290,7 +3787,7 @@ function formatInlineMathLabel(value) {
 }
 
 function setFeedback(node, text, type = "") {
-  node.textContent = text;
+  node.innerHTML = formatInlineMathLabel(text);
   node.className = `feedback${type ? ` ${type}` : ""}`;
 }
 

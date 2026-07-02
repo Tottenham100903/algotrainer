@@ -1390,6 +1390,12 @@ h2 {
   margin-top: 1rem;
 }
 
+.master-example-row + .master-example-row {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+
 .master-learn-step {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -2117,22 +2123,40 @@ button:disabled {
     transform: translate3d(var(--logo-ride-in), 0, 0) scaleX(1.055);
   }
 
-  62% {
+  54% {
     opacity: 1;
-    background-position: 50% 50%;
-    filter: blur(0.9px);
+    background-position: 70% 50%;
+    filter: blur(1.2px);
     text-shadow:
-      -0.08em 0 rgba(217, 95, 67, 0.22),
-      -0.2em 0 rgba(240, 163, 95, 0.12);
-    transform: translate3d(calc(var(--logo-ride-in) * 0.48), 0, 0) scaleX(1.025);
+      -0.1em 0 rgba(217, 95, 67, 0.26),
+      -0.26em 0 rgba(240, 163, 95, 0.13);
+    transform: translate3d(calc(var(--logo-ride-in) * 0.64), 0, 0) scaleX(1.04);
+  }
+
+  68% {
+    opacity: 1;
+    background-position: 46% 50%;
+    filter: blur(0.7px);
+    text-shadow:
+      -0.06em 0 rgba(217, 95, 67, 0.2),
+      -0.16em 0 rgba(240, 163, 95, 0.1);
+    transform: translate3d(calc(var(--logo-ride-in) * 0.34), 0, 0) scaleX(1.025);
   }
 
   82% {
     opacity: 1;
-    background-position: 20% 50%;
-    filter: blur(0.25px);
+    background-position: 22% 50%;
+    filter: blur(0.3px);
     text-shadow: -0.03em 0 rgba(217, 95, 67, 0.12);
-    transform: translate3d(calc(var(--logo-ride-in) * 0.16), 0, 0) scaleX(1.01);
+    transform: translate3d(calc(var(--logo-ride-in) * 0.12), 0, 0) scaleX(1.01);
+  }
+
+  92% {
+    opacity: 1;
+    background-position: 8% 50%;
+    filter: blur(0.08px);
+    text-shadow: -0.012em 0 rgba(217, 95, 67, 0.06);
+    transform: translate3d(calc(var(--logo-ride-in) * 0.03), 0, 0) scaleX(1.003);
   }
 
   100% {
