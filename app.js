@@ -430,6 +430,27 @@ const masterCaseChoices = [
   },
 ];
 
+const masterTrainingConfigs = {
+  "Divide and Conquer / Master-Theorem": {
+    heading: "Master-Theorem trainieren",
+    copy: "Löse die Rekurrenz wie in einer Klausur: Lies die Master-Parameter ab, berechne log<sub>b</sub>(a), wähle den Dominanzfall und leite daraus die Laufzeit her.",
+    flow: masterFlowChoices[0],
+    caseValues: ["Fall 1", "Fall 2", "Fall 3"],
+  },
+  "Subtract and Conquer": {
+    heading: "Subtract and Conquer trainieren",
+    copy: "Löse die Rekurrenz durch Entfalten: Bestimme, wie die Eingabe kleiner wird, formuliere die entstehende Summe und leite daraus die Laufzeit her.",
+    flow: masterFlowChoices[1],
+    caseValues: ["Lineare Entfaltung", "Logarithmische Entfaltung", "Geometrische Summe"],
+  },
+  Substitution: {
+    heading: "Substitution trainieren",
+    copy: "Löse die Rekurrenz über eine Vermutung: Wähle eine passende Schranke, setze sie für kleinere Eingaben ein und prüfe, ob die Ungleichung stabil bleibt.",
+    flow: masterFlowChoices[2],
+    caseValues: ["Lineare Substitution", "Exponentielle Substitution"],
+  },
+};
+
 const masterPatterns = [
   {
     title: "Rekurrenz analysieren",
@@ -1231,6 +1252,7 @@ const state = {
   showMasterHelp: false,
   masterSection: "learn",
   masterLearnStep: 0,
+  masterTrainingTopic: "Divide and Conquer / Master-Theorem",
   sortValues: [],
   sortSteps: [],
   sortStepIndex: 0,
@@ -1285,6 +1307,9 @@ const el = {
   masterTask: document.getElementById("master-task"),
   masterHelp: document.getElementById("master-help"),
   masterHelpToggle: document.getElementById("toggle-master-help"),
+  masterTrainingHeading: document.getElementById("master-training-heading"),
+  masterTrainingCopy: document.getElementById("master-training-copy"),
+  masterTrainingTopic: document.getElementById("master-training-topic"),
   masterMethodOptions: document.getElementById("master-method-options"),
   masterFlowOptions: document.getElementById("master-flow-options"),
   masterCaseOptions: document.getElementById("master-case-options"),
@@ -1404,6 +1429,17 @@ document.querySelector("[data-master-learn-options]").addEventListener("click", 
   setMasterChoice(el.masterLearnCase, "[data-master-learn-case]", button.dataset.masterLearnCase);
   state.masterLearnStep = 0;
   renderMasterLearning();
+});
+document.querySelector("[data-master-training-options]").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-master-training-topic]");
+  if (!button) {
+    return;
+  }
+
+  state.masterTrainingTopic = button.dataset.masterTrainingTopic;
+  el.masterTrainingTopic.value = state.masterTrainingTopic;
+  syncMasterTrainingTopic();
+  createMasterQuestion();
 });
 el.masterLearnPrev.addEventListener("click", () => changeMasterLearningStep(-1));
 el.masterLearnNext.addEventListener("click", () => changeMasterLearningStep(1));
@@ -1679,29 +1715,40 @@ function checkRuntimeQuestion() {
 }
 
 function createMasterQuestion() {
-  const pattern = sample(masterPatterns);
+  const topicPatterns = masterPatterns.filter(
+    (item) => item.method === state.masterTrainingTopic,
+  );
+  const pattern = sample(topicPatterns);
+  const config = getMasterTrainingConfig();
   const runtimeChoices = shuffle([
     pattern.answer,
     ...shuffle(masterRuntimeChoicesPool.filter((item) => item !== pattern.answer)).slice(0, 3),
   ]);
   const methodChoices = shuffle(masterMethodChoices);
-  const flowChoices = shuffle(masterFlowChoices);
+  const flowChoices = shuffle([
+    config.flow,
+    ...masterFlowChoices.filter((choice) => choice !== config.flow),
+  ]);
+  const scopedCaseChoices = masterCaseChoices.filter((choice) => (
+    config.caseValues.includes(choice.value)
+  ));
   const caseChoices = shuffle([
     masterCaseChoices.find((choice) => choice.value === pattern.caseName),
-    ...shuffle(masterCaseChoices.filter((choice) => choice.value !== pattern.caseName)).slice(0, 3),
+    ...shuffle(scopedCaseChoices.filter((choice) => choice.value !== pattern.caseName)).slice(0, 3),
   ]);
 
   state.masterQuestion = {
     ...pattern,
-    flow: getMasterFlowForMethod(pattern.method),
+    flow: config.flow,
     runtimeChoices,
     methodChoices,
     flowChoices,
     caseChoices,
   };
-  el.masterTitle.textContent = "Klausuraufgabe: Rekurrenz vollständig herleiten";
+  syncMasterTrainingTopic();
+  el.masterTitle.textContent = `Klausuraufgabe: ${config.heading}`;
   el.masterRecurrence.innerHTML = pattern.recurrenceHtml;
-  el.masterTask.innerHTML = "Dokumentiere jeden Rechenschritt: Verfahren, Rechenweg, Begründung und O-Laufzeit.";
+  el.masterTask.innerHTML = "Dokumentiere jeden Rechenschritt passend zu diesem Verfahren.";
   renderChoices(el.masterMethodOptions, "master-method", methodChoices);
   renderChoices(el.masterFlowOptions, "master-flow", flowChoices);
   renderChoices(el.masterCaseOptions, "master-case", caseChoices);
@@ -1777,6 +1824,24 @@ function toggleMasterHelp() {
 function syncMasterHelpVisibility() {
   el.masterHelp.classList.toggle("is-hidden", !state.showMasterHelp);
   el.masterHelpToggle.textContent = state.showMasterHelp ? "Hilfestellung ausblenden" : "Hilfestellung anzeigen";
+}
+
+function getMasterTrainingConfig() {
+  return masterTrainingConfigs[state.masterTrainingTopic]
+    || masterTrainingConfigs["Divide and Conquer / Master-Theorem"];
+}
+
+function syncMasterTrainingTopic() {
+  const config = getMasterTrainingConfig();
+  el.masterTrainingHeading.textContent = config.heading;
+  el.masterTrainingCopy.innerHTML = config.copy;
+  el.masterTrainingTopic.value = state.masterTrainingTopic;
+
+  document.querySelectorAll("[data-master-training-topic]").forEach((button) => {
+    const active = button.dataset.masterTrainingTopic === state.masterTrainingTopic;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
 }
 
 function setMasterSection(section) {
@@ -3202,18 +3267,6 @@ function formatRuntimeLabel(value) {
 
 function formatOrderLabel(value) {
   return `O(${formatRuntimeLabel(value)})`;
-}
-
-function getMasterFlowForMethod(method) {
-  if (method === "Divide and Conquer / Master-Theorem") {
-    return masterFlowChoices[0];
-  }
-
-  if (method === "Subtract and Conquer") {
-    return masterFlowChoices[1];
-  }
-
-  return masterFlowChoices[2];
 }
 
 function formatMasterCaseLabel(value) {

@@ -163,6 +163,7 @@ queue: [A, C, D]</pre>
                 <p>Verfahren / Fall</p>
                 <input id="master-learn-case" type="hidden" value="case1">
                 <div class="master-rule-options" data-master-learn-options>
+                  <p class="master-rule-group-title">Master-Theorem / Divide and Conquer</p>
                   <button class="master-rule-option is-active" type="button" data-master-learn-case="case1" aria-pressed="true">
                     <span class="rule-main">d &lt; log<sub>b</sub>(a)</span>
                     <span class="rule-detail">Rekursion dominiert</span>
@@ -178,6 +179,7 @@ queue: [A, C, D]</pre>
                     <span class="rule-detail">Zusatzarbeit dominiert</span>
                     <span class="rule-formula">T(n) = O(n<sup>d</sup>)</span>
                   </button>
+                  <p class="master-rule-group-title">Subtract and Conquer</p>
                   <button class="master-rule-option" type="button" data-master-learn-case="subtract-sum" aria-pressed="false">
                     <span class="rule-main">T(n - 1) + g(n)</span>
                     <span class="rule-detail">Subtract: Summe entfalten</span>
@@ -188,6 +190,7 @@ queue: [A, C, D]</pre>
                     <span class="rule-detail">Subtract: Tiefe bestimmen</span>
                     <span class="rule-formula">logarithmische Ebenen</span>
                   </button>
+                  <p class="master-rule-group-title">Substitution</p>
                   <button class="master-rule-option" type="button" data-master-learn-case="substitution-linear" aria-pressed="false">
                     <span class="rule-main">T(n) ≤ c · n</span>
                     <span class="rule-detail">Substitution: Schranke beweisen</span>
@@ -228,15 +231,37 @@ queue: [A, C, D]</pre>
             <div class="card-head">
               <div>
                 <p class="section-label">Training</p>
-                <h2>Master-Theorem und Rekurrenzen</h2>
+                <h2 id="master-training-heading">Master-Theorem trainieren</h2>
               </div>
               <div class="inline-actions">
                 <button id="toggle-master-help" class="secondary-btn" type="button">Hilfestellung anzeigen</button>
               </div>
             </div>
 
-            <p class="section-copy">
-              Löse die Rekurrenz wie in einer Klausur: Wähle zuerst das passende Verfahren, entscheide dich für den Rechenweg, begründe den Fall und leite daraus die Laufzeit her.
+            <div class="master-case-select master-training-select">
+              <p>Übungsbereich</p>
+              <input id="master-training-topic" type="hidden" value="Divide and Conquer / Master-Theorem">
+              <div class="master-rule-options master-rule-options-training" data-master-training-options>
+                <button class="master-rule-option is-active" type="button" data-master-training-topic="Divide and Conquer / Master-Theorem" aria-pressed="true">
+                  <span class="rule-main">Master-Theorem</span>
+                  <span class="rule-detail">d mit log<sub>b</sub>(a) vergleichen</span>
+                  <span class="rule-formula">3 Dominanzfälle</span>
+                </button>
+                <button class="master-rule-option" type="button" data-master-training-topic="Subtract and Conquer" aria-pressed="false">
+                  <span class="rule-main">Subtract and Conquer</span>
+                  <span class="rule-detail">Rekurrenz entfalten</span>
+                  <span class="rule-formula">Summen und Ebenen</span>
+                </button>
+                <button class="master-rule-option" type="button" data-master-training-topic="Substitution" aria-pressed="false">
+                  <span class="rule-main">Substitution</span>
+                  <span class="rule-detail">Schranke einsetzen</span>
+                  <span class="rule-formula">Induktionsidee</span>
+                </button>
+              </div>
+            </div>
+
+            <p id="master-training-copy" class="section-copy">
+              Löse die Rekurrenz wie in einer Klausur: Lies die Master-Parameter ab, berechne log<sub>b</sub>(a), wähle den Dominanzfall und leite daraus die Laufzeit her.
             </p>
 
             <div class="recurrence-box">
