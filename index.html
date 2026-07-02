@@ -409,6 +409,8 @@
               <button id="graph-next" class="primary-btn" type="button">Nächster Schritt</button>
             </div>
 
+            <div id="graph-idea" class="algorithm-idea"></div>
+
             <div class="graph-layout">
               <svg id="graph-visual" class="graph-visual" viewBox="0 0 620 340" role="img" aria-label="Beispielgraph mit sechs Knoten">
                 <g class="graph-edges">
@@ -445,6 +447,39 @@
                 <div id="graph-matrix" class="graph-matrix is-hidden"></div>
               </div>
             </div>
+          </section>
+
+          <section class="card module-grid-full is-hidden" id="heap-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Prioritätsstruktur</p>
+                <h2>Min-Heap und Max-Heap</h2>
+              </div>
+              <button id="heap-reset" class="secondary-btn" type="button">Zurücksetzen</button>
+            </div>
+
+            <div class="structure-controls">
+              <label>
+                Heap-Typ
+                <select id="heap-mode">
+                  <option value="min">Min-Heap</option>
+                  <option value="max">Max-Heap</option>
+                </select>
+              </label>
+              <label>
+                Wert
+                <input id="heap-value" type="number" placeholder="z. B. 17">
+              </label>
+              <button id="heap-add" class="primary-btn" type="button">Einfügen</button>
+              <button id="heap-extract" class="secondary-btn" type="button">Wurzel entfernen</button>
+            </div>
+
+            <div class="algorithm-idea">
+              <strong id="heap-goal"></strong>
+              <span>Beim Einfügen steigt ein Wert nach oben, beim Entfernen der Wurzel sinkt der Ersatzwert nach unten.</span>
+            </div>
+            <div id="heap-visual" class="heap-visual" aria-live="polite"></div>
+            <p id="heap-note" class="visual-note"></p>
           </section>
 
           <section class="card is-hidden" id="avl-quiz-card">

@@ -419,8 +419,8 @@ h2 {
 
 #avl-tree-before,
 #avl-tree-after {
-  height: 340px;
-  min-height: 340px;
+  height: 440px;
+  min-height: 440px;
 }
 
 .tree-panel > div,
@@ -918,6 +918,25 @@ h2 {
   line-height: 1.5;
 }
 
+.algorithm-idea {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-left: 4px solid var(--primary);
+  border-radius: 0 16px 16px 0;
+  background: rgba(13, 107, 95, 0.07);
+}
+
+.algorithm-idea strong {
+  color: var(--primary-strong);
+}
+
+.algorithm-idea span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .graph-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.6fr);
@@ -979,6 +998,54 @@ h2 {
   font-family: "IBM Plex Mono", monospace;
   white-space: pre;
   line-height: 1.55;
+}
+
+.heap-visual {
+  display: grid;
+  gap: 1.4rem;
+  min-height: 390px;
+  align-content: center;
+  margin-top: 1rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: radial-gradient(circle at top, rgba(13, 107, 95, 0.08), transparent 55%), var(--surface-strong);
+}
+
+.heap-level {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  min-width: 520px;
+}
+
+.heap-node {
+  display: grid;
+  place-items: center;
+  gap: 0.15rem;
+  width: 72px;
+  height: 72px;
+  border: 3px solid rgba(13, 107, 95, 0.3);
+  border-radius: 50%;
+  background: #fffdf8;
+  box-shadow: 0 10px 22px rgba(31, 42, 48, 0.1);
+  animation: item-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.heap-node.is-root {
+  border-color: var(--secondary);
+  background: rgba(217, 95, 67, 0.12);
+}
+
+.heap-node strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+}
+
+.heap-node small {
+  color: var(--muted);
+  font-size: 0.62rem;
 }
 
 .compact-choices {
@@ -1573,8 +1640,8 @@ button:disabled {
 
   #avl-tree-before,
   #avl-tree-after {
-    height: 280px;
-    min-height: 280px;
+    height: 360px;
+    min-height: 360px;
   }
 
   .sort-bars {

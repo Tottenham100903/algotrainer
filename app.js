@@ -790,6 +790,29 @@ const graphAlgorithmSteps = {
   ],
 };
 
+const graphAlgorithmInfo = {
+  bfs: {
+    title: "Breitensuche",
+    text: "Ziel: Einen Graphen Ebene für Ebene durchsuchen und in ungewichteten Graphen kürzeste Wege nach Anzahl der Kanten finden. Grundidee: Eine Queue verarbeitet zuerst alle nahen Knoten.",
+  },
+  dfs: {
+    title: "Tiefensuche",
+    text: "Ziel: Pfade vollständig verfolgen, Zusammenhang prüfen oder Zyklen entdecken. Grundidee: Mit Stack oder Rekursion so tief wie möglich gehen und danach zurückkehren.",
+  },
+  dijkstra: {
+    title: "Dijkstra",
+    text: "Ziel: Kürzeste Wege von einem Startknoten bei nichtnegativen Kantengewichten bestimmen. Grundidee: Immer den noch offenen Knoten mit der kleinsten bekannten Distanz fest auswählen.",
+  },
+  backtracking: {
+    title: "Backtracking",
+    text: "Ziel: Durch systematisches Ausprobieren einen gültigen Weg oder eine Lösung finden. Grundidee: Eine Entscheidung treffen, bei einer Sackgasse zurückgehen und den nächsten Zweig testen.",
+  },
+  floyd: {
+    title: "Floyd-Warshall",
+    text: "Ziel: Kürzeste Wege zwischen allen Knotenpaaren berechnen. Grundidee: Schrittweise jeden Knoten als möglichen Zwischenknoten zulassen und die Distanzmatrix verbessern.",
+  },
+};
+
 class AVLNode {
   constructor(value) {
     this.value = value;
@@ -913,6 +936,8 @@ const state = {
   stackQueueMode: "stack",
   stackQueueItems: ["A", "B", "C"],
   graphStepIndex: 0,
+  heapMode: "min",
+  heapItems: [4, 9, 7, 15, 12, 20, 18],
   avlQuestion: null,
   showAVLPreview: false,
   sandboxTree: new AVLTree(),
@@ -977,9 +1002,16 @@ const el = {
   stackQueueDetail: document.getElementById("sq-detail"),
   graphCard: document.getElementById("graph-card"),
   graphAlgorithm: document.getElementById("graph-algorithm"),
+  graphIdea: document.getElementById("graph-idea"),
   graphNote: document.getElementById("graph-note"),
   graphStepDetail: document.getElementById("graph-step-detail"),
   graphMatrix: document.getElementById("graph-matrix"),
+  heapCard: document.getElementById("heap-card"),
+  heapMode: document.getElementById("heap-mode"),
+  heapValue: document.getElementById("heap-value"),
+  heapVisual: document.getElementById("heap-visual"),
+  heapNote: document.getElementById("heap-note"),
+  heapGoal: document.getElementById("heap-goal"),
   avlQuizCard: document.getElementById("avl-quiz-card"),
   avlSandboxCard: document.getElementById("avl-sandbox-card"),
   avlOperation: document.getElementById("avl-operation"),
@@ -1037,6 +1069,10 @@ document.getElementById("sq-reset").addEventListener("click", resetStackQueue);
 document.getElementById("graph-next").addEventListener("click", nextGraphStep);
 document.getElementById("graph-reset").addEventListener("click", resetGraphVisualization);
 el.graphAlgorithm.addEventListener("change", resetGraphVisualization);
+el.heapMode.addEventListener("change", changeHeapMode);
+document.getElementById("heap-add").addEventListener("click", addHeapValue);
+document.getElementById("heap-extract").addEventListener("click", extractHeapRoot);
+document.getElementById("heap-reset").addEventListener("click", resetHeap);
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
@@ -1060,6 +1096,7 @@ setSortSection("visual");
 setDataStructureTopic("Training");
 renderStackQueue();
 resetGraphVisualization();
+renderHeap();
 createAVLQuestion();
 resetSandbox(true);
 syncMasterHelpVisibility();
@@ -1622,11 +1659,13 @@ function setDataStructureTopic(topic) {
   const showAVL = topic === "AVL-Bäume";
   const showStackQueue = topic === "Stacks & Queues";
   const showGraph = topic === "Graphen";
-  const showQuiz = !showAVL && !showStackQueue && !showGraph;
+  const showHeap = topic === "Heaps";
+  const showQuiz = !showAVL && !showStackQueue && !showGraph && !showHeap;
 
   el.dataStructureCard.classList.toggle("is-hidden", !showQuiz);
   el.stackQueueCard.classList.toggle("is-hidden", !showStackQueue);
   el.graphCard.classList.toggle("is-hidden", !showGraph);
+  el.heapCard.classList.toggle("is-hidden", !showHeap);
   el.avlQuizCard.classList.toggle("is-hidden", !showAVL);
   el.avlSandboxCard.classList.toggle("is-hidden", !showAVL);
 
@@ -1644,6 +1683,8 @@ function setDataStructureTopic(topic) {
     renderStackQueue();
   } else if (showGraph) {
     resetGraphVisualization();
+  } else if (showHeap) {
+    renderHeap();
   }
 }
 
@@ -1729,6 +1770,7 @@ function renderGraphStep() {
   const algorithm = el.graphAlgorithm.value;
   const steps = graphAlgorithmSteps[algorithm];
   const step = steps[state.graphStepIndex];
+  const info = graphAlgorithmInfo[algorithm];
 
   document.querySelectorAll("[data-graph-node]").forEach((node) => {
     const name = node.dataset.graphNode;
@@ -1736,6 +1778,7 @@ function renderGraphStep() {
     node.classList.toggle("is-active", step.active === name);
   });
   el.graphNote.textContent = `Schritt ${state.graphStepIndex + 1} von ${steps.length}: ${step.note}`;
+  el.graphIdea.innerHTML = `<strong>${info.title}</strong><span>${info.text}</span>`;
   const graphDetails = {
     bfs: "Die Queue arbeitet nach FIFO. Darum werden erst alle direkt erreichbaren Nachbarn verarbeitet, bevor die Suche eine Ebene tiefer geht. In ungewichteten Graphen findet BFS so Wege mit möglichst wenigen Kanten.",
     dfs: "Ein Stack merkt sich den aktuellen Pfad. Erst wenn kein unbesuchter Nachbar mehr existiert, springt DFS zurück und probiert am letzten Verzweigungspunkt den nächsten Weg.",
@@ -1754,6 +1797,107 @@ function renderGraphStep() {
   el.graphMatrix.classList.toggle("is-hidden", algorithm !== "floyd");
   el.graphMatrix.textContent = step.matrix || "";
   document.getElementById("graph-next").disabled = state.graphStepIndex >= steps.length - 1;
+}
+
+function changeHeapMode() {
+  state.heapMode = el.heapMode.value;
+  resetHeap();
+}
+
+function resetHeap() {
+  state.heapItems = state.heapMode === "min"
+    ? [4, 9, 7, 15, 12, 20, 18]
+    : [42, 18, 35, 7, 12, 20, 30];
+  el.heapValue.value = "";
+  el.heapNote.textContent = "";
+  renderHeap();
+}
+
+function addHeapValue() {
+  const value = Number(el.heapValue.value);
+  if (!Number.isFinite(value)) {
+    el.heapNote.textContent = "Gib zuerst eine Zahl ein.";
+    return;
+  }
+
+  state.heapItems.push(value);
+  let index = state.heapItems.length - 1;
+  while (index > 0) {
+    const parent = Math.floor((index - 1) / 2);
+    if (!heapComesFirst(state.heapItems[index], state.heapItems[parent])) {
+      break;
+    }
+    [state.heapItems[index], state.heapItems[parent]] = [state.heapItems[parent], state.heapItems[index]];
+    index = parent;
+  }
+  el.heapValue.value = "";
+  el.heapNote.textContent = `${value} wurde eingefügt und per Bubble-up einsortiert.`;
+  renderHeap(false);
+}
+
+function extractHeapRoot() {
+  if (!state.heapItems.length) {
+    el.heapNote.textContent = "Der Heap ist bereits leer.";
+    return;
+  }
+  const removed = state.heapItems[0];
+  const replacement = state.heapItems.pop();
+  if (state.heapItems.length) {
+    state.heapItems[0] = replacement;
+    let index = 0;
+    while (true) {
+      const left = index * 2 + 1;
+      const right = left + 1;
+      let preferred = index;
+      if (left < state.heapItems.length && heapComesFirst(state.heapItems[left], state.heapItems[preferred])) {
+        preferred = left;
+      }
+      if (right < state.heapItems.length && heapComesFirst(state.heapItems[right], state.heapItems[preferred])) {
+        preferred = right;
+      }
+      if (preferred === index) {
+        break;
+      }
+      [state.heapItems[index], state.heapItems[preferred]] = [state.heapItems[preferred], state.heapItems[index]];
+      index = preferred;
+    }
+  }
+  el.heapNote.textContent = `${removed} wurde entfernt; der Ersatzwert wurde per Bubble-down einsortiert.`;
+  renderHeap(false);
+}
+
+function heapComesFirst(first, second) {
+  return state.heapMode === "min" ? first < second : first > second;
+}
+
+function renderHeap(resetNote = true) {
+  el.heapMode.value = state.heapMode;
+  el.heapGoal.textContent = state.heapMode === "min"
+    ? "Min-Heap: Der kleinste Wert steht immer an der Wurzel."
+    : "Max-Heap: Der größte Wert steht immer an der Wurzel.";
+  el.heapVisual.innerHTML = "";
+
+  let start = 0;
+  let width = 1;
+  while (start < state.heapItems.length) {
+    const row = document.createElement("div");
+    row.className = "heap-level";
+    state.heapItems.slice(start, start + width).forEach((value, offset) => {
+      const node = document.createElement("div");
+      node.className = `heap-node${start + offset === 0 ? " is-root" : ""}`;
+      node.innerHTML = `<strong>${value}</strong><small>Index ${start + offset}</small>`;
+      row.appendChild(node);
+    });
+    el.heapVisual.appendChild(row);
+    start += width;
+    width *= 2;
+  }
+  if (!state.heapItems.length) {
+    el.heapVisual.innerHTML = '<p class="tree-empty">(leer)</p>';
+  }
+  if (resetNote) {
+    el.heapNote.textContent = "Die Array-Indizes zeigen die interne Speicherung des vollständigen Binärbaums.";
+  }
 }
 
 function checkDataStructureQuestion() {
@@ -1789,7 +1933,6 @@ function createAVLQuestion() {
   el.avlSequence.textContent = attempt.sequenceText;
   renderTree(el.avlTreeBefore, attempt.beforeInvalidRoot, {
     pivot: attempt.pivot,
-    motionHint: "Ausgangslage vor der Rotation",
     animate: false,
     showStats: false,
   });
