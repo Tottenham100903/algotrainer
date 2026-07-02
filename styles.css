@@ -65,19 +65,37 @@ body {
 }
 
 .home-title {
+  overflow: visible;
   font-size: clamp(4.2rem, 11vw, 9rem);
-  letter-spacing: -0.075em;
+  letter-spacing: -0.06em;
   line-height: 0.72;
 }
 
 .home-title span {
   display: block;
-  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1), color 240ms ease;
+  width: max-content;
+  transition: transform 620ms cubic-bezier(0.18, 0.9, 0.18, 1), color 240ms ease, letter-spacing 240ms ease;
 }
 
-.home-title span:last-child {
+.logo-train {
+  position: relative;
   color: var(--primary);
   margin-left: clamp(1.5rem, 7vw, 6rem);
+}
+
+.logo-train::after {
+  content: "";
+  position: absolute;
+  left: 0.16em;
+  right: 0.2em;
+  bottom: -0.1em;
+  height: 0.08em;
+  border-top: 0.035em solid currentColor;
+  border-bottom: 0.035em dotted currentColor;
+  opacity: 0;
+  transform: translateY(0.16em) scaleX(0.75);
+  transform-origin: left;
+  transition: opacity 220ms ease, transform 420ms ease;
 }
 
 .eyebrow,
@@ -254,13 +272,19 @@ h2 {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .home-title:hover span:first-child {
+  .home-title:hover .logo-algo {
     transform: translateX(0.45rem);
   }
 
-  .home-title:hover span:last-child {
+  .home-title:hover .logo-train {
     color: var(--secondary);
-    transform: translateX(-0.45rem);
+    letter-spacing: -0.03em;
+    transform: translateX(min(56vw, 42rem));
+  }
+
+  .home-title:hover .logo-train::after {
+    opacity: 0.75;
+    transform: translateY(0.16em) scaleX(1);
   }
 
   .module-tile:hover {
@@ -387,6 +411,12 @@ h2 {
 .tree-panel,
 .sandbox-layout {
   align-items: stretch;
+}
+
+#avl-tree-before,
+#avl-tree-after {
+  height: 340px;
+  min-height: 340px;
 }
 
 .tree-panel > div,
@@ -540,14 +570,16 @@ h2 {
   margin-top: 1rem;
 }
 
-.sort-controls label {
+.sort-controls label,
+.select-control {
   display: grid;
   gap: 0.45rem;
   min-width: 210px;
   color: var(--muted);
 }
 
-.sort-controls select {
+.sort-controls select,
+.select-control select {
   min-height: 48px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -559,9 +591,10 @@ h2 {
 
 .sort-bars {
   display: flex;
-  align-items: end;
+  align-items: stretch;
   gap: 0.55rem;
-  min-height: 280px;
+  height: 360px;
+  min-height: 360px;
   margin-top: 1rem;
   padding: 1rem;
   border: 1px solid var(--line);
@@ -571,12 +604,22 @@ h2 {
     var(--surface-strong);
 }
 
+.sort-slot {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  align-items: end;
+  gap: 0.45rem;
+}
+
 .sort-bar {
   position: relative;
   display: flex;
-  flex: 1;
   align-items: end;
   justify-content: center;
+  width: 100%;
   min-width: 0;
   border-radius: 12px 12px 4px 4px;
   background: rgba(13, 107, 95, 0.45);
@@ -598,6 +641,15 @@ h2 {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.sort-index {
+  min-height: 1.2rem;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 .sort-step-row {
@@ -649,13 +701,13 @@ h2 {
 
 .ds-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   margin-top: 1rem;
 }
 
 .ds-scenario {
-  min-height: 220px;
+  min-height: 0;
   display: grid;
   align-content: start;
   gap: 0.8rem;
@@ -676,6 +728,10 @@ h2 {
   font-size: 1.08rem;
   line-height: 1.5;
   font-weight: 700;
+}
+
+#data-structure-card .choices {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .ds-list,
@@ -780,7 +836,8 @@ input[type="radio"] {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -846,6 +903,10 @@ button:disabled {
     radial-gradient(circle at top, rgba(13, 107, 95, 0.06), transparent 55%),
     var(--surface-strong);
   overflow: auto;
+}
+
+.tree-canvas .tree-svg {
+  flex: 0 0 auto;
 }
 
 .tree-canvas-large {
@@ -1094,9 +1155,14 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
+  #data-structure-card .choices {
+    grid-template-columns: 1fr;
+  }
+
   .sort-controls,
   .sort-controls label,
-  .sort-controls button {
+  .sort-controls button,
+  .select-control {
     width: 100%;
   }
 
@@ -1214,13 +1280,24 @@ button:disabled {
     justify-content: flex-start;
   }
 
+  #avl-tree-before,
+  #avl-tree-after {
+    height: 280px;
+    min-height: 280px;
+  }
+
   .sort-bars {
-    min-height: 220px;
+    height: 300px;
+    min-height: 300px;
     gap: 0.35rem;
     padding: 0.75rem;
   }
 
   .sort-bar span {
+    font-size: 0.68rem;
+  }
+
+  .sort-index {
     font-size: 0.68rem;
   }
 

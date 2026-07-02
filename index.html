@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlgoTrainer</title>
+  <title>AlgoTrain</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
         <header class="hero hero-home">
           <p class="eyebrow">Dein Lernbereich</p>
           <h1 class="home-title">
-            <span>Algo</span>
-            <span>Trainer.</span>
+            <span class="logo-algo">Algo</span>
+            <span class="logo-train">Train.</span>
           </h1>
           <p class="hero-copy">
             Wähle ein Thema und starte direkt mit dem Training.
@@ -211,7 +211,7 @@
             </div>
 
             <p class="section-copy">
-              Waehle ein Verfahren und gehe die Schritte manuell oder automatisch durch.
+              Wähle ein Verfahren und gehe die Schritte manuell oder automatisch durch.
             </p>
 
             <div class="sort-controls">
@@ -226,9 +226,17 @@
                   <option value="quick">Quicksort</option>
                 </select>
               </label>
-              <button id="sort-prev" class="secondary-btn" type="button">Zurueck</button>
+              <label>
+                Geschwindigkeit
+                <select id="sort-speed">
+                  <option value="2200">Langsam</option>
+                  <option value="1400" selected>Normal</option>
+                  <option value="800">Schnell</option>
+                </select>
+              </label>
+              <button id="sort-prev" class="secondary-btn" type="button">Ein Schritt zurück</button>
               <button id="sort-play" class="primary-btn" type="button">Abspielen</button>
-              <button id="sort-next" class="secondary-btn" type="button">Weiter</button>
+              <button id="sort-next" class="secondary-btn" type="button">Ein Schritt weiter</button>
             </div>
 
             <div id="sort-bars" class="sort-bars" aria-label="Sortiervisualisierung"></div>
@@ -267,7 +275,7 @@
             </div>
 
             <div class="actions">
-              <button id="check-sort-question" class="primary-btn" type="button">Antwort pruefen</button>
+              <button id="check-sort-question" class="primary-btn" type="button">Antwort prüfen</button>
             </div>
 
             <div id="sort-feedback" class="feedback" aria-live="polite"></div>
@@ -281,7 +289,7 @@
           <div>
             <p class="eyebrow">Modul 4</p>
             <h1 class="module-title">Datenstrukturen</h1>
-            <p class="hero-copy">Wähle einen Bereich und trainiere gezielt die passende Datenstruktur.</p>
+            <p class="hero-copy">Wähle einen Bereich und trainiere Listen, Wörterbücher, Hashmaps, Tiefensuche, Heaps und AVL-Bäume gezielt.</p>
           </div>
         </header>
 
@@ -291,6 +299,8 @@
           <button class="topic-nav-btn" type="button" data-ds-topic="Listen">Listen</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Wörterbücher">Wörterbücher</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Hashmaps">Hashmaps</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Tiefensuche">Tiefensuche</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Heaps">Heaps</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Stacks & Queues">Stacks &amp; Queues</button>
         </nav>
 
@@ -305,7 +315,7 @@
             </div>
 
             <p class="section-copy">
-              Uebe typische Eigenschaften, Operationen und Denkfehler bei Listen, Woerterbuechern, Hashmaps, DFS und Heaps.
+              Übe typische Eigenschaften, Operationen und Denkfehler bei Listen, Wörterbüchern, Hashmaps, DFS und Heaps.
             </p>
 
             <div class="ds-layout">
@@ -321,7 +331,7 @@
             </div>
 
             <div class="actions">
-              <button id="check-ds-question" class="primary-btn" type="button">Antwort pruefen</button>
+              <button id="check-ds-question" class="primary-btn" type="button">Antwort prüfen</button>
             </div>
 
             <div id="ds-feedback" class="feedback" aria-live="polite"></div>

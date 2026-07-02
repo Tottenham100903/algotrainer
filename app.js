@@ -4,7 +4,7 @@ function asCode(lines) {
 
 const runtimePatterns = [
   {
-    title: "Konstante Laufzeit mit sofortigem Rückgabewert",
+    title: "Code-Schnipsel analysieren",
     build() {
       const answer = sample(["42", "n + 7", "13"]);
       return {
@@ -26,7 +26,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Linearer rekursiver Abstieg",
+    title: "Code-Schnipsel analysieren",
     build() {
       const step = sample([1, 2, 3]);
       return {
@@ -48,7 +48,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Binäre Rekursion",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -69,7 +69,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Halbierung",
+    title: "Code-Schnipsel analysieren",
     build() {
       const base = sample([1, 2]);
       return {
@@ -91,7 +91,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Halbierung mit Schleife",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -112,7 +112,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Wurzelartige Verkleinerung",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -133,7 +133,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Linear mit Schleife",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -154,7 +154,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Lineare Rekursion mit Akkumulator",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -175,7 +175,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Zwei halbierte Teilprobleme",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -196,7 +196,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Zwei halbierte Teilprobleme mit linearer Arbeit",
+    title: "Code-Schnipsel analysieren",
     build() {
       return {
         code: asCode([
@@ -368,35 +368,35 @@ const sortAlgorithms = {
   },
   insertion: {
     name: "Insertionsort",
-    idea: "Baut links einen sortierten Bereich auf und fuegt jedes neue Element passend ein.",
+    idea: "Baut links einen sortierten Bereich auf und fügt jedes neue Element passend ein.",
     stable: "Ja",
     inPlace: "Ja",
     runtimes: { best: "O(n)", average: "O(n^2)", worst: "O(n^2)" },
   },
   bubble: {
     name: "Bubblesort",
-    idea: "Vergleicht Nachbarn und schiebt grosse Werte schrittweise nach rechts.",
+    idea: "Vergleicht Nachbarn und schiebt große Werte schrittweise nach rechts.",
     stable: "Ja",
     inPlace: "Ja",
     runtimes: { best: "O(n)", average: "O(n^2)", worst: "O(n^2)" },
   },
   merge: {
     name: "Mergesort",
-    idea: "Teilt das Array rekursiv und fuehrt sortierte Teilbereiche wieder zusammen.",
+    idea: "Teilt das Array rekursiv und führt sortierte Teilbereiche wieder zusammen.",
     stable: "Ja",
     inPlace: "Nein",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)" },
   },
   heap: {
     name: "Heapsort",
-    idea: "Baut einen Max-Heap und legt das groesste Element wiederholt ans Ende.",
+    idea: "Baut einen Max-Heap und legt das größte Element wiederholt ans Ende.",
     stable: "Nein",
     inPlace: "Ja",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)" },
   },
   quick: {
     name: "Quicksort",
-    idea: "Partitioniert um ein Pivot; gute Pivots fuehren zu kleinen Rekursionstiefen.",
+    idea: "Partitioniert um ein Pivot; gute Pivots führen zu kleinen Rekursionstiefen.",
     stable: "Nein",
     inPlace: "Ja",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n^2)" },
@@ -410,25 +410,25 @@ const dataStructureQuestions = [
     topic: "Listen",
     scenarioHtml: '<div class="ds-list"><span>3</span><span>8</span><span>13</span><span>21</span><span>34</span></div>',
     question: "Welche Operation ist bei einer Array-Liste typischerweise O(1)?",
-    choices: ["Zugriff auf Index 3", "Einfuegen am Anfang", "Suchen nach Wert 21", "Loeschen aus der Mitte ohne Index"],
+    choices: ["Zugriff auf Index 3", "Einfügen am Anfang", "Suchen nach Wert 21", "Löschen aus der Mitte ohne Index"],
     answer: "Zugriff auf Index 3",
-    explanation: "Array-Listen speichern Elemente zusammenhaengend; direkter Indexzugriff ist konstant.",
+    explanation: "Array-Listen speichern Elemente zusammenhängend; direkter Indexzugriff ist konstant.",
   },
   {
     topic: "Listen",
     scenarioHtml: '<div class="ds-list linked"><span>A</span><span>B</span><span>C</span><span>D</span></div>',
     question: "Was ist bei einer einfach verketteten Liste ohne Tail-Zeiger besonders teuer?",
-    choices: ["Vorne einfuegen", "Erstes Element lesen", "Hinten einfuegen", "Nachfolger eines bekannten Knotens lesen"],
-    answer: "Hinten einfuegen",
+    choices: ["Vorne einfügen", "Erstes Element lesen", "Hinten einfügen", "Nachfolger eines bekannten Knotens lesen"],
+    answer: "Hinten einfügen",
     explanation: "Ohne Tail-Zeiger muss man erst bis zum letzten Knoten laufen.",
   },
   {
     topic: "Wörterbücher",
     scenarioHtml: '<div class="ds-map"><span>\"id\" → 42</span><span>\"name\" → \"Ada\"</span><span>\"level\" → 3</span></div>',
-    question: "Welche Denkweise passt am besten zu einem Woerterbuch?",
-    choices: ["Werte werden ueber Schluessel gefunden", "Werte sind nur ueber Positionen erreichbar", "Alle Werte bleiben automatisch sortiert", "Jeder Zugriff muss linear suchen"],
-    answer: "Werte werden ueber Schluessel gefunden",
-    explanation: "Woerterbuecher modellieren Key-Value-Zugriff, nicht Positionszugriff.",
+    question: "Welche Denkweise passt am besten zu einem Wörterbuch?",
+    choices: ["Werte werden über Schlüssel gefunden", "Werte sind nur über Positionen erreichbar", "Alle Werte bleiben automatisch sortiert", "Jeder Zugriff muss linear suchen"],
+    answer: "Werte werden über Schlüssel gefunden",
+    explanation: "Wörterbücher modellieren Key-Value-Zugriff, nicht Positionszugriff.",
   },
   {
     topic: "Hashmaps",
@@ -436,15 +436,15 @@ const dataStructureQuestions = [
     question: "Was zeigt der Bucket mit Tom und Zoe?",
     choices: ["Eine Kollision", "Eine perfekte Hashfunktion", "Eine Tiefensuche", "Eine Heap-Verletzung"],
     answer: "Eine Kollision",
-    explanation: "Eine Kollision entsteht, wenn verschiedene Schluessel im selben Bucket landen.",
+    explanation: "Eine Kollision entsteht, wenn verschiedene Schlüssel im selben Bucket landen.",
   },
   {
     topic: "Hashmaps",
     scenarioHtml: '<div class="ds-map"><span>load factor = entries / buckets</span><span>zu hoch → resize</span></div>',
-    question: "Warum vergroessert eine Hashmap gelegentlich ihre Bucket-Anzahl?",
+    question: "Warum vergrößert eine Hashmap gelegentlich ihre Bucket-Anzahl?",
     choices: ["Um Kollisionen wahrscheinlicher zu machen", "Um die Last pro Bucket zu senken", "Um DFS zu beschleunigen", "Damit Werte sortiert bleiben"],
     answer: "Um die Last pro Bucket zu senken",
-    explanation: "Resizing haelt den Load Factor klein und stabilisiert erwartete O(1)-Operationen.",
+    explanation: "Resizing hält den Load Factor klein und stabilisiert erwartete O(1)-Operationen.",
   },
   {
     topic: "Tiefensuche",
@@ -452,7 +452,7 @@ const dataStructureQuestions = [
     question: "DFS startet bei A und besucht Nachbarn in angegebener Reihenfolge. Welche Reihenfolge entsteht?",
     choices: ["A, B, D, C, E", "A, C, E, B, D", "A, B, C, D, E", "D, B, E, C, A"],
     answer: "A, B, D, C, E",
-    explanation: "DFS geht zuerst so tief wie moeglich ueber B nach D und kehrt dann zu C/E zurueck.",
+    explanation: "DFS geht zuerst so tief wie möglich über B nach D und kehrt dann zu C/E zurück.",
   },
   {
     topic: "Tiefensuche",
@@ -465,8 +465,8 @@ const dataStructureQuestions = [
   {
     topic: "Min-Heap",
     scenarioHtml: '<div class="ds-heap"><span>4</span><span>9</span><span>7</span><span>15</span><span>12</span></div>',
-    question: "Welches Element steht bei einem gueltigen Min-Heap immer an der Wurzel?",
-    choices: ["Das kleinste Element", "Das groesste Element", "Das zuletzt eingefuegte Element", "Ein zufaelliges Pivot"],
+    question: "Welches Element steht bei einem gültigen Min-Heap immer an der Wurzel?",
+    choices: ["Das kleinste Element", "Das größte Element", "Das zuletzt eingefügte Element", "Ein zufälliges Pivot"],
     answer: "Das kleinste Element",
     explanation: "Im Min-Heap ist jeder Elternknoten kleiner oder gleich seinen Kindern.",
   },
@@ -474,17 +474,17 @@ const dataStructureQuestions = [
     topic: "Max-Heap",
     scenarioHtml: '<div class="ds-heap"><span>42</span><span>18</span><span>35</span><span>7</span><span>12</span><span>20</span></div>',
     question: "Welche Aussage beschreibt einen Max-Heap korrekt?",
-    choices: ["Eltern sind groesser oder gleich ihren Kindern", "Eltern sind kleiner oder gleich ihren Kindern", "Die Blaetter sind immer sortiert", "Die Inorder-Reihenfolge ist sortiert"],
-    answer: "Eltern sind groesser oder gleich ihren Kindern",
+    choices: ["Eltern sind größer oder gleich ihren Kindern", "Eltern sind kleiner oder gleich ihren Kindern", "Die Blätter sind immer sortiert", "Die Inorder-Reihenfolge ist sortiert"],
+    answer: "Eltern sind größer oder gleich ihren Kindern",
     explanation: "Beim Max-Heap steht das Maximum oben; die Ordnung gilt lokal zwischen Eltern und Kindern.",
   },
   {
     topic: "Heaps",
     scenarioHtml: '<div class="ds-heap"><span>2</span><span>8</span><span>5</span><span>13</span><span>11</span></div>',
-    question: "Du fuegst 1 in diesen Min-Heap ein. Was passiert konzeptionell?",
+    question: "Du fügst 1 in diesen Min-Heap ein. Was passiert konzeptionell?",
     choices: ["1 wandert nach oben bis zur Wurzel", "1 bleibt immer am Ende", "Der Heap wird zu einer sortierten Liste", "Alle Elemente werden per DFS besucht"],
     answer: "1 wandert nach oben bis zur Wurzel",
-    explanation: "Nach dem Einfuegen wird per Bubble-up die Heap-Eigenschaft wiederhergestellt.",
+    explanation: "Nach dem Einfügen wird per Bubble-up die Heap-Eigenschaft wiederhergestellt.",
   },
   {
     topic: "Stacks & Queues",
@@ -620,6 +620,7 @@ const state = {
   sortSteps: [],
   sortStepIndex: 0,
   sortTimer: null,
+  sortDelay: 1400,
   sortQuestion: null,
   dataStructureQuestion: null,
   dataStructureTopic: "Training",
@@ -655,6 +656,7 @@ const el = {
   masterRuntimeOptions: document.getElementById("master-runtime-options"),
   masterFeedback: document.getElementById("master-feedback"),
   sortAlgorithm: document.getElementById("sort-algorithm"),
+  sortSpeed: document.getElementById("sort-speed"),
   sortBars: document.getElementById("sort-bars"),
   sortNote: document.getElementById("sort-note"),
   sortStepCount: document.getElementById("sort-step-count"),
@@ -705,6 +707,7 @@ document.getElementById("new-master").addEventListener("click", createMasterQues
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
 el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 el.sortAlgorithm.addEventListener("change", rebuildSortSteps);
+el.sortSpeed.addEventListener("change", changeSortSpeed);
 document.getElementById("shuffle-sort").addEventListener("click", resetSortValues);
 el.sortPrev.addEventListener("click", previousSortStep);
 el.sortNext.addEventListener("click", nextSortStep);
@@ -761,6 +764,14 @@ function setActiveView(viewName) {
     node.classList.toggle("is-hidden", !active);
     node.classList.toggle("app-view-active", active);
   });
+
+  if (viewName === "sorting") {
+    renderSortStep();
+    renderSortInfo();
+  }
+  if (viewName === "avl") {
+    createDataStructureQuestion();
+  }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -938,10 +949,10 @@ function buildInsertionSortSteps(values) {
   for (let i = 1; i < arr.length; i += 1) {
     const key = arr[i];
     let j = i - 1;
-    pushSortStep(steps, arr, `Fuege ${key} in den sortierten linken Bereich ein.`, [i], range(0, i));
+    pushSortStep(steps, arr, `Füge ${key} in den sortierten linken Bereich ein.`, [i], range(0, i));
     while (j >= 0 && arr[j] > key) {
       arr[j + 1] = arr[j];
-      pushSortStep(steps, arr, `${arr[j]} ist groesser als ${key}; verschiebe nach rechts.`, [j, j + 1], range(0, i + 1));
+      pushSortStep(steps, arr, `${arr[j]} ist größer als ${key}; verschiebe nach rechts.`, [j, j + 1], range(0, i + 1));
       j -= 1;
     }
     arr[j + 1] = key;
@@ -954,7 +965,7 @@ function buildInsertionSortSteps(values) {
 function buildBubbleSortSteps(values) {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, "Start: grosse Elemente wandern durch Nachbarvergleiche nach rechts.");
+  pushSortStep(steps, arr, "Start: große Elemente wandern durch Nachbarvergleiche nach rechts.");
   for (let end = arr.length - 1; end > 0; end -= 1) {
     let swapped = false;
     for (let i = 0; i < end; i += 1) {
@@ -965,12 +976,12 @@ function buildBubbleSortSteps(values) {
         pushSortStep(steps, arr, "Tausche, weil die Reihenfolge falsch ist.", [i, i + 1], range(end + 1, arr.length));
       }
     }
-    pushSortStep(steps, arr, "Das groesste verbleibende Element ist rechts fixiert.", [end], range(end, arr.length));
+    pushSortStep(steps, arr, "Das größte verbleibende Element ist rechts fixiert.", [end], range(end, arr.length));
     if (!swapped) {
       break;
     }
   }
-  pushSortStep(steps, arr, "Fertig: keine Vertauschungen mehr noetig.", [], range(0, arr.length));
+  pushSortStep(steps, arr, "Fertig: keine Vertauschungen mehr nötig.", [], range(0, arr.length));
   return steps;
 }
 
@@ -978,14 +989,14 @@ function buildMergeSortSteps(values) {
   const arr = [...values];
   const steps = [];
   const work = [...arr];
-  pushSortStep(steps, arr, "Start: teile rekursiv und fuehre sortierte Bereiche zusammen.");
+  pushSortStep(steps, arr, "Start: teile rekursiv und führe sortierte Bereiche zusammen.");
 
   function sort(left, right) {
     if (right - left <= 1) {
       return;
     }
     const mid = Math.floor((left + right) / 2);
-    pushSortStep(steps, arr, `Teile Bereich ${left + 1}-${right} in zwei Haelften.`, range(left, right));
+    pushSortStep(steps, arr, `Teile Bereich ${left + 1}-${right} in zwei Hälften.`, range(left, right));
     sort(left, mid);
     sort(mid, right);
     let i = left;
@@ -1013,12 +1024,12 @@ function buildMergeSortSteps(values) {
     }
     for (let index = left; index < right; index += 1) {
       arr[index] = work[index];
-      pushSortStep(steps, arr, "Fuehre die Teilbereiche sortiert zusammen.", range(left, right), right - left === values.length ? range(left, index + 1) : []);
+      pushSortStep(steps, arr, "Führe die Teilbereiche sortiert zusammen.", range(left, right), right - left === values.length ? range(left, index + 1) : []);
     }
   }
 
   sort(0, arr.length);
-  pushSortStep(steps, arr, "Fertig: alle Teilbereiche wurden zusammengefuehrt.", [], range(0, arr.length));
+  pushSortStep(steps, arr, "Fertig: alle Teilbereiche wurden zusammengeführt.", [], range(0, arr.length));
   return steps;
 }
 
@@ -1037,10 +1048,10 @@ function buildHeapSortSteps(values) {
     if (right < size && arr[right] > arr[largest]) {
       largest = right;
     }
-    pushSortStep(steps, arr, `Pruefe Heap-Eigenschaft bei Position ${root + 1}.`, [root, left, right].filter((item) => item < size), range(size, arr.length));
+    pushSortStep(steps, arr, `Prüfe Heap-Eigenschaft bei Position ${root + 1}.`, [root, left, right].filter((item) => item < size), range(size, arr.length));
     if (largest !== root) {
       [arr[root], arr[largest]] = [arr[largest], arr[root]];
-      pushSortStep(steps, arr, "Tausche groesseres Kind nach oben.", [root, largest], range(size, arr.length));
+      pushSortStep(steps, arr, "Tausche größeres Kind nach oben.", [root, largest], range(size, arr.length));
       heapify(size, largest);
     }
   }
@@ -1072,12 +1083,12 @@ function buildQuickSortSteps(values) {
       pushSortStep(steps, arr, `Vergleiche ${arr[j]} mit Pivot ${pivot}.`, [j, high], []);
       if (arr[j] <= pivot) {
         [arr[i], arr[j]] = [arr[j], arr[i]];
-        pushSortStep(steps, arr, "Element gehoert auf die linke Pivot-Seite.", [i, j, high], []);
+        pushSortStep(steps, arr, "Element gehört auf die linke Pivot-Seite.", [i, j, high], []);
         i += 1;
       }
     }
     [arr[i], arr[high]] = [arr[high], arr[i]];
-    pushSortStep(steps, arr, "Pivot sitzt jetzt an seiner endgueltigen Position.", [i], [i]);
+    pushSortStep(steps, arr, "Pivot sitzt jetzt an seiner endgültigen Position.", [i], [i]);
     return i;
   }
 
@@ -1107,11 +1118,21 @@ function renderSortStep() {
   el.sortBars.innerHTML = "";
   const max = Math.max(...step.array);
   step.array.forEach((value, index) => {
+    const slot = document.createElement("div");
+    slot.className = "sort-slot";
+
     const bar = document.createElement("div");
     bar.className = `sort-bar${step.active.has(index) ? " active" : ""}${step.sorted.has(index) ? " sorted" : ""}`;
     bar.style.height = `${Math.max(14, (value / max) * 100)}%`;
     bar.innerHTML = `<span>${value}</span>`;
-    el.sortBars.appendChild(bar);
+
+    const indexLabel = document.createElement("span");
+    indexLabel.className = "sort-index";
+    indexLabel.textContent = index;
+
+    slot.appendChild(bar);
+    slot.appendChild(indexLabel);
+    el.sortBars.appendChild(slot);
   });
 
   el.sortNote.textContent = step.note;
@@ -1148,8 +1169,12 @@ function toggleSortPlayback() {
     stopSortPlayback();
     return;
   }
+  if (state.sortStepIndex >= state.sortSteps.length - 1) {
+    state.sortStepIndex = 0;
+    renderSortStep();
+  }
   el.sortPlay.textContent = "Pause";
-  state.sortTimer = window.setInterval(nextSortStep, 700);
+  state.sortTimer = window.setInterval(nextSortStep, state.sortDelay);
 }
 
 function stopSortPlayback() {
@@ -1160,6 +1185,15 @@ function stopSortPlayback() {
   if (el.sortPlay) {
     el.sortPlay.textContent = "Abspielen";
   }
+}
+
+function changeSortSpeed() {
+  state.sortDelay = Number(el.sortSpeed.value) || 1400;
+  if (!state.sortTimer) {
+    return;
+  }
+  stopSortPlayback();
+  toggleSortPlayback();
 }
 
 function createSortQuestion() {
@@ -1178,7 +1212,7 @@ function checkSortQuestion() {
   const selectedAverage = getSelectedValue("sort-average-choice");
   const selectedWorst = getSelectedValue("sort-worst-choice");
   if (!selectedBest || !selectedAverage || !selectedWorst) {
-    setFeedback(el.sortFeedback, "Waehle Best, Average und Worst Case aus.", "wrong");
+    setFeedback(el.sortFeedback, "Wähle Best, Average und Worst Case aus.", "wrong");
     return;
   }
 
@@ -1190,11 +1224,19 @@ function checkSortQuestion() {
   setFeedback(el.sortFeedback, `Noch nicht. Korrekt ist: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}.`, "wrong");
 }
 
+function normalizeDataStructureTopic(topic) {
+  if (topic === "Min-Heap" || topic === "Max-Heap") {
+    return "Heaps";
+  }
+  return topic;
+}
+
 function createDataStructureQuestion() {
-  const availableQuestions = state.dataStructureTopic === "Training"
+  const selectedTopic = state.dataStructureTopic;
+  const pool = selectedTopic === "Training"
     ? dataStructureQuestions
-    : dataStructureQuestions.filter((question) => question.topic === state.dataStructureTopic);
-  const question = sample(availableQuestions);
+    : dataStructureQuestions.filter((question) => normalizeDataStructureTopic(question.topic) === selectedTopic);
+  const question = sample(pool.length ? pool : dataStructureQuestions);
   state.dataStructureQuestion = question;
   el.dataStructureScenario.innerHTML = `
     <p class="ds-topic">${question.topic}</p>
@@ -1229,7 +1271,7 @@ function setDataStructureTopic(topic) {
 function checkDataStructureQuestion() {
   const selected = getSelectedValue("ds-choice");
   if (!selected) {
-    setFeedback(el.dataStructureFeedback, "Waehle erst eine Antwort aus.", "wrong");
+    setFeedback(el.dataStructureFeedback, "Wähle erst eine Antwort aus.", "wrong");
     return;
   }
 
