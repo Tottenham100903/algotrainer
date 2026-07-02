@@ -134,22 +134,14 @@
             </div>
 
             <div id="master-help" class="help-box is-hidden">
-              <div>
-                <h3>Master-Theorem</h3>
-                <p>Fuer T(n) = aT(n/b) + f(n) vergleiche f(n) mit n^log_b(a).</p>
-                <ul>
-                  <li>Fall 1: f(n) ist polynomial kleiner, Ergebnis Theta(n^log_b(a)).</li>
-                  <li>Fall 2: f(n) ist gleich gross bis auf Log-Faktoren, Ergebnis Theta(n^log_b(a) log^(k+1) n).</li>
-                  <li>Fall 3: f(n) ist polynomial groesser und Regularitaet gilt, Ergebnis Theta(f(n)).</li>
-                </ul>
+              <div class="help-card">
+                <h3>1. Form pruefen</h3>
+                <p>Master-Theorem nur bei gleicher Teilproblemgroesse:</p>
+                <p class="mini-formula">T(n) = aT(n / b) + f(n)</p>
               </div>
-              <div>
-                <h3>Auswahl</h3>
-                <ul>
-                  <li>Divide and Conquer: mehrere gleich grosse Teilprobleme, oft Master-Theorem.</li>
-                  <li>Subtract and Conquer: T(n-c) oder T(n/c) mit einem Teilproblem, oft Summe/Iteration.</li>
-                  <li>Substitution: Rate eine Schranke und beweise sie durch Einsetzen/Induktion.</li>
-                </ul>
+              <div class="help-card">
+                <h3>2. Methode waehlen</h3>
+                <p>Mehrere gleich grosse Teilprobleme: Master. Ein Teilproblem: entfalten. Ungleiche/ungewohnte Form: Substitution.</p>
               </div>
             </div>
 
@@ -161,6 +153,20 @@
               <div>
                 <p class="tree-label">Fall / Begruendung</p>
                 <form id="master-case-options" class="choices compact-choices"></form>
+                <div id="master-case-help" class="case-help is-hidden">
+                  <div>
+                    <strong>Fall 1</strong>
+                    <span>f(n) kleiner als n<sup>log_b(a)</sup>: Rekursion dominiert.</span>
+                  </div>
+                  <div>
+                    <strong>Fall 2</strong>
+                    <span>f(n) gleich gross: eine Log-Stufe mehr.</span>
+                  </div>
+                  <div>
+                    <strong>Fall 3</strong>
+                    <span>f(n) groesser: Zusatzarbeit dominiert.</span>
+                  </div>
+                </div>
               </div>
               <div>
                 <p class="tree-label">Laufzeit</p>

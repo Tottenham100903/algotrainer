@@ -229,15 +229,15 @@ const runtimeChoicesPool = [
 ];
 
 const masterRuntimeChoicesPool = [
-  "Theta(log n)",
-  "Theta(n)",
-  "Theta(n log n)",
-  "Theta(n^log_2(3))",
-  "Theta(n^2)",
-  "Theta(n^2 log n)",
-  "Theta(n^2 log^2 n)",
-  "Theta(n^3)",
-  "Theta(2^n)",
+  "log n",
+  "n",
+  "n log n",
+  "n^log_2(3)",
+  "n^2",
+  "n^2 log n",
+  "n^2 log^2 n",
+  "n^3",
+  "2^n",
 ];
 
 const masterMethodChoices = [
@@ -247,92 +247,113 @@ const masterMethodChoices = [
 ];
 
 const masterCaseChoices = [
-  "Fall 1",
-  "Fall 2",
-  "Fall 3",
-  "Nicht anwendbar",
+  {
+    value: "Fall 1",
+    label: "Fall 1: f(n) ist kleiner",
+  },
+  {
+    value: "Fall 2",
+    label: "Fall 2: gleich gross",
+  },
+  {
+    value: "Fall 3",
+    label: "Fall 3: f(n) ist groesser",
+  },
+  {
+    value: "Nicht anwendbar",
+    label: "Kein Master-Fall",
+  },
 ];
 
 const masterPatterns = [
   {
-    title: "Divide and Conquer: viele kleine Teilprobleme",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = 3T(n / 2) + n",
-    task: "Vergleiche f(n) = n mit n^log_2(3).",
+    recurrenceHtml: "T(n) = 3T(n / 2) + n",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 1",
-    answer: "Theta(n^log_2(3))",
+    answer: "n^log_2(3)",
     explanation: "n ist polynomial kleiner als n^log_2(3), daher dominiert die Rekursion.",
   },
   {
-    title: "Divide and Conquer: gleiche Ebenenkosten",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = 2T(n / 2) + n",
-    task: "Vergleiche f(n) = n mit n^log_2(2).",
+    recurrenceHtml: "T(n) = 2T(n / 2) + n",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 2",
-    answer: "Theta(n log n)",
+    answer: "n log n",
     explanation: "f(n) passt zu n^log_2(2) = n, also entsteht ein zusaetzlicher log-Faktor.",
   },
   {
-    title: "Divide and Conquer: teure Kombinationsarbeit",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = 2T(n / 2) + n^2",
-    task: "Vergleiche f(n) = n^2 mit n^log_2(2).",
+    recurrenceHtml: "T(n) = 2T(n / 2) + n<sup>2</sup>",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 3",
-    answer: "Theta(n^2)",
+    answer: "n^2",
     explanation: "n^2 ist polynomial groesser als n; die Regularitaetsbedingung ist hier erfuellt.",
   },
   {
-    title: "Divide and Conquer mit Log-Faktor",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = 4T(n / 2) + n^2 log n",
-    task: "Vergleiche f(n) = n^2 log n mit n^log_2(4).",
+    recurrenceHtml: "T(n) = 4T(n / 2) + n<sup>2</sup> log n",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 2",
-    answer: "Theta(n^2 log^2 n)",
+    answer: "n^2 log^2 n",
     explanation: "f(n) = n^2 log^1 n; Fall 2 erhoeht die Log-Potenz um eins.",
   },
   {
-    title: "Subtract and Conquer: lineares Abschneiden",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n - 1) + n",
-    task: "Entfalte die Rekurrenz als Summe n + (n-1) + ... + 1.",
+    recurrenceHtml: "T(n) = T(n - 1) + n",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
-    answer: "Theta(n^2)",
-    explanation: "Ein Teilproblem wird nur um 1 kleiner; die arithmetische Summe ergibt Theta(n^2).",
+    answer: "n^2",
+    explanation: "Ein Teilproblem wird nur um 1 kleiner; die arithmetische Summe ergibt n^2.",
   },
   {
-    title: "Subtract and Conquer: halbieren mit konstanter Arbeit",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n / 2) + 1",
-    task: "Zaehle, wie oft n halbiert werden kann.",
+    recurrenceHtml: "T(n) = T(n / 2) + 1",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
-    answer: "Theta(log n)",
+    answer: "log n",
     explanation: "Es gibt nur ein Teilproblem pro Ebene; nach logarithmisch vielen Halbierungen ist Schluss.",
   },
   {
-    title: "Subtract and Conquer: halbieren mit linearer Arbeit",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n / 2) + n",
-    task: "Entfalte n + n/2 + n/4 + ...",
+    recurrenceHtml: "T(n) = T(n / 2) + n",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
-    answer: "Theta(n)",
+    answer: "n",
     explanation: "Die geometrische Summe ist durch ein konstantes Vielfaches von n beschraenkt.",
   },
   {
-    title: "Substitution: ungleich grosse Teilprobleme",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n / 2) + T(n / 4) + n",
-    task: "Master-Theorem passt nicht direkt; pruefe die Vermutung T(n) = O(n) durch Einsetzen.",
+    recurrenceHtml: "T(n) = T(n / 2) + T(n / 4) + n",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Substitution",
     caseName: "Nicht anwendbar",
-    answer: "Theta(n)",
+    answer: "n",
     explanation: "Mit T(k) <= ck ergibt sich c(n/2) + c(n/4) + n <= cn fuer hinreichend grosses c.",
   },
   {
-    title: "Substitution: zwei vorherige Werte",
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n - 1) + T(n - 2) + 1",
-    task: "Begruende eine exponentielle Schranke per Induktion/Substitution.",
+    recurrenceHtml: "T(n) = T(n - 1) + T(n - 2) + 1",
+    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
     method: "Substitution",
     caseName: "Nicht anwendbar",
-    answer: "Theta(2^n)",
+    answer: "2^n",
     explanation: "Die Rekurrenz verzweigt in zwei fast gleich grosse Teilprobleme und waechst exponentiell.",
   },
 ];
@@ -470,6 +491,7 @@ const el = {
   masterRecurrence: document.getElementById("master-recurrence"),
   masterTask: document.getElementById("master-task"),
   masterHelp: document.getElementById("master-help"),
+  masterCaseHelp: document.getElementById("master-case-help"),
   masterHelpToggle: document.getElementById("toggle-master-help"),
   masterMethodOptions: document.getElementById("master-method-options"),
   masterCaseOptions: document.getElementById("master-case-options"),
@@ -589,11 +611,15 @@ function createMasterQuestion() {
 
   state.masterQuestion = { ...pattern, runtimeChoices };
   el.masterTitle.textContent = pattern.title;
-  el.masterRecurrence.textContent = pattern.recurrence;
+  el.masterRecurrence.innerHTML = pattern.recurrenceHtml || pattern.recurrence;
   el.masterTask.textContent = pattern.task;
   renderChoices(el.masterMethodOptions, "master-method", masterMethodChoices);
   renderChoices(el.masterCaseOptions, "master-case", masterCaseChoices);
-  renderChoices(el.masterRuntimeOptions, "master-runtime", runtimeChoices);
+  renderChoices(
+    el.masterRuntimeOptions,
+    "master-runtime",
+    runtimeChoices.map((choice) => ({ value: choice, label: formatRuntimeLabel(choice) })),
+  );
   setFeedback(el.masterFeedback, "");
 }
 
@@ -614,7 +640,7 @@ function checkMasterQuestion() {
   if (methodCorrect && caseCorrect && runtimeCorrect) {
     setFeedback(
       el.masterFeedback,
-      `Richtig: ${selectedMethod}, ${selectedCase}, ${selectedRuntime}. ${state.masterQuestion.explanation}`,
+      `Richtig: ${selectedMethod}, ${selectedCase}, Laufzeitklasse ${selectedRuntime}. ${state.masterQuestion.explanation}`,
       "correct",
     );
     return;
@@ -628,7 +654,7 @@ function checkMasterQuestion() {
     missing.push(`Fall/Begruendung: ${state.masterQuestion.caseName}`);
   }
   if (!runtimeCorrect) {
-    missing.push(`Laufzeit: ${state.masterQuestion.answer}`);
+    missing.push(`Laufzeitklasse: ${state.masterQuestion.answer}`);
   }
 
   setFeedback(
@@ -645,6 +671,7 @@ function toggleMasterHelp() {
 
 function syncMasterHelpVisibility() {
   el.masterHelp.classList.toggle("is-hidden", !state.showMasterHelp);
+  el.masterCaseHelp.classList.toggle("is-hidden", !state.showMasterHelp);
   el.masterHelpToggle.textContent = state.showMasterHelp ? "Hilfestellung ausblenden" : "Hilfestellung anzeigen";
 }
 
@@ -848,10 +875,30 @@ function buildAVLScenario() {
 function renderChoices(container, name, choices) {
   container.innerHTML = "";
   choices.forEach((choice) => {
+    const value = typeof choice === "string" ? choice : choice.value;
+    const labelText = typeof choice === "string" ? choice : choice.label;
     const label = document.createElement("label");
-    label.innerHTML = `<input type="radio" name="${name}-choice" value="${choice}"><span>${choice}</span>`;
+    label.innerHTML = `<input type="radio" name="${name}-choice" value="${escapeAttribute(value)}"><span>${labelText}</span>`;
     container.appendChild(label);
   });
+}
+
+function escapeAttribute(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function formatRuntimeLabel(value) {
+  return String(value)
+    .replaceAll("n^log_2(3)", "n<sup>log<sub>2</sub>(3)</sup>")
+    .replaceAll("n^2 log^2 n", "n<sup>2</sup> log<sup>2</sup> n")
+    .replaceAll("n^2 log n", "n<sup>2</sup> log n")
+    .replaceAll("n^2", "n<sup>2</sup>")
+    .replaceAll("n^3", "n<sup>3</sup>")
+    .replaceAll("2^n", "2<sup>n</sup>");
 }
 
 function setFeedback(node, text, type = "") {
