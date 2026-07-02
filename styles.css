@@ -436,11 +436,11 @@ h2 {
 
 .module-tile.is-scroll-active {
   border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 32px 68px rgba(78, 63, 34, 0.22);
+  box-shadow: 0 24px 52px rgba(78, 63, 34, 0.18);
 }
 
 .module-tile.is-scroll-active strong {
-  transform: translateX(0.45rem);
+  transform: translateX(0.28rem);
 }
 
 .module-tile.is-scroll-active .module-cta {
@@ -449,12 +449,12 @@ h2 {
 }
 
 .module-tile.is-scroll-active .module-cta span {
-  transform: translateX(0.55rem);
+  transform: translateX(0.38rem);
 }
 
 .module-tile.is-scroll-active::after {
-  transform: scale(1.25) translate(-0.4rem, -0.4rem);
-  opacity: 0.16;
+  transform: scale(1.15) translate(-0.25rem, -0.25rem);
+  opacity: 0.14;
 }
 
 .module-tile-runtime {
@@ -2198,6 +2198,8 @@ button:disabled {
   .module-tile {
     width: 100%;
     min-height: 350px;
+    transition-duration: 520ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .module-tile:nth-child(even) {

@@ -1578,13 +1578,10 @@ function updateScrollTileMotion() {
       return;
     }
 
-    const rect = tile.getBoundingClientRect();
-    const horizontalOffset = ((rect.left + rect.width / 2) - (window.innerWidth / 2)) / (window.innerWidth / 2);
+    const easedStrength = activeStrength ** 1.6;
     setTileMotion(tile, {
-      lift: 8 + (activeStrength * 24),
-      tiltX: -5.5 * activeStrength,
-      tiltY: -horizontalOffset * 4 * activeStrength,
-      scale: 1 + (activeStrength * 0.018),
+      lift: 5 + (easedStrength * 10),
+      scale: 1 + (easedStrength * 0.008),
     });
   });
 }
