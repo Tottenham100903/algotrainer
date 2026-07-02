@@ -125,8 +125,51 @@
           </div>
         </header>
 
+        <nav class="section-tabs" aria-label="Bereiche des Master-Theorems">
+          <button class="section-tab-btn is-active" type="button" data-master-section="learn">Schritt-für-Schritt-Erklärung</button>
+          <button class="section-tab-btn" type="button" data-master-section="training">Anwendungsübungen</button>
+        </nav>
+
         <div class="module-grid module-grid-single">
-          <section class="card" id="master-card">
+          <section class="card" id="master-learn-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Erklärung</p>
+                <h2>Master-Theorem systematisch anwenden</h2>
+              </div>
+              <label class="master-case-select">
+                Anwendungsfall
+                <select id="master-learn-case">
+                  <option value="case1">Fall 1 – Rekursion dominiert</option>
+                  <option value="case2">Fall 2 – Gleichgewicht</option>
+                  <option value="case3">Fall 3 – Zusatzarbeit dominiert</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="master-general-form">
+              <p class="tree-label">Allgemeine Form</p>
+              <p class="master-main-formula">T(n) = aT(n / b) + c · n<sup>d</sup></p>
+              <div class="master-parameter-grid">
+                <p><strong>a</strong><span>Anzahl der rekursiven Teilprobleme</span></p>
+                <p><strong>b</strong><span>Verkleinerungsfaktor der Eingabe</span></p>
+                <p><strong>c</strong><span>konstanter Faktor der Zusatzarbeit</span></p>
+                <p><strong>d</strong><span>Exponent der Zusatzarbeit n<sup>d</sup></span></p>
+              </div>
+              <p class="section-copy">Entscheidend ist der Vergleich von <strong>p = log<sub>b</sub>(a)</strong> mit <strong>d</strong>. Der positive konstante Faktor c verändert die asymptotische Laufzeit nicht.</p>
+            </div>
+
+            <div id="master-learn-example" class="recurrence-box"></div>
+            <div id="master-learn-steps" class="master-learn-steps"></div>
+
+            <div class="actions master-step-actions">
+              <button id="master-learn-prev" class="secondary-btn" type="button">Vorheriger Schritt</button>
+              <span id="master-learn-count" class="step-count"></span>
+              <button id="master-learn-next" class="primary-btn" type="button">Nächster Schritt</button>
+            </div>
+          </section>
+
+          <section class="card is-hidden" id="master-card">
             <div class="card-head">
               <div>
                 <p class="section-label">Training</p>
@@ -138,7 +181,7 @@
             </div>
 
             <p class="section-copy">
-              Wähle zuerst das passende Verfahren und bestimme dann Fall oder Begründung sowie die Laufzeit.
+              Löse die Rekurrenz wie in einer Klausur: Lies die Parameter ab, berechne den Vergleichsexponenten und leite daraus Fall und Laufzeit her.
             </p>
 
             <div class="recurrence-box">
@@ -149,55 +192,76 @@
 
             <div id="master-help" class="help-box is-hidden">
               <div class="help-card">
-                <h3>1. Form prüfen</h3>
-                <p>Master-Theorem nur bei gleicher Teilproblemgröße:</p>
-                <p class="mini-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + f(n)</p>
+                <h3>1. Parameter markieren</h3>
+                <p>Bringe die Rekurrenz in die Form:</p>
+                <p class="mini-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
               </div>
               <div class="help-card">
-                <h3>2. Methode wählen</h3>
-                <p>Mehrere gleich große Teilprobleme: Master. Ein Teilproblem: entfalten. Ungleiche oder ungewohnte Form: Substitution.</p>
+                <h3>2. p berechnen</h3>
+                <p>Berechne p = log<sub>b</sub>(a). Dieser Exponent beschreibt, wie stark der rekursive Anteil wächst.</p>
               </div>
               <div class="help-card">
-                <h3>3. Master anwenden</h3>
-                <p>Berechne p = log<sub>b</sub>(a). Vergleiche f(n) mit n<sup>p</sup>: kleiner, gleich groß oder größer.</p>
+                <h3>3. Exponenten vergleichen</h3>
+                <p>d &lt; p führt zu Fall 1, d = p zu Fall 2 und d &gt; p zu Fall 3.</p>
               </div>
               <div class="help-card">
-                <h3>4. Andere Abläufe</h3>
-                <p>Subtract: Rekurrenz entfalten und Summe auswerten. Substitution: Vermutung wählen, einsetzen und per Induktion absichern.</p>
+                <h3>4. Ergebnis notieren</h3>
+                <p>Fall 1: Θ(n<sup>p</sup>), Fall 2: Θ(n<sup>d</sup> log n), Fall 3: Θ(n<sup>d</sup>). Gib in der Klausur immer die Herleitung an.</p>
               </div>
             </div>
 
-            <div class="master-quiz-grid">
-              <div>
-                <p class="tree-label">Verfahren</p>
-                <form id="master-method-options" class="choices compact-choices"></form>
-              </div>
-              <div>
-                <p class="tree-label">Ablauf</p>
-                <form id="master-flow-options" class="choices compact-choices"></form>
-              </div>
-              <div>
-                <p class="tree-label">Fall / Begründung</p>
-                <form id="master-case-options" class="choices compact-choices"></form>
-                <div id="master-case-help" class="case-help is-hidden">
-                  <div>
-                    <strong>Fall 1</strong>
-                    <span>f(n) kleiner als n<sup>log_b(a)</sup>: Rekursion dominiert.</span>
-                  </div>
-                  <div>
-                    <strong>Fall 2</strong>
-                    <span>f(n) gleich groß: eine Log-Stufe mehr.</span>
-                  </div>
-                  <div>
-                    <strong>Fall 3</strong>
-                    <span>f(n) größer: Zusatzarbeit dominiert.</span>
+            <div class="master-workflow">
+              <section class="master-work-step">
+                <span>1</span>
+                <div>
+                  <p class="tree-label">Parameter selbst ablesen</p>
+                  <div class="master-parameter-inputs">
+                    <label>a<input id="master-input-a" type="number" min="1" inputmode="numeric"></label>
+                    <label>b<input id="master-input-b" type="number" min="2" inputmode="numeric"></label>
+                    <label>c<input id="master-input-c" type="number" min="1" inputmode="numeric"></label>
+                    <label>d<input id="master-input-d" type="number" min="0" inputmode="numeric"></label>
                   </div>
                 </div>
-              </div>
-              <div>
-                <p class="tree-label">Laufzeit</p>
-                <form id="master-runtime-options" class="choices compact-choices"></form>
-              </div>
+              </section>
+
+              <section class="master-work-step">
+                <span>2</span>
+                <div>
+                  <p class="tree-label">Vergleichsexponent berechnen</p>
+                  <label class="master-calculation-input">p = log<sub>b</sub>(a) =
+                    <input id="master-input-p" type="number" min="0" step="0.001" inputmode="decimal" placeholder="z. B. 2">
+                  </label>
+                </div>
+              </section>
+
+              <section class="master-work-step">
+                <span>3</span>
+                <div>
+                  <p class="tree-label">d mit p vergleichen</p>
+                  <select id="master-comparison">
+                    <option value="">Vergleich auswählen</option>
+                    <option value="d<p">d &lt; p – Rekursion wächst stärker</option>
+                    <option value="d=p">d = p – beide sind gleich stark</option>
+                    <option value="d>p">d &gt; p – Zusatzarbeit wächst stärker</option>
+                  </select>
+                </div>
+              </section>
+
+              <section class="master-work-step">
+                <span>4</span>
+                <div>
+                  <p class="tree-label">Fall und Ergebnis ableiten</p>
+                  <div class="master-result-grid">
+                    <select id="master-case-select">
+                      <option value="">Fall auswählen</option>
+                      <option value="Fall 1">Fall 1</option>
+                      <option value="Fall 2">Fall 2</option>
+                      <option value="Fall 3">Fall 3</option>
+                    </select>
+                    <form id="master-runtime-options" class="choices compact-choices"></form>
+                  </div>
+                </div>
+              </section>
             </div>
 
             <div class="actions quiz-actions">
@@ -206,6 +270,7 @@
             </div>
 
             <div id="master-feedback" class="feedback" aria-live="polite"></div>
+            <div id="master-solution" class="master-solution is-hidden"></div>
           </section>
         </div>
       </section>

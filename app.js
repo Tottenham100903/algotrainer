@@ -497,6 +497,51 @@ const masterPatterns = [
   },
 ];
 
+const masterLearnCases = {
+  case1: {
+    formula: "T(n) = 8T(n / 2) + 3n²",
+    parameters: "a = 8, b = 2, c = 3, d = 2",
+    result: "Θ(n³)",
+    steps: [
+      ["Parameter ablesen", "Aus aT(n/b) + c·nᵈ lesen wir a=8, b=2, c=3 und d=2 ab."],
+      ["Rekursionsanteil berechnen", "p = log₂(8) = 3. Der Rekursionsbaum erzeugt also Arbeit in der Größenordnung n³."],
+      ["Exponenten vergleichen", "d=2 ist kleiner als p=3. Die Zusatzarbeit 3n² wächst langsamer als n³; der Faktor c=3 ändert daran nichts."],
+      ["Fall und Ergebnis", "Fall 1 gilt: Die Rekursion dominiert. Deshalb ist T(n) = Θ(nᵖ) = Θ(n³)."],
+    ],
+  },
+  case2: {
+    formula: "T(n) = 2T(n / 2) + 5n",
+    parameters: "a = 2, b = 2, c = 5, d = 1",
+    result: "Θ(n log n)",
+    steps: [
+      ["Parameter ablesen", "Es gilt a=2, b=2, c=5 und d=1. Pro Aufruf entstehen zwei halb so große Teilprobleme."],
+      ["Rekursionsanteil berechnen", "p = log₂(2) = 1. Damit wächst der reine Rekursionsanteil wie n¹."],
+      ["Exponenten vergleichen", "d=1 und p=1 sind gleich. Rekursion und Zusatzarbeit tragen auf jeder Ebene dieselbe Größenordnung bei."],
+      ["Fall und Ergebnis", "Fall 2 gilt. Die gleich große Arbeit fällt auf log n Ebenen an: T(n) = Θ(nᵈ log n) = Θ(n log n)."],
+    ],
+  },
+  case3: {
+    formula: "T(n) = 2T(n / 2) + 4n²",
+    parameters: "a = 2, b = 2, c = 4, d = 2",
+    result: "Θ(n²)",
+    steps: [
+      ["Parameter ablesen", "Es gilt a=2, b=2, c=4 und d=2. Außerhalb der Rekursion werden pro Aufruf 4n² Operationen modelliert."],
+      ["Rekursionsanteil berechnen", "p = log₂(2) = 1. Der Rekursionsanteil allein wächst damit wie n."],
+      ["Exponenten vergleichen", "d=2 ist größer als p=1. Die Zusatzarbeit n² wächst polynomial schneller als der Rekursionsanteil n."],
+      ["Fall und Ergebnis", "Fall 3 gilt; für diese polynomiale Form ist die Regularitätsbedingung erfüllt. Daher ist T(n) = Θ(nᵈ) = Θ(n²)."],
+    ],
+  },
+};
+
+const masterApplicationQuestions = [
+  { a: 8, b: 2, c: 3, d: 2, p: 3, comparison: "d<p", caseName: "Fall 1", answer: "n^3" },
+  { a: 4, b: 2, c: 7, d: 1, p: 2, comparison: "d<p", caseName: "Fall 1", answer: "n^2" },
+  { a: 2, b: 2, c: 5, d: 1, p: 1, comparison: "d=p", caseName: "Fall 2", answer: "n log n" },
+  { a: 9, b: 3, c: 2, d: 2, p: 2, comparison: "d=p", caseName: "Fall 2", answer: "n^2 log n" },
+  { a: 2, b: 2, c: 4, d: 2, p: 1, comparison: "d>p", caseName: "Fall 3", answer: "n^2" },
+  { a: 3, b: 3, c: 6, d: 2, p: 1, comparison: "d>p", caseName: "Fall 3", answer: "n^2" },
+];
+
 const sortAlgorithms = {
   selection: {
     name: "Selectionsort",
@@ -925,6 +970,8 @@ const state = {
   runtimeQuestion: null,
   masterQuestion: null,
   showMasterHelp: false,
+  masterSection: "learn",
+  masterLearnStep: 0,
   sortValues: [],
   sortSteps: [],
   sortStepIndex: 0,
@@ -952,6 +999,8 @@ const state = {
   avlPreviewTimer: null,
   renderCache: new Map(),
   logoRideTimer: null,
+  logoRideArmed: true,
+  logoPointerInside: false,
 };
 
 const el = {
@@ -970,13 +1019,25 @@ const el = {
   masterRecurrence: document.getElementById("master-recurrence"),
   masterTask: document.getElementById("master-task"),
   masterHelp: document.getElementById("master-help"),
-  masterCaseHelp: document.getElementById("master-case-help"),
   masterHelpToggle: document.getElementById("toggle-master-help"),
-  masterMethodOptions: document.getElementById("master-method-options"),
-  masterFlowOptions: document.getElementById("master-flow-options"),
-  masterCaseOptions: document.getElementById("master-case-options"),
   masterRuntimeOptions: document.getElementById("master-runtime-options"),
   masterFeedback: document.getElementById("master-feedback"),
+  masterSolution: document.getElementById("master-solution"),
+  masterInputA: document.getElementById("master-input-a"),
+  masterInputB: document.getElementById("master-input-b"),
+  masterInputC: document.getElementById("master-input-c"),
+  masterInputD: document.getElementById("master-input-d"),
+  masterInputP: document.getElementById("master-input-p"),
+  masterComparison: document.getElementById("master-comparison"),
+  masterCaseSelect: document.getElementById("master-case-select"),
+  masterLearnCard: document.getElementById("master-learn-card"),
+  masterTrainingCard: document.getElementById("master-card"),
+  masterLearnCase: document.getElementById("master-learn-case"),
+  masterLearnExample: document.getElementById("master-learn-example"),
+  masterLearnSteps: document.getElementById("master-learn-steps"),
+  masterLearnCount: document.getElementById("master-learn-count"),
+  masterLearnPrev: document.getElementById("master-learn-prev"),
+  masterLearnNext: document.getElementById("master-learn-next"),
   sortAlgorithm: document.getElementById("sort-algorithm"),
   sortBars: document.getElementById("sort-bars"),
   sortNote: document.getElementById("sort-note"),
@@ -1053,7 +1114,16 @@ document.querySelectorAll("[data-back-home]").forEach((button) => {
   button.addEventListener("click", () => setActiveView("home"));
 });
 if (el.homeTitle) {
-  el.homeTitle.addEventListener("pointerenter", playLogoRide);
+  el.homeTitle.addEventListener("pointerenter", () => {
+    state.logoPointerInside = true;
+    playLogoRide();
+  });
+  el.homeTitle.addEventListener("pointerleave", () => {
+    state.logoPointerInside = false;
+    if (!el.homeTitle.classList.contains("is-riding")) {
+      state.logoRideArmed = true;
+    }
+  });
   el.homeTitle.addEventListener("focus", playLogoRide);
 }
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
@@ -1061,6 +1131,15 @@ document.getElementById("check-runtime").addEventListener("click", checkRuntimeQ
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
 el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
+document.querySelectorAll("[data-master-section]").forEach((button) => {
+  button.addEventListener("click", () => setMasterSection(button.dataset.masterSection));
+});
+el.masterLearnCase.addEventListener("change", () => {
+  state.masterLearnStep = 0;
+  renderMasterLearning();
+});
+el.masterLearnPrev.addEventListener("click", () => changeMasterLearningStep(-1));
+el.masterLearnNext.addEventListener("click", () => changeMasterLearningStep(1));
 el.sortAlgorithm.addEventListener("change", rebuildSortSteps);
 document.getElementById("shuffle-sort").addEventListener("click", resetSortValues);
 el.sortPrev.addEventListener("click", previousSortStep);
@@ -1110,6 +1189,8 @@ el.sandboxValue.addEventListener("keydown", (event) => {
 
 createRuntimeQuestion();
 createMasterQuestion();
+setMasterSection("learn");
+renderMasterLearning();
 resetSortValues();
 createSortQuestion();
 setSortSection("visual");
@@ -1160,15 +1241,21 @@ function setActiveView(viewName) {
 }
 
 function playLogoRide() {
-  if (!el.homeTitle || el.homeTitle.classList.contains("is-riding")) {
+  if (
+    !el.homeTitle
+    || el.homeTitle.classList.contains("is-riding")
+    || !state.logoRideArmed
+  ) {
     return;
   }
 
+  state.logoRideArmed = false;
   window.clearTimeout(state.logoRideTimer);
   el.homeTitle.classList.add("is-riding");
   state.logoRideTimer = window.setTimeout(() => {
     el.homeTitle.classList.remove("is-riding");
-  }, 940);
+    state.logoRideArmed = !state.logoPointerInside;
+  }, 1500);
 }
 
 function createRuntimeQuestion() {
@@ -1209,81 +1296,100 @@ function checkRuntimeQuestion() {
 }
 
 function createMasterQuestion() {
-  const pattern = sample(masterPatterns);
+  const pattern = sample(masterApplicationQuestions);
   const runtimeChoices = shuffle([
     pattern.answer,
     ...shuffle(masterRuntimeChoicesPool.filter((item) => item !== pattern.answer)).slice(0, 3),
   ]);
 
   state.masterQuestion = { ...pattern, runtimeChoices };
-  el.masterTitle.textContent = pattern.title;
-  el.masterRecurrence.innerHTML = pattern.recurrenceHtml || pattern.recurrence;
-  el.masterTask.textContent = pattern.task;
-  renderChoices(el.masterMethodOptions, "master-method", masterMethodChoices);
-  renderChoices(el.masterFlowOptions, "master-flow", masterFlowChoices);
-  renderChoices(el.masterCaseOptions, "master-case", masterCaseChoices);
+  el.masterTitle.textContent = "Klausuraufgabe: Rekurrenz vollständig herleiten";
+  el.masterRecurrence.innerHTML = `T(n) = ${pattern.a}T(<span class="frac"><span>n</span><span>${pattern.b}</span></span>) + ${pattern.c}n<sup>${pattern.d}</sup>`;
+  el.masterTask.textContent = "Dokumentiere jeden Rechenschritt. Erst die Herleitung macht das Ergebnis nachvollziehbar.";
   renderChoices(
     el.masterRuntimeOptions,
     "master-runtime",
     runtimeChoices.map((choice) => ({ value: choice, label: formatRuntimeLabel(choice) })),
   );
+  [el.masterInputA, el.masterInputB, el.masterInputC, el.masterInputD, el.masterInputP]
+    .forEach((input) => {
+      input.value = "";
+    });
+  el.masterComparison.value = "";
+  el.masterCaseSelect.value = "";
   setFeedback(el.masterFeedback, "");
+  el.masterSolution.classList.add("is-hidden");
+  el.masterSolution.innerHTML = "";
 }
 
 function checkMasterQuestion() {
-  const selectedMethod = getSelectedValue("master-method-choice");
-  const selectedFlow = getSelectedValue("master-flow-choice");
-  const selectedCase = getSelectedValue("master-case-choice");
   const selectedRuntime = getSelectedValue("master-runtime-choice");
+  const values = {
+    a: Number(el.masterInputA.value),
+    b: Number(el.masterInputB.value),
+    c: Number(el.masterInputC.value),
+    d: Number(el.masterInputD.value),
+    p: Number(el.masterInputP.value),
+  };
 
-  if (!selectedMethod || !selectedFlow || !selectedCase || !selectedRuntime) {
-    setFeedback(el.masterFeedback, "Wähle Verfahren, Ablauf, Fall/Begründung und Laufzeit aus.", "wrong");
+  if (
+    [el.masterInputA, el.masterInputB, el.masterInputC, el.masterInputD, el.masterInputP]
+      .some((input) => input.value.trim() === "")
+    || Object.values(values).some((value) => !Number.isFinite(value))
+    || !el.masterComparison.value
+    || !el.masterCaseSelect.value
+    || !selectedRuntime
+  ) {
+    setFeedback(el.masterFeedback, "Bearbeite zuerst alle vier Schritte der Herleitung.", "wrong");
     return;
   }
 
-  const methodCorrect = selectedMethod === state.masterQuestion.method;
-  const flowCorrect = selectedFlow === expectedMasterFlow(state.masterQuestion);
-  const caseCorrect = selectedCase === state.masterQuestion.caseName;
+  const parameterKeys = ["a", "b", "c", "d"];
+  const parametersCorrect = parameterKeys.every(
+    (key) => values[key] === state.masterQuestion[key],
+  );
+  const pCorrect = Math.abs(values.p - state.masterQuestion.p) < 0.01;
+  const comparisonCorrect = el.masterComparison.value === state.masterQuestion.comparison;
+  const caseCorrect = el.masterCaseSelect.value === state.masterQuestion.caseName;
   const runtimeCorrect = selectedRuntime === state.masterQuestion.answer;
+  const checks = [
+    [parametersCorrect, "Parameter a, b, c und d"],
+    [pCorrect, "Vergleichsexponent p"],
+    [comparisonCorrect, "Vergleich von d und p"],
+    [caseCorrect, "Master-Fall"],
+    [runtimeCorrect, "Laufzeit"],
+  ];
+  const firstError = checks.find((check) => !check[0]);
 
-  if (methodCorrect && flowCorrect && caseCorrect && runtimeCorrect) {
+  if (!firstError) {
     setFeedback(
       el.masterFeedback,
-      `Richtig: ${selectedMethod}, passender Ablauf, ${selectedCase}, Laufzeitklasse ${selectedRuntime}. ${state.masterQuestion.explanation}`,
+      "Vollständig richtig. Du hast die Rekurrenz in einer klausurtauglichen Reihenfolge hergeleitet.",
       "correct",
     );
-    return;
+  } else {
+    setFeedback(
+      el.masterFeedback,
+      `Der erste fehlerhafte Rechenschritt ist: ${firstError[1]}. Vergleiche deine Eingabe mit der Herleitung darunter und versuche anschließend eine neue Aufgabe.`,
+      "wrong",
+    );
   }
 
-  const missing = [];
-  if (!methodCorrect) {
-    missing.push(`Verfahren: ${state.masterQuestion.method}`);
-  }
-  if (!flowCorrect) {
-    missing.push(`Ablauf: ${expectedMasterFlow(state.masterQuestion)}`);
-  }
-  if (!caseCorrect) {
-    missing.push(`Fall/Begründung: ${state.masterQuestion.caseName}`);
-  }
-  if (!runtimeCorrect) {
-    missing.push(`Laufzeitklasse: ${state.masterQuestion.answer}`);
-  }
-
-  setFeedback(
-    el.masterFeedback,
-    `Noch nicht ganz. Korrektur: ${missing.join(", ")}. ${state.masterQuestion.explanation}`,
-    "wrong",
-  );
-}
-
-function expectedMasterFlow(question) {
-  if (question.method === "Divide and Conquer / Master-Theorem") {
-    return "Master: p = log_b(a) berechnen und f(n) mit n^p vergleichen";
-  }
-  if (question.method === "Subtract and Conquer") {
-    return "Subtract: Rekurrenz entfalten und entstehende Summe auswerten";
-  }
-  return "Substitution: Vermutung wählen und durch Einsetzen/Induktion prüfen";
+  const comparisonLabels = {
+    "d<p": "d < p, also dominiert die Rekursion",
+    "d=p": "d = p, also herrscht Gleichgewicht",
+    "d>p": "d > p, also dominiert die Zusatzarbeit",
+  };
+  el.masterSolution.innerHTML = `
+    <p class="tree-label">Musterlösung</p>
+    <ol>
+      <li><strong>Ablesen:</strong> a=${state.masterQuestion.a}, b=${state.masterQuestion.b}, c=${state.masterQuestion.c}, d=${state.masterQuestion.d}.</li>
+      <li><strong>Berechnen:</strong> p = log<sub>${state.masterQuestion.b}</sub>(${state.masterQuestion.a}) = ${state.masterQuestion.p}.</li>
+      <li><strong>Vergleichen:</strong> ${comparisonLabels[state.masterQuestion.comparison]}.</li>
+      <li><strong>Folgern:</strong> ${state.masterQuestion.caseName} ergibt T(n) = Θ(${formatRuntimeLabel(state.masterQuestion.answer)}).</li>
+    </ol>
+  `;
+  el.masterSolution.classList.remove("is-hidden");
 }
 
 function toggleMasterHelp() {
@@ -1293,8 +1399,57 @@ function toggleMasterHelp() {
 
 function syncMasterHelpVisibility() {
   el.masterHelp.classList.toggle("is-hidden", !state.showMasterHelp);
-  el.masterCaseHelp.classList.toggle("is-hidden", !state.showMasterHelp);
   el.masterHelpToggle.textContent = state.showMasterHelp ? "Hilfestellung ausblenden" : "Hilfestellung anzeigen";
+}
+
+function setMasterSection(section) {
+  state.masterSection = section;
+  const showLearning = section === "learn";
+  el.masterLearnCard.classList.toggle("is-hidden", !showLearning);
+  el.masterTrainingCard.classList.toggle("is-hidden", showLearning);
+
+  document.querySelectorAll("[data-master-section]").forEach((button) => {
+    const active = button.dataset.masterSection === section;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (showLearning) {
+    renderMasterLearning();
+  }
+}
+
+function changeMasterLearningStep(direction) {
+  const lesson = masterLearnCases[el.masterLearnCase.value];
+  state.masterLearnStep = Math.max(
+    0,
+    Math.min(lesson.steps.length - 1, state.masterLearnStep + direction),
+  );
+  renderMasterLearning();
+}
+
+function renderMasterLearning() {
+  const lesson = masterLearnCases[el.masterLearnCase.value];
+  if (!lesson) {
+    return;
+  }
+
+  el.masterLearnExample.innerHTML = `
+    <p class="tree-label">Beispiel</p>
+    <p class="recurrence-line">${lesson.formula}</p>
+    <p class="operation-subline">${lesson.parameters} · Ergebnis: ${lesson.result}</p>
+  `;
+  el.masterLearnSteps.innerHTML = lesson.steps
+    .map(([title, text], index) => `
+      <article class="master-learn-step${index <= state.masterLearnStep ? " is-visible" : ""}${index === state.masterLearnStep ? " is-current" : ""}">
+        <strong>${index + 1}</strong>
+        <div><h3>${title}</h3><p>${text}</p></div>
+      </article>
+    `)
+    .join("");
+  el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
+  el.masterLearnPrev.disabled = state.masterLearnStep === 0;
+  el.masterLearnNext.disabled = state.masterLearnStep === lesson.steps.length - 1;
 }
 
 function resetSortValues() {
