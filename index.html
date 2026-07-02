@@ -157,10 +157,10 @@ queue: [A, C, D]</pre>
             <div class="card-head">
               <div>
                 <p class="section-label">Erklärung</p>
-                <h2>Master-Theorem systematisch anwenden</h2>
+                <h2>Rekurrenzen systematisch lösen</h2>
               </div>
               <div class="master-case-select">
-                <p>Dominanzregel</p>
+                <p>Verfahren / Fall</p>
                 <input id="master-learn-case" type="hidden" value="case1">
                 <div class="master-rule-options" data-master-learn-options>
                   <button class="master-rule-option is-active" type="button" data-master-learn-case="case1" aria-pressed="true">
@@ -178,20 +178,40 @@ queue: [A, C, D]</pre>
                     <span class="rule-detail">Zusatzarbeit dominiert</span>
                     <span class="rule-formula">T(n) = O(n<sup>d</sup>)</span>
                   </button>
+                  <button class="master-rule-option" type="button" data-master-learn-case="subtract-sum" aria-pressed="false">
+                    <span class="rule-main">T(n - 1) + g(n)</span>
+                    <span class="rule-detail">Subtract: Summe entfalten</span>
+                    <span class="rule-formula">T(n) = T(1) + Σg(i)</span>
+                  </button>
+                  <button class="master-rule-option" type="button" data-master-learn-case="subtract-shrink" aria-pressed="false">
+                    <span class="rule-main">T(n / b) + g(n)</span>
+                    <span class="rule-detail">Subtract: Tiefe bestimmen</span>
+                    <span class="rule-formula">logarithmische Ebenen</span>
+                  </button>
+                  <button class="master-rule-option" type="button" data-master-learn-case="substitution-linear" aria-pressed="false">
+                    <span class="rule-main">T(n) ≤ c · n</span>
+                    <span class="rule-detail">Substitution: Schranke beweisen</span>
+                    <span class="rule-formula">Einsetzen und c wählen</span>
+                  </button>
+                  <button class="master-rule-option" type="button" data-master-learn-case="substitution-branch" aria-pressed="false">
+                    <span class="rule-main">T(n - 1) + T(n - 2)</span>
+                    <span class="rule-detail">Substitution: exponentiell abschätzen</span>
+                    <span class="rule-formula">T(n) = O(2<sup>n</sup>)</span>
+                  </button>
                 </div>
               </div>
             </div>
 
             <div class="master-general-form">
-              <p class="tree-label">Allgemeine Form</p>
+              <p class="tree-label">Grundidee</p>
               <p class="master-main-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
               <div class="master-parameter-grid">
-                <p><strong>a</strong><span>Anzahl der rekursiven Teilprobleme</span></p>
-                <p><strong>b</strong><span>Verkleinerungsfaktor der Eingabe</span></p>
-                <p><strong>c</strong><span>konstanter Faktor der Zusatzarbeit</span></p>
-                <p><strong>d</strong><span>Exponent der Zusatzarbeit n<sup>d</sup></span></p>
+                <p><strong>Master</strong><span>Vergleiche d mit log<sub>b</sub>(a)</span></p>
+                <p><strong>Subtract</strong><span>Entfalte die Ebenen als Summe</span></p>
+                <p><strong>Substitution</strong><span>Setze eine vermutete Schranke ein</span></p>
+                <p><strong>Ziel</strong><span>Begründete O-Laufzeit ableiten</span></p>
               </div>
-              <p class="section-copy">Entscheidend ist der Vergleich von <strong>d</strong> mit <strong>log<sub>b</sub>(a)</strong>. Der positive konstante Faktor c verändert die asymptotische Laufzeit nicht.</p>
+              <p class="section-copy">Wähle das Verfahren nach der Struktur der Rekurrenz: gleich große Teilprobleme sprechen für das Master-Theorem, ein einzelnes kleineres Teilproblem für Subtract and Conquer, schwer passende oder zu beweisende Schranken für Substitution.</p>
             </div>
 
             <div id="master-learn-example" class="recurrence-box"></div>
@@ -216,7 +236,7 @@ queue: [A, C, D]</pre>
             </div>
 
             <p class="section-copy">
-              Löse die Rekurrenz wie in einer Klausur: Lies die Parameter ab, berechne log<sub>b</sub>(a), vergleiche d damit und leite daraus die Laufzeit her.
+              Löse die Rekurrenz wie in einer Klausur: Wähle zuerst das passende Verfahren, entscheide dich für den Rechenweg, begründe den Fall und leite daraus die Laufzeit her.
             </p>
 
             <div class="recurrence-box">
@@ -227,21 +247,21 @@ queue: [A, C, D]</pre>
 
             <div id="master-help" class="help-box is-hidden">
               <div class="help-card">
-                <h3>1. Parameter markieren</h3>
-                <p>Bringe die Rekurrenz in die Form:</p>
+                <h3>1. Verfahren erkennen</h3>
+                <p>Master-Theorem passt zu mehreren gleich großen Teilproblemen. Subtract and Conquer passt zu einem Teilproblem. Substitution nutzt du, wenn du eine Schranke gezielt beweisen willst.</p>
+              </div>
+              <div class="help-card">
+                <h3>2. Master-Theorem</h3>
+                <p>Bringe Divide-and-Conquer-Rekurrenzen in die Form:</p>
                 <p class="mini-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
               </div>
               <div class="help-card">
-                <h3>2. log<sub>b</sub>(a) berechnen</h3>
-                <p>Berechne log<sub>b</sub>(a). Dieser Exponent beschreibt, wie stark der rekursive Anteil wächst.</p>
+                <h3>3. Subtract and Conquer</h3>
+                <p>Entfalte ein einzelnes Teilproblem: T(n - 1) führt meist zu Summen, T(n / b) zu logarithmisch vielen Ebenen oder geometrischen Summen.</p>
               </div>
               <div class="help-card">
-                <h3>3. Exponenten vergleichen</h3>
-                <p>Vergleiche direkt: d &lt; log<sub>b</sub>(a), d = log<sub>b</sub>(a) oder d &gt; log<sub>b</sub>(a).</p>
-              </div>
-              <div class="help-card">
-                <h3>4. Ergebnis notieren</h3>
-                <p>d &lt; log<sub>b</sub>(a): O(n<sup>log<sub>b</sub>(a)</sup>), d = log<sub>b</sub>(a): O(n<sup>d</sup> log n), d &gt; log<sub>b</sub>(a): O(n<sup>d</sup>).</p>
+                <h3>4. Substitution</h3>
+                <p>Rate eine passende Schranke, setze sie für kleinere Eingaben ein und wähle die Konstante so, dass die Ungleichung aufgeht.</p>
               </div>
             </div>
 
@@ -249,48 +269,24 @@ queue: [A, C, D]</pre>
               <section class="master-work-step">
                 <span>1</span>
                 <div>
-                  <p class="tree-label">Parameter selbst ablesen</p>
-                  <div class="master-parameter-inputs">
-                    <label>a<input id="master-input-a" type="number" min="1" inputmode="numeric"></label>
-                    <label>b<input id="master-input-b" type="number" min="2" inputmode="numeric"></label>
-                    <label>c<input id="master-input-c" type="number" min="1" inputmode="numeric"></label>
-                    <label>d<input id="master-input-d" type="number" min="0" inputmode="numeric"></label>
-                  </div>
+                  <p class="tree-label">Passendes Verfahren auswählen</p>
+                  <form id="master-method-options" class="choices compact-choices"></form>
                 </div>
               </section>
 
               <section class="master-work-step">
                 <span>2</span>
                 <div>
-                  <p class="tree-label">Vergleichsexponent berechnen</p>
-                  <label class="master-calculation-input">log<sub>b</sub>(a) =
-                    <input id="master-input-p" type="number" min="0" step="0.001" inputmode="decimal" placeholder="z. B. 2">
-                  </label>
+                  <p class="tree-label">Rechenweg festlegen</p>
+                  <form id="master-flow-options" class="choices compact-choices"></form>
                 </div>
               </section>
 
               <section class="master-work-step">
                 <span>3</span>
                 <div>
-                  <p class="tree-label">d mit log<sub>b</sub>(a) vergleichen</p>
-                  <input id="master-comparison" type="hidden" value="">
-                  <div class="master-rule-options master-rule-options-compact" data-master-comparison-options>
-                    <button class="master-rule-option" type="button" data-master-comparison="d&lt;p" aria-pressed="false">
-                      <span class="rule-main">d &lt; log<sub>b</sub>(a)</span>
-                      <span class="rule-detail">Rekursion wächst stärker</span>
-                      <span class="rule-formula">O(n<sup>log<sub>b</sub>(a)</sup>)</span>
-                    </button>
-                    <button class="master-rule-option" type="button" data-master-comparison="d=p" aria-pressed="false">
-                      <span class="rule-main">d = log<sub>b</sub>(a)</span>
-                      <span class="rule-detail">beide Anteile sind gleich stark</span>
-                      <span class="rule-formula">O(n<sup>d</sup> log n)</span>
-                    </button>
-                    <button class="master-rule-option" type="button" data-master-comparison="d&gt;p" aria-pressed="false">
-                      <span class="rule-main">d &gt; log<sub>b</sub>(a)</span>
-                      <span class="rule-detail">Zusatzarbeit wächst stärker</span>
-                      <span class="rule-formula">O(n<sup>d</sup>)</span>
-                    </button>
-                  </div>
+                  <p class="tree-label">Fall oder Begründung auswählen</p>
+                  <form id="master-case-options" class="choices compact-choices"></form>
                 </div>
               </section>
 
@@ -298,28 +294,8 @@ queue: [A, C, D]</pre>
                 <span>4</span>
                 <div>
                   <p class="tree-label">Dominanz und Ergebnis ableiten</p>
-                  <div class="master-result-grid">
-                    <input id="master-case-select" type="hidden" value="">
-                    <div class="master-rule-options master-rule-options-compact" data-master-case-options>
-                      <button class="master-rule-option" type="button" data-master-case="Fall 1" aria-pressed="false">
-                        <span class="rule-main">Rekursion dominiert</span>
-                        <span class="rule-detail">wenn d &lt; log<sub>b</sub>(a)</span>
-                        <span class="rule-formula">T(n) = O(n<sup>log<sub>b</sub>(a)</sup>)</span>
-                      </button>
-                      <button class="master-rule-option" type="button" data-master-case="Fall 2" aria-pressed="false">
-                        <span class="rule-main">Gleichgewicht</span>
-                        <span class="rule-detail">wenn d = log<sub>b</sub>(a)</span>
-                        <span class="rule-formula">T(n) = O(n<sup>d</sup> log n)</span>
-                      </button>
-                      <button class="master-rule-option" type="button" data-master-case="Fall 3" aria-pressed="false">
-                        <span class="rule-main">Zusatzarbeit dominiert</span>
-                        <span class="rule-detail">wenn d &gt; log<sub>b</sub>(a)</span>
-                        <span class="rule-formula">T(n) = O(n<sup>d</sup>)</span>
-                      </button>
-                    </div>
-                    <form id="master-runtime-options" class="choices compact-choices"></form>
-                  </div>
-                  <p class="master-rule-hint">Merke: d &lt; log<sub>b</sub>(a) → O(n<sup>log<sub>b</sub>(a)</sup>), d = log<sub>b</sub>(a) → O(n<sup>d</sup> log n), d &gt; log<sub>b</sub>(a) → O(n<sup>d</sup>).</p>
+                  <form id="master-runtime-options" class="choices compact-choices"></form>
+                  <p class="master-rule-hint">Merke: Beim Master-Theorem entscheidest du über d im Vergleich zu log<sub>b</sub>(a). Bei Subtract and Conquer entsteht die Laufzeit durch Entfalten der Summe. Bei Substitution zählt, ob die vermutete Schranke nach dem Einsetzen stabil bleibt.</p>
                 </div>
               </section>
             </div>

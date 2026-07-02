@@ -147,8 +147,8 @@ body {
   position: relative;
   width: fit-content;
   overflow: visible;
-  font-size: clamp(4.2rem, 11vw, 9rem);
-  letter-spacing: -0.06em;
+  font-size: clamp(3.35rem, 11vw, 9rem);
+  letter-spacing: -0.055em;
   line-height: 0.72;
 }
 
@@ -1253,7 +1253,7 @@ h2 {
 
 .master-rule-options {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.45rem;
 }
 
@@ -2380,15 +2380,6 @@ button:disabled {
     min-height: 350px;
     padding: 1.25rem;
     border-radius: 20px;
-  }
-
-  .home-title {
-    font-size: clamp(3.15rem, 16vw, 4.2rem);
-    letter-spacing: -0.045em;
-  }
-
-  .logo-train {
-    --logo-ride-out: 128vw;
   }
 
   .module-tile strong {
