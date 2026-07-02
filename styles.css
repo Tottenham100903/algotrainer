@@ -52,10 +52,11 @@ body {
 .hero-home {
   display: grid;
   grid-template-columns: 1fr;
+  align-items: start;
   gap: 1.5rem;
   max-width: 940px;
   margin: 0 auto;
-  padding-top: clamp(2.5rem, 8vw, 7rem);
+  padding-top: clamp(3.5rem, 8vw, 7rem);
   padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
 }
 
@@ -136,7 +137,7 @@ h2 {
 }
 
 .home-grid {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   max-width: 940px;
   margin: 0 auto;
   padding: 0 1.5rem;
@@ -149,6 +150,10 @@ h2 {
 
 .module-grid-single {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.module-grid-full {
+  grid-column: 1 / -1;
 }
 
 .module-tile {
@@ -293,6 +298,12 @@ h2 {
     linear-gradient(135deg, rgba(255, 252, 246, 0.95), rgba(241, 238, 250, 0.92));
 }
 
+.module-tile-sorting {
+  background:
+    radial-gradient(circle at top right, rgba(13, 107, 95, 0.18), transparent 32%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.95), rgba(239, 246, 241, 0.92));
+}
+
 .module-hero {
   display: grid;
   gap: 1rem;
@@ -359,6 +370,7 @@ h2 {
 .snippet-meta,
 .recurrence-box,
 .help-box,
+.ds-scenario,
 .operation-box,
 .tree-canvas,
 .log-box,
@@ -372,6 +384,7 @@ h2 {
 .snippet-meta,
 .recurrence-box,
 .help-box,
+.ds-scenario,
 .operation-box,
 .tree-canvas,
 .log-box {
@@ -404,6 +417,25 @@ h2 {
   font-weight: 500;
   overflow-wrap: anywhere;
   line-height: 1.25;
+}
+
+.frac {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.08em;
+  line-height: 1;
+  text-align: center;
+}
+
+.frac span:first-child {
+  border-bottom: 1.5px solid currentColor;
+  padding: 0 0.12em 0.08em;
+}
+
+.frac span:last-child {
+  padding-top: 0.08em;
 }
 
 .help-box {
@@ -470,6 +502,211 @@ h2 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.sort-controls label {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 210px;
+  color: var(--muted);
+}
+
+.sort-controls select {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: var(--surface-strong);
+  color: var(--text);
+  font: inherit;
+}
+
+.sort-bars {
+  display: flex;
+  align-items: end;
+  gap: 0.55rem;
+  min-height: 280px;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(13, 107, 95, 0.06), transparent),
+    var(--surface-strong);
+}
+
+.sort-bar {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: end;
+  justify-content: center;
+  min-width: 0;
+  border-radius: 12px 12px 4px 4px;
+  background: rgba(13, 107, 95, 0.45);
+  transition: height 220ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.sort-bar.active {
+  background: rgba(217, 95, 67, 0.72);
+  transform: translateY(-4px);
+}
+
+.sort-bar.sorted {
+  background: rgba(33, 110, 57, 0.72);
+}
+
+.sort-bar span {
+  padding-bottom: 0.45rem;
+  color: white;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.sort-step-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+#sort-step-count {
+  flex-shrink: 0;
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--primary-strong);
+}
+
+.sort-info {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.sort-info div {
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.8rem;
+  background: rgba(255, 253, 248, 0.75);
+}
+
+.sort-info strong {
+  color: var(--primary-strong);
+}
+
+.sort-info span {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.runtime-case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ds-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.ds-scenario {
+  min-height: 220px;
+  display: grid;
+  align-content: start;
+  gap: 0.8rem;
+  background:
+    radial-gradient(circle at top right, rgba(13, 107, 95, 0.07), transparent 55%),
+    var(--surface-strong);
+}
+
+.ds-topic {
+  margin: 0;
+  color: var(--primary-strong);
+  font-weight: 700;
+}
+
+.ds-question {
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-size: 1.08rem;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.ds-list,
+.ds-map,
+.ds-buckets,
+.ds-graph,
+.ds-heap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.ds-list span,
+.ds-map span,
+.ds-buckets span,
+.ds-graph span,
+.ds-heap span {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.65rem 0.8rem;
+  background: rgba(255, 253, 248, 0.85);
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--text);
+}
+
+.ds-list span {
+  min-width: 46px;
+  text-align: center;
+}
+
+.ds-list.linked span::after {
+  content: " →";
+  color: var(--secondary);
+}
+
+.ds-list.linked span:last-child::after {
+  content: "";
+}
+
+.ds-map,
+.ds-buckets,
+.ds-graph {
+  display: grid;
+  align-items: stretch;
+}
+
+.ds-heap {
+  justify-content: center;
+}
+
+.ds-heap span:first-child {
+  flex-basis: 100%;
+  max-width: 84px;
+  margin-inline: auto;
+  text-align: center;
+  background: rgba(13, 107, 95, 0.12);
+  border-color: rgba(13, 107, 95, 0.25);
+  font-weight: 700;
 }
 
 .compact-choices {
@@ -817,8 +1054,17 @@ button:disabled {
   }
 
   .help-box,
-  .master-quiz-grid {
+  .master-quiz-grid,
+  .runtime-case-grid,
+  .ds-layout,
+  .sort-info {
     grid-template-columns: 1fr;
+  }
+
+  .sort-controls,
+  .sort-controls label,
+  .sort-controls button {
+    width: 100%;
   }
 
   .inline-actions > button,
@@ -902,6 +1148,7 @@ button:disabled {
   .snippet-meta,
   .recurrence-box,
   .help-box,
+  .ds-scenario,
   .operation-box,
   .tree-canvas,
   .log-box {
@@ -926,6 +1173,21 @@ button:disabled {
   .tree-canvas {
     min-height: 170px;
     justify-content: flex-start;
+  }
+
+  .sort-bars {
+    min-height: 220px;
+    gap: 0.35rem;
+    padding: 0.75rem;
+  }
+
+  .sort-bar span {
+    font-size: 0.68rem;
+  }
+
+  .sort-step-row {
+    flex-direction: column;
+    gap: 0.35rem;
   }
 
   .tree-canvas-large,

@@ -43,12 +43,23 @@
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
 
-          <button class="module-tile module-tile-avl" type="button" data-open-view="avl">
+          <button class="module-tile module-tile-sorting" type="button" data-open-view="sorting">
+            <span class="module-kicker">03 / Sortieren</span>
             <strong>
-              <span>AVL</span>
-              <span>Bäume</span>
+              <span>Sortier</span>
+              <span>verfahren</span>
             </strong>
-            <span class="module-copy">Rotationen verstehen, Hilfe einblenden und in der Sandbox mit Bäumen experimentieren.</span>
+            <span class="module-copy">Heapsort, Mergesort, Selectionsort und weitere Verfahren visuell Schritt für Schritt verstehen.</span>
+            <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
+          </button>
+
+          <button class="module-tile module-tile-avl" type="button" data-open-view="avl">
+            <span class="module-kicker">04 / Datenstrukturen</span>
+            <strong>
+              <span>Daten</span>
+              <span>strukturen</span>
+            </strong>
+            <span class="module-copy">Listen, Hashmaps, DFS, Heaps und AVL-Bäume gezielt trainieren.</span>
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
         </section>
@@ -134,7 +145,7 @@
               <div class="help-card">
                 <h3>1. Form prüfen</h3>
                 <p>Master-Theorem nur bei gleicher Teilproblemgröße:</p>
-                <p class="mini-formula">T(n) = aT(n / b) + f(n)</p>
+                <p class="mini-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + f(n)</p>
               </div>
               <div class="help-card">
                 <h3>2. Methode wählen</h3>
@@ -180,21 +191,138 @@
         </div>
       </section>
 
-      <section id="avl-view" class="app-view is-hidden">
+      <section id="sorting-view" class="app-view is-hidden">
         <header class="module-hero">
           <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
           <div>
             <p class="eyebrow">Modul 3</p>
-            <h1 class="module-title">AVL-Bäume</h1>
-            <p class="hero-copy">Arbeite dich durch Rotationen und teste Einfügen, Löschen und Balancieren in der Sandbox.</p>
+            <h1 class="module-title">Sortierverfahren</h1>
+            <p class="hero-copy">Beobachte typische Sortieralgorithmen Schritt für Schritt und trainiere ihre Laufzeiten.</p>
           </div>
         </header>
 
         <div class="module-grid">
+          <section class="card" id="sorting-visual-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Visualisierung</p>
+                <h2>Algorithmus verstehen</h2>
+              </div>
+              <button id="shuffle-sort" class="secondary-btn" type="button">Neue Werte</button>
+            </div>
+
+            <p class="section-copy">
+              Waehle ein Verfahren und gehe die Schritte manuell oder automatisch durch.
+            </p>
+
+            <div class="sort-controls">
+              <label>
+                Verfahren
+                <select id="sort-algorithm">
+                  <option value="selection">Selectionsort</option>
+                  <option value="insertion">Insertionsort</option>
+                  <option value="bubble">Bubblesort</option>
+                  <option value="merge">Mergesort</option>
+                  <option value="heap">Heapsort</option>
+                  <option value="quick">Quicksort</option>
+                </select>
+              </label>
+              <button id="sort-prev" class="secondary-btn" type="button">Zurueck</button>
+              <button id="sort-play" class="primary-btn" type="button">Abspielen</button>
+              <button id="sort-next" class="secondary-btn" type="button">Weiter</button>
+            </div>
+
+            <div id="sort-bars" class="sort-bars" aria-label="Sortiervisualisierung"></div>
+            <div class="sort-step-row">
+              <span id="sort-step-count"></span>
+              <span id="sort-note"></span>
+            </div>
+
+            <div id="sort-info" class="sort-info"></div>
+          </section>
+
+          <section class="card" id="sorting-quiz-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Abfrage</p>
+                <h2>Laufzeiten trainieren</h2>
+              </div>
+              <button id="new-sort-question" class="secondary-btn" type="button">Neue Frage</button>
+            </div>
+
+            <p id="sort-question-title" class="section-copy"></p>
+
+            <div class="runtime-case-grid">
+              <div>
+                <p class="tree-label">Best Case</p>
+                <form id="sort-best-options" class="choices compact-choices"></form>
+              </div>
+              <div>
+                <p class="tree-label">Average Case</p>
+                <form id="sort-average-options" class="choices compact-choices"></form>
+              </div>
+              <div>
+                <p class="tree-label">Worst Case</p>
+                <form id="sort-worst-options" class="choices compact-choices"></form>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="check-sort-question" class="primary-btn" type="button">Antwort pruefen</button>
+            </div>
+
+            <div id="sort-feedback" class="feedback" aria-live="polite"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="avl-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
+          <div>
+            <p class="eyebrow">Modul 4</p>
+            <h1 class="module-title">Datenstrukturen</h1>
+            <p class="hero-copy">Trainiere Listen, Woerterbuecher, Hashmaps, Tiefensuche, Heaps und AVL-Baeume.</p>
+          </div>
+        </header>
+
+        <div class="module-grid">
+          <section class="card module-grid-full" id="data-structure-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Grundlagen</p>
+                <h2>Datenstruktur-Training</h2>
+              </div>
+              <button id="new-ds-question" class="secondary-btn" type="button">Neue Aufgabe</button>
+            </div>
+
+            <p class="section-copy">
+              Uebe typische Eigenschaften, Operationen und Denkfehler bei Listen, Woerterbuechern, Hashmaps, DFS und Heaps.
+            </p>
+
+            <div class="ds-layout">
+              <div>
+                <p class="tree-label">Szenario</p>
+                <div id="ds-scenario" class="ds-scenario"></div>
+              </div>
+              <div>
+                <p class="tree-label">Frage</p>
+                <p id="ds-question" class="ds-question"></p>
+                <form id="ds-options" class="choices compact-choices"></form>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="check-ds-question" class="primary-btn" type="button">Antwort pruefen</button>
+            </div>
+
+            <div id="ds-feedback" class="feedback" aria-live="polite"></div>
+          </section>
+
           <section class="card" id="avl-quiz-card">
             <div class="card-head">
               <div>
-                <p class="section-label">Modul 3A</p>
+                <p class="section-label">AVL</p>
                 <h2>AVL-Rotationen</h2>
               </div>
               <div class="inline-actions">
@@ -235,7 +363,7 @@
           <section class="card" id="avl-sandbox-card">
             <div class="card-head">
               <div>
-                <p class="section-label">Modul 3B</p>
+                <p class="section-label">AVL</p>
                 <h2>AVL-Sandbox</h2>
               </div>
               <button id="reset-sandbox" class="secondary-btn" type="button">Zurücksetzen</button>
