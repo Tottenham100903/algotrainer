@@ -2061,7 +2061,7 @@ button:disabled {
     transform: translate3d(calc(var(--logo-ride-out) * 0.5), 0, 0) scaleX(1.025);
   }
 
-  48% {
+  43% {
     opacity: 1;
     background-position: 100% 50%;
     filter: blur(1.35px);
@@ -2072,21 +2072,21 @@ button:disabled {
     transform: translate3d(var(--logo-ride-out), 0, 0) scaleX(1.055);
   }
 
-  49% {
+  43.8% {
     opacity: 0;
     background-position: 100% 50%;
     filter: blur(1.35px);
     transform: translate3d(var(--logo-ride-out), 0, 0) scaleX(1.055);
   }
 
-  50% {
+  44.2% {
     opacity: 0;
     background-position: 100% 50%;
     filter: blur(1.35px);
     transform: translate3d(calc(var(--logo-ride-out) * -1), 0, 0) scaleX(1.055);
   }
 
-  51% {
+  45% {
     opacity: 1;
     background-position: 100% 50%;
     filter: blur(1.35px);
@@ -2097,7 +2097,7 @@ button:disabled {
     transform: translate3d(calc(var(--logo-ride-out) * -1), 0, 0) scaleX(1.055);
   }
 
-  75% {
+  68% {
     opacity: 1;
     background-position: 50% 50%;
     filter: blur(0.65px);
@@ -2107,7 +2107,7 @@ button:disabled {
     transform: translate3d(calc(var(--logo-ride-out) * -0.51), 0, 0) scaleX(1.025);
   }
 
-  90% {
+  84% {
     opacity: 1;
     background-position: 20% 50%;
     filter: blur(0.25px);
