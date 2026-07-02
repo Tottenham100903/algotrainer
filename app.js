@@ -507,7 +507,6 @@ const el = {
   avlHelpToggle: document.getElementById("toggle-avl-help"),
   sandboxValue: document.getElementById("sandbox-value"),
   sandboxTree: document.getElementById("sandbox-tree"),
-  sandboxLog: document.getElementById("sandbox-log"),
   sandboxUndo: document.getElementById("sandbox-undo"),
   sandboxRedo: document.getElementById("sandbox-redo"),
 };
@@ -526,7 +525,7 @@ el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
-el.avlOptions.addEventListener("change", () => previewAVLRotation(false));
+el.avlOptions.addEventListener("change", () => previewAVLRotation(true));
 document.getElementById("sandbox-insert").addEventListener("click", () => mutateSandbox("insert"));
 document.getElementById("sandbox-delete").addEventListener("click", () => mutateSandbox("delete"));
 document.getElementById("reset-sandbox").addEventListener("click", () => resetSandbox(false));
@@ -822,12 +821,10 @@ function renderSandbox(options = {}) {
   const latestRotation = latestRotationEntry(state.sandboxTree.log);
   renderTree(el.sandboxTree, state.sandboxTree.root, {
     pivot: latestRotation ? latestRotation.pivot : null,
-    motionHint: options.motionHint || "AVL-Baum mit automatischer Balance",
     animate: options.animate !== false,
     replay: options.replay === true,
     showStats: false,
   });
-  el.sandboxLog.textContent = state.sandboxTree.log.slice(-12).join("\n");
 }
 
 function buildAVLScenario() {
@@ -926,7 +923,7 @@ function toggleAVLHelp() {
   state.showAVLPreview = !state.showAVLPreview;
   syncAVLPreviewVisibility();
   if (state.showAVLPreview) {
-    previewAVLRotation(false);
+    previewAVLRotation(true);
   } else {
     showPreviewPlaceholder();
   }
