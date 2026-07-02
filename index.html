@@ -52,6 +52,15 @@
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
 
+          <button class="module-tile module-tile-search" type="button" data-open-view="search">
+            <strong>
+              <span>Such</span>
+              <span>verfahren</span>
+            </strong>
+            <span class="module-copy">Lineare, binäre und Interpolationssuche visuell vergleichen und verstehen.</span>
+            <span class="module-cta">Visualisierung starten <span aria-hidden="true">→</span></span>
+          </button>
+
           <button class="module-tile module-tile-avl" type="button" data-open-view="avl">
             <strong>
               <span>Daten</span>
@@ -292,6 +301,54 @@
             </div>
 
             <div id="sort-feedback" class="feedback" aria-live="polite"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="search-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <div>
+            <p class="eyebrow">Suchalgorithmen</p>
+            <h1 class="module-title">Suchen</h1>
+            <p class="hero-copy">Vergleiche Suchstrategien, Voraussetzungen und Laufzeiten Schritt für Schritt.</p>
+          </div>
+        </header>
+
+        <div class="module-grid module-grid-single">
+          <section class="card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Visualisierung</p>
+                <h2>Wert im Array finden</h2>
+              </div>
+              <button id="search-new-values" class="secondary-btn" type="button">Neue Werte</button>
+            </div>
+
+            <div class="search-controls">
+              <label>
+                Verfahren
+                <select id="search-algorithm">
+                  <option value="linear">Lineare Suche</option>
+                  <option value="binary">Binäre Suche</option>
+                  <option value="interpolation">Interpolationssuche</option>
+                </select>
+              </label>
+              <label>
+                Zielwert
+                <select id="search-target"></select>
+              </label>
+              <button id="search-prev" class="secondary-btn" type="button">Ein Schritt zurück</button>
+              <button id="search-play" class="primary-btn" type="button">Abspielen</button>
+              <button id="search-next" class="secondary-btn" type="button">Ein Schritt weiter</button>
+            </div>
+
+            <div id="search-array" class="search-array" aria-label="Suchvisualisierung"></div>
+            <div class="sort-step-row">
+              <span id="search-step-count"></span>
+              <span id="search-note"></span>
+            </div>
+            <div id="search-info" class="search-info"></div>
           </section>
         </div>
       </section>

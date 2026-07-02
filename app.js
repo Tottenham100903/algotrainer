@@ -931,6 +931,10 @@ const state = {
   sortTimer: null,
   sortSection: "visual",
   sortQuestion: null,
+  searchValues: [],
+  searchSteps: [],
+  searchStepIndex: 0,
+  searchTimer: null,
   dataStructureQuestion: null,
   dataStructureTopic: "Training",
   stackQueueMode: "stack",
@@ -956,6 +960,7 @@ const el = {
   runtimeView: document.getElementById("runtime-view"),
   masterView: document.getElementById("master-view"),
   sortingView: document.getElementById("sorting-view"),
+  searchView: document.getElementById("search-view"),
   avlView: document.getElementById("avl-view"),
   runtimeTitle: document.getElementById("runtime-title"),
   runtimeSnippet: document.getElementById("runtime-snippet"),
@@ -988,6 +993,15 @@ const el = {
   sortFeedback: document.getElementById("sort-feedback"),
   sortingVisualCard: document.getElementById("sorting-visual-card"),
   sortingQuizCard: document.getElementById("sorting-quiz-card"),
+  searchAlgorithm: document.getElementById("search-algorithm"),
+  searchTarget: document.getElementById("search-target"),
+  searchArray: document.getElementById("search-array"),
+  searchNote: document.getElementById("search-note"),
+  searchStepCount: document.getElementById("search-step-count"),
+  searchPlay: document.getElementById("search-play"),
+  searchPrev: document.getElementById("search-prev"),
+  searchNext: document.getElementById("search-next"),
+  searchInfo: document.getElementById("search-info"),
   dataStructureScenario: document.getElementById("ds-scenario"),
   dataStructureQuestion: document.getElementById("ds-question"),
   dataStructureOptions: document.getElementById("ds-options"),
@@ -1057,6 +1071,12 @@ document.getElementById("check-sort-question").addEventListener("click", checkSo
 document.querySelectorAll("[data-sort-section]").forEach((button) => {
   button.addEventListener("click", () => setSortSection(button.dataset.sortSection));
 });
+el.searchAlgorithm.addEventListener("change", rebuildSearchSteps);
+el.searchTarget.addEventListener("change", rebuildSearchSteps);
+document.getElementById("search-new-values").addEventListener("click", resetSearchValues);
+el.searchPrev.addEventListener("click", previousSearchStep);
+el.searchNext.addEventListener("click", nextSearchStep);
+el.searchPlay.addEventListener("click", toggleSearchPlayback);
 document.getElementById("new-ds-question").addEventListener("click", createDataStructureQuestion);
 document.getElementById("check-ds-question").addEventListener("click", checkDataStructureQuestion);
 document.querySelectorAll("[data-ds-topic]").forEach((button) => {
@@ -1093,6 +1113,7 @@ createMasterQuestion();
 resetSortValues();
 createSortQuestion();
 setSortSection("visual");
+resetSearchValues();
 setDataStructureTopic("Training");
 renderStackQueue();
 resetGraphVisualization();
@@ -1107,6 +1128,9 @@ function setActiveView(viewName) {
   if (viewName !== "sorting") {
     stopSortPlayback();
   }
+  if (viewName !== "search") {
+    stopSearchPlayback();
+  }
   state.currentView = viewName;
 
   const views = {
@@ -1114,6 +1138,7 @@ function setActiveView(viewName) {
     runtime: el.runtimeView,
     master: el.masterView,
     sorting: el.sortingView,
+    search: el.searchView,
     avl: el.avlView,
   };
 
@@ -1601,6 +1626,162 @@ function stopSortPlayback() {
   if (el.sortPlay) {
     el.sortPlay.textContent = "Abspielen";
   }
+}
+
+function resetSearchValues() {
+  stopSearchPlayback();
+  state.searchValues = generateUniqueNumbers(9, 5, 90).sort((a, b) => a - b);
+  el.searchTarget.innerHTML = [
+    ...state.searchValues.map((value) => `<option value="${value}">${value}</option>`),
+    '<option value="99">99 (nicht enthalten)</option>',
+  ].join("");
+  el.searchTarget.value = String(sample(state.searchValues));
+  rebuildSearchSteps();
+}
+
+function rebuildSearchSteps() {
+  stopSearchPlayback();
+  const target = Number(el.searchTarget.value);
+  const builders = {
+    linear: buildLinearSearchSteps,
+    binary: buildBinarySearchSteps,
+    interpolation: buildInterpolationSearchSteps,
+  };
+  state.searchSteps = builders[el.searchAlgorithm.value](state.searchValues, target);
+  state.searchStepIndex = 0;
+  renderSearchStep();
+}
+
+function buildLinearSearchSteps(values, target) {
+  const steps = [{ probe: null, low: 0, high: values.length - 1, found: false, note: "Start links beim ersten Element." }];
+  for (let index = 0; index < values.length; index += 1) {
+    const found = values[index] === target;
+    steps.push({
+      probe: index,
+      low: index,
+      high: values.length - 1,
+      found,
+      note: found ? `${target} wurde an Index ${index} gefunden.` : `${values[index]} ist nicht ${target}; gehe ein Feld weiter.`,
+    });
+    if (found) return steps;
+  }
+  steps.push({ probe: null, low: values.length, high: values.length - 1, found: false, note: `${target} ist nicht enthalten.` });
+  return steps;
+}
+
+function buildBinarySearchSteps(values, target) {
+  const steps = [{ probe: null, low: 0, high: values.length - 1, found: false, note: "Das gesamte sortierte Array ist der Suchbereich." }];
+  let low = 0;
+  let high = values.length - 1;
+  while (low <= high) {
+    const middle = Math.floor((low + high) / 2);
+    const found = values[middle] === target;
+    steps.push({
+      probe: middle,
+      low,
+      high,
+      found,
+      note: found
+        ? `${target} wurde in der Mitte an Index ${middle} gefunden.`
+        : `${values[middle]} wird geprüft. ${target < values[middle] ? "Die rechte Hälfte entfällt." : "Die linke Hälfte entfällt."}`,
+    });
+    if (found) return steps;
+    if (target < values[middle]) high = middle - 1;
+    else low = middle + 1;
+  }
+  steps.push({ probe: null, low, high, found: false, note: `Der Suchbereich ist leer; ${target} ist nicht enthalten.` });
+  return steps;
+}
+
+function buildInterpolationSearchSteps(values, target) {
+  const steps = [{ probe: null, low: 0, high: values.length - 1, found: false, note: "Schätze die Position aus Zielwert und Wertebereich." }];
+  let low = 0;
+  let high = values.length - 1;
+  while (low <= high && target >= values[low] && target <= values[high]) {
+    const spread = values[high] - values[low];
+    const estimate = spread === 0 ? low : low + Math.floor(((target - values[low]) * (high - low)) / spread);
+    const probe = Math.max(low, Math.min(high, estimate));
+    const found = values[probe] === target;
+    steps.push({
+      probe,
+      low,
+      high,
+      found,
+      note: found
+        ? `Die Schätzung trifft Index ${probe}; ${target} wurde gefunden.`
+        : `Die Formel schätzt Index ${probe} mit Wert ${values[probe]}. Der Bereich wird angepasst.`,
+    });
+    if (found) return steps;
+    if (values[probe] < target) low = probe + 1;
+    else high = probe - 1;
+  }
+  steps.push({ probe: null, low, high, found: false, note: `${target} liegt außerhalb des verbleibenden Wertebereichs.` });
+  return steps;
+}
+
+function renderSearchStep() {
+  const step = state.searchSteps[state.searchStepIndex];
+  el.searchArray.innerHTML = state.searchValues.map((value, index) => {
+    const classes = [
+      "search-cell",
+      index >= step.low && index <= step.high ? "is-range" : "is-discarded",
+      index === step.probe ? "is-probe" : "",
+      index === step.probe && step.found ? "is-found" : "",
+    ].filter(Boolean).join(" ");
+    return `<div class="${classes}"><span>${value}</span><small>${index}</small></div>`;
+  }).join("");
+  el.searchStepCount.textContent = `Schritt ${state.searchStepIndex + 1} / ${state.searchSteps.length}`;
+  el.searchNote.textContent = step.note;
+  el.searchPrev.disabled = state.searchStepIndex === 0;
+  el.searchNext.disabled = state.searchStepIndex >= state.searchSteps.length - 1;
+  renderSearchInfo();
+}
+
+function renderSearchInfo() {
+  const info = {
+    linear: ["Lineare Suche", "Prüft alle Elemente nacheinander.", "Kleine oder unsortierte Daten.", "Keine Sortierung erforderlich.", "Best O(1), Average/Worst O(n)."],
+    binary: ["Binäre Suche", "Halbiert den Suchbereich nach jedem Vergleich.", "Viele Suchen in sortierten Daten.", "Sortierung und direkter Indexzugriff erforderlich.", "Best O(1), Average/Worst O(log n)."],
+    interpolation: ["Interpolationssuche", "Schätzt die Position anhand der Werteverteilung.", "Gleichmäßig verteilte, sortierte Zahlen.", "Sortierte numerische und möglichst gleichmäßig verteilte Daten.", "Best O(1), Average O(log log n), Worst O(n)."],
+  }[el.searchAlgorithm.value];
+  el.searchInfo.innerHTML = `
+    <div><strong>${info[0]}: Idee</strong><span>${info[1]}</span></div>
+    <div><strong>Anwendungsfall</strong><span>${info[2]}</span></div>
+    <div><strong>Voraussetzung</strong><span>${info[3]}</span></div>
+    <div><strong>Laufzeit</strong><span>${info[4]}</span></div>
+  `;
+}
+
+function previousSearchStep() {
+  stopSearchPlayback();
+  state.searchStepIndex = Math.max(0, state.searchStepIndex - 1);
+  renderSearchStep();
+}
+
+function nextSearchStep() {
+  state.searchStepIndex = Math.min(state.searchSteps.length - 1, state.searchStepIndex + 1);
+  renderSearchStep();
+  if (state.searchStepIndex >= state.searchSteps.length - 1) stopSearchPlayback();
+}
+
+function toggleSearchPlayback() {
+  if (state.searchTimer) {
+    stopSearchPlayback();
+    return;
+  }
+  if (state.searchStepIndex >= state.searchSteps.length - 1) {
+    state.searchStepIndex = 0;
+    renderSearchStep();
+  }
+  el.searchPlay.textContent = "Pause";
+  state.searchTimer = window.setInterval(nextSearchStep, 1100);
+}
+
+function stopSearchPlayback() {
+  if (state.searchTimer) {
+    window.clearInterval(state.searchTimer);
+    state.searchTimer = null;
+  }
+  if (el.searchPlay) el.searchPlay.textContent = "Abspielen";
 }
 
 function createSortQuestion() {
