@@ -24,14 +24,14 @@
           </p>
         </header>
 
-        <section class="home-grid" aria-label="Module auswaehlen">
+        <section class="home-grid" aria-label="Module auswählen">
           <button class="module-tile module-tile-runtime" type="button" data-open-view="runtime">
             <span class="module-kicker">01 / Analyse</span>
             <strong>
               <span>Lauf</span>
               <span>zeiten</span>
             </strong>
-            <span class="module-copy">Rekursive Python-Schnipsel lesen und die asymptotische Laufzeit einschaetzen.</span>
+            <span class="module-copy">Rekursive Python-Schnipsel lesen und die asymptotische Laufzeit einschätzen.</span>
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
 
@@ -41,7 +41,7 @@
               <span>Master</span>
               <span>Theorem</span>
             </strong>
-            <span class="module-copy">Verfahren erkennen, Faelle bestimmen und Rekurrenzen mit der passenden Methode loesen.</span>
+            <span class="module-copy">Verfahren erkennen, Fälle bestimmen und Rekurrenzen mit der passenden Methode lösen.</span>
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
 
@@ -51,7 +51,7 @@
               <span>AVL</span>
               <span>Bäume</span>
             </strong>
-            <span class="module-copy">Rotationen verstehen, Hilfe einblenden und in der Sandbox mit Baeumen experimentieren.</span>
+            <span class="module-copy">Rotationen verstehen, Hilfe einblenden und in der Sandbox mit Bäumen experimentieren.</span>
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
         </section>
@@ -59,11 +59,11 @@
 
       <section id="runtime-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
           <div>
             <p class="eyebrow">Modul 1</p>
             <h1 class="module-title">Laufzeiten</h1>
-            <p class="hero-copy">Fokussiere dich nur auf Rekursion und asymptotische Komplexitaet.</p>
+            <p class="hero-copy">Fokussiere dich nur auf Rekursion und asymptotische Komplexität.</p>
           </div>
         </header>
 
@@ -78,7 +78,7 @@
             </div>
 
             <p class="section-copy">
-              Lies den Python-Schnipsel und waehle die asymptotische Laufzeit.
+              Lies den Python-Schnipsel und wähle die asymptotische Laufzeit.
             </p>
 
             <div class="snippet-meta">
@@ -92,7 +92,7 @@
             <form id="runtime-options" class="choices"></form>
 
             <div class="actions">
-              <button id="check-runtime" class="primary-btn" type="button">Antwort pruefen</button>
+              <button id="check-runtime" class="primary-btn" type="button">Antwort prüfen</button>
             </div>
 
             <div id="runtime-feedback" class="feedback" aria-live="polite"></div>
@@ -102,11 +102,11 @@
 
       <section id="master-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
           <div>
             <p class="eyebrow">Modul 2</p>
             <h1 class="module-title">Master-Theorem</h1>
-            <p class="hero-copy">Trainiere Rekurrenzen, unterscheide passende Verfahren und pruefe Faelle gezielt mit Hilfestellung.</p>
+            <p class="hero-copy">Trainiere Rekurrenzen, unterscheide passende Verfahren und prüfe Fälle gezielt mit Hilfestellung.</p>
           </div>
         </header>
 
@@ -124,7 +124,7 @@
             </div>
 
             <p class="section-copy">
-              Waehle zuerst das passende Verfahren und bestimme dann Fall oder Begruendung sowie die Laufzeit.
+              Wähle zuerst das passende Verfahren und bestimme dann Fall oder Begründung sowie die Laufzeit.
             </p>
 
             <div class="recurrence-box">
@@ -135,13 +135,13 @@
 
             <div id="master-help" class="help-box is-hidden">
               <div class="help-card">
-                <h3>1. Form pruefen</h3>
-                <p>Master-Theorem nur bei gleicher Teilproblemgroesse:</p>
+                <h3>1. Form prüfen</h3>
+                <p>Master-Theorem nur bei gleicher Teilproblemgröße:</p>
                 <p class="mini-formula">T(n) = aT(n / b) + f(n)</p>
               </div>
               <div class="help-card">
-                <h3>2. Methode waehlen</h3>
-                <p>Mehrere gleich grosse Teilprobleme: Master. Ein Teilproblem: entfalten. Ungleiche/ungewohnte Form: Substitution.</p>
+                <h3>2. Methode wählen</h3>
+                <p>Mehrere gleich große Teilprobleme: Master. Ein Teilproblem: entfalten. Ungleiche oder ungewohnte Form: Substitution.</p>
               </div>
             </div>
 
@@ -151,7 +151,7 @@
                 <form id="master-method-options" class="choices compact-choices"></form>
               </div>
               <div>
-                <p class="tree-label">Fall / Begruendung</p>
+                <p class="tree-label">Fall / Begründung</p>
                 <form id="master-case-options" class="choices compact-choices"></form>
                 <div id="master-case-help" class="case-help is-hidden">
                   <div>
@@ -160,11 +160,11 @@
                   </div>
                   <div>
                     <strong>Fall 2</strong>
-                    <span>f(n) gleich gross: eine Log-Stufe mehr.</span>
+                    <span>f(n) gleich groß: eine Log-Stufe mehr.</span>
                   </div>
                   <div>
                     <strong>Fall 3</strong>
-                    <span>f(n) groesser: Zusatzarbeit dominiert.</span>
+                    <span>f(n) größer: Zusatzarbeit dominiert.</span>
                   </div>
                 </div>
               </div>
@@ -175,7 +175,7 @@
             </div>
 
             <div class="actions">
-              <button id="check-master" class="primary-btn" type="button">Antwort pruefen</button>
+              <button id="check-master" class="primary-btn" type="button">Antwort prüfen</button>
             </div>
 
             <div id="master-feedback" class="feedback" aria-live="polite"></div>
@@ -185,11 +185,11 @@
 
       <section id="avl-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
           <div>
             <p class="eyebrow">Modul 3</p>
-            <h1 class="module-title">AVL-Baeume</h1>
-            <p class="hero-copy">Arbeite dich durch Rotationen und teste Einfuegen, Loeschen und Balancieren in der Sandbox.</p>
+            <h1 class="module-title">AVL-Bäume</h1>
+            <p class="hero-copy">Arbeite dich durch Rotationen und teste Einfügen, Löschen und Balancieren in der Sandbox.</p>
           </div>
         </header>
 
@@ -207,7 +207,7 @@
             </div>
 
             <p class="section-copy">
-              Verfolge die Operation. Welche Rotation wird benoetigt, damit der Baum wieder AVL-gueltig ist?
+              Verfolge die Operation. Welche Rotation wird benötigt, damit der Baum wieder AVL-gültig ist?
             </p>
 
             <div class="operation-box">
@@ -241,11 +241,11 @@
                 <p class="section-label">Modul 3B</p>
                 <h2>AVL-Sandbox</h2>
               </div>
-              <button id="reset-sandbox" class="secondary-btn" type="button">Zuruecksetzen</button>
+              <button id="reset-sandbox" class="secondary-btn" type="button">Zurücksetzen</button>
             </div>
 
             <p class="section-copy">
-              Fuege Werte ein oder loesche sie. Der Baum balanciert sich automatisch und zeigt dir jede Rotation an.
+              Füge Werte ein oder lösche sie. Der Baum balanciert sich automatisch und zeigt dir jede Rotation an.
             </p>
 
             <div class="sandbox-controls">
@@ -253,8 +253,8 @@
                 Wert
                 <input id="sandbox-value" type="number" placeholder="z. B. 42">
               </label>
-              <button id="sandbox-insert" class="primary-btn" type="button">Einfuegen</button>
-              <button id="sandbox-delete" class="secondary-btn" type="button">Loeschen</button>
+              <button id="sandbox-insert" class="primary-btn" type="button">Einfügen</button>
+              <button id="sandbox-delete" class="secondary-btn" type="button">Löschen</button>
               <button id="sandbox-undo" class="secondary-btn" type="button">Undo</button>
               <button id="sandbox-redo" class="secondary-btn" type="button">Redo</button>
             </div>

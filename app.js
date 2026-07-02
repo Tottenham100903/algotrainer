@@ -4,7 +4,7 @@ function asCode(lines) {
 
 const runtimePatterns = [
   {
-    title: "Konstante Laufzeit mit sofortigem Rueckgabewert",
+    title: "Konstante Laufzeit mit sofortigem Rückgabewert",
     build() {
       const answer = sample(["42", "n + 7", "13"]);
       return {
@@ -48,7 +48,7 @@ const runtimePatterns = [
     },
   },
   {
-    title: "Binaere Rekursion",
+    title: "Binäre Rekursion",
     build() {
       return {
         code: asCode([
@@ -64,7 +64,7 @@ const runtimePatterns = [
           "    return score",
         ]),
         answer: "O(2^n)",
-        explanation: "Jeder Aufruf erzeugt zwei Teilaufrufe der Groesse n-1.",
+        explanation: "Jeder Aufruf erzeugt zwei Teilaufrufe der Größe n-1.",
       };
     },
   },
@@ -170,7 +170,7 @@ const runtimePatterns = [
           "    return probe",
         ]),
         answer: "O(n)",
-        explanation: "Jeder Schritt reduziert n um 1 und fuehrt sonst nur konstante Arbeit aus.",
+        explanation: "Jeder Schritt reduziert n um 1 und führt sonst nur konstante Arbeit aus.",
       };
     },
   },
@@ -253,11 +253,11 @@ const masterCaseChoices = [
   },
   {
     value: "Fall 2",
-    label: "Fall 2: gleich gross",
+    label: "Fall 2: gleich groß",
   },
   {
     value: "Fall 3",
-    label: "Fall 3: f(n) ist groesser",
+    label: "Fall 3: f(n) ist größer",
   },
   {
     value: "Nicht anwendbar",
@@ -270,7 +270,7 @@ const masterPatterns = [
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = 3T(n / 2) + n",
     recurrenceHtml: "T(n) = 3T(n / 2) + n",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 1",
     answer: "n^log_2(3)",
@@ -280,37 +280,37 @@ const masterPatterns = [
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = 2T(n / 2) + n",
     recurrenceHtml: "T(n) = 2T(n / 2) + n",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 2",
     answer: "n log n",
-    explanation: "f(n) passt zu n^log_2(2) = n, also entsteht ein zusaetzlicher log-Faktor.",
+    explanation: "f(n) passt zu n^log_2(2) = n, also entsteht ein zusätzlicher log-Faktor.",
   },
   {
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = 2T(n / 2) + n^2",
     recurrenceHtml: "T(n) = 2T(n / 2) + n<sup>2</sup>",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 3",
     answer: "n^2",
-    explanation: "n^2 ist polynomial groesser als n; die Regularitaetsbedingung ist hier erfuellt.",
+    explanation: "n^2 ist polynomial größer als n; die Regularitätsbedingung ist hier erfüllt.",
   },
   {
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = 4T(n / 2) + n^2 log n",
     recurrenceHtml: "T(n) = 4T(n / 2) + n<sup>2</sup> log n",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
     method: "Divide and Conquer / Master-Theorem",
     caseName: "Fall 2",
     answer: "n^2 log^2 n",
-    explanation: "f(n) = n^2 log^1 n; Fall 2 erhoeht die Log-Potenz um eins.",
+    explanation: "f(n) = n^2 log^1 n; Fall 2 erhöht die Log-Potenz um eins.",
   },
   {
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n - 1) + n",
     recurrenceHtml: "T(n) = T(n - 1) + n",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
     answer: "n^2",
@@ -320,7 +320,7 @@ const masterPatterns = [
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n / 2) + 1",
     recurrenceHtml: "T(n) = T(n / 2) + 1",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Zähle, wie oft n halbiert werden kann.",
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
     answer: "log n",
@@ -330,31 +330,31 @@ const masterPatterns = [
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n / 2) + n",
     recurrenceHtml: "T(n) = T(n / 2) + n",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
     answer: "n",
-    explanation: "Die geometrische Summe ist durch ein konstantes Vielfaches von n beschraenkt.",
+    explanation: "Die geometrische Summe ist durch ein konstantes Vielfaches von n beschränkt.",
   },
   {
-    title: "Rekurrenz analysieren",
+    title: "Substitution: ungleich große Teilprobleme",
     recurrence: "T(n) = T(n / 2) + T(n / 4) + n",
     recurrenceHtml: "T(n) = T(n / 2) + T(n / 4) + n",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Master-Theorem passt nicht direkt; prüfe die Vermutung T(n) = O(n) durch Einsetzen.",
     method: "Substitution",
     caseName: "Nicht anwendbar",
     answer: "n",
-    explanation: "Mit T(k) <= ck ergibt sich c(n/2) + c(n/4) + n <= cn fuer hinreichend grosses c.",
+    explanation: "Mit T(k) <= ck ergibt sich c(n/2) + c(n/4) + n <= cn für hinreichend großes c.",
   },
   {
     title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n - 1) + T(n - 2) + 1",
     recurrenceHtml: "T(n) = T(n - 1) + T(n - 2) + 1",
-    task: "Bestimme Verfahren, Fall/Begruendung und Laufzeitklasse.",
+    task: "Begründe eine exponentielle Schranke per Induktion/Substitution.",
     method: "Substitution",
     caseName: "Nicht anwendbar",
     answer: "2^n",
-    explanation: "Die Rekurrenz verzweigt in zwei fast gleich grosse Teilprobleme und waechst exponentiell.",
+    explanation: "Die Rekurrenz verzweigt in zwei fast gleich große Teilprobleme und wächst exponentiell.",
   },
 ];
 
@@ -583,7 +583,7 @@ function createRuntimeQuestion() {
 function checkRuntimeQuestion() {
   const selected = getSelectedValue("runtime-choice");
   if (!selected) {
-    setFeedback(el.runtimeFeedback, "Waehle erst eine Laufzeit aus.", "wrong");
+    setFeedback(el.runtimeFeedback, "Wähle erst eine Laufzeit aus.", "wrong");
     return;
   }
 
@@ -629,7 +629,7 @@ function checkMasterQuestion() {
   const selectedRuntime = getSelectedValue("master-runtime-choice");
 
   if (!selectedMethod || !selectedCase || !selectedRuntime) {
-    setFeedback(el.masterFeedback, "Waehle Verfahren, Fall/Begruendung und Laufzeit aus.", "wrong");
+    setFeedback(el.masterFeedback, "Wähle Verfahren, Fall/Begründung und Laufzeit aus.", "wrong");
     return;
   }
 
@@ -651,7 +651,7 @@ function checkMasterQuestion() {
     missing.push(`Verfahren: ${state.masterQuestion.method}`);
   }
   if (!caseCorrect) {
-    missing.push(`Fall/Begruendung: ${state.masterQuestion.caseName}`);
+    missing.push(`Fall/Begründung: ${state.masterQuestion.caseName}`);
   }
   if (!runtimeCorrect) {
     missing.push(`Laufzeitklasse: ${state.masterQuestion.answer}`);
@@ -728,7 +728,7 @@ function previewAVLRotation(forceReplay) {
 function applyAVLAnswer() {
   const selected = getSelectedValue("avl-choice");
   if (!selected) {
-    setFeedback(el.avlFeedback, "Waehle erst eine Rotation aus.", "wrong");
+    setFeedback(el.avlFeedback, "Wähle erst eine Rotation aus.", "wrong");
     return;
   }
 
@@ -753,7 +753,7 @@ function applyAVLAnswer() {
   if (state.showAVLPreview) {
     previewAVLRotation(true);
   }
-  setFeedback(el.avlFeedback, `Noch nicht richtig. ${selected} fuehrt nicht zum korrekten AVL-Endzustand.`, "wrong");
+  setFeedback(el.avlFeedback, `Noch nicht richtig. ${selected} führt nicht zum korrekten AVL-Endzustand.`, "wrong");
 }
 
 function mutateSandbox(mode) {
@@ -791,7 +791,7 @@ function resetSandbox(isInitial) {
   state.sandboxTree.log.push("Sandbox neu aufgebaut.");
   renderSandbox({
     animate: !isInitial,
-    motionHint: "Startbaum geladen. Du kannst jetzt Einfuegen, Loeschen, Undo und Redo testen.",
+    motionHint: "Startbaum geladen. Du kannst jetzt Einfügen, Löschen, Undo und Redo testen.",
   });
   updateUndoRedoButtons();
 }
@@ -814,7 +814,7 @@ function redoSandbox() {
   state.sandboxHistory.push(snapshotSandbox());
   const snapshot = state.sandboxFuture.pop();
   restoreSandboxSnapshot(snapshot);
-  renderSandbox({ motionHint: "Redo: der naechste Baumstand wurde erneut geladen." });
+  renderSandbox({ motionHint: "Redo: der nächste Baumstand wurde erneut geladen." });
   updateUndoRedoButtons();
 }
 
@@ -917,8 +917,8 @@ function showPreviewPlaceholder() {
   const note = document.createElement("div");
   note.className = "tree-preview-note";
   note.textContent = state.showAVLPreview
-    ? "Waehle eine Rotation aus, dann siehst du hier die Hilfe mit Vorschau, Hoehe und Balancefaktor."
-    : "Tippe auf Hilfe, um die Vorschau mit Hoehe und Balancefaktor einzublenden.";
+    ? "Wähle eine Rotation aus, dann siehst du hier die Hilfe mit Vorschau, Höhe und Balancefaktor."
+    : "Tippe auf Hilfe, um die Vorschau mit Höhe und Balancefaktor einzublenden.";
   el.avlTreeAfter.appendChild(note);
 }
 
@@ -1239,15 +1239,15 @@ function describeRotationPreview(rotation, pivot) {
   if (rotation === "Keine Rotation") {
     return "Kein Umbau: der Baum bleibt in seiner aktuellen Form.";
   }
-  return `${rotation}-Rotation an Knoten ${pivot}: beobachte, wie die Teilbaeume die Seite wechseln.`;
+  return `${rotation}-Rotation an Knoten ${pivot}: beobachte, wie die Teilbäume die Seite wechseln.`;
 }
 
 function sandboxMotionHint(mode, value, newEntries) {
   const rotation = latestRotationEntry(newEntries);
   if (rotation) {
-    return `${mode === "insert" ? "Einfuegen" : "Loeschen"} von ${value}. Danach ${rotation.rotation} an Knoten ${rotation.pivot}.`;
+    return `${mode === "insert" ? "Einfügen" : "Löschen"} von ${value}. Danach ${rotation.rotation} an Knoten ${rotation.pivot}.`;
   }
-  return `${mode === "insert" ? "Einfuegen" : "Loeschen"} von ${value}. Der Baum bleibt AVL-stabil.`;
+  return `${mode === "insert" ? "Einfügen" : "Löschen"} von ${value}. Der Baum bleibt AVL-stabil.`;
 }
 
 function snapshotSandbox() {
