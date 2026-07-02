@@ -1211,8 +1211,6 @@ const state = {
   avlPreviewTimer: null,
   renderCache: new Map(),
   logoRideTimer: null,
-  logoRideArmed: true,
-  logoPointerInside: false,
   logoIntroPlayed: false,
   tileScrollFrame: null,
 };
@@ -1336,18 +1334,6 @@ document.querySelectorAll("[data-open-view]").forEach((button) => {
 document.querySelectorAll("[data-back-home]").forEach((button) => {
   button.addEventListener("click", () => setActiveView("home"));
 });
-if (el.logoTrain) {
-  el.logoTrain.addEventListener("pointerenter", () => {
-    state.logoPointerInside = true;
-    playLogoRide();
-  });
-  el.logoTrain.addEventListener("pointerleave", () => {
-    state.logoPointerInside = false;
-    if (!el.homeTitle.classList.contains("is-riding")) {
-      state.logoRideArmed = true;
-    }
-  });
-}
 el.moduleTiles.forEach((tile) => {
   tile.addEventListener("pointermove", updateTilePointerMotion);
   tile.addEventListener("pointerleave", () => resetTileMotion(tile));
@@ -1475,7 +1461,7 @@ function setActiveView(viewName) {
   }
 
   queueScrollTileMotion();
-  playMobileLogoIntro();
+  playLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1483,25 +1469,21 @@ function playLogoRide() {
   if (
     !el.homeTitle
     || el.homeTitle.classList.contains("is-riding")
-    || !state.logoRideArmed
   ) {
     return;
   }
 
-  state.logoRideArmed = false;
   window.clearTimeout(state.logoRideTimer);
   el.homeTitle.classList.add("is-riding");
   state.logoRideTimer = window.setTimeout(() => {
     el.homeTitle.classList.remove("is-riding");
-    state.logoRideArmed = !state.logoPointerInside;
-  }, 2350);
+  }, 2900);
 }
 
-function playMobileLogoIntro() {
+function playLogoIntro() {
   if (
     state.logoIntroPlayed
     || state.currentView !== "home"
-    || supportsPointerHover()
     || prefersReducedMotion()
   ) {
     return;

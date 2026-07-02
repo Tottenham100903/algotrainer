@@ -162,9 +162,9 @@ queue: [A, C, D]</pre>
               <label class="master-case-select">
                 Dominanzregel
                 <select id="master-learn-case">
-                  <option value="case1">d &lt; log_b(a): Rekursion → O(n^log_b(a))</option>
-                  <option value="case2">d = log_b(a): Gleichgewicht → O(n^d log n)</option>
-                  <option value="case3">d &gt; log_b(a): Zusatzarbeit → O(n^d)</option>
+                  <option value="case1">d &lt; log_b(a) – Rekursion dominiert</option>
+                  <option value="case2">d = log_b(a) – Gleichgewicht</option>
+                  <option value="case3">d &gt; log_b(a) – Zusatzarbeit dominiert</option>
                 </select>
               </label>
             </div>
@@ -276,13 +276,13 @@ queue: [A, C, D]</pre>
                   <div class="master-result-grid">
                     <select id="master-case-select">
                       <option value="">Dominanz auswählen</option>
-                      <option value="Fall 1">Rekursion dominiert → O(n^log_b(a))</option>
-                      <option value="Fall 2">Gleichgewicht → O(n^d log n)</option>
-                      <option value="Fall 3">Zusatzarbeit dominiert → O(n^d)</option>
+                      <option value="Fall 1">Rekursion dominiert</option>
+                      <option value="Fall 2">Gleichgewicht</option>
+                      <option value="Fall 3">Zusatzarbeit dominiert</option>
                     </select>
                     <form id="master-runtime-options" class="choices compact-choices"></form>
                   </div>
-                  <p class="master-rule-hint">Merke: d &lt; log_b(a) → O(n^log_b(a)), d = log_b(a) → O(n^d log n), d &gt; log_b(a) → O(n^d).</p>
+                  <p class="master-rule-hint">Merke: d &lt; log<sub>b</sub>(a) → O(n<sup>log<sub>b</sub>(a)</sup>), d = log<sub>b</sub>(a) → O(n<sup>d</sup> log n), d &gt; log<sub>b</sub>(a) → O(n<sup>d</sup>).</p>
                 </div>
               </section>
             </div>
