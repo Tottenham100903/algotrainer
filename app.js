@@ -232,8 +232,10 @@ const masterRuntimeChoicesPool = [
   "Theta(log n)",
   "Theta(n)",
   "Theta(n log n)",
+  "Theta(n^log_2(3))",
   "Theta(n^2)",
   "Theta(n^2 log n)",
+  "Theta(n^2 log^2 n)",
   "Theta(n^3)",
   "Theta(2^n)",
 ];
@@ -648,8 +650,10 @@ function syncMasterHelpVisibility() {
 
 function createAVLQuestion() {
   let attempt = null;
-  while (!attempt || attempt.rotation === "Keine Rotation") {
+  let tries = 0;
+  while ((!attempt || attempt.rotation === "Keine Rotation") && tries < 80) {
     attempt = buildAVLScenario();
+    tries += 1;
   }
 
   state.avlQuestion = attempt;
