@@ -390,7 +390,7 @@ const masterMethodChoices = [
 ];
 
 const masterFlowChoices = [
-  "Master: p = log_b(a) berechnen und f(n) mit n^p vergleichen",
+  "Master: log_b(a) berechnen und d mit log_b(a) vergleichen",
   "Subtract: Rekurrenz entfalten und entstehende Summe auswerten",
   "Substitution: Vermutung wählen und durch Einsetzen/Induktion prüfen",
 ];
@@ -398,15 +398,15 @@ const masterFlowChoices = [
 const masterCaseChoices = [
   {
     value: "Fall 1",
-    label: "Fall 1: f(n) ist kleiner",
+    label: "d < log_b(a): Rekursion dominiert",
   },
   {
     value: "Fall 2",
-    label: "Fall 2: gleich groß",
+    label: "d = log_b(a): Gleichgewicht",
   },
   {
     value: "Fall 3",
-    label: "Fall 3: f(n) ist größer",
+    label: "d > log_b(a): Zusatzarbeit dominiert",
   },
   {
     value: "Nicht anwendbar",
@@ -533,7 +533,7 @@ const masterPatterns = [
     method: "Subtract and Conquer",
     caseName: "Nicht anwendbar",
     answer: "n log n",
-    explanation: "Die Summe log 1 + log 2 + ... + log n liegt in Θ(n log n).",
+    explanation: "Die Summe log 1 + log 2 + ... + log n liegt in O(n log n).",
   },
   {
     title: "Rekurrenz analysieren",
@@ -619,36 +619,36 @@ const masterPatterns = [
 
 const masterLearnCases = {
   case1: {
-    formula: "T(n) = 8T(n / 2) + 3n²",
+    formula: 'T(n) = 8T(<span class="frac"><span>n</span><span>2</span></span>) + 3n<sup>2</sup>',
     parameters: "a = 8, b = 2, c = 3, d = 2",
-    result: "Θ(n³)",
+    result: "O(n<sup>3</sup>)",
     steps: [
-      ["Parameter ablesen", "Aus aT(n/b) + c·nᵈ lesen wir a=8, b=2, c=3 und d=2 ab."],
-      ["Rekursionsanteil berechnen", "p = log₂(8) = 3. Der Rekursionsbaum erzeugt also Arbeit in der Größenordnung n³."],
-      ["Exponenten vergleichen", "d=2 ist kleiner als p=3. Die Zusatzarbeit 3n² wächst langsamer als n³; der Faktor c=3 ändert daran nichts."],
-      ["Fall und Ergebnis", "Fall 1 gilt: Die Rekursion dominiert. Deshalb ist T(n) = Θ(nᵖ) = Θ(n³)."],
+      ["Parameter ablesen", "Aus aT(<span class=\"frac\"><span>n</span><span>b</span></span>) + c · n<sup>d</sup> lesen wir a = 8, b = 2, c = 3 und d = 2 ab."],
+      ["Rekursionsanteil berechnen", "log<sub>2</sub>(8) = 3. Der Rekursionsbaum erzeugt also Arbeit in der Größenordnung n<sup>3</sup>."],
+      ["Exponenten vergleichen", "d = 2 ist kleiner als log<sub>b</sub>(a) = 3. Die Zusatzarbeit 3n<sup>2</sup> wächst langsamer als n<sup>3</sup>; der Faktor c = 3 ändert daran nichts."],
+      ["Ergebnis ableiten", "Wenn d &lt; log<sub>b</sub>(a), dominiert die Rekursion. Deshalb gilt T(n) = O(n<sup>log<sub>b</sub>(a)</sup>) = O(n<sup>3</sup>)."],
     ],
   },
   case2: {
-    formula: "T(n) = 2T(n / 2) + 5n",
+    formula: 'T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + 5n',
     parameters: "a = 2, b = 2, c = 5, d = 1",
-    result: "Θ(n log n)",
+    result: "O(n log n)",
     steps: [
-      ["Parameter ablesen", "Es gilt a=2, b=2, c=5 und d=1. Pro Aufruf entstehen zwei halb so große Teilprobleme."],
-      ["Rekursionsanteil berechnen", "p = log₂(2) = 1. Damit wächst der reine Rekursionsanteil wie n¹."],
-      ["Exponenten vergleichen", "d=1 und p=1 sind gleich. Rekursion und Zusatzarbeit tragen auf jeder Ebene dieselbe Größenordnung bei."],
-      ["Fall und Ergebnis", "Fall 2 gilt. Die gleich große Arbeit fällt auf log n Ebenen an: T(n) = Θ(nᵈ log n) = Θ(n log n)."],
+      ["Parameter ablesen", "Es gilt a = 2, b = 2, c = 5 und d = 1. Pro Aufruf entstehen zwei halb so große Teilprobleme."],
+      ["Rekursionsanteil berechnen", "log<sub>2</sub>(2) = 1. Damit wächst der reine Rekursionsanteil wie n<sup>1</sup>."],
+      ["Exponenten vergleichen", "d = 1 und log<sub>b</sub>(a) = 1 sind gleich. Rekursion und Zusatzarbeit tragen auf jeder Ebene dieselbe Größenordnung bei."],
+      ["Ergebnis ableiten", "Wenn d = log<sub>b</sub>(a), kommt ein Log-Faktor hinzu: T(n) = O(n<sup>d</sup> log n) = O(n log n)."],
     ],
   },
   case3: {
-    formula: "T(n) = 2T(n / 2) + 4n²",
+    formula: 'T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + 4n<sup>2</sup>',
     parameters: "a = 2, b = 2, c = 4, d = 2",
-    result: "Θ(n²)",
+    result: "O(n<sup>2</sup>)",
     steps: [
-      ["Parameter ablesen", "Es gilt a=2, b=2, c=4 und d=2. Außerhalb der Rekursion werden pro Aufruf 4n² Operationen modelliert."],
-      ["Rekursionsanteil berechnen", "p = log₂(2) = 1. Der Rekursionsanteil allein wächst damit wie n."],
-      ["Exponenten vergleichen", "d=2 ist größer als p=1. Die Zusatzarbeit n² wächst polynomial schneller als der Rekursionsanteil n."],
-      ["Fall und Ergebnis", "Fall 3 gilt; für diese polynomiale Form ist die Regularitätsbedingung erfüllt. Daher ist T(n) = Θ(nᵈ) = Θ(n²)."],
+      ["Parameter ablesen", "Es gilt a = 2, b = 2, c = 4 und d = 2. Außerhalb der Rekursion werden pro Aufruf 4n<sup>2</sup> Operationen modelliert."],
+      ["Rekursionsanteil berechnen", "log<sub>2</sub>(2) = 1. Der Rekursionsanteil allein wächst damit wie n."],
+      ["Exponenten vergleichen", "d = 2 ist größer als log<sub>b</sub>(a) = 1. Die Zusatzarbeit n<sup>2</sup> wächst polynomial schneller als der Rekursionsanteil n."],
+      ["Ergebnis ableiten", "Wenn d &gt; log<sub>b</sub>(a), dominiert die Zusatzarbeit. Für diese polynomiale Form gilt T(n) = O(n<sup>d</sup>) = O(n<sup>2</sup>)."],
     ],
   },
 };
@@ -1213,10 +1213,14 @@ const state = {
   logoRideTimer: null,
   logoRideArmed: true,
   logoPointerInside: false,
+  logoIntroPlayed: false,
+  tileScrollFrame: null,
 };
 
 const el = {
   homeTitle: document.querySelector(".home-title"),
+  logoTrain: document.querySelector(".logo-train"),
+  moduleTiles: [...document.querySelectorAll(".module-tile")],
   homeView: document.getElementById("home-view"),
   runtimeView: document.getElementById("runtime-view"),
   masterView: document.getElementById("master-view"),
@@ -1332,19 +1336,24 @@ document.querySelectorAll("[data-open-view]").forEach((button) => {
 document.querySelectorAll("[data-back-home]").forEach((button) => {
   button.addEventListener("click", () => setActiveView("home"));
 });
-if (el.homeTitle) {
-  el.homeTitle.addEventListener("pointerenter", () => {
+if (el.logoTrain) {
+  el.logoTrain.addEventListener("pointerenter", () => {
     state.logoPointerInside = true;
     playLogoRide();
   });
-  el.homeTitle.addEventListener("pointerleave", () => {
+  el.logoTrain.addEventListener("pointerleave", () => {
     state.logoPointerInside = false;
     if (!el.homeTitle.classList.contains("is-riding")) {
       state.logoRideArmed = true;
     }
   });
-  el.homeTitle.addEventListener("focus", playLogoRide);
 }
+el.moduleTiles.forEach((tile) => {
+  tile.addEventListener("pointermove", updateTilePointerMotion);
+  tile.addEventListener("pointerleave", () => resetTileMotion(tile));
+});
+window.addEventListener("scroll", queueScrollTileMotion, { passive: true });
+window.addEventListener("resize", queueScrollTileMotion);
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
@@ -1465,6 +1474,8 @@ function setActiveView(viewName) {
     createDataStructureQuestion();
   }
 
+  queueScrollTileMotion();
+  playMobileLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1483,7 +1494,117 @@ function playLogoRide() {
   state.logoRideTimer = window.setTimeout(() => {
     el.homeTitle.classList.remove("is-riding");
     state.logoRideArmed = !state.logoPointerInside;
-  }, 1500);
+  }, 2350);
+}
+
+function playMobileLogoIntro() {
+  if (
+    state.logoIntroPlayed
+    || state.currentView !== "home"
+    || supportsPointerHover()
+    || prefersReducedMotion()
+  ) {
+    return;
+  }
+
+  state.logoIntroPlayed = true;
+  window.setTimeout(playLogoRide, 420);
+}
+
+function supportsPointerHover() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function setTileMotion(tile, { lift = 0, tiltX = 0, tiltY = 0, shiftX = 0, scale = 1 }) {
+  tile.style.setProperty("--tile-lift", `${lift.toFixed(2)}px`);
+  tile.style.setProperty("--tilt-x", `${tiltX.toFixed(2)}deg`);
+  tile.style.setProperty("--tilt-y", `${tiltY.toFixed(2)}deg`);
+  tile.style.setProperty("--tile-shift-x", `${shiftX.toFixed(2)}px`);
+  tile.style.setProperty("--tile-scale", scale.toFixed(3));
+}
+
+function resetTileMotion(tile) {
+  tile.classList.remove("is-scroll-active");
+  setTileMotion(tile, {});
+}
+
+function updateTilePointerMotion(event) {
+  if (!supportsPointerHover() || prefersReducedMotion()) {
+    return;
+  }
+
+  const tile = event.currentTarget;
+  const rect = tile.getBoundingClientRect();
+  const x = (event.clientX - rect.left) / rect.width;
+  const y = (event.clientY - rect.top) / rect.height;
+
+  tile.classList.remove("is-scroll-active");
+  setTileMotion(tile, {
+    lift: 12,
+    tiltX: (0.5 - y) * 8,
+    tiltY: (x - 0.5) * 10,
+    shiftX: (x - 0.5) * 5,
+    scale: 1.015,
+  });
+}
+
+function queueScrollTileMotion() {
+  if (state.tileScrollFrame) {
+    return;
+  }
+
+  state.tileScrollFrame = window.requestAnimationFrame(() => {
+    state.tileScrollFrame = null;
+    updateScrollTileMotion();
+  });
+}
+
+function updateScrollTileMotion() {
+  if (state.currentView !== "home" || supportsPointerHover() || prefersReducedMotion()) {
+    el.moduleTiles.forEach((tile) => {
+      tile.classList.remove("is-scroll-active");
+    });
+    return;
+  }
+
+  const viewportFocus = window.innerHeight * 0.54;
+  const falloff = window.innerHeight * 0.52;
+  let activeTile = null;
+  let activeStrength = 0;
+
+  el.moduleTiles.forEach((tile) => {
+    const rect = tile.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const strength = Math.max(0, 1 - (Math.abs(center - viewportFocus) / falloff));
+
+    if (strength > activeStrength) {
+      activeStrength = strength;
+      activeTile = tile;
+    }
+  });
+
+  el.moduleTiles.forEach((tile) => {
+    const isActive = tile === activeTile && activeStrength > 0.16;
+    tile.classList.toggle("is-scroll-active", isActive);
+
+    if (!isActive) {
+      setTileMotion(tile, {});
+      return;
+    }
+
+    const rect = tile.getBoundingClientRect();
+    const horizontalOffset = ((rect.left + rect.width / 2) - (window.innerWidth / 2)) / (window.innerWidth / 2);
+    setTileMotion(tile, {
+      lift: 8 + (activeStrength * 24),
+      tiltX: -5.5 * activeStrength,
+      tiltY: -horizontalOffset * 4 * activeStrength,
+      scale: 1 + (activeStrength * 0.018),
+    });
+  });
 }
 
 function createRuntimeQuestion() {
@@ -1533,11 +1654,11 @@ function createMasterQuestion() {
   state.masterQuestion = { ...pattern, runtimeChoices };
   el.masterTitle.textContent = "Klausuraufgabe: Rekurrenz vollständig herleiten";
   el.masterRecurrence.innerHTML = `T(n) = ${pattern.a}T(<span class="frac"><span>n</span><span>${pattern.b}</span></span>) + ${pattern.c}n<sup>${pattern.d}</sup>`;
-  el.masterTask.textContent = "Dokumentiere jeden Rechenschritt. Erst die Herleitung macht das Ergebnis nachvollziehbar.";
+  el.masterTask.textContent = "Dokumentiere jeden Rechenschritt: Parameter, log_b(a), Vergleich und O-Laufzeit.";
   renderChoices(
     el.masterRuntimeOptions,
     "master-runtime",
-    runtimeChoices.map((choice) => ({ value: choice, label: formatRuntimeLabel(choice) })),
+    runtimeChoices.map((choice) => ({ value: choice, label: formatOrderLabel(choice) })),
   );
   [el.masterInputA, el.masterInputB, el.masterInputC, el.masterInputD, el.masterInputP]
     .forEach((input) => {
@@ -1582,9 +1703,9 @@ function checkMasterQuestion() {
   const runtimeCorrect = selectedRuntime === state.masterQuestion.answer;
   const checks = [
     [parametersCorrect, "Parameter a, b, c und d"],
-    [pCorrect, "Vergleichsexponent p"],
-    [comparisonCorrect, "Vergleich von d und p"],
-    [caseCorrect, "Master-Fall"],
+    [pCorrect, "Wert log_b(a)"],
+    [comparisonCorrect, "Vergleich von d und log_b(a)"],
+    [caseCorrect, "Dominanzregel"],
     [runtimeCorrect, "Laufzeit"],
   ];
   const firstError = checks.find((check) => !check[0]);
@@ -1604,17 +1725,22 @@ function checkMasterQuestion() {
   }
 
   const comparisonLabels = {
-    "d<p": "d < p, also dominiert die Rekursion",
-    "d=p": "d = p, also herrscht Gleichgewicht",
-    "d>p": "d > p, also dominiert die Zusatzarbeit",
+    "d<p": "d < log_b(a), also dominiert die Rekursion",
+    "d=p": "d = log_b(a), also herrscht Gleichgewicht",
+    "d>p": "d > log_b(a), also dominiert die Zusatzarbeit",
+  };
+  const dominanceLabels = {
+    "Fall 1": "Rekursion dominiert",
+    "Fall 2": "Gleichgewicht zwischen Rekursion und Zusatzarbeit",
+    "Fall 3": "Zusatzarbeit dominiert",
   };
   el.masterSolution.innerHTML = `
     <p class="tree-label">Musterlösung</p>
     <ol>
       <li><strong>Ablesen:</strong> a=${state.masterQuestion.a}, b=${state.masterQuestion.b}, c=${state.masterQuestion.c}, d=${state.masterQuestion.d}.</li>
-      <li><strong>Berechnen:</strong> p = log<sub>${state.masterQuestion.b}</sub>(${state.masterQuestion.a}) = ${state.masterQuestion.p}.</li>
+      <li><strong>Berechnen:</strong> log<sub>${state.masterQuestion.b}</sub>(${state.masterQuestion.a}) = ${state.masterQuestion.p}.</li>
       <li><strong>Vergleichen:</strong> ${comparisonLabels[state.masterQuestion.comparison]}.</li>
-      <li><strong>Folgern:</strong> ${state.masterQuestion.caseName} ergibt T(n) = Θ(${formatRuntimeLabel(state.masterQuestion.answer)}).</li>
+      <li><strong>Folgern:</strong> ${dominanceLabels[state.masterQuestion.caseName]} ergibt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
     </ol>
   `;
   el.masterSolution.classList.remove("is-hidden");
@@ -3048,6 +3174,10 @@ function formatRuntimeLabel(value) {
     .replaceAll("n^2", "n<sup>2</sup>")
     .replaceAll("n^3", "n<sup>3</sup>")
     .replaceAll("2^n", "2<sup>n</sup>");
+}
+
+function formatOrderLabel(value) {
+  return `O(${formatRuntimeLabel(value)})`;
 }
 
 function setFeedback(node, text, type = "") {

@@ -160,25 +160,25 @@ queue: [A, C, D]</pre>
                 <h2>Master-Theorem systematisch anwenden</h2>
               </div>
               <label class="master-case-select">
-                Anwendungsfall
+                Dominanzregel
                 <select id="master-learn-case">
-                  <option value="case1">Fall 1 – Rekursion dominiert</option>
-                  <option value="case2">Fall 2 – Gleichgewicht</option>
-                  <option value="case3">Fall 3 – Zusatzarbeit dominiert</option>
+                  <option value="case1">d &lt; log_b(a): Rekursion → O(n^log_b(a))</option>
+                  <option value="case2">d = log_b(a): Gleichgewicht → O(n^d log n)</option>
+                  <option value="case3">d &gt; log_b(a): Zusatzarbeit → O(n^d)</option>
                 </select>
               </label>
             </div>
 
             <div class="master-general-form">
               <p class="tree-label">Allgemeine Form</p>
-              <p class="master-main-formula">T(n) = aT(n / b) + c · n<sup>d</sup></p>
+              <p class="master-main-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
               <div class="master-parameter-grid">
                 <p><strong>a</strong><span>Anzahl der rekursiven Teilprobleme</span></p>
                 <p><strong>b</strong><span>Verkleinerungsfaktor der Eingabe</span></p>
                 <p><strong>c</strong><span>konstanter Faktor der Zusatzarbeit</span></p>
                 <p><strong>d</strong><span>Exponent der Zusatzarbeit n<sup>d</sup></span></p>
               </div>
-              <p class="section-copy">Entscheidend ist der Vergleich von <strong>p = log<sub>b</sub>(a)</strong> mit <strong>d</strong>. Der positive konstante Faktor c verändert die asymptotische Laufzeit nicht.</p>
+              <p class="section-copy">Entscheidend ist der Vergleich von <strong>d</strong> mit <strong>log<sub>b</sub>(a)</strong>. Der positive konstante Faktor c verändert die asymptotische Laufzeit nicht.</p>
             </div>
 
             <div id="master-learn-example" class="recurrence-box"></div>
@@ -203,7 +203,7 @@ queue: [A, C, D]</pre>
             </div>
 
             <p class="section-copy">
-              Löse die Rekurrenz wie in einer Klausur: Lies die Parameter ab, berechne den Vergleichsexponenten und leite daraus Fall und Laufzeit her.
+              Löse die Rekurrenz wie in einer Klausur: Lies die Parameter ab, berechne log<sub>b</sub>(a), vergleiche d damit und leite daraus die Laufzeit her.
             </p>
 
             <div class="recurrence-box">
@@ -219,16 +219,16 @@ queue: [A, C, D]</pre>
                 <p class="mini-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
               </div>
               <div class="help-card">
-                <h3>2. p berechnen</h3>
-                <p>Berechne p = log<sub>b</sub>(a). Dieser Exponent beschreibt, wie stark der rekursive Anteil wächst.</p>
+                <h3>2. log_b(a) berechnen</h3>
+                <p>Berechne log<sub>b</sub>(a). Dieser Exponent beschreibt, wie stark der rekursive Anteil wächst.</p>
               </div>
               <div class="help-card">
                 <h3>3. Exponenten vergleichen</h3>
-                <p>d &lt; p führt zu Fall 1, d = p zu Fall 2 und d &gt; p zu Fall 3.</p>
+                <p>Vergleiche direkt: d &lt; log<sub>b</sub>(a), d = log<sub>b</sub>(a) oder d &gt; log<sub>b</sub>(a).</p>
               </div>
               <div class="help-card">
                 <h3>4. Ergebnis notieren</h3>
-                <p>Fall 1: Θ(n<sup>p</sup>), Fall 2: Θ(n<sup>d</sup> log n), Fall 3: Θ(n<sup>d</sup>). Gib in der Klausur immer die Herleitung an.</p>
+                <p>d &lt; log<sub>b</sub>(a): O(n<sup>log<sub>b</sub>(a)</sup>), d = log<sub>b</sub>(a): O(n<sup>d</sup> log n), d &gt; log<sub>b</sub>(a): O(n<sup>d</sup>).</p>
               </div>
             </div>
 
@@ -250,7 +250,7 @@ queue: [A, C, D]</pre>
                 <span>2</span>
                 <div>
                   <p class="tree-label">Vergleichsexponent berechnen</p>
-                  <label class="master-calculation-input">p = log<sub>b</sub>(a) =
+                  <label class="master-calculation-input">log<sub>b</sub>(a) =
                     <input id="master-input-p" type="number" min="0" step="0.001" inputmode="decimal" placeholder="z. B. 2">
                   </label>
                 </div>
@@ -259,12 +259,12 @@ queue: [A, C, D]</pre>
               <section class="master-work-step">
                 <span>3</span>
                 <div>
-                  <p class="tree-label">d mit p vergleichen</p>
+                  <p class="tree-label">d mit log_b(a) vergleichen</p>
                   <select id="master-comparison">
                     <option value="">Vergleich auswählen</option>
-                    <option value="d<p">d &lt; p – Rekursion wächst stärker</option>
-                    <option value="d=p">d = p – beide sind gleich stark</option>
-                    <option value="d>p">d &gt; p – Zusatzarbeit wächst stärker</option>
+                    <option value="d<p">d &lt; log_b(a) – Rekursion wächst stärker</option>
+                    <option value="d=p">d = log_b(a) – beide sind gleich stark</option>
+                    <option value="d>p">d &gt; log_b(a) – Zusatzarbeit wächst stärker</option>
                   </select>
                 </div>
               </section>
@@ -272,16 +272,17 @@ queue: [A, C, D]</pre>
               <section class="master-work-step">
                 <span>4</span>
                 <div>
-                  <p class="tree-label">Fall und Ergebnis ableiten</p>
+                  <p class="tree-label">Dominanz und Ergebnis ableiten</p>
                   <div class="master-result-grid">
                     <select id="master-case-select">
-                      <option value="">Fall auswählen</option>
-                      <option value="Fall 1">Fall 1</option>
-                      <option value="Fall 2">Fall 2</option>
-                      <option value="Fall 3">Fall 3</option>
+                      <option value="">Dominanz auswählen</option>
+                      <option value="Fall 1">Rekursion dominiert → O(n^log_b(a))</option>
+                      <option value="Fall 2">Gleichgewicht → O(n^d log n)</option>
+                      <option value="Fall 3">Zusatzarbeit dominiert → O(n^d)</option>
                     </select>
                     <form id="master-runtime-options" class="choices compact-choices"></form>
                   </div>
+                  <p class="master-rule-hint">Merke: d &lt; log_b(a) → O(n^log_b(a)), d = log_b(a) → O(n^d log n), d &gt; log_b(a) → O(n^d).</p>
                 </div>
               </section>
             </div>
