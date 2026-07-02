@@ -1191,7 +1191,9 @@ const state = {
   searchStepIndex: 0,
   searchTimer: null,
   dataStructureQuestion: null,
-  dataStructureTopic: "Training",
+  dataStructureSection: "structures",
+  dataStructureTopic: "AVL-Bäume",
+  lastDataStructureTopic: "AVL-Bäume",
   treeFamilyRoot: null,
   treeFamilyMode: "binary",
   stackQueueMode: "stack",
@@ -1279,6 +1281,7 @@ const el = {
   dataStructureFeedback: document.getElementById("ds-feedback"),
   dataStructureCard: document.getElementById("data-structure-card"),
   dataStructureSectionTitle: document.getElementById("ds-section-title"),
+  dataStructureTopicNav: document.getElementById("data-structure-topic-nav"),
   treeFamilyCard: document.getElementById("tree-family-card"),
   treeFamilyTitle: document.getElementById("tree-family-title"),
   treeFamilyValue: document.getElementById("tree-family-value"),
@@ -1382,6 +1385,9 @@ document.getElementById("check-ds-question").addEventListener("click", checkData
 document.querySelectorAll("[data-ds-topic]").forEach((button) => {
   button.addEventListener("click", () => setDataStructureTopic(button.dataset.dsTopic));
 });
+document.querySelectorAll("[data-ds-section]").forEach((button) => {
+  button.addEventListener("click", () => setDataStructureSection(button.dataset.dsSection));
+});
 el.stackQueueMode.addEventListener("change", changeStackQueueMode);
 document.getElementById("sq-add").addEventListener("click", addStackQueueItem);
 document.getElementById("sq-remove").addEventListener("click", removeStackQueueItem);
@@ -1416,7 +1422,7 @@ resetSortValues();
 createSortQuestion();
 setSortSection("visual");
 resetSearchValues();
-setDataStructureTopic("Training");
+setDataStructureSection("structures");
 resetTreeFamily();
 renderStackQueue();
 resetGraphVisualization();
@@ -2359,8 +2365,33 @@ function createDataStructureQuestion() {
   setFeedback(el.dataStructureFeedback, "");
 }
 
+function setDataStructureSection(section) {
+  state.dataStructureSection = section;
+  const showStructures = section === "structures";
+
+  document.querySelectorAll("[data-ds-section]").forEach((button) => {
+    const active = button.dataset.dsSection === section;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (showStructures) {
+    el.dataStructureTopicNav.classList.remove("is-hidden");
+    setDataStructureTopic(state.lastDataStructureTopic);
+  } else {
+    if (state.dataStructureTopic !== "Training") {
+      state.lastDataStructureTopic = state.dataStructureTopic;
+    }
+    el.dataStructureTopicNav.classList.add("is-hidden");
+    setDataStructureTopic("Training");
+  }
+}
+
 function setDataStructureTopic(topic) {
   state.dataStructureTopic = topic;
+  if (topic !== "Training") {
+    state.lastDataStructureTopic = topic;
+  }
   const showAVL = topic === "AVL-Bäume";
   const showStackQueue = topic === "Stacks & Queues";
   const showGraph = topic === "Graphen";
