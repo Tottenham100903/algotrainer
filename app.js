@@ -216,6 +216,79 @@ const runtimePatterns = [
       };
     },
   },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      const factor = sample([2, 3, 4]);
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    total = 0",
+          "    outer = n",
+          "    while outer > 1:",
+          "        inner = n",
+          "        while inner > 1:",
+          "            total += inner",
+          `            inner = inner // ${factor}`,
+          "        outer = outer - 1",
+          "    return total",
+        ]),
+        answer: "O(n log n)",
+        explanation: "Die äußere Schleife läuft linear oft, die innere Schleife logarithmisch oft.",
+      };
+    },
+  },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    total = 0",
+          "    for i in range(n):",
+          "        for j in range(i):",
+          "            total += i + j",
+          "    return total",
+        ]),
+        answer: "O(n^2)",
+        explanation: "Die verschachtelte Summe 0 + 1 + ... + (n-1) wächst quadratisch.",
+      };
+    },
+  },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    if n <= 1:",
+          "        return 1",
+          "    left = mystery(n // 2)",
+          "    right = mystery(n // 2)",
+          "    return left + right + n",
+        ]),
+        answer: "O(n log n)",
+        explanation: "Es gilt T(n) = 2T(n/2) + O(n), also O(n log n).",
+      };
+    },
+  },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    steps = 0",
+          "    while n > 1:",
+          "        n = n // 2",
+          "        steps += 1",
+          "    return steps",
+        ]),
+        answer: "O(log n)",
+        explanation: "Die Eingabe wird in jeder Iteration halbiert.",
+      };
+    },
+  },
 ];
 
 const runtimeChoicesPool = [
@@ -244,6 +317,12 @@ const masterMethodChoices = [
   "Divide and Conquer / Master-Theorem",
   "Subtract and Conquer",
   "Substitution",
+];
+
+const masterFlowChoices = [
+  "Master: p = log_b(a) berechnen und f(n) mit n^p vergleichen",
+  "Subtract: Rekurrenz entfalten und entstehende Summe auswerten",
+  "Substitution: Vermutung wählen und durch Einsetzen/Induktion prüfen",
 ];
 
 const masterCaseChoices = [
@@ -308,6 +387,36 @@ const masterPatterns = [
   },
   {
     title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 8T(n / 2) + n^2",
+    recurrenceHtml: 'T(n) = 8T(<span class="frac"><span>n</span><span>2</span></span>) + n<sup>2</sup>',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 1",
+    answer: "n^3",
+    explanation: "n^log_2(8) = n^3 wächst polynomial stärker als n^2.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 9T(n / 3) + n^2",
+    recurrenceHtml: 'T(n) = 9T(<span class="frac"><span>n</span><span>3</span></span>) + n<sup>2</sup>',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 2",
+    answer: "n^2 log n",
+    explanation: "n^log_3(9) = n^2; bei gleicher Größe entsteht ein zusätzlicher Log-Faktor.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 3T(n / 3) + n^2",
+    recurrenceHtml: 'T(n) = 3T(<span class="frac"><span>n</span><span>3</span></span>) + n<sup>2</sup>',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 3",
+    answer: "n^2",
+    explanation: "n^2 wächst polynomial stärker als n^log_3(3) = n und dominiert die Rekurrenz.",
+  },
+  {
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n - 1) + n",
     recurrenceHtml: "T(n) = T(n - 1) + n",
     task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
@@ -338,6 +447,26 @@ const masterPatterns = [
   },
   {
     title: "Rekurrenz analysieren",
+    recurrence: "T(n) = T(n - 2) + 1",
+    recurrenceHtml: "T(n) = T(n - 2) + 1",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "n",
+    explanation: "n sinkt um eine Konstante, daher gibt es linear viele Rekursionsschritte.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = T(n - 1) + log n",
+    recurrenceHtml: "T(n) = T(n - 1) + log n",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "n log n",
+    explanation: "Die Summe log 1 + log 2 + ... + log n liegt in Θ(n log n).",
+  },
+  {
+    title: "Rekurrenz analysieren",
     recurrence: "T(n) = T(n / 2) + T(n / 4) + n",
     recurrenceHtml: 'T(n) = T(<span class="frac"><span>n</span><span>2</span></span>) + T(<span class="frac"><span>n</span><span>4</span></span>) + n',
     task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
@@ -355,6 +484,16 @@ const masterPatterns = [
     caseName: "Nicht anwendbar",
     answer: "2^n",
     explanation: "Die Rekurrenz verzweigt in zwei fast gleich große Teilprobleme und wächst exponentiell.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 2T(n / 3) + n",
+    recurrenceHtml: 'T(n) = 2T(<span class="frac"><span>n</span><span>3</span></span>) + n',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Substitution",
+    caseName: "Nicht anwendbar",
+    answer: "n",
+    explanation: "Mit T(k) <= ck folgt 2c(n/3) + n <= cn für hinreichend großes c.",
   },
 ];
 
@@ -404,6 +543,7 @@ const sortAlgorithms = {
 };
 
 const sortRuntimeChoices = ["O(n)", "O(n log n)", "O(n^2)"];
+const sortPlaybackDelay = 950;
 
 const dataStructureQuestions = [
   {
@@ -423,12 +563,44 @@ const dataStructureQuestions = [
     explanation: "Ohne Tail-Zeiger muss man erst bis zum letzten Knoten laufen.",
   },
   {
+    topic: "Listen",
+    scenarioHtml: '<div class="ds-list"><span>0: 7</span><span>1: 11</span><span>2: 18</span><span>3: 29</span></div>',
+    question: "Was passiert typischerweise beim Einfügen in die Mitte einer Array-Liste?",
+    choices: ["Elemente rechts davon werden verschoben", "Nur ein Zeiger wird geändert", "Die Liste wird automatisch balanciert", "Die Hashfunktion wird neu berechnet"],
+    answer: "Elemente rechts davon werden verschoben",
+    explanation: "Bei Array-Listen müssen nachfolgende Elemente Platz machen; das kostet im Worst Case O(n).",
+  },
+  {
+    topic: "Listen",
+    scenarioHtml: '<div class="ds-list linked"><span>head</span><span>4</span><span>9</span><span>tail</span></div>',
+    question: "Welche Stärke hat eine verkettete Liste, wenn der Knoten bereits bekannt ist?",
+    choices: ["Einfügen nach diesem Knoten ist O(1)", "Zugriff auf Index 50 ist O(1)", "Binäre Suche ist direkt möglich", "Alle Elemente liegen zusammenhängend im Speicher"],
+    answer: "Einfügen nach diesem Knoten ist O(1)",
+    explanation: "Ist der Knoten bekannt, müssen nur Referenzen angepasst werden.",
+  },
+  {
     topic: "Wörterbücher",
     scenarioHtml: '<div class="ds-map"><span>\"id\" → 42</span><span>\"name\" → \"Ada\"</span><span>\"level\" → 3</span></div>',
     question: "Welche Denkweise passt am besten zu einem Wörterbuch?",
     choices: ["Werte werden über Schlüssel gefunden", "Werte sind nur über Positionen erreichbar", "Alle Werte bleiben automatisch sortiert", "Jeder Zugriff muss linear suchen"],
     answer: "Werte werden über Schlüssel gefunden",
     explanation: "Wörterbücher modellieren Key-Value-Zugriff, nicht Positionszugriff.",
+  },
+  {
+    topic: "Wörterbücher",
+    scenarioHtml: '<div class="ds-map"><span>\"kurs\" → \"Algo\"</span><span>\"punkte\" → 84</span><span>\"bestanden\" → true</span></div>',
+    question: "Was sollte in einem Wörterbuch eindeutig sein?",
+    choices: ["Der Schlüssel", "Der Wert", "Die Einfügezeit", "Die Speicheradresse"],
+    answer: "Der Schlüssel",
+    explanation: "Ein Wörterbuch ordnet jedem Schlüssel höchstens einen aktuellen Wert zu.",
+  },
+  {
+    topic: "Wörterbücher",
+    scenarioHtml: '<div class="ds-map"><span>scores[\"Mia\"] = 12</span><span>scores[\"Mia\"] = 15</span></div>',
+    question: "Was bewirkt die zweite Zuweisung meistens?",
+    choices: ["Der alte Wert wird überschrieben", "Ein zweiter identischer Schlüssel entsteht", "Die Map wird sortiert", "Alle Werte werden gelöscht"],
+    answer: "Der alte Wert wird überschrieben",
+    explanation: "Ein Schlüssel ist eindeutig; eine erneute Zuweisung aktualisiert seinen Wert.",
   },
   {
     topic: "Hashmaps",
@@ -445,6 +617,54 @@ const dataStructureQuestions = [
     choices: ["Um Kollisionen wahrscheinlicher zu machen", "Um die Last pro Bucket zu senken", "Um DFS zu beschleunigen", "Damit Werte sortiert bleiben"],
     answer: "Um die Last pro Bucket zu senken",
     explanation: "Resizing hält den Load Factor klein und stabilisiert erwartete O(1)-Operationen.",
+  },
+  {
+    topic: "Hashmaps",
+    scenarioHtml: '<div class="ds-buckets"><span>hash(\"Ada\") % 5 = 2</span><span>hash(\"Lin\") % 5 = 2</span></div>',
+    question: "Welche Strategie kann Kollisionen in Buckets behandeln?",
+    choices: ["Chaining mit Listen pro Bucket", "AVL-Rotation am Schlüssel", "DFS ab dem Bucket", "Mergesort nach jedem Zugriff"],
+    answer: "Chaining mit Listen pro Bucket",
+    explanation: "Beim Chaining speichert ein Bucket mehrere Einträge, die denselben Index erhalten.",
+  },
+  {
+    topic: "Hashmaps",
+    scenarioHtml: '<div class="ds-map"><span>viele Einträge</span><span>wenige Buckets</span><span>Load Factor steigt</span></div>',
+    question: "Was passiert bei zu hohem Load Factor typischerweise mit der erwarteten Zugriffszeit?",
+    choices: ["Sie wird schlechter", "Sie bleibt garantiert O(1)", "Sie wird zu O(log log n)", "Sie hängt nur vom Wert ab"],
+    answer: "Sie wird schlechter",
+    explanation: "Mehr Kollisionen bedeuten längere Bucket-Ketten oder mehr Sondierungsschritte.",
+  },
+  {
+    topic: "Tiefensuche",
+    scenarioHtml: '<div class="ds-graph"><span>A: B, C</span><span>B: D</span><span>C: E</span><span>D: -</span><span>E: -</span></div>',
+    question: "DFS startet bei A und besucht Nachbarn in angegebener Reihenfolge. Welche Reihenfolge entsteht?",
+    choices: ["A, B, D, C, E", "A, C, E, B, D", "A, B, C, D, E", "D, B, E, C, A"],
+    answer: "A, B, D, C, E",
+    explanation: "DFS geht zuerst so tief wie möglich über B nach D und kehrt dann zu C/E zurück.",
+  },
+  {
+    topic: "Tiefensuche",
+    scenarioHtml: '<div class="ds-graph"><span>Stack: A</span><span>visited: ∅</span><span>Graph kann Zyklen enthalten</span></div>',
+    question: "Warum braucht DFS eine visited-Menge?",
+    choices: ["Um Zyklen nicht endlos zu besuchen", "Um den Graphen automatisch zu sortieren", "Um einen Min-Heap zu bauen", "Um Hash-Kollisionen zu verhindern"],
+    answer: "Um Zyklen nicht endlos zu besuchen",
+    explanation: "Bei Zyklen kann DFS sonst immer wieder dieselben Knoten erreichen.",
+  },
+  {
+    topic: "Tiefensuche",
+    scenarioHtml: '<div class="ds-graph"><span>A: B</span><span>B: C</span><span>C: A, D</span><span>D: -</span></div>',
+    question: "Was erkennt DFS mit Farben oder visited-Status in gerichteten Graphen besonders gut?",
+    choices: ["Zyklen", "Den Median", "Den kleinsten Heap-Wert", "Die Hashfunktion"],
+    answer: "Zyklen",
+    explanation: "Trifft DFS auf einen Knoten im aktuellen Rekursionspfad, weist das auf einen Zyklus hin.",
+  },
+  {
+    topic: "Tiefensuche",
+    scenarioHtml: '<div class="ds-graph"><span>Start: S</span><span>S: A, B</span><span>A: C</span><span>B: D</span></div>',
+    question: "Welche Datenstruktur passt zur iterativen Tiefensuche?",
+    choices: ["Stack", "Queue", "Hashfunktion", "Min-Heap als Pflicht"],
+    answer: "Stack",
+    explanation: "DFS verfolgt einen Pfad in die Tiefe; iterativ bildet ein Stack dieses Verhalten ab.",
   },
   {
     topic: "Min-Heap",
@@ -471,6 +691,30 @@ const dataStructureQuestions = [
     explanation: "Nach dem Einfügen wird per Bubble-up die Heap-Eigenschaft wiederhergestellt.",
   },
   {
+    topic: "Min-Heap",
+    scenarioHtml: '<div class="ds-heap"><span>3</span><span>8</span><span>5</span><span>12</span><span>10</span></div>',
+    question: "Was passiert beim Entfernen der Wurzel aus einem Min-Heap zuerst?",
+    choices: ["Das letzte Element wird nach oben gesetzt", "Alle Blätter werden sortiert", "DFS sucht das Minimum", "Die Hashmap wird vergrößert"],
+    answer: "Das letzte Element wird nach oben gesetzt",
+    explanation: "Danach wird per Bubble-down die Heap-Eigenschaft wiederhergestellt.",
+  },
+  {
+    topic: "Max-Heap",
+    scenarioHtml: '<div class="ds-heap"><span>50</span><span>41</span><span>33</span><span>12</span><span>28</span></div>',
+    question: "Welcher Zugriff ist bei einem Max-Heap direkt möglich?",
+    choices: ["Maximum lesen", "Minimum lesen", "Median lesen", "Sortierte Reihenfolge aller Blätter lesen"],
+    answer: "Maximum lesen",
+    explanation: "Beim Max-Heap steht das größte Element an der Wurzel.",
+  },
+  {
+    topic: "Heaps",
+    scenarioHtml: '<div class="ds-heap"><span>Heap</span><span>Prioritäten</span><span>push</span><span>pop</span></div>',
+    question: "Wofür eignet sich ein Heap besonders gut?",
+    choices: ["Prioritätswarteschlangen", "Direkter Zugriff auf beliebige Indizes", "Speichern eindeutiger Schlüssel", "DFS-Rekursion ersetzen"],
+    answer: "Prioritätswarteschlangen",
+    explanation: "Heaps liefern das Element mit höchster oder niedrigster Priorität effizient.",
+  },
+  {
     topic: "Stacks & Queues",
     scenarioHtml: '<div class="ds-list"><span>Stack</span><span>A</span><span>B</span><span>C</span></div>',
     question: "Welches Element wird bei einem Stack als Nächstes entfernt?",
@@ -485,6 +729,22 @@ const dataStructureQuestions = [
     choices: ["A", "C", "B", "Ein zufälliges Element"],
     answer: "A",
     explanation: "Eine Queue arbeitet nach FIFO: Das zuerst eingefügte Element wird zuerst entfernt.",
+  },
+  {
+    topic: "Stacks & Queues",
+    scenarioHtml: '<div class="ds-list"><span>Queue</span><span>enqueue X</span><span>enqueue Y</span><span>dequeue</span></div>',
+    question: "Welches Element wird bei dieser Queue zuerst entfernt?",
+    choices: ["X", "Y", "Beide gleichzeitig", "Keines, Queues löschen nicht"],
+    answer: "X",
+    explanation: "Queues arbeiten nach FIFO: X wurde vor Y eingefügt.",
+  },
+  {
+    topic: "Stacks & Queues",
+    scenarioHtml: '<div class="ds-list"><span>Stack</span><span>push 5</span><span>push 8</span><span>pop</span></div>',
+    question: "Welcher Wert wird durch pop entfernt?",
+    choices: ["8", "5", "13", "Der kleinste Wert"],
+    answer: "8",
+    explanation: "Stacks arbeiten nach LIFO: Das zuletzt eingefügte Element kommt zuerst heraus.",
   },
 ];
 
@@ -640,7 +900,7 @@ const state = {
   sortSteps: [],
   sortStepIndex: 0,
   sortTimer: null,
-  sortDelay: 1400,
+  sortSection: "visual",
   sortQuestion: null,
   dataStructureQuestion: null,
   dataStructureTopic: "Training",
@@ -656,9 +916,11 @@ const state = {
   sandboxAnimationTimer: null,
   avlPreviewTimer: null,
   renderCache: new Map(),
+  logoRideTimer: null,
 };
 
 const el = {
+  homeTitle: document.querySelector(".home-title"),
   homeView: document.getElementById("home-view"),
   runtimeView: document.getElementById("runtime-view"),
   masterView: document.getElementById("master-view"),
@@ -675,11 +937,11 @@ const el = {
   masterCaseHelp: document.getElementById("master-case-help"),
   masterHelpToggle: document.getElementById("toggle-master-help"),
   masterMethodOptions: document.getElementById("master-method-options"),
+  masterFlowOptions: document.getElementById("master-flow-options"),
   masterCaseOptions: document.getElementById("master-case-options"),
   masterRuntimeOptions: document.getElementById("master-runtime-options"),
   masterFeedback: document.getElementById("master-feedback"),
   sortAlgorithm: document.getElementById("sort-algorithm"),
-  sortSpeed: document.getElementById("sort-speed"),
   sortBars: document.getElementById("sort-bars"),
   sortNote: document.getElementById("sort-note"),
   sortStepCount: document.getElementById("sort-step-count"),
@@ -692,6 +954,8 @@ const el = {
   sortAverageOptions: document.getElementById("sort-average-options"),
   sortWorstOptions: document.getElementById("sort-worst-options"),
   sortFeedback: document.getElementById("sort-feedback"),
+  sortingVisualCard: document.getElementById("sorting-visual-card"),
+  sortingQuizCard: document.getElementById("sorting-quiz-card"),
   dataStructureScenario: document.getElementById("ds-scenario"),
   dataStructureQuestion: document.getElementById("ds-question"),
   dataStructureOptions: document.getElementById("ds-options"),
@@ -733,19 +997,25 @@ document.querySelectorAll("[data-open-view]").forEach((button) => {
 document.querySelectorAll("[data-back-home]").forEach((button) => {
   button.addEventListener("click", () => setActiveView("home"));
 });
+if (el.homeTitle) {
+  el.homeTitle.addEventListener("pointerenter", playLogoRide);
+  el.homeTitle.addEventListener("focus", playLogoRide);
+}
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
 el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 el.sortAlgorithm.addEventListener("change", rebuildSortSteps);
-el.sortSpeed.addEventListener("change", changeSortSpeed);
 document.getElementById("shuffle-sort").addEventListener("click", resetSortValues);
 el.sortPrev.addEventListener("click", previousSortStep);
 el.sortNext.addEventListener("click", nextSortStep);
 el.sortPlay.addEventListener("click", toggleSortPlayback);
 document.getElementById("new-sort-question").addEventListener("click", createSortQuestion);
 document.getElementById("check-sort-question").addEventListener("click", checkSortQuestion);
+document.querySelectorAll("[data-sort-section]").forEach((button) => {
+  button.addEventListener("click", () => setSortSection(button.dataset.sortSection));
+});
 document.getElementById("new-ds-question").addEventListener("click", createDataStructureQuestion);
 document.getElementById("check-ds-question").addEventListener("click", checkDataStructureQuestion);
 document.querySelectorAll("[data-ds-topic]").forEach((button) => {
@@ -777,6 +1047,7 @@ createRuntimeQuestion();
 createMasterQuestion();
 resetSortValues();
 createSortQuestion();
+setSortSection("visual");
 setDataStructureTopic("Training");
 renderStackQueue();
 resetGraphVisualization();
@@ -815,6 +1086,18 @@ function setActiveView(viewName) {
   }
 
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function playLogoRide() {
+  if (!el.homeTitle || el.homeTitle.classList.contains("is-riding")) {
+    return;
+  }
+
+  window.clearTimeout(state.logoRideTimer);
+  el.homeTitle.classList.add("is-riding");
+  state.logoRideTimer = window.setTimeout(() => {
+    el.homeTitle.classList.remove("is-riding");
+  }, 1250);
 }
 
 function createRuntimeQuestion() {
@@ -866,6 +1149,7 @@ function createMasterQuestion() {
   el.masterRecurrence.innerHTML = pattern.recurrenceHtml || pattern.recurrence;
   el.masterTask.textContent = pattern.task;
   renderChoices(el.masterMethodOptions, "master-method", masterMethodChoices);
+  renderChoices(el.masterFlowOptions, "master-flow", masterFlowChoices);
   renderChoices(el.masterCaseOptions, "master-case", masterCaseChoices);
   renderChoices(
     el.masterRuntimeOptions,
@@ -877,22 +1161,24 @@ function createMasterQuestion() {
 
 function checkMasterQuestion() {
   const selectedMethod = getSelectedValue("master-method-choice");
+  const selectedFlow = getSelectedValue("master-flow-choice");
   const selectedCase = getSelectedValue("master-case-choice");
   const selectedRuntime = getSelectedValue("master-runtime-choice");
 
-  if (!selectedMethod || !selectedCase || !selectedRuntime) {
-    setFeedback(el.masterFeedback, "Wähle Verfahren, Fall/Begründung und Laufzeit aus.", "wrong");
+  if (!selectedMethod || !selectedFlow || !selectedCase || !selectedRuntime) {
+    setFeedback(el.masterFeedback, "Wähle Verfahren, Ablauf, Fall/Begründung und Laufzeit aus.", "wrong");
     return;
   }
 
   const methodCorrect = selectedMethod === state.masterQuestion.method;
+  const flowCorrect = selectedFlow === expectedMasterFlow(state.masterQuestion);
   const caseCorrect = selectedCase === state.masterQuestion.caseName;
   const runtimeCorrect = selectedRuntime === state.masterQuestion.answer;
 
-  if (methodCorrect && caseCorrect && runtimeCorrect) {
+  if (methodCorrect && flowCorrect && caseCorrect && runtimeCorrect) {
     setFeedback(
       el.masterFeedback,
-      `Richtig: ${selectedMethod}, ${selectedCase}, Laufzeitklasse ${selectedRuntime}. ${state.masterQuestion.explanation}`,
+      `Richtig: ${selectedMethod}, passender Ablauf, ${selectedCase}, Laufzeitklasse ${selectedRuntime}. ${state.masterQuestion.explanation}`,
       "correct",
     );
     return;
@@ -901,6 +1187,9 @@ function checkMasterQuestion() {
   const missing = [];
   if (!methodCorrect) {
     missing.push(`Verfahren: ${state.masterQuestion.method}`);
+  }
+  if (!flowCorrect) {
+    missing.push(`Ablauf: ${expectedMasterFlow(state.masterQuestion)}`);
   }
   if (!caseCorrect) {
     missing.push(`Fall/Begründung: ${state.masterQuestion.caseName}`);
@@ -914,6 +1203,16 @@ function checkMasterQuestion() {
     `Noch nicht ganz. Korrektur: ${missing.join(", ")}. ${state.masterQuestion.explanation}`,
     "wrong",
   );
+}
+
+function expectedMasterFlow(question) {
+  if (question.method === "Divide and Conquer / Master-Theorem") {
+    return "Master: p = log_b(a) berechnen und f(n) mit n^p vergleichen";
+  }
+  if (question.method === "Subtract and Conquer") {
+    return "Subtract: Rekurrenz entfalten und entstehende Summe auswerten";
+  }
+  return "Substitution: Vermutung wählen und durch Einsetzen/Induktion prüfen";
 }
 
 function toggleMasterHelp() {
@@ -940,6 +1239,26 @@ function rebuildSortSteps() {
   state.sortStepIndex = 0;
   renderSortStep();
   renderSortInfo();
+}
+
+function setSortSection(section) {
+  state.sortSection = section;
+  const showVisual = section === "visual";
+  el.sortingVisualCard.classList.toggle("is-hidden", !showVisual);
+  el.sortingQuizCard.classList.toggle("is-hidden", showVisual);
+
+  document.querySelectorAll("[data-sort-section]").forEach((button) => {
+    const active = button.dataset.sortSection === section;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (showVisual) {
+    renderSortStep();
+    renderSortInfo();
+  } else {
+    stopSortPlayback();
+  }
 }
 
 function buildSortSteps(algorithm, values) {
@@ -1215,7 +1534,7 @@ function toggleSortPlayback() {
     renderSortStep();
   }
   el.sortPlay.textContent = "Pause";
-  state.sortTimer = window.setInterval(nextSortStep, state.sortDelay);
+  state.sortTimer = window.setInterval(nextSortStep, sortPlaybackDelay);
 }
 
 function stopSortPlayback() {
@@ -1226,15 +1545,6 @@ function stopSortPlayback() {
   if (el.sortPlay) {
     el.sortPlay.textContent = "Abspielen";
   }
-}
-
-function changeSortSpeed() {
-  state.sortDelay = Number(el.sortSpeed.value) || 1400;
-  if (!state.sortTimer) {
-    return;
-  }
-  stopSortPlayback();
-  toggleSortPlayback();
 }
 
 function createSortQuestion() {

@@ -150,12 +150,24 @@
                 <h3>2. Methode wählen</h3>
                 <p>Mehrere gleich große Teilprobleme: Master. Ein Teilproblem: entfalten. Ungleiche oder ungewohnte Form: Substitution.</p>
               </div>
+              <div class="help-card">
+                <h3>3. Master anwenden</h3>
+                <p>Berechne p = log<sub>b</sub>(a). Vergleiche f(n) mit n<sup>p</sup>: kleiner, gleich groß oder größer.</p>
+              </div>
+              <div class="help-card">
+                <h3>4. Andere Abläufe</h3>
+                <p>Subtract: Rekurrenz entfalten und Summe auswerten. Substitution: Vermutung wählen, einsetzen und per Induktion absichern.</p>
+              </div>
             </div>
 
             <div class="master-quiz-grid">
               <div>
                 <p class="tree-label">Verfahren</p>
                 <form id="master-method-options" class="choices compact-choices"></form>
+              </div>
+              <div>
+                <p class="tree-label">Ablauf</p>
+                <form id="master-flow-options" class="choices compact-choices"></form>
               </div>
               <div>
                 <p class="tree-label">Fall / Begründung</p>
@@ -200,7 +212,12 @@
           </div>
         </header>
 
-        <div class="module-grid">
+        <nav class="section-tabs" aria-label="Bereiche der Sortierverfahren">
+          <button class="section-tab-btn is-active" type="button" data-sort-section="visual">Visualisierung</button>
+          <button class="section-tab-btn" type="button" data-sort-section="training">Training</button>
+        </nav>
+
+        <div class="module-grid module-grid-single">
           <section class="card" id="sorting-visual-card">
             <div class="card-head">
               <div>
@@ -226,14 +243,6 @@
                   <option value="quick">Quicksort</option>
                 </select>
               </label>
-              <label>
-                Geschwindigkeit
-                <select id="sort-speed">
-                  <option value="2200">Langsam</option>
-                  <option value="1400" selected>Normal</option>
-                  <option value="800">Schnell</option>
-                </select>
-              </label>
               <button id="sort-prev" class="secondary-btn" type="button">Ein Schritt zurück</button>
               <button id="sort-play" class="primary-btn" type="button">Abspielen</button>
               <button id="sort-next" class="secondary-btn" type="button">Ein Schritt weiter</button>
@@ -248,7 +257,7 @@
             <div id="sort-info" class="sort-info"></div>
           </section>
 
-          <section class="card" id="sorting-quiz-card">
+          <section class="card is-hidden" id="sorting-quiz-card">
             <div class="card-head">
               <div>
                 <p class="section-label">Abfrage</p>
