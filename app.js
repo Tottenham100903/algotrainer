@@ -289,6 +289,76 @@ const runtimePatterns = [
       };
     },
   },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    i = 1",
+          "    steps = 0",
+          "    while i < n:",
+          "        i = i * 2",
+          "        steps += 1",
+          "    return steps",
+        ]),
+        answer: "O(log n)",
+        explanation: "i verdoppelt sich in jedem Durchlauf und erreicht n daher nach logarithmisch vielen Schritten.",
+      };
+    },
+  },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    if n <= 1:",
+          "        return 1",
+          "    total = 0",
+          "    for i in range(n):",
+          "        total += i",
+          "    return total + mystery(n // 2)",
+        ]),
+        answer: "O(n)",
+        explanation: "Die Arbeit bildet die geometrische Reihe n + n/2 + n/4 + ..., also O(n).",
+      };
+    },
+  },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    if n <= 1:",
+          "        return 1",
+          "    a = mystery(n // 2)",
+          "    b = mystery(n // 2)",
+          "    return a + b + 1",
+        ]),
+        answer: "O(n)",
+        explanation: "T(n) = 2T(n/2) + O(1) besitzt insgesamt linear viele Rekursionsknoten.",
+      };
+    },
+  },
+  {
+    title: "Code-Schnipsel analysieren",
+    build() {
+      return {
+        code: asCode([
+          "def mystery(n):",
+          "    total = 0",
+          "    for i in range(n):",
+          "        for j in range(n - i):",
+          "            total += 1",
+          "    return total",
+        ]),
+        answer: "O(n^2)",
+        explanation: "Die innere Schleife läuft n + (n-1) + ... + 1 Mal, also quadratisch oft.",
+      };
+    },
+  },
 ];
 
 const runtimeChoicesPool = [
@@ -494,6 +564,56 @@ const masterPatterns = [
     caseName: "Nicht anwendbar",
     answer: "n",
     explanation: "Mit T(k) <= ck folgt 2c(n/3) + n <= cn für hinreichend großes c.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 4T(n / 2) + n",
+    recurrenceHtml: 'T(n) = 4T(<span class="frac"><span>n</span><span>2</span></span>) + n',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 1",
+    answer: "n^2",
+    explanation: "n^log_2(4) = n^2 wächst polynomial stärker als f(n) = n.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 4T(n / 2) + n^2",
+    recurrenceHtml: 'T(n) = 4T(<span class="frac"><span>n</span><span>2</span></span>) + n<sup>2</sup>',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 2",
+    answer: "n^2 log n",
+    explanation: "f(n) entspricht n^log_2(4) = n^2, daher kommt ein Log-Faktor hinzu.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = 2T(n / 2) + n^3",
+    recurrenceHtml: 'T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + n<sup>3</sup>',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 3",
+    answer: "n^3",
+    explanation: "n^3 wächst polynomial stärker als n^log_2(2) = n und dominiert.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = T(n - 3) + n^2",
+    recurrenceHtml: "T(n) = T(n - 3) + n<sup>2</sup>",
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "n^3",
+    explanation: "Die Summe der quadratischen Kosten über linear viele Schritte wächst kubisch.",
+  },
+  {
+    title: "Rekurrenz analysieren",
+    recurrence: "T(n) = T(n / 3) + 1",
+    recurrenceHtml: 'T(n) = T(<span class="frac"><span>n</span><span>3</span></span>) + 1',
+    task: "Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "log n",
+    explanation: "n kann nur logarithmisch oft durch 3 geteilt werden, bevor die Basis erreicht ist.",
   },
 ];
 
@@ -796,6 +916,86 @@ const dataStructureQuestions = [
     choices: ["8", "5", "13", "Der kleinste Wert"],
     answer: "8",
     explanation: "Stacks arbeiten nach LIFO: Das zuletzt eingefügte Element kommt zuerst heraus.",
+  },
+  {
+    topic: "Listen",
+    scenarioHtml: '<div class="ds-list"><span>10</span><span>20</span><span>30</span><span>40</span></div>',
+    question: "Warum ist das Einfügen in der Mitte einer Array-Liste typischerweise O(n)?",
+    choices: ["Nachfolgende Elemente müssen verschoben werden", "Der Index muss gehasht werden", "Die Liste muss balanciert werden", "Alle Werte werden rekursiv verdoppelt"],
+    answer: "Nachfolgende Elemente müssen verschoben werden",
+    explanation: "Für die neue Lücke müssen im Worst Case linear viele Elemente nach rechts rücken.",
+  },
+  {
+    topic: "Listen",
+    scenarioHtml: '<div class="ds-list linked"><span>head</span><span>7</span><span>11</span><span>19</span></div>',
+    question: "Welche Information speichert ein Knoten einer einfach verketteten Liste?",
+    choices: ["Wert und Verweis auf den Nachfolger", "Nur seinen Array-Index", "Immer zwei Kindknoten", "Eine Hashfunktion"],
+    answer: "Wert und Verweis auf den Nachfolger",
+    explanation: "Die Verkettung entsteht durch den Zeiger auf den jeweils nächsten Knoten.",
+  },
+  {
+    topic: "Wörterbücher",
+    scenarioHtml: '<div class="ds-map"><span>\"rot\" → #f00</span><span>\"grün\" → #0f0</span></div>',
+    question: "Was passiert konzeptionell beim Überschreiben des Schlüssels „rot“?",
+    choices: ["Der zugehörige Wert wird ersetzt", "Ein zweiter gleicher Schlüssel bleibt parallel bestehen", "Alle Schlüssel werden gelöscht", "Die Reihenfolge wird umgedreht"],
+    answer: "Der zugehörige Wert wird ersetzt",
+    explanation: "Ein Wörterbuch ordnet jedem eindeutigen Schlüssel genau einen aktuellen Wert zu.",
+  },
+  {
+    topic: "Wörterbücher",
+    scenarioHtml: '<div class="ds-map"><span>key in map</span><span>map[key]</span><span>map.pop(key)</span></div>',
+    question: "Welche Operation prüft, ob ein Schlüssel vorhanden ist, ohne seinen Wert zu verändern?",
+    choices: ["Mitgliedschaftstest", "pop", "clear", "Sortieren"],
+    answer: "Mitgliedschaftstest",
+    explanation: "Der Mitgliedschaftstest fragt nur die Existenz des Schlüssels ab.",
+  },
+  {
+    topic: "Hashmaps",
+    scenarioHtml: '<div class="ds-buckets"><span>0: A</span><span>1: B → C → D</span><span>2: -</span></div>',
+    question: "Welche Folge hat eine lange Kette in einem Bucket?",
+    choices: ["Zugriffe auf diesen Bucket werden langsamer", "Die Hashmap wird automatisch sortiert", "Die Laufzeit wird garantiert O(1)", "Der Bucket wird zu einem AVL-Baum"],
+    answer: "Zugriffe auf diesen Bucket werden langsamer",
+    explanation: "Bei Chaining müssen innerhalb des Buckets mehrere Einträge verglichen werden.",
+  },
+  {
+    topic: "Hashmaps",
+    scenarioHtml: '<div class="ds-map"><span>capacity = 8</span><span>entries = 6</span></div>',
+    question: "Wie groß ist der Load Factor dieser Hashmap?",
+    choices: ["0,75", "1,33", "2", "48"],
+    answer: "0,75",
+    explanation: "Der Load Factor ist entries / capacity = 6 / 8 = 0,75.",
+  },
+  {
+    topic: "Heaps",
+    scenarioHtml: '<div class="ds-heap"><span>5</span><span>12</span><span>8</span><span>20</span><span>15</span></div>',
+    question: "An welcher Position wird ein neuer Heap-Wert zunächst eingefügt?",
+    choices: ["Am nächsten freien Platz der untersten Ebene", "Immer direkt an der Wurzel", "An einer zufälligen Stelle", "Links neben die Wurzel"],
+    answer: "Am nächsten freien Platz der untersten Ebene",
+    explanation: "So bleibt der Baum vollständig; danach repariert Bubble-up die Heap-Eigenschaft.",
+  },
+  {
+    topic: "Heaps",
+    scenarioHtml: '<div class="ds-heap"><span>30</span><span>22</span><span>18</span><span>9</span><span>14</span></div>',
+    question: "Welche Eigenschaft muss in einem Max-Heap für jede Eltern-Kind-Kante gelten?",
+    choices: ["Elternwert ≥ Kindwert", "Elternwert ≤ Kindwert", "Beide Werte müssen gleich sein", "Der linke Wert ist immer gerade"],
+    answer: "Elternwert ≥ Kindwert",
+    explanation: "Die lokale Max-Heap-Eigenschaft bringt das größte Element an die Wurzel.",
+  },
+  {
+    topic: "Stacks & Queues",
+    scenarioHtml: '<div class="ds-list"><span>Stack</span><span>push A</span><span>push B</span><span>pop</span><span>push C</span></div>',
+    question: "Welches Element liegt anschließend oben auf dem Stack?",
+    choices: ["C", "A", "B", "Der Stack ist leer"],
+    answer: "C",
+    explanation: "B wird durch pop entfernt; danach legt push C oben ab.",
+  },
+  {
+    topic: "Stacks & Queues",
+    scenarioHtml: '<div class="ds-list"><span>Queue</span><span>enqueue 1</span><span>enqueue 2</span><span>dequeue</span><span>enqueue 3</span></div>',
+    question: "Welches Element steht anschließend vorne in der Queue?",
+    choices: ["2", "3", "1", "Die Queue ist leer"],
+    answer: "2",
+    explanation: "1 wird entfernt; 2 bleibt vorne, während 3 hinten angefügt wird.",
   },
 ];
 

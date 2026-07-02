@@ -13,6 +13,28 @@
   <div class="page-shell">
     <main>
       <section id="home-view" class="app-view app-view-active">
+        <div class="algorithm-wallpaper" aria-hidden="true">
+          <pre class="wallpaper-code">def binary_search(values, target):
+    low, high = 0, len(values) - 1
+    while low &lt;= high:
+        middle = (low + high) // 2</pre>
+          <pre class="wallpaper-tree">        42
+      /    \
+    21      68
+   /  \    /  \
+  9   30  55   81</pre>
+          <pre class="wallpaper-graph">A ─── B ─── D
+│   ╱ │     │
+│ ╱   │     │
+C ─── E ─── F</pre>
+          <span class="wallpaper-runtime">T(n) = 2T(n / 2) + n</span>
+          <span class="wallpaper-complexity">O(n log n)</span>
+          <pre class="wallpaper-stack">push(A)
+push(B)
+pop() → B
+queue: [A, C, D]</pre>
+        </div>
+
         <header class="hero hero-home">
           <p class="eyebrow">Dein Lernbereich</p>
           <h1 class="home-title">

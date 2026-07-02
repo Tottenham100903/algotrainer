@@ -43,6 +43,82 @@ body {
   display: block;
 }
 
+#home-view {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 32px;
+}
+
+#home-view > .hero,
+#home-view > .home-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.algorithm-wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.algorithm-wallpaper > * {
+  position: absolute;
+  margin: 0;
+  opacity: 0.055;
+  font: inherit;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+.wallpaper-code {
+  top: 5%;
+  right: -2%;
+  font-size: clamp(0.75rem, 1.35vw, 1rem);
+  transform: rotate(3deg);
+}
+
+.wallpaper-tree {
+  top: 32%;
+  left: 4%;
+  font-size: clamp(0.82rem, 1.7vw, 1.25rem);
+  transform: rotate(-5deg);
+}
+
+.wallpaper-graph {
+  top: 56%;
+  right: 2%;
+  font-size: clamp(0.9rem, 2vw, 1.45rem);
+  transform: rotate(4deg);
+}
+
+.wallpaper-runtime {
+  top: 26%;
+  right: 8%;
+  font-size: clamp(1rem, 2.5vw, 1.9rem);
+  transform: rotate(-4deg);
+}
+
+.wallpaper-complexity {
+  bottom: 7%;
+  left: 7%;
+  font-size: clamp(1.5rem, 5vw, 4rem);
+  font-weight: 700;
+  transform: rotate(5deg);
+}
+
+.wallpaper-stack {
+  bottom: 24%;
+  left: 10%;
+  font-size: clamp(0.75rem, 1.5vw, 1.05rem);
+  transform: rotate(3deg);
+}
+
 .app-view-active {
   animation: fade-in 220ms ease;
 }
@@ -1905,6 +1981,29 @@ button:disabled {
 
   .home-grid {
     padding-inline: 0.1rem;
+  }
+
+  #home-view {
+    border-radius: 20px;
+  }
+
+  .algorithm-wallpaper > * {
+    opacity: 0.04;
+  }
+
+  .wallpaper-code,
+  .wallpaper-stack {
+    display: none;
+  }
+
+  .wallpaper-tree {
+    top: 24%;
+    left: -14%;
+  }
+
+  .wallpaper-graph {
+    top: 60%;
+    right: -18%;
   }
 
   .search-array {
