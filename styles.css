@@ -798,6 +798,22 @@ h2 {
   justify-content: start;
 }
 
+.math-label {
+  display: inline-flex;
+  align-items: baseline;
+  min-height: 1.6em;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.choices label small {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.82em;
+  line-height: 1.35;
+}
+
 .master-result-grid {
   display: grid;
   grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr);

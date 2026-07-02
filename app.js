@@ -2065,7 +2065,7 @@ function renderMasterWorkflow(runtimeChoices) {
         <span>2</span>
         <div>
           <p class="tree-label">Vergleichsexponent berechnen</p>
-          <label class="master-calculation-input">log<sub>b</sub>(a) =
+          <label class="master-calculation-input"><span class="math-label">log<sub>b</sub>(a) =</span>
             <input id="master-input-p" type="number" min="0" step="0.001" inputmode="decimal" placeholder="z. B. 2">
           </label>
         </div>
@@ -2087,9 +2087,9 @@ function renderMasterWorkflow(runtimeChoices) {
       </section>
     `;
     renderChoices(document.getElementById("master-comparison-options"), "master-comparison", [
-      { value: "d<p", label: "d &lt; log<sub>b</sub>(a)" },
-      { value: "d=p", label: "d = log<sub>b</sub>(a)" },
-      { value: "d>p", label: "d &gt; log<sub>b</sub>(a)" },
+      { value: "d<p", label: "d &lt; log<sub>b</sub>(a)<small>Rekursion dominiert → O(n<sup>log<sub>b</sub>(a)</sup>)</small>" },
+      { value: "d=p", label: "d = log<sub>b</sub>(a)<small>Gleichgewicht → O(n<sup>d</sup> log n)</small>" },
+      { value: "d>p", label: "d &gt; log<sub>b</sub>(a)<small>Zusatzarbeit dominiert → O(n<sup>d</sup>)</small>" },
     ]);
   } else if (topic === "Subtract and Conquer") {
     el.masterWorkflow.innerHTML = `
@@ -2259,8 +2259,8 @@ function renderMasterSolutionSteps() {
 
   if (state.masterTrainingTopic === "Subtract and Conquer") {
     return `
-      <li><strong>Reduktion:</strong> ${state.masterQuestion.reduction}; dadurch entsteht Tiefe ${state.masterQuestion.depth}.</li>
-      <li><strong>Entfalten:</strong> ${state.masterQuestion.expansion}.</li>
+      <li><strong>Reduktion:</strong> ${formatInlineMathLabel(state.masterQuestion.reduction)}; dadurch entsteht Tiefe ${formatInlineMathLabel(state.masterQuestion.depth)}.</li>
+      <li><strong>Entfalten:</strong> ${formatInlineMathLabel(state.masterQuestion.expansion)}.</li>
       <li><strong>Einordnen:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
       <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
     `;
@@ -2337,18 +2337,18 @@ function renderMasterLearning() {
 
   el.masterLearnOverview.innerHTML = `
     <p class="tree-label">Grundidee</p>
-    <p class="master-main-formula">${topic.formula}</p>
+    <p class="master-main-formula">${formatInlineMathLabel(topic.formula)}</p>
     <div class="master-parameter-grid">
-      ${topic.tiles.map(([title, text]) => `<p><strong>${title}</strong><span>${text}</span></p>`).join("")}
+      ${topic.tiles.map(([title, text]) => `<p><strong>${title}</strong><span>${formatInlineMathLabel(text)}</span></p>`).join("")}
     </div>
-    <p class="section-copy">${topic.summary}</p>
+    <p class="section-copy">${formatInlineMathLabel(topic.summary)}</p>
   `;
   el.masterLearnExample.innerHTML = `
     <p class="tree-label">Fälle und Beispiele</p>
     ${topic.lessons.map((lesson) => `
       <div class="master-example-row">
-        <p class="recurrence-line">${lesson.formula}</p>
-        <p class="operation-subline">${lesson.parameters} · Ergebnis: ${lesson.result}</p>
+        <p class="recurrence-line">${formatInlineMathLabel(lesson.formula)}</p>
+        <p class="operation-subline">${formatInlineMathLabel(lesson.parameters)} · Ergebnis: ${formatInlineMathLabel(lesson.result)}</p>
       </div>
     `).join("")}
   `;
@@ -2357,7 +2357,7 @@ function renderMasterLearning() {
     .map(([title, text], index) => `
       <article class="master-learn-step${index <= state.masterLearnStep ? " is-visible" : ""}${index === state.masterLearnStep ? " is-current" : ""}">
         <strong>${index + 1}</strong>
-        <div><h3>${title}</h3><p>${text}</p></div>
+        <div><h3>${title}</h3><p>${formatInlineMathLabel(text)}</p></div>
       </article>
     `)
     .join("");
@@ -3767,10 +3767,10 @@ function normalizeMathText(value) {
 function formatInlineMathLabel(value) {
   const text = String(value);
   if (text.includes("<")) {
-    return text;
+    return formatPlainFractions(text);
   }
 
-  return text
+  return formatPlainFractions(text)
     .replace(/2\^\(([^)]+)\)/g, "2<sup>$1</sup>")
     .replace(/n\^\(([^)]+)\)/g, "n<sup>$1</sup>")
     .replaceAll("n^log_2(3)", "n<sup>log<sub>2</sub>(3)</sup>")
@@ -3781,6 +3781,28 @@ function formatInlineMathLabel(value) {
     .replaceAll("n^3", "n<sup>3</sup>")
     .replaceAll("n^2", "n<sup>2</sup>")
     .replaceAll("2^n", "2<sup>n</sup>");
+}
+
+function formatPlainFractions(value) {
+  return String(value)
+    .replaceAll("3cn/4", '3c · <span class="frac"><span>n</span><span>4</span></span>')
+    .replaceAll("cn/4", 'c · <span class="frac"><span>n</span><span>4</span></span>')
+    .replaceAll("c(n/2)", 'c(<span class="frac"><span>n</span><span>2</span></span>)')
+    .replaceAll("c(n / 2)", 'c(<span class="frac"><span>n</span><span>2</span></span>)')
+    .replaceAll("c(n/4)", 'c(<span class="frac"><span>n</span><span>4</span></span>)')
+    .replaceAll("c(n / 4)", 'c(<span class="frac"><span>n</span><span>4</span></span>)')
+    .replaceAll("c(n/5)", 'c(<span class="frac"><span>n</span><span>5</span></span>)')
+    .replaceAll("c(n / 5)", 'c(<span class="frac"><span>n</span><span>5</span></span>)')
+    .replaceAll("n/b", '<span class="frac"><span>n</span><span>b</span></span>')
+    .replaceAll("n / b", '<span class="frac"><span>n</span><span>b</span></span>')
+    .replaceAll("n/2", '<span class="frac"><span>n</span><span>2</span></span>')
+    .replaceAll("n / 2", '<span class="frac"><span>n</span><span>2</span></span>')
+    .replaceAll("n/3", '<span class="frac"><span>n</span><span>3</span></span>')
+    .replaceAll("n / 3", '<span class="frac"><span>n</span><span>3</span></span>')
+    .replaceAll("n/4", '<span class="frac"><span>n</span><span>4</span></span>')
+    .replaceAll("n / 4", '<span class="frac"><span>n</span><span>4</span></span>')
+    .replaceAll("n/5", '<span class="frac"><span>n</span><span>5</span></span>')
+    .replaceAll("n / 5", '<span class="frac"><span>n</span><span>5</span></span>');
 }
 
 function setFeedback(node, text, type = "") {

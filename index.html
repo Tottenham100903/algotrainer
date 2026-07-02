@@ -27,7 +27,7 @@
 │   ╱ │     │
 │ ╱   │     │
 C ─── E ─── F</pre>
-          <span class="wallpaper-runtime">T(n) = 2T(n / 2) + n</span>
+          <span class="wallpaper-runtime">T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + n</span>
           <span class="wallpaper-complexity">O(n log n)</span>
           <pre class="wallpaper-stack">push(A)
 push(B)
@@ -166,12 +166,12 @@ queue: [A, C, D]</pre>
                   <button class="master-rule-option is-active" type="button" data-master-learn-case="Divide and Conquer / Master-Theorem" aria-pressed="true">
                     <span class="rule-main">Master-Theorem</span>
                     <span class="rule-detail">gleich große Teilprobleme</span>
-                    <span class="rule-formula">aT(n/b) + c · n<sup>d</sup></span>
+                    <span class="rule-formula">aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></span>
                   </button>
                   <button class="master-rule-option" type="button" data-master-learn-case="Subtract and Conquer" aria-pressed="false">
                     <span class="rule-main">Subtract and Conquer</span>
                     <span class="rule-detail">ein Teilproblem entfalten</span>
-                    <span class="rule-formula">T(n - k) oder T(n/b)</span>
+                    <span class="rule-formula">T(n - k) oder T(<span class="frac"><span>n</span><span>b</span></span>)</span>
                   </button>
                   <button class="master-rule-option" type="button" data-master-learn-case="Substitution" aria-pressed="false">
                     <span class="rule-main">Substitution</span>
@@ -259,7 +259,7 @@ queue: [A, C, D]</pre>
               </div>
               <div class="help-card">
                 <h3>3. Subtract and Conquer</h3>
-                <p>Entfalte ein einzelnes Teilproblem: T(n - 1) führt meist zu Summen, T(n / b) zu logarithmisch vielen Ebenen oder geometrischen Summen.</p>
+                <p>Entfalte ein einzelnes Teilproblem: T(n - 1) führt meist zu Summen, T(<span class="frac"><span>n</span><span>b</span></span>) zu logarithmisch vielen Ebenen oder geometrischen Summen.</p>
               </div>
               <div class="help-card">
                 <h3>4. Substitution</h3>
