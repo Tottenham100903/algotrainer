@@ -840,6 +840,65 @@ h2 {
   background: rgba(33, 110, 57, 0.14);
 }
 
+.search-array.hash-table {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(105px, 1fr));
+  align-items: stretch;
+  justify-content: start;
+}
+
+.hash-bucket {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+  min-height: 150px;
+  padding: 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 253, 248, 0.8);
+  transition: border-color 240ms ease, background 240ms ease, transform 240ms ease;
+}
+
+.hash-bucket.is-active {
+  border-color: var(--secondary);
+  background: rgba(217, 95, 67, 0.08);
+  transform: translateY(-6px);
+}
+
+.hash-bucket small {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.hash-bucket > div {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.hash-entry {
+  padding: 0.45rem;
+  border-radius: 9px;
+  background: rgba(13, 107, 95, 0.1);
+  font-family: "IBM Plex Mono", monospace;
+  text-align: center;
+}
+
+.hash-entry.is-probe {
+  background: rgba(217, 95, 67, 0.18);
+  outline: 2px solid var(--secondary);
+}
+
+.hash-entry.is-found {
+  background: rgba(33, 110, 57, 0.18);
+  outline-color: var(--correct);
+}
+
+.hash-empty {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
 .search-info {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -895,6 +954,98 @@ h2 {
   background:
     linear-gradient(180deg, rgba(13, 107, 95, 0.06), transparent),
     var(--surface-strong);
+}
+
+.sort-bars.topological-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(230px, 0.6fr);
+  align-items: center;
+  gap: 1.5rem;
+  height: auto;
+  min-height: 360px;
+}
+
+.topological-graph {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.topological-nodes {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.topological-node {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 3px solid rgba(31, 42, 48, 0.2);
+  border-radius: 50%;
+  background: var(--surface-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  transition: transform 240ms ease, opacity 240ms ease, border-color 240ms ease, background 240ms ease;
+}
+
+.topological-node.is-available {
+  border-color: var(--secondary);
+  background: rgba(217, 95, 67, 0.12);
+  transform: translateY(-5px);
+}
+
+.topological-node.is-done {
+  border-color: var(--correct);
+  background: rgba(33, 110, 57, 0.14);
+  opacity: 0.6;
+}
+
+.topological-node.is-active {
+  opacity: 1;
+  transform: translateY(-8px) scale(1.08);
+}
+
+.topological-edges {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.topological-edges span {
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.78);
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--muted);
+}
+
+.topological-result {
+  display: grid;
+  gap: 0.6rem;
+  min-height: 150px;
+  align-content: center;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(13, 107, 95, 0.08);
+}
+
+.topological-result small {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.topological-result strong {
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+  line-height: 1.6;
 }
 
 .sort-slot {
@@ -1322,6 +1473,11 @@ h2 {
   border-left: 4px solid var(--primary);
   border-radius: 0 16px 16px 0;
   background: rgba(13, 107, 95, 0.07);
+}
+
+#tree-family-card .tree-canvas {
+  min-height: 440px;
+  margin-top: 1rem;
 }
 
 .algorithm-idea strong {
@@ -1858,7 +2014,8 @@ button:disabled {
 
   .home-grid,
   .module-grid,
-  .graph-layout {
+  .graph-layout,
+  .sort-bars.topological-stage {
     grid-template-columns: 1fr;
     gap: 1rem;
   }

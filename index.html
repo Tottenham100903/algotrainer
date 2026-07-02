@@ -88,7 +88,7 @@ queue: [A, C, D]</pre>
               <span>Daten</span>
               <span>strukturen</span>
             </strong>
-            <span class="module-copy">Listen, Graphen, Hashmaps, Stacks, Queues und AVL-Bäume gezielt trainieren.</span>
+            <span class="module-copy">Listen, Graphen, Hashmaps, Binär-, Splay- und AVL-Bäume gezielt trainieren.</span>
             <span class="module-cta">Training starten <span aria-hidden="true">→</span></span>
           </button>
         </section>
@@ -336,6 +336,7 @@ queue: [A, C, D]</pre>
                   <option value="merge">Mergesort</option>
                   <option value="heap">Heapsort</option>
                   <option value="quick">Quicksort</option>
+                  <option value="topological">Topologisches Sortieren</option>
                 </select>
               </label>
               <button id="sort-prev" class="secondary-btn" type="button">Ein Schritt zurück</button>
@@ -419,6 +420,7 @@ queue: [A, C, D]</pre>
                   <option value="linear">Lineare Suche</option>
                   <option value="binary">Binäre Suche</option>
                   <option value="interpolation">Interpolationssuche</option>
+                  <option value="hash">Hash-basierte Suche</option>
                 </select>
               </label>
               <label>
@@ -446,13 +448,15 @@ queue: [A, C, D]</pre>
           <div>
             <p class="eyebrow">Modul 4</p>
             <h1 class="module-title">Datenstrukturen</h1>
-            <p class="hero-copy">Wähle einen Bereich und trainiere Listen, Wörterbücher, Hashmaps, Graphen, Stacks, Queues und AVL-Bäume gezielt.</p>
+            <p class="hero-copy">Wähle einen Bereich und trainiere Listen, Hashmaps, Graphen, Binär-, Splay- und AVL-Bäume gezielt.</p>
           </div>
         </header>
 
         <nav class="topic-nav" aria-label="Bereiche der Datenstrukturen">
           <button class="topic-nav-btn is-active" type="button" data-ds-topic="Training">Training</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="AVL-Bäume">AVL-Bäume</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Binärbäume">Binärbäume</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Splaybäume">Splaybäume</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Listen">Listen</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Wörterbücher">Wörterbücher</button>
           <button class="topic-nav-btn" type="button" data-ds-topic="Hashmaps">Hashmaps</button>
@@ -492,6 +496,31 @@ queue: [A, C, D]</pre>
             </div>
 
             <div id="ds-feedback" class="feedback" aria-live="polite"></div>
+          </section>
+
+          <section class="card module-grid-full is-hidden" id="tree-family-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Binäre Suchbäume</p>
+                <h2 id="tree-family-title">Binärbaum</h2>
+              </div>
+              <button id="tree-family-reset" class="secondary-btn" type="button">Zurücksetzen</button>
+            </div>
+
+            <div class="structure-controls">
+              <label>
+                Wert
+                <input id="tree-family-value" type="number" placeholder="z. B. 45">
+              </label>
+              <button id="tree-family-insert" class="primary-btn" type="button">Einfügen</button>
+              <button class="secondary-btn traversal-btn" data-traversal="inorder" type="button">Inorder</button>
+              <button class="secondary-btn traversal-btn" data-traversal="preorder" type="button">Preorder</button>
+              <button class="secondary-btn traversal-btn" data-traversal="postorder" type="button">Postorder</button>
+            </div>
+
+            <div class="algorithm-idea" id="tree-family-idea"></div>
+            <div class="tree-canvas tree-canvas-large" id="tree-family-visual"></div>
+            <p id="tree-family-note" class="visual-note"></p>
           </section>
 
           <section class="card module-grid-full is-hidden" id="stack-queue-card">

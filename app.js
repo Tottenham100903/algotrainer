@@ -711,6 +711,14 @@ const sortAlgorithms = {
     inPlace: "Ja",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n^2)" },
   },
+  topological: {
+    name: "Topologisches Sortieren",
+    idea: "Ordnet die Knoten eines gerichteten azyklischen Graphen so, dass jede Voraussetzung vor dem davon abhängigen Knoten erscheint. Kahn wählt dafür wiederholt einen Knoten mit Eingangsgrad 0.",
+    stepWhy: "Ein Knoten ohne eingehende Kante hat keine offene Voraussetzung und darf daher als Nächstes ausgegeben werden. Seine ausgehenden Kanten werden anschließend entfernt.",
+    stable: "Nicht anwendbar",
+    inPlace: "Nicht anwendbar",
+    runtimes: { best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)" },
+  },
 };
 
 const sortRuntimeChoices = ["O(n)", "O(n log n)", "O(n^2)"];
@@ -1184,6 +1192,8 @@ const state = {
   searchTimer: null,
   dataStructureQuestion: null,
   dataStructureTopic: "Training",
+  treeFamilyRoot: null,
+  treeFamilyMode: "binary",
   stackQueueMode: "stack",
   stackQueueItems: ["A", "B", "C"],
   graphStepIndex: 0,
@@ -1269,6 +1279,12 @@ const el = {
   dataStructureFeedback: document.getElementById("ds-feedback"),
   dataStructureCard: document.getElementById("data-structure-card"),
   dataStructureSectionTitle: document.getElementById("ds-section-title"),
+  treeFamilyCard: document.getElementById("tree-family-card"),
+  treeFamilyTitle: document.getElementById("tree-family-title"),
+  treeFamilyValue: document.getElementById("tree-family-value"),
+  treeFamilyVisual: document.getElementById("tree-family-visual"),
+  treeFamilyIdea: document.getElementById("tree-family-idea"),
+  treeFamilyNote: document.getElementById("tree-family-note"),
   stackQueueCard: document.getElementById("stack-queue-card"),
   stackQueueMode: document.getElementById("sq-mode"),
   stackQueueValue: document.getElementById("sq-value"),
@@ -1356,6 +1372,11 @@ document.getElementById("search-new-values").addEventListener("click", resetSear
 el.searchPrev.addEventListener("click", previousSearchStep);
 el.searchNext.addEventListener("click", nextSearchStep);
 el.searchPlay.addEventListener("click", toggleSearchPlayback);
+document.getElementById("tree-family-insert").addEventListener("click", insertTreeFamilyValue);
+document.getElementById("tree-family-reset").addEventListener("click", resetTreeFamily);
+document.querySelectorAll("[data-traversal]").forEach((button) => {
+  button.addEventListener("click", () => showTreeTraversal(button.dataset.traversal));
+});
 document.getElementById("new-ds-question").addEventListener("click", createDataStructureQuestion);
 document.getElementById("check-ds-question").addEventListener("click", checkDataStructureQuestion);
 document.querySelectorAll("[data-ds-topic]").forEach((button) => {
@@ -1396,6 +1417,7 @@ createSortQuestion();
 setSortSection("visual");
 resetSearchValues();
 setDataStructureTopic("Training");
+resetTreeFamily();
 renderStackQueue();
 resetGraphVisualization();
 renderHeap();
@@ -1663,6 +1685,7 @@ function rebuildSortSteps() {
   const algorithm = el.sortAlgorithm.value;
   state.sortSteps = buildSortSteps(algorithm, state.sortValues);
   state.sortStepIndex = 0;
+  document.getElementById("shuffle-sort").disabled = algorithm === "topological";
   renderSortStep();
   renderSortInfo();
 }
@@ -1695,6 +1718,7 @@ function buildSortSteps(algorithm, values) {
     merge: buildMergeSortSteps,
     heap: buildHeapSortSteps,
     quick: buildQuickSortSteps,
+    topological: buildTopologicalSortSteps,
   };
   return builders[algorithm](values);
 }
@@ -1706,6 +1730,42 @@ function pushSortStep(steps, array, note, active = [], sorted = []) {
     active: new Set(active),
     sorted: new Set(sorted),
   });
+}
+
+function buildTopologicalSortSteps() {
+  const nodes = ["A", "B", "C", "D", "E", "F"];
+  const edges = [["A", "C"], ["B", "C"], ["B", "D"], ["C", "E"], ["D", "F"], ["E", "F"]];
+  const indegree = Object.fromEntries(nodes.map((node) => [node, 0]));
+  edges.forEach(([, to]) => {
+    indegree[to] += 1;
+  });
+  const queue = nodes.filter((node) => indegree[node] === 0);
+  const order = [];
+  const steps = [{
+    topological: true,
+    active: null,
+    available: [...queue],
+    order: [],
+    note: "A und B haben Eingangsgrad 0 und besitzen keine offenen Voraussetzungen.",
+  }];
+
+  while (queue.length) {
+    const active = queue.shift();
+    order.push(active);
+    edges.filter(([from]) => from === active).forEach(([, to]) => {
+      indegree[to] -= 1;
+      if (indegree[to] === 0) queue.push(to);
+    });
+    steps.push({
+      topological: true,
+      active,
+      available: [...queue],
+      order: [...order],
+      note: `${active} wird ausgegeben. Danach verfügbar: ${queue.length ? queue.join(", ") : "kein weiterer Knoten"}.`,
+    });
+  }
+  steps[steps.length - 1].note = `Fertig: ${order.join(" → ")} ist eine gültige topologische Reihenfolge.`;
+  return steps;
 }
 
 function buildSelectionSortSteps(values) {
@@ -1901,6 +1961,12 @@ function renderSortStep() {
     return;
   }
 
+  if (step.topological) {
+    renderTopologicalSortStep(step);
+    return;
+  }
+
+  el.sortBars.className = "sort-bars";
   el.sortBars.innerHTML = "";
   const max = Math.max(...step.array);
   step.array.forEach((value, index) => {
@@ -1937,12 +2003,45 @@ function renderSortStep() {
   el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
 }
 
+function renderTopologicalSortStep(step) {
+  const nodes = ["A", "B", "C", "D", "E", "F"];
+  const edges = ["A → C", "B → C", "B → D", "C → E", "D → F", "E → F"];
+  el.sortBars.className = "sort-bars topological-stage";
+  el.sortBars.innerHTML = `
+    <div class="topological-graph">
+      <div class="topological-nodes">
+        ${nodes.map((node) => {
+          const isDone = step.order.includes(node);
+          const isAvailable = step.available.includes(node);
+          const isActive = step.active === node;
+          return `<span class="topological-node${isDone ? " is-done" : ""}${isAvailable ? " is-available" : ""}${isActive ? " is-active" : ""}">${node}</span>`;
+        }).join("")}
+      </div>
+      <div class="topological-edges">${edges.map((edge) => `<span>${edge}</span>`).join("")}</div>
+    </div>
+    <div class="topological-result">
+      <small>Topologische Reihenfolge</small>
+      <strong>${step.order.length ? step.order.join(" → ") : "noch leer"}</strong>
+    </div>
+  `;
+  el.sortNote.textContent = step.note;
+  el.sortStepCount.textContent = `Schritt ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
+  el.sortStepDetail.innerHTML = `
+    <p><strong>Was passiert?</strong> ${step.note}</p>
+    <p><strong>Verfügbar:</strong> ${step.available.length ? step.available.join(", ") : "Kein Knoten mit Eingangsgrad 0."}</p>
+    <p><strong>Warum ist das korrekt?</strong> ${sortAlgorithms.topological.stepWhy}</p>
+  `;
+  el.sortPrev.disabled = state.sortStepIndex === 0;
+  el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
+}
+
 function renderSortInfo() {
   const algorithm = sortAlgorithms[el.sortAlgorithm.value];
   el.sortInfo.innerHTML = `
     <div><strong>Idee</strong><span>${algorithm.idea}</span></div>
     <div><strong>Stabil</strong><span>${algorithm.stable}</span></div>
     <div><strong>In-place</strong><span>${algorithm.inPlace}</span></div>
+    <div><strong>Laufzeit</strong><span>Best ${algorithm.runtimes.best}, Average ${algorithm.runtimes.average}, Worst ${algorithm.runtimes.worst}</span></div>
   `;
 }
 
@@ -2001,6 +2100,7 @@ function rebuildSearchSteps() {
     linear: buildLinearSearchSteps,
     binary: buildBinarySearchSteps,
     interpolation: buildInterpolationSearchSteps,
+    hash: buildHashSearchSteps,
   };
   state.searchSteps = builders[el.searchAlgorithm.value](state.searchValues, target);
   state.searchStepIndex = 0;
@@ -2074,8 +2174,57 @@ function buildInterpolationSearchSteps(values, target) {
   return steps;
 }
 
+function buildHashSearchSteps(values, target) {
+  const bucketCount = 7;
+  const buckets = Array.from({ length: bucketCount }, () => []);
+  values.forEach((value) => buckets[value % bucketCount].push(value));
+  const bucket = target % bucketCount;
+  const steps = [{
+    hash: true,
+    buckets,
+    bucket: null,
+    probeEntry: null,
+    found: false,
+    note: `Berechne zuerst h(${target}) = ${target} mod ${bucketCount}.`,
+  }];
+  steps.push({
+    hash: true,
+    buckets,
+    bucket,
+    probeEntry: null,
+    found: false,
+    note: `Der Hashwert ist ${bucket}. Untersuche nur Bucket ${bucket}.`,
+  });
+  for (const value of buckets[bucket]) {
+    const found = value === target;
+    steps.push({
+      hash: true,
+      buckets,
+      bucket,
+      probeEntry: value,
+      found,
+      note: found ? `${target} wurde im Bucket ${bucket} gefunden.` : `${value} kollidiert im selben Bucket, ist aber nicht ${target}.`,
+    });
+    if (found) return steps;
+  }
+  steps.push({
+    hash: true,
+    buckets,
+    bucket,
+    probeEntry: null,
+    found: false,
+    note: `Bucket ${bucket} enthält ${target} nicht.`,
+  });
+  return steps;
+}
+
 function renderSearchStep() {
   const step = state.searchSteps[state.searchStepIndex];
+  if (step.hash) {
+    renderHashSearchStep(step);
+    return;
+  }
+  el.searchArray.className = "search-array";
   el.searchArray.innerHTML = state.searchValues.map((value, index) => {
     const classes = [
       "search-cell",
@@ -2092,11 +2241,31 @@ function renderSearchStep() {
   renderSearchInfo();
 }
 
+function renderHashSearchStep(step) {
+  el.searchArray.className = "search-array hash-table";
+  el.searchArray.innerHTML = step.buckets.map((entries, index) => {
+    const active = index === step.bucket;
+    const content = entries.length
+      ? entries.map((value) => {
+        const probing = value === step.probeEntry;
+        return `<span class="hash-entry${probing ? " is-probe" : ""}${probing && step.found ? " is-found" : ""}">${value}</span>`;
+      }).join("")
+      : '<span class="hash-empty">leer</span>';
+    return `<div class="hash-bucket${active ? " is-active" : ""}"><small>Bucket ${index}</small><div>${content}</div></div>`;
+  }).join("");
+  el.searchStepCount.textContent = `Schritt ${state.searchStepIndex + 1} / ${state.searchSteps.length}`;
+  el.searchNote.textContent = step.note;
+  el.searchPrev.disabled = state.searchStepIndex === 0;
+  el.searchNext.disabled = state.searchStepIndex >= state.searchSteps.length - 1;
+  renderSearchInfo();
+}
+
 function renderSearchInfo() {
   const info = {
     linear: ["Lineare Suche", "Prüft alle Elemente nacheinander.", "Kleine oder unsortierte Daten.", "Keine Sortierung erforderlich.", "Best O(1), Average/Worst O(n)."],
     binary: ["Binäre Suche", "Halbiert den Suchbereich nach jedem Vergleich.", "Viele Suchen in sortierten Daten.", "Sortierung und direkter Indexzugriff erforderlich.", "Best O(1), Average/Worst O(log n)."],
     interpolation: ["Interpolationssuche", "Schätzt die Position anhand der Werteverteilung.", "Gleichmäßig verteilte, sortierte Zahlen.", "Sortierte numerische und möglichst gleichmäßig verteilte Daten.", "Best O(1), Average O(log log n), Worst O(n)."],
+    hash: ["Hash-basierte Suche", "Berechnet aus dem Schlüssel direkt einen Bucket und prüft nur dessen Einträge.", "Wörterbücher, Mengen, Caches und schnelle Schlüsselabfragen.", "Eine geeignete Hashfunktion und Kollisionsbehandlung sind erforderlich.", "Best/Average O(1), Worst O(n) bei vielen Kollisionen."],
   }[el.searchAlgorithm.value];
   el.searchInfo.innerHTML = `
     <div><strong>${info[0]}: Idee</strong><span>${info[1]}</span></div>
@@ -2140,7 +2309,7 @@ function stopSearchPlayback() {
 }
 
 function createSortQuestion() {
-  const key = sample(Object.keys(sortAlgorithms));
+  const key = sample(Object.keys(sortAlgorithms).filter((name) => name !== "topological"));
   const algorithm = sortAlgorithms[key];
   state.sortQuestion = { key, algorithm };
   el.sortQuestionTitle.textContent = `Welche Laufzeiten hat ${algorithm.name}?`;
@@ -2196,9 +2365,11 @@ function setDataStructureTopic(topic) {
   const showStackQueue = topic === "Stacks & Queues";
   const showGraph = topic === "Graphen";
   const showHeap = topic === "Heaps";
-  const showQuiz = !showAVL && !showStackQueue && !showGraph && !showHeap;
+  const showTreeFamily = topic === "Binärbäume" || topic === "Splaybäume";
+  const showQuiz = !showAVL && !showStackQueue && !showGraph && !showHeap && !showTreeFamily;
 
   el.dataStructureCard.classList.toggle("is-hidden", !showQuiz);
+  el.treeFamilyCard.classList.toggle("is-hidden", !showTreeFamily);
   el.stackQueueCard.classList.toggle("is-hidden", !showStackQueue);
   el.graphCard.classList.toggle("is-hidden", !showGraph);
   el.heapCard.classList.toggle("is-hidden", !showHeap);
@@ -2221,7 +2392,110 @@ function setDataStructureTopic(topic) {
     resetGraphVisualization();
   } else if (showHeap) {
     renderHeap();
+  } else if (showTreeFamily) {
+    state.treeFamilyMode = topic === "Splaybäume" ? "splay" : "binary";
+    renderTreeFamily();
   }
+}
+
+function resetTreeFamily() {
+  state.treeFamilyRoot = null;
+  [40, 20, 60, 10, 30, 50, 70].forEach((value) => {
+    state.treeFamilyRoot = bstInsertOnly(state.treeFamilyRoot, value);
+  });
+  refreshHeights(state.treeFamilyRoot);
+  el.treeFamilyValue.value = "";
+  el.treeFamilyNote.textContent = "";
+  renderTreeFamily();
+}
+
+function insertTreeFamilyValue() {
+  const value = Number(el.treeFamilyValue.value);
+  if (!Number.isInteger(value)) {
+    el.treeFamilyNote.textContent = "Gib bitte eine ganze Zahl ein.";
+    return;
+  }
+  state.treeFamilyRoot = bstInsertOnly(state.treeFamilyRoot, value);
+  refreshHeights(state.treeFamilyRoot);
+  if (state.treeFamilyMode === "splay") {
+    state.treeFamilyRoot = splayNode(state.treeFamilyRoot, value);
+    el.treeFamilyNote.textContent = `${value} wurde eingefügt und anschließend zur Wurzel gesplayt.`;
+  } else {
+    el.treeFamilyNote.textContent = `${value} wurde entsprechend der Suchbaumordnung eingefügt.`;
+  }
+  el.treeFamilyValue.value = "";
+  renderTreeFamily();
+}
+
+function accessTreeFamilyNode(value) {
+  if (state.treeFamilyMode === "splay") {
+    state.renderCache.set(
+      el.treeFamilyVisual.id,
+      layoutCacheFromRoot(state.treeFamilyRoot, value),
+    );
+    state.treeFamilyRoot = splayNode(state.treeFamilyRoot, value);
+    refreshHeights(state.treeFamilyRoot);
+    el.treeFamilyNote.textContent = `Zugriff auf ${value}: Der Knoten wird durch Zig-, Zig-Zig- oder Zig-Zag-Rotationen zur Wurzel bewegt.`;
+    renderTreeFamily(true);
+    return;
+  }
+  el.treeFamilyNote.textContent = `Knoten ${value} gefunden. Im normalen Binärbaum bleibt seine Position unverändert.`;
+}
+
+function renderTreeFamily(replay = false) {
+  const isSplay = state.treeFamilyMode === "splay";
+  el.treeFamilyTitle.textContent = isSplay ? "Splaybaum" : "Normaler Binärbaum";
+  el.treeFamilyIdea.innerHTML = isSplay
+    ? "<strong>Splaybaum</strong><span>Jeder Zugriff bewegt den verwendeten Knoten zur Wurzel. Häufig genutzte Werte werden dadurch mit der Zeit besonders schnell erreichbar; amortisiert kosten Operationen O(log n).</span>"
+    : "<strong>Binärer Suchbaum</strong><span>Links stehen kleinere, rechts größere Werte. Suchen, Einfügen und Löschen kosten im Mittel O(log n), bei starker Schieflage jedoch O(n).</span>";
+  renderTree(el.treeFamilyVisual, state.treeFamilyRoot, {
+    animate: replay,
+    replay,
+    duration: replay ? 1100 : undefined,
+    showStats: false,
+    onNodeClick: accessTreeFamilyNode,
+  });
+}
+
+function showTreeTraversal(order) {
+  const values = [];
+  function visit(node) {
+    if (!node) return;
+    if (order === "preorder") values.push(node.value);
+    visit(node.left);
+    if (order === "inorder") values.push(node.value);
+    visit(node.right);
+    if (order === "postorder") values.push(node.value);
+  }
+  visit(state.treeFamilyRoot);
+  const labels = { inorder: "Inorder", preorder: "Preorder", postorder: "Postorder" };
+  el.treeFamilyNote.textContent = `${labels[order]}: ${values.join(" → ")}`;
+}
+
+function splayNode(root, value) {
+  if (!root || root.value === value) return root;
+
+  if (value < root.value) {
+    if (!root.left) return root;
+    if (value < root.left.value) {
+      root.left.left = splayNode(root.left.left, value);
+      root = rotateRight(root);
+    } else if (value > root.left.value) {
+      root.left.right = splayNode(root.left.right, value);
+      if (root.left.right) root.left = rotateLeft(root.left);
+    }
+    return root.left ? rotateRight(root) : root;
+  }
+
+  if (!root.right) return root;
+  if (value > root.right.value) {
+    root.right.right = splayNode(root.right.right, value);
+    root = rotateLeft(root);
+  } else if (value < root.right.value) {
+    root.right.left = splayNode(root.right.left, value);
+    if (root.right.left) root.right = rotateRight(root.right);
+  }
+  return root.right ? rotateLeft(root) : root;
 }
 
 function changeStackQueueMode() {
