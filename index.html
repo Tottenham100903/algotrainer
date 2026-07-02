@@ -50,10 +50,74 @@
         <div id="runtime-feedback" class="feedback" aria-live="polite"></div>
       </section>
 
+      <section class="card card-wide" id="master-card">
+        <div class="card-head">
+          <div>
+            <p class="section-label">Modul 2</p>
+            <h2>Master-Theorem und Rekurrenzen</h2>
+          </div>
+          <div class="inline-actions">
+            <button id="toggle-master-help" class="secondary-btn" type="button">Hilfestellung anzeigen</button>
+            <button id="new-master" class="secondary-btn" type="button">Neue Aufgabe</button>
+          </div>
+        </div>
+
+        <p class="section-copy">
+          Waehle zuerst das passende Verfahren und bestimme dann Fall oder Begruendung sowie die Laufzeit.
+        </p>
+
+        <div class="recurrence-box">
+          <p id="master-title" class="snippet-title"></p>
+          <p id="master-recurrence" class="recurrence-line"></p>
+          <p id="master-task" class="operation-subline"></p>
+        </div>
+
+        <div id="master-help" class="help-box is-hidden">
+          <div>
+            <h3>Master-Theorem</h3>
+            <p>Fuer T(n) = aT(n/b) + f(n) vergleiche f(n) mit n^log_b(a).</p>
+            <ul>
+              <li>Fall 1: f(n) ist polynomial kleiner, Ergebnis Theta(n^log_b(a)).</li>
+              <li>Fall 2: f(n) ist gleich gross bis auf Log-Faktoren, Ergebnis Theta(n^log_b(a) log^(k+1) n).</li>
+              <li>Fall 3: f(n) ist polynomial groesser und Regularitaet gilt, Ergebnis Theta(f(n)).</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Auswahl</h3>
+            <ul>
+              <li>Divide and Conquer: mehrere gleich grosse Teilprobleme, oft Master-Theorem.</li>
+              <li>Subtract and Conquer: T(n-c) oder T(n/c) mit einem Teilproblem, oft Summe/Iteration.</li>
+              <li>Substitution: Rate eine Schranke und beweise sie durch Einsetzen/Induktion.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="master-quiz-grid">
+          <div>
+            <p class="tree-label">Verfahren</p>
+            <form id="master-method-options" class="choices compact-choices"></form>
+          </div>
+          <div>
+            <p class="tree-label">Fall / Begruendung</p>
+            <form id="master-case-options" class="choices compact-choices"></form>
+          </div>
+          <div>
+            <p class="tree-label">Laufzeit</p>
+            <form id="master-runtime-options" class="choices compact-choices"></form>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="check-master" class="primary-btn" type="button">Antwort pruefen</button>
+        </div>
+
+        <div id="master-feedback" class="feedback" aria-live="polite"></div>
+      </section>
+
       <section class="card" id="avl-quiz-card">
         <div class="card-head">
           <div>
-            <p class="section-label">Modul 2A</p>
+            <p class="section-label">Modul 3A</p>
             <h2>AVL-Rotationen</h2>
           </div>
           <div class="inline-actions">
@@ -94,7 +158,7 @@
       <section class="card" id="avl-sandbox-card">
         <div class="card-head">
           <div>
-            <p class="section-label">Modul 2B</p>
+            <p class="section-label">Modul 3B</p>
             <h2>AVL-Sandbox</h2>
           </div>
           <button id="reset-sandbox" class="secondary-btn">Zuruecksetzen</button>

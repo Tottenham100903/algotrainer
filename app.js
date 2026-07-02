@@ -228,6 +228,113 @@ const runtimeChoicesPool = [
   "O(2^n)",
 ];
 
+const masterRuntimeChoicesPool = [
+  "Theta(log n)",
+  "Theta(n)",
+  "Theta(n log n)",
+  "Theta(n^2)",
+  "Theta(n^2 log n)",
+  "Theta(n^3)",
+  "Theta(2^n)",
+];
+
+const masterMethodChoices = [
+  "Divide and Conquer / Master-Theorem",
+  "Subtract and Conquer",
+  "Substitution",
+];
+
+const masterCaseChoices = [
+  "Fall 1",
+  "Fall 2",
+  "Fall 3",
+  "Nicht anwendbar",
+];
+
+const masterPatterns = [
+  {
+    title: "Divide and Conquer: viele kleine Teilprobleme",
+    recurrence: "T(n) = 3T(n / 2) + n",
+    task: "Vergleiche f(n) = n mit n^log_2(3).",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 1",
+    answer: "Theta(n^log_2(3))",
+    explanation: "n ist polynomial kleiner als n^log_2(3), daher dominiert die Rekursion.",
+  },
+  {
+    title: "Divide and Conquer: gleiche Ebenenkosten",
+    recurrence: "T(n) = 2T(n / 2) + n",
+    task: "Vergleiche f(n) = n mit n^log_2(2).",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 2",
+    answer: "Theta(n log n)",
+    explanation: "f(n) passt zu n^log_2(2) = n, also entsteht ein zusaetzlicher log-Faktor.",
+  },
+  {
+    title: "Divide and Conquer: teure Kombinationsarbeit",
+    recurrence: "T(n) = 2T(n / 2) + n^2",
+    task: "Vergleiche f(n) = n^2 mit n^log_2(2).",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 3",
+    answer: "Theta(n^2)",
+    explanation: "n^2 ist polynomial groesser als n; die Regularitaetsbedingung ist hier erfuellt.",
+  },
+  {
+    title: "Divide and Conquer mit Log-Faktor",
+    recurrence: "T(n) = 4T(n / 2) + n^2 log n",
+    task: "Vergleiche f(n) = n^2 log n mit n^log_2(4).",
+    method: "Divide and Conquer / Master-Theorem",
+    caseName: "Fall 2",
+    answer: "Theta(n^2 log^2 n)",
+    explanation: "f(n) = n^2 log^1 n; Fall 2 erhoeht die Log-Potenz um eins.",
+  },
+  {
+    title: "Subtract and Conquer: lineares Abschneiden",
+    recurrence: "T(n) = T(n - 1) + n",
+    task: "Entfalte die Rekurrenz als Summe n + (n-1) + ... + 1.",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "Theta(n^2)",
+    explanation: "Ein Teilproblem wird nur um 1 kleiner; die arithmetische Summe ergibt Theta(n^2).",
+  },
+  {
+    title: "Subtract and Conquer: halbieren mit konstanter Arbeit",
+    recurrence: "T(n) = T(n / 2) + 1",
+    task: "Zaehle, wie oft n halbiert werden kann.",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "Theta(log n)",
+    explanation: "Es gibt nur ein Teilproblem pro Ebene; nach logarithmisch vielen Halbierungen ist Schluss.",
+  },
+  {
+    title: "Subtract and Conquer: halbieren mit linearer Arbeit",
+    recurrence: "T(n) = T(n / 2) + n",
+    task: "Entfalte n + n/2 + n/4 + ...",
+    method: "Subtract and Conquer",
+    caseName: "Nicht anwendbar",
+    answer: "Theta(n)",
+    explanation: "Die geometrische Summe ist durch ein konstantes Vielfaches von n beschraenkt.",
+  },
+  {
+    title: "Substitution: ungleich grosse Teilprobleme",
+    recurrence: "T(n) = T(n / 2) + T(n / 4) + n",
+    task: "Master-Theorem passt nicht direkt; pruefe die Vermutung T(n) = O(n) durch Einsetzen.",
+    method: "Substitution",
+    caseName: "Nicht anwendbar",
+    answer: "Theta(n)",
+    explanation: "Mit T(k) <= ck ergibt sich c(n/2) + c(n/4) + n <= cn fuer hinreichend grosses c.",
+  },
+  {
+    title: "Substitution: zwei vorherige Werte",
+    recurrence: "T(n) = T(n - 1) + T(n - 2) + 1",
+    task: "Begruende eine exponentielle Schranke per Induktion/Substitution.",
+    method: "Substitution",
+    caseName: "Nicht anwendbar",
+    answer: "Theta(2^n)",
+    explanation: "Die Rekurrenz verzweigt in zwei fast gleich grosse Teilprobleme und waechst exponentiell.",
+  },
+];
+
 class AVLNode {
   constructor(value) {
     this.value = value;
@@ -337,6 +444,8 @@ class AVLTree {
 
 const state = {
   runtimeQuestion: null,
+  masterQuestion: null,
+  showMasterHelp: false,
   avlQuestion: null,
   showAVLPreview: false,
   sandboxTree: new AVLTree(),
@@ -350,6 +459,15 @@ const el = {
   runtimeSnippet: document.getElementById("runtime-snippet"),
   runtimeOptions: document.getElementById("runtime-options"),
   runtimeFeedback: document.getElementById("runtime-feedback"),
+  masterTitle: document.getElementById("master-title"),
+  masterRecurrence: document.getElementById("master-recurrence"),
+  masterTask: document.getElementById("master-task"),
+  masterHelp: document.getElementById("master-help"),
+  masterHelpToggle: document.getElementById("toggle-master-help"),
+  masterMethodOptions: document.getElementById("master-method-options"),
+  masterCaseOptions: document.getElementById("master-case-options"),
+  masterRuntimeOptions: document.getElementById("master-runtime-options"),
+  masterFeedback: document.getElementById("master-feedback"),
   avlOperation: document.getElementById("avl-operation"),
   avlSequence: document.getElementById("avl-sequence"),
   avlTreeBefore: document.getElementById("avl-tree-before"),
@@ -367,6 +485,9 @@ const el = {
 
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
+document.getElementById("new-master").addEventListener("click", createMasterQuestion);
+document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
+el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
@@ -383,8 +504,10 @@ el.sandboxValue.addEventListener("keydown", (event) => {
 });
 
 createRuntimeQuestion();
+createMasterQuestion();
 createAVLQuestion();
 resetSandbox(true);
+syncMasterHelpVisibility();
 syncAVLPreviewVisibility();
 
 function createRuntimeQuestion() {
@@ -422,6 +545,74 @@ function checkRuntimeQuestion() {
       "wrong",
     );
   }
+}
+
+function createMasterQuestion() {
+  const pattern = sample(masterPatterns);
+  const runtimeChoices = shuffle([
+    pattern.answer,
+    ...shuffle(masterRuntimeChoicesPool.filter((item) => item !== pattern.answer)).slice(0, 3),
+  ]);
+
+  state.masterQuestion = { ...pattern, runtimeChoices };
+  el.masterTitle.textContent = pattern.title;
+  el.masterRecurrence.textContent = pattern.recurrence;
+  el.masterTask.textContent = pattern.task;
+  renderChoices(el.masterMethodOptions, "master-method", masterMethodChoices);
+  renderChoices(el.masterCaseOptions, "master-case", masterCaseChoices);
+  renderChoices(el.masterRuntimeOptions, "master-runtime", runtimeChoices);
+  setFeedback(el.masterFeedback, "");
+}
+
+function checkMasterQuestion() {
+  const selectedMethod = getSelectedValue("master-method-choice");
+  const selectedCase = getSelectedValue("master-case-choice");
+  const selectedRuntime = getSelectedValue("master-runtime-choice");
+
+  if (!selectedMethod || !selectedCase || !selectedRuntime) {
+    setFeedback(el.masterFeedback, "Waehle Verfahren, Fall/Begruendung und Laufzeit aus.", "wrong");
+    return;
+  }
+
+  const methodCorrect = selectedMethod === state.masterQuestion.method;
+  const caseCorrect = selectedCase === state.masterQuestion.caseName;
+  const runtimeCorrect = selectedRuntime === state.masterQuestion.answer;
+
+  if (methodCorrect && caseCorrect && runtimeCorrect) {
+    setFeedback(
+      el.masterFeedback,
+      `Richtig: ${selectedMethod}, ${selectedCase}, ${selectedRuntime}. ${state.masterQuestion.explanation}`,
+      "correct",
+    );
+    return;
+  }
+
+  const missing = [];
+  if (!methodCorrect) {
+    missing.push(`Verfahren: ${state.masterQuestion.method}`);
+  }
+  if (!caseCorrect) {
+    missing.push(`Fall/Begruendung: ${state.masterQuestion.caseName}`);
+  }
+  if (!runtimeCorrect) {
+    missing.push(`Laufzeit: ${state.masterQuestion.answer}`);
+  }
+
+  setFeedback(
+    el.masterFeedback,
+    `Noch nicht ganz. Korrektur: ${missing.join(", ")}. ${state.masterQuestion.explanation}`,
+    "wrong",
+  );
+}
+
+function toggleMasterHelp() {
+  state.showMasterHelp = !state.showMasterHelp;
+  syncMasterHelpVisibility();
+}
+
+function syncMasterHelpVisibility() {
+  el.masterHelp.classList.toggle("is-hidden", !state.showMasterHelp);
+  el.masterHelpToggle.textContent = state.showMasterHelp ? "Hilfestellung ausblenden" : "Hilfestellung anzeigen";
 }
 
 function createAVLQuestion() {

@@ -136,6 +136,8 @@ h2 {
 
 .snippet-wrap,
 .snippet-meta,
+.recurrence-box,
+.help-box,
 .operation-box,
 .tree-canvas,
 .log-box,
@@ -147,6 +149,8 @@ h2 {
 
 .snippet-wrap,
 .snippet-meta,
+.recurrence-box,
+.help-box,
 .operation-box,
 .tree-canvas,
 .log-box {
@@ -163,6 +167,57 @@ h2 {
   font-size: 0.95rem;
   color: var(--primary-strong);
   font-weight: 700;
+}
+
+.recurrence-box {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  background: linear-gradient(135deg, rgba(13, 107, 95, 0.08), rgba(217, 95, 67, 0.08));
+}
+
+.recurrence-line {
+  margin: 0;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.35rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.help-box {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  background: rgba(13, 107, 95, 0.06);
+}
+
+.help-box h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+  color: var(--primary-strong);
+}
+
+.help-box p,
+.help-box ul {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.help-box ul {
+  padding-left: 1.1rem;
+}
+
+.master-quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.compact-choices {
+  margin-top: 0;
 }
 
 pre,
@@ -397,14 +452,28 @@ button:disabled {
   .sandbox-layout,
   .card-head,
   .actions,
+  .help-box,
+  .master-quiz-grid,
+  .inline-actions {
+    align-items: stretch;
+  }
+
+  .tree-panel,
+  .sandbox-layout,
+  .card-head,
+  .actions,
   .inline-actions {
     flex-direction: column;
-    align-items: stretch;
   }
 
   .inline-actions,
   .actions {
     width: 100%;
+  }
+
+  .help-box,
+  .master-quiz-grid {
+    grid-template-columns: 1fr;
   }
 
   .inline-actions > button,
@@ -454,6 +523,8 @@ button:disabled {
 
   .snippet-wrap,
   .snippet-meta,
+  .recurrence-box,
+  .help-box,
   .operation-box,
   .tree-canvas,
   .log-box {
