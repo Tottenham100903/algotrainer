@@ -973,7 +973,7 @@ const masterLearnCases = {
 const masterLearnTopics = {
   "Divide and Conquer / Master-Theorem": {
     formula: 'T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup>',
-    summary: "Nutze das Master-Theorem, wenn die Rekurrenz aus a gleich großen Teilproblemen der Größe n/b und einer polynomialen Zusatzarbeit c · n^d besteht.",
+    summary: "Nutze das Master-Theorem, wenn die Rekurrenz aus a gleich großen Teilproblemen der Größe n/b und einer polynomialen Zusatzarbeit c · n<sup>d</sup> besteht.",
     tiles: [
       ["a", "Anzahl der rekursiven Teilprobleme"],
       ["b", "Verkleinerungsfaktor der Eingabe"],
@@ -2080,9 +2080,9 @@ function renderMasterWorkflow(runtimeChoices) {
       <section class="master-work-step">
         <span>4</span>
         <div>
-          <p class="tree-label">Fall und Laufzeit ableiten</p>
-          <form id="master-case-options" class="choices compact-choices"></form>
+          <p class="tree-label">Laufzeit aus dem Vergleich ableiten</p>
           <form id="master-runtime-options" class="choices compact-choices"></form>
+          <p class="master-rule-hint">Aus dem Vergleich folgt der Fall: d &lt; log<sub>b</sub>(a) → Rekursion dominiert, d = log<sub>b</sub>(a) → Gleichgewicht, d &gt; log<sub>b</sub>(a) → Zusatzarbeit dominiert.</p>
         </div>
       </section>
     `;
@@ -2091,7 +2091,6 @@ function renderMasterWorkflow(runtimeChoices) {
       { value: "d=p", label: "d = log<sub>b</sub>(a)" },
       { value: "d>p", label: "d &gt; log<sub>b</sub>(a)" },
     ]);
-    renderChoices(document.getElementById("master-case-options"), "master-case", masterCaseChoices.slice(0, 3));
   } else if (topic === "Subtract and Conquer") {
     el.masterWorkflow.innerHTML = `
       <section class="master-work-step">
@@ -2204,13 +2203,11 @@ function buildMasterApplicationChecks(selectedRuntime) {
       p: Number(document.getElementById("master-input-p").value),
     };
     const selectedComparison = getSelectedValue("master-comparison-choice");
-    const selectedCase = getSelectedValue("master-case-choice");
 
     return [
       [["a", "b", "c", "d"].every((key) => values[key] === state.masterQuestion[key]), "Parameter a, b, c und d"],
       [Math.abs(values.p - state.masterQuestion.p) < 0.01, "Vergleichsexponent"],
       [selectedComparison === state.masterQuestion.comparison, "Vergleich von d und dem Vergleichsexponenten"],
-      [selectedCase === state.masterQuestion.caseName, "Master-Fall"],
       [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
     ];
   }
@@ -2966,7 +2963,7 @@ function renderSearchInfo() {
     <div><strong>${info[0]}: Idee</strong><span>${info[1]}</span></div>
     <div><strong>Anwendungsfall</strong><span>${info[2]}</span></div>
     <div><strong>Voraussetzung</strong><span>${info[3]}</span></div>
-    <div><strong>Laufzeit</strong><span>${info[4]}</span></div>
+    <div><strong>Laufzeit</strong><span>${formatInlineMathLabel(info[4])}</span></div>
   `;
 }
 

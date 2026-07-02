@@ -21,6 +21,22 @@
   box-sizing: border-box;
 }
 
+sup,
+sub {
+  position: relative;
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.48em;
+}
+
+sub {
+  bottom: -0.22em;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
