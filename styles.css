@@ -36,13 +36,27 @@ body {
   padding: 2rem 0 3rem;
 }
 
-.hero {
+.app-view {
+  display: block;
+}
+
+.app-view-active {
+  animation: fade-in 220ms ease;
+}
+
+.hero,
+.module-hero {
   padding: 1.5rem;
+}
+
+.hero-home {
+  padding-bottom: 1rem;
 }
 
 .eyebrow,
 .section-label,
-.tree-label {
+.tree-label,
+.module-kicker {
   margin: 0 0 0.35rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -64,11 +78,16 @@ h2 {
   font-size: 1.45rem;
 }
 
+.module-title {
+  font-size: clamp(2rem, 5vw, 3.3rem);
+}
+
 .hero-copy,
 .section-copy,
 .operation-subline,
 .feedback,
-.log-box {
+.log-box,
+.module-copy {
   color: var(--muted);
 }
 
@@ -78,10 +97,86 @@ h2 {
   line-height: 1.6;
 }
 
-.grid {
+.home-grid,
+.module-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
+}
+
+.home-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0 1.5rem;
+}
+
+.module-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.module-grid-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.module-tile {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 32px;
+  padding: 1.5rem;
+  text-align: left;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.module-tile strong {
+  display: block;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1;
+  margin-bottom: 0.85rem;
+}
+
+.module-copy {
+  display: block;
+  min-height: 4.8rem;
+  line-height: 1.55;
+}
+
+.module-cta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1.2rem;
+  padding: 0.72rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--primary-strong);
+  font-weight: 700;
+}
+
+.module-tile-runtime {
+  background:
+    radial-gradient(circle at top right, rgba(13, 107, 95, 0.2), transparent 32%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.95), rgba(240, 248, 246, 0.92));
+}
+
+.module-tile-avl {
+  background:
+    radial-gradient(circle at top right, rgba(217, 95, 67, 0.2), transparent 32%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.95), rgba(250, 241, 235, 0.92));
+}
+
+.module-tile-master {
+  background:
+    radial-gradient(circle at top right, rgba(102, 93, 166, 0.18), transparent 32%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.95), rgba(241, 238, 250, 0.92));
+}
+
+.module-hero {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+  grid-template-columns: auto 1fr;
+}
+
+.back-btn {
+  white-space: nowrap;
 }
 
 .card {
@@ -91,10 +186,6 @@ h2 {
   border-radius: 28px;
   padding: 1.35rem;
   backdrop-filter: blur(10px);
-}
-
-.card-wide {
-  grid-column: span 2;
 }
 
 .card-head,
@@ -424,23 +515,39 @@ button:disabled {
   display: none;
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 900px) {
   .page-shell {
     width: min(100% - 1.25rem, 1160px);
     padding: 1.25rem 0 2rem;
   }
 
-  .hero {
-    padding: 1rem 0.35rem 0.5rem;
+  .hero,
+  .module-hero,
+  .home-grid {
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
   }
 
-  .grid {
+  .home-grid,
+  .module-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 
-  .card-wide {
-    grid-column: span 1;
+  .module-hero {
+    grid-template-columns: 1fr;
   }
 
   .card {
@@ -477,7 +584,8 @@ button:disabled {
   }
 
   .inline-actions > button,
-  .actions > button {
+  .actions > button,
+  .back-btn {
     width: 100%;
   }
 
@@ -488,6 +596,10 @@ button:disabled {
 
   .sandbox-controls label {
     min-width: min(100%, 220px);
+  }
+
+  .module-copy {
+    min-height: 0;
   }
 }
 
@@ -504,7 +616,8 @@ button:disabled {
   .section-copy,
   .feedback,
   .operation-subline,
-  .log-box {
+  .log-box,
+  .module-copy {
     font-size: 0.96rem;
   }
 
@@ -512,11 +625,17 @@ button:disabled {
     width: min(100% - 0.9rem, 1160px);
   }
 
-  .hero {
+  .hero,
+  .module-hero {
     padding-inline: 0.1rem;
   }
 
-  .card {
+  .home-grid {
+    padding-inline: 0.1rem;
+  }
+
+  .card,
+  .module-tile {
     padding: 0.95rem;
     border-radius: 20px;
   }
@@ -558,5 +677,10 @@ button:disabled {
 
   .tree-svg {
     min-width: 320px;
+  }
+
+  .module-cta {
+    width: 100%;
+    justify-content: center;
   }
 }

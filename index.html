@@ -11,183 +11,247 @@
 </head>
 <body>
   <div class="page-shell">
-    <header class="hero">
-      <p class="eyebrow">Klausurmodus</p>
-      <h1>AlgoTrainer</h1>
-      <p class="hero-copy">
-        Trainiere Rekursion, Laufzeiten und AVL-Baum-Rotationen mit zufaelligen Aufgaben statt stumpfem Auswendiglernen.
-      </p>
-    </header>
+    <main>
+      <section id="home-view" class="app-view app-view-active">
+        <header class="hero hero-home">
+          <p class="eyebrow">Klausurmodus</p>
+          <h1>AlgoTrainer</h1>
+          <p class="hero-copy">
+            Waehle ein Modul und trainiere gezielt Laufzeiten, Rekurrenzen oder AVL-Baeume in einer ruhigeren, fokussierten Ansicht.
+          </p>
+        </header>
 
-    <main class="grid">
-      <section class="card card-wide" id="runtime-card">
-        <div class="card-head">
-          <div>
-            <p class="section-label">Modul 1</p>
-            <h2>Rekursion und Laufzeiten</h2>
-          </div>
-          <button id="new-runtime" class="secondary-btn">Neue Aufgabe</button>
-        </div>
+        <section class="home-grid" aria-label="Module auswaehlen">
+          <button class="module-tile module-tile-runtime" type="button" data-open-view="runtime">
+            <span class="module-kicker">Modul 1</span>
+            <strong>Laufzeiten</strong>
+            <span class="module-copy">Rekursive Python-Schnipsel lesen und die asymptotische Laufzeit einschaetzen.</span>
+            <span class="module-cta">Modul oeffnen</span>
+          </button>
 
-        <p class="section-copy">
-          Lies den Python-Schnipsel und waehle die asymptotische Laufzeit.
-        </p>
+          <button class="module-tile module-tile-master" type="button" data-open-view="master">
+            <span class="module-kicker">Modul 2</span>
+            <strong>Master-Theorem</strong>
+            <span class="module-copy">Verfahren erkennen, Faelle bestimmen und Rekurrenzen mit der passenden Methode loesen.</span>
+            <span class="module-cta">Modul oeffnen</span>
+          </button>
 
-        <div class="snippet-meta">
-          <p id="runtime-title" class="snippet-title"></p>
-        </div>
-
-        <div class="snippet-wrap">
-          <pre><code id="runtime-snippet"></code></pre>
-        </div>
-
-        <form id="runtime-options" class="choices"></form>
-
-        <div class="actions">
-          <button id="check-runtime" class="primary-btn">Antwort pruefen</button>
-        </div>
-
-        <div id="runtime-feedback" class="feedback" aria-live="polite"></div>
+          <button class="module-tile module-tile-avl" type="button" data-open-view="avl">
+            <span class="module-kicker">Modul 3</span>
+            <strong>AVL-Baeume</strong>
+            <span class="module-copy">Rotationen verstehen, Hilfe einblenden und in der Sandbox mit Baeumen experimentieren.</span>
+            <span class="module-cta">Modul oeffnen</span>
+          </button>
+        </section>
       </section>
 
-      <section class="card card-wide" id="master-card">
-        <div class="card-head">
+      <section id="runtime-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
           <div>
-            <p class="section-label">Modul 2</p>
-            <h2>Master-Theorem und Rekurrenzen</h2>
+            <p class="eyebrow">Modul 1</p>
+            <h1 class="module-title">Laufzeiten</h1>
+            <p class="hero-copy">Fokussiere dich nur auf Rekursion und asymptotische Komplexitaet.</p>
           </div>
-          <div class="inline-actions">
-            <button id="toggle-master-help" class="secondary-btn" type="button">Hilfestellung anzeigen</button>
-            <button id="new-master" class="secondary-btn" type="button">Neue Aufgabe</button>
-          </div>
+        </header>
+
+        <div class="module-grid module-grid-single">
+          <section class="card" id="runtime-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Training</p>
+                <h2>Rekursion und Laufzeiten</h2>
+              </div>
+              <button id="new-runtime" class="secondary-btn">Neue Aufgabe</button>
+            </div>
+
+            <p class="section-copy">
+              Lies den Python-Schnipsel und waehle die asymptotische Laufzeit.
+            </p>
+
+            <div class="snippet-meta">
+              <p id="runtime-title" class="snippet-title"></p>
+            </div>
+
+            <div class="snippet-wrap">
+              <pre><code id="runtime-snippet"></code></pre>
+            </div>
+
+            <form id="runtime-options" class="choices"></form>
+
+            <div class="actions">
+              <button id="check-runtime" class="primary-btn">Antwort pruefen</button>
+            </div>
+
+            <div id="runtime-feedback" class="feedback" aria-live="polite"></div>
+          </section>
         </div>
-
-        <p class="section-copy">
-          Waehle zuerst das passende Verfahren und bestimme dann Fall oder Begruendung sowie die Laufzeit.
-        </p>
-
-        <div class="recurrence-box">
-          <p id="master-title" class="snippet-title"></p>
-          <p id="master-recurrence" class="recurrence-line"></p>
-          <p id="master-task" class="operation-subline"></p>
-        </div>
-
-        <div id="master-help" class="help-box is-hidden">
-          <div>
-            <h3>Master-Theorem</h3>
-            <p>Fuer T(n) = aT(n/b) + f(n) vergleiche f(n) mit n^log_b(a).</p>
-            <ul>
-              <li>Fall 1: f(n) ist polynomial kleiner, Ergebnis Theta(n^log_b(a)).</li>
-              <li>Fall 2: f(n) ist gleich gross bis auf Log-Faktoren, Ergebnis Theta(n^log_b(a) log^(k+1) n).</li>
-              <li>Fall 3: f(n) ist polynomial groesser und Regularitaet gilt, Ergebnis Theta(f(n)).</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Auswahl</h3>
-            <ul>
-              <li>Divide and Conquer: mehrere gleich grosse Teilprobleme, oft Master-Theorem.</li>
-              <li>Subtract and Conquer: T(n-c) oder T(n/c) mit einem Teilproblem, oft Summe/Iteration.</li>
-              <li>Substitution: Rate eine Schranke und beweise sie durch Einsetzen/Induktion.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="master-quiz-grid">
-          <div>
-            <p class="tree-label">Verfahren</p>
-            <form id="master-method-options" class="choices compact-choices"></form>
-          </div>
-          <div>
-            <p class="tree-label">Fall / Begruendung</p>
-            <form id="master-case-options" class="choices compact-choices"></form>
-          </div>
-          <div>
-            <p class="tree-label">Laufzeit</p>
-            <form id="master-runtime-options" class="choices compact-choices"></form>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button id="check-master" class="primary-btn" type="button">Antwort pruefen</button>
-        </div>
-
-        <div id="master-feedback" class="feedback" aria-live="polite"></div>
       </section>
 
-      <section class="card" id="avl-quiz-card">
-        <div class="card-head">
+      <section id="master-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
           <div>
-            <p class="section-label">Modul 3A</p>
-            <h2>AVL-Rotationen</h2>
+            <p class="eyebrow">Modul 2</p>
+            <h1 class="module-title">Master-Theorem</h1>
+            <p class="hero-copy">Trainiere Rekurrenzen, unterscheide passende Verfahren und pruefe Faelle gezielt mit Hilfestellung.</p>
           </div>
-          <div class="inline-actions">
-            <button id="toggle-avl-help" class="secondary-btn">Hilfe anzeigen</button>
-            <button id="new-avl" class="secondary-btn">Neue Aufgabe</button>
-          </div>
+        </header>
+
+        <div class="module-grid module-grid-single">
+          <section class="card" id="master-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Training</p>
+                <h2>Master-Theorem und Rekurrenzen</h2>
+              </div>
+              <div class="inline-actions">
+                <button id="toggle-master-help" class="secondary-btn" type="button">Hilfestellung anzeigen</button>
+                <button id="new-master" class="secondary-btn" type="button">Neue Aufgabe</button>
+              </div>
+            </div>
+
+            <p class="section-copy">
+              Waehle zuerst das passende Verfahren und bestimme dann Fall oder Begruendung sowie die Laufzeit.
+            </p>
+
+            <div class="recurrence-box">
+              <p id="master-title" class="snippet-title"></p>
+              <p id="master-recurrence" class="recurrence-line"></p>
+              <p id="master-task" class="operation-subline"></p>
+            </div>
+
+            <div id="master-help" class="help-box is-hidden">
+              <div>
+                <h3>Master-Theorem</h3>
+                <p>Fuer T(n) = aT(n/b) + f(n) vergleiche f(n) mit n^log_b(a).</p>
+                <ul>
+                  <li>Fall 1: f(n) ist polynomial kleiner, Ergebnis Theta(n^log_b(a)).</li>
+                  <li>Fall 2: f(n) ist gleich gross bis auf Log-Faktoren, Ergebnis Theta(n^log_b(a) log^(k+1) n).</li>
+                  <li>Fall 3: f(n) ist polynomial groesser und Regularitaet gilt, Ergebnis Theta(f(n)).</li>
+                </ul>
+              </div>
+              <div>
+                <h3>Auswahl</h3>
+                <ul>
+                  <li>Divide and Conquer: mehrere gleich grosse Teilprobleme, oft Master-Theorem.</li>
+                  <li>Subtract and Conquer: T(n-c) oder T(n/c) mit einem Teilproblem, oft Summe/Iteration.</li>
+                  <li>Substitution: Rate eine Schranke und beweise sie durch Einsetzen/Induktion.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="master-quiz-grid">
+              <div>
+                <p class="tree-label">Verfahren</p>
+                <form id="master-method-options" class="choices compact-choices"></form>
+              </div>
+              <div>
+                <p class="tree-label">Fall / Begruendung</p>
+                <form id="master-case-options" class="choices compact-choices"></form>
+              </div>
+              <div>
+                <p class="tree-label">Laufzeit</p>
+                <form id="master-runtime-options" class="choices compact-choices"></form>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="check-master" class="primary-btn" type="button">Antwort pruefen</button>
+            </div>
+
+            <div id="master-feedback" class="feedback" aria-live="polite"></div>
+          </section>
         </div>
-
-        <p class="section-copy">
-          Verfolge die Operation. Welche Rotation wird benoetigt, damit der Baum wieder AVL-gueltig ist?
-        </p>
-
-        <div class="operation-box">
-          <p id="avl-operation" class="operation-line"></p>
-          <p id="avl-sequence" class="operation-subline"></p>
-        </div>
-
-        <div class="tree-panel">
-          <div>
-            <p class="tree-label">Vor der Rotation</p>
-            <div class="tree-canvas" id="avl-tree-before"></div>
-          </div>
-          <div id="avl-preview-panel">
-            <p class="tree-label">Vorschau deiner Rotation</p>
-            <div class="tree-canvas" id="avl-tree-after"></div>
-          </div>
-        </div>
-
-        <form id="avl-options" class="choices"></form>
-
-        <div class="actions">
-          <button id="check-avl" class="primary-btn">Rotation anwenden</button>
-        </div>
-
-        <div id="avl-feedback" class="feedback" aria-live="polite"></div>
       </section>
 
-      <section class="card" id="avl-sandbox-card">
-        <div class="card-head">
+      <section id="avl-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
           <div>
-            <p class="section-label">Modul 3B</p>
-            <h2>AVL-Sandbox</h2>
+            <p class="eyebrow">Modul 3</p>
+            <h1 class="module-title">AVL-Baeume</h1>
+            <p class="hero-copy">Arbeite dich durch Rotationen und teste Einfuegen, Loeschen und Balancieren in der Sandbox.</p>
           </div>
-          <button id="reset-sandbox" class="secondary-btn">Zuruecksetzen</button>
-        </div>
+        </header>
 
-        <p class="section-copy">
-          Fuege Werte ein oder loesche sie. Der Baum balanciert sich automatisch und zeigt dir jede Rotation an.
-        </p>
+        <div class="module-grid">
+          <section class="card" id="avl-quiz-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Modul 3A</p>
+                <h2>AVL-Rotationen</h2>
+              </div>
+              <div class="inline-actions">
+                <button id="toggle-avl-help" class="secondary-btn">Hilfe anzeigen</button>
+                <button id="new-avl" class="secondary-btn">Neue Aufgabe</button>
+              </div>
+            </div>
 
-        <div class="sandbox-controls">
-          <label>
-            Wert
-            <input id="sandbox-value" type="number" placeholder="z. B. 42">
-          </label>
-          <button id="sandbox-insert" class="primary-btn">Einfuegen</button>
-          <button id="sandbox-delete" class="secondary-btn">Loeschen</button>
-          <button id="sandbox-undo" class="secondary-btn">Undo</button>
-          <button id="sandbox-redo" class="secondary-btn">Redo</button>
-        </div>
+            <p class="section-copy">
+              Verfolge die Operation. Welche Rotation wird benoetigt, damit der Baum wieder AVL-gueltig ist?
+            </p>
 
-        <div class="sandbox-layout">
-          <div>
-            <p class="tree-label">Aktueller Baum</p>
-            <div class="tree-canvas tree-canvas-large" id="sandbox-tree"></div>
-          </div>
-          <div>
-            <p class="tree-label">Rotationen / Schritte</p>
-            <div id="sandbox-log" class="log-box"></div>
-          </div>
+            <div class="operation-box">
+              <p id="avl-operation" class="operation-line"></p>
+              <p id="avl-sequence" class="operation-subline"></p>
+            </div>
+
+            <div class="tree-panel">
+              <div>
+                <p class="tree-label">Vor der Rotation</p>
+                <div class="tree-canvas" id="avl-tree-before"></div>
+              </div>
+              <div id="avl-preview-panel">
+                <p class="tree-label">Hilfe / Vorschau</p>
+                <div class="tree-canvas" id="avl-tree-after"></div>
+              </div>
+            </div>
+
+            <form id="avl-options" class="choices"></form>
+
+            <div class="actions">
+              <button id="check-avl" class="primary-btn">Rotation anwenden</button>
+            </div>
+
+            <div id="avl-feedback" class="feedback" aria-live="polite"></div>
+          </section>
+
+          <section class="card" id="avl-sandbox-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Modul 3B</p>
+                <h2>AVL-Sandbox</h2>
+              </div>
+              <button id="reset-sandbox" class="secondary-btn">Zuruecksetzen</button>
+            </div>
+
+            <p class="section-copy">
+              Fuege Werte ein oder loesche sie. Der Baum balanciert sich automatisch und zeigt dir jede Rotation an.
+            </p>
+
+            <div class="sandbox-controls">
+              <label>
+                Wert
+                <input id="sandbox-value" type="number" placeholder="z. B. 42">
+              </label>
+              <button id="sandbox-insert" class="primary-btn">Einfuegen</button>
+              <button id="sandbox-delete" class="secondary-btn">Loeschen</button>
+              <button id="sandbox-undo" class="secondary-btn">Undo</button>
+              <button id="sandbox-redo" class="secondary-btn">Redo</button>
+            </div>
+
+            <div class="sandbox-layout">
+              <div>
+                <p class="tree-label">Aktueller Baum</p>
+                <div class="tree-canvas tree-canvas-large" id="sandbox-tree"></div>
+              </div>
+              <div>
+                <p class="tree-label">Rotationen / Schritte</p>
+                <div id="sandbox-log" class="log-box"></div>
+              </div>
+            </div>
+          </section>
         </div>
       </section>
     </main>

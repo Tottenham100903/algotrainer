@@ -443,6 +443,7 @@ class AVLTree {
 }
 
 const state = {
+  currentView: "home",
   runtimeQuestion: null,
   masterQuestion: null,
   showMasterHelp: false,
@@ -455,6 +456,10 @@ const state = {
 };
 
 const el = {
+  homeView: document.getElementById("home-view"),
+  runtimeView: document.getElementById("runtime-view"),
+  masterView: document.getElementById("master-view"),
+  avlView: document.getElementById("avl-view"),
   runtimeTitle: document.getElementById("runtime-title"),
   runtimeSnippet: document.getElementById("runtime-snippet"),
   runtimeOptions: document.getElementById("runtime-options"),
@@ -483,6 +488,12 @@ const el = {
   sandboxRedo: document.getElementById("sandbox-redo"),
 };
 
+document.querySelectorAll("[data-open-view]").forEach((button) => {
+  button.addEventListener("click", () => setActiveView(button.dataset.openView));
+});
+document.querySelectorAll("[data-back-home]").forEach((button) => {
+  button.addEventListener("click", () => setActiveView("home"));
+});
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
@@ -509,6 +520,26 @@ createAVLQuestion();
 resetSandbox(true);
 syncMasterHelpVisibility();
 syncAVLPreviewVisibility();
+setActiveView("home");
+
+function setActiveView(viewName) {
+  state.currentView = viewName;
+
+  const views = {
+    home: el.homeView,
+    runtime: el.runtimeView,
+    master: el.masterView,
+    avl: el.avlView,
+  };
+
+  Object.entries(views).forEach(([name, node]) => {
+    const active = name === viewName;
+    node.classList.toggle("is-hidden", !active);
+    node.classList.toggle("app-view-active", active);
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 function createRuntimeQuestion() {
   const pattern = sample(runtimePatterns);
