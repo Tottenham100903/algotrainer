@@ -412,6 +412,16 @@ h2 {
   margin-top: 1rem;
 }
 
+.quiz-actions {
+  flex-direction: column;
+  align-items: stretch;
+  width: min(100%, 360px);
+}
+
+.quiz-actions button {
+  width: 100%;
+}
+
 .tree-panel,
 .sandbox-layout {
   align-items: stretch;
