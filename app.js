@@ -423,7 +423,7 @@ const dataStructureQuestions = [
     explanation: "Ohne Tail-Zeiger muss man erst bis zum letzten Knoten laufen.",
   },
   {
-    topic: "Woerterbuecher",
+    topic: "Wörterbücher",
     scenarioHtml: '<div class="ds-map"><span>\"id\" → 42</span><span>\"name\" → \"Ada\"</span><span>\"level\" → 3</span></div>',
     question: "Welche Denkweise passt am besten zu einem Woerterbuch?",
     choices: ["Werte werden ueber Schluessel gefunden", "Werte sind nur ueber Positionen erreichbar", "Alle Werte bleiben automatisch sortiert", "Jeder Zugriff muss linear suchen"],
@@ -485,6 +485,22 @@ const dataStructureQuestions = [
     choices: ["1 wandert nach oben bis zur Wurzel", "1 bleibt immer am Ende", "Der Heap wird zu einer sortierten Liste", "Alle Elemente werden per DFS besucht"],
     answer: "1 wandert nach oben bis zur Wurzel",
     explanation: "Nach dem Einfuegen wird per Bubble-up die Heap-Eigenschaft wiederhergestellt.",
+  },
+  {
+    topic: "Stacks & Queues",
+    scenarioHtml: '<div class="ds-list"><span>Stack</span><span>A</span><span>B</span><span>C</span></div>',
+    question: "Welches Element wird bei einem Stack als Nächstes entfernt?",
+    choices: ["C", "A", "B", "Alle gleichzeitig"],
+    answer: "C",
+    explanation: "Ein Stack arbeitet nach LIFO: Das zuletzt eingefügte Element wird zuerst entfernt.",
+  },
+  {
+    topic: "Stacks & Queues",
+    scenarioHtml: '<div class="ds-list"><span>Queue</span><span>A</span><span>B</span><span>C</span></div>',
+    question: "Welches Element verlässt eine Queue als Nächstes?",
+    choices: ["A", "C", "B", "Ein zufälliges Element"],
+    answer: "A",
+    explanation: "Eine Queue arbeitet nach FIFO: Das zuerst eingefügte Element wird zuerst entfernt.",
   },
 ];
 
@@ -606,6 +622,7 @@ const state = {
   sortTimer: null,
   sortQuestion: null,
   dataStructureQuestion: null,
+  dataStructureTopic: "Training",
   avlQuestion: null,
   showAVLPreview: false,
   sandboxTree: new AVLTree(),
@@ -654,6 +671,10 @@ const el = {
   dataStructureQuestion: document.getElementById("ds-question"),
   dataStructureOptions: document.getElementById("ds-options"),
   dataStructureFeedback: document.getElementById("ds-feedback"),
+  dataStructureCard: document.getElementById("data-structure-card"),
+  dataStructureSectionTitle: document.getElementById("ds-section-title"),
+  avlQuizCard: document.getElementById("avl-quiz-card"),
+  avlSandboxCard: document.getElementById("avl-sandbox-card"),
   avlOperation: document.getElementById("avl-operation"),
   avlSequence: document.getElementById("avl-sequence"),
   avlTreeBefore: document.getElementById("avl-tree-before"),
@@ -692,6 +713,9 @@ document.getElementById("new-sort-question").addEventListener("click", createSor
 document.getElementById("check-sort-question").addEventListener("click", checkSortQuestion);
 document.getElementById("new-ds-question").addEventListener("click", createDataStructureQuestion);
 document.getElementById("check-ds-question").addEventListener("click", checkDataStructureQuestion);
+document.querySelectorAll("[data-ds-topic]").forEach((button) => {
+  button.addEventListener("click", () => setDataStructureTopic(button.dataset.dsTopic));
+});
 document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
 document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
@@ -711,7 +735,7 @@ createRuntimeQuestion();
 createMasterQuestion();
 resetSortValues();
 createSortQuestion();
-createDataStructureQuestion();
+setDataStructureTopic("Training");
 createAVLQuestion();
 resetSandbox(true);
 syncMasterHelpVisibility();
@@ -1167,7 +1191,10 @@ function checkSortQuestion() {
 }
 
 function createDataStructureQuestion() {
-  const question = sample(dataStructureQuestions);
+  const availableQuestions = state.dataStructureTopic === "Training"
+    ? dataStructureQuestions
+    : dataStructureQuestions.filter((question) => question.topic === state.dataStructureTopic);
+  const question = sample(availableQuestions);
   state.dataStructureQuestion = question;
   el.dataStructureScenario.innerHTML = `
     <p class="ds-topic">${question.topic}</p>
@@ -1176,6 +1203,27 @@ function createDataStructureQuestion() {
   el.dataStructureQuestion.textContent = question.question;
   renderChoices(el.dataStructureOptions, "ds", shuffle(question.choices));
   setFeedback(el.dataStructureFeedback, "");
+}
+
+function setDataStructureTopic(topic) {
+  state.dataStructureTopic = topic;
+  const showAVL = topic === "AVL-Bäume";
+
+  el.dataStructureCard.classList.toggle("is-hidden", showAVL);
+  el.avlQuizCard.classList.toggle("is-hidden", !showAVL);
+  el.avlSandboxCard.classList.toggle("is-hidden", !showAVL);
+
+  document.querySelectorAll("[data-ds-topic]").forEach((button) => {
+    const active = button.dataset.dsTopic === topic;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (!showAVL) {
+    el.dataStructureSectionTitle.textContent =
+      topic === "Training" ? "Datenstruktur-Training" : `${topic}-Training`;
+    createDataStructureQuestion();
+  }
 }
 
 function checkDataStructureQuestion() {

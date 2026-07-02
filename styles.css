@@ -156,6 +156,34 @@ h2 {
   grid-column: 1 / -1;
 }
 
+.topic-nav {
+  display: flex;
+  gap: 0.65rem;
+  margin: 0 1.5rem 1.25rem;
+  padding: 0.65rem;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  background: rgba(255, 251, 244, 0.72);
+  box-shadow: 0 14px 34px rgba(110, 87, 41, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.topic-nav-btn {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 0.65rem 0.95rem;
+  background: transparent;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.topic-nav-btn.is-active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 8px 18px rgba(13, 107, 95, 0.2);
+}
+
 .module-tile {
   position: relative;
   display: flex;
@@ -1001,6 +1029,11 @@ button:disabled {
     padding-right: 0.35rem;
   }
 
+  .topic-nav {
+    margin-right: 0.35rem;
+    margin-left: 0.35rem;
+  }
+
   .hero-home {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -1125,6 +1158,12 @@ button:disabled {
 
   .home-grid {
     padding-inline: 0.1rem;
+  }
+
+  .topic-nav {
+    margin-right: 0.1rem;
+    margin-left: 0.1rem;
+    border-radius: 16px;
   }
 
   .card,

@@ -54,7 +54,6 @@
           </button>
 
           <button class="module-tile module-tile-avl" type="button" data-open-view="avl">
-            <span class="module-kicker">04 / Datenstrukturen</span>
             <strong>
               <span>Daten</span>
               <span>strukturen</span>
@@ -278,20 +277,29 @@
 
       <section id="avl-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurueck zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
           <div>
             <p class="eyebrow">Modul 4</p>
             <h1 class="module-title">Datenstrukturen</h1>
-            <p class="hero-copy">Trainiere Listen, Woerterbuecher, Hashmaps, Tiefensuche, Heaps und AVL-Baeume.</p>
+            <p class="hero-copy">Wähle einen Bereich und trainiere gezielt die passende Datenstruktur.</p>
           </div>
         </header>
+
+        <nav class="topic-nav" aria-label="Bereiche der Datenstrukturen">
+          <button class="topic-nav-btn is-active" type="button" data-ds-topic="Training">Training</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="AVL-Bäume">AVL-Bäume</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Listen">Listen</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Wörterbücher">Wörterbücher</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Hashmaps">Hashmaps</button>
+          <button class="topic-nav-btn" type="button" data-ds-topic="Stacks & Queues">Stacks &amp; Queues</button>
+        </nav>
 
         <div class="module-grid">
           <section class="card module-grid-full" id="data-structure-card">
             <div class="card-head">
               <div>
                 <p class="section-label">Grundlagen</p>
-                <h2>Datenstruktur-Training</h2>
+                <h2 id="ds-section-title">Datenstruktur-Training</h2>
               </div>
               <button id="new-ds-question" class="secondary-btn" type="button">Neue Aufgabe</button>
             </div>
@@ -319,7 +327,7 @@
             <div id="ds-feedback" class="feedback" aria-live="polite"></div>
           </section>
 
-          <section class="card" id="avl-quiz-card">
+          <section class="card is-hidden" id="avl-quiz-card">
             <div class="card-head">
               <div>
                 <p class="section-label">AVL</p>
@@ -360,7 +368,7 @@
             <div id="avl-feedback" class="feedback" aria-live="polite"></div>
           </section>
 
-          <section class="card" id="avl-sandbox-card">
+          <section class="card is-hidden" id="avl-sandbox-card">
             <div class="card-head">
               <div>
                 <p class="section-label">AVL</p>
