@@ -57,7 +57,7 @@ body {
 }
 
 .algorithm-wallpaper {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
@@ -70,7 +70,7 @@ body {
 .algorithm-wallpaper > * {
   position: absolute;
   margin: 0;
-  opacity: 0.055;
+  opacity: 0.085;
   font: inherit;
   line-height: 1.55;
   white-space: pre;
@@ -2145,7 +2145,7 @@ button:disabled {
   }
 
   .algorithm-wallpaper > * {
-    opacity: 0.04;
+    opacity: 0.06;
   }
 
   .wallpaper-code,
