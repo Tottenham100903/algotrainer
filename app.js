@@ -1531,9 +1531,14 @@ function setTileMotion(tile, { lift = 0, tiltX = 0, tiltY = 0, shiftX = 0, scale
   tile.style.setProperty("--tile-scale", scale.toFixed(3));
 }
 
+function setTileFocus(tile, strength = 0) {
+  tile.style.setProperty("--tile-focus", strength.toFixed(3));
+}
+
 function resetTileMotion(tile) {
   tile.classList.remove("is-scroll-active");
   setTileMotion(tile, {});
+  setTileFocus(tile);
 }
 
 function updateTilePointerMotion(event) {
@@ -1547,6 +1552,7 @@ function updateTilePointerMotion(event) {
   const y = (event.clientY - rect.top) / rect.height;
 
   tile.classList.remove("is-scroll-active");
+  setTileFocus(tile);
   setTileMotion(tile, {
     lift: 12,
     tiltX: (0.5 - y) * 8,
@@ -1571,6 +1577,8 @@ function updateScrollTileMotion() {
   if (state.currentView !== "home" || supportsPointerHover() || prefersReducedMotion()) {
     el.moduleTiles.forEach((tile) => {
       tile.classList.remove("is-scroll-active");
+      setTileMotion(tile, {});
+      setTileFocus(tile);
     });
     return;
   }
@@ -1579,11 +1587,13 @@ function updateScrollTileMotion() {
   const falloff = window.innerHeight * 0.52;
   let activeTile = null;
   let activeStrength = 0;
+  const strengths = new Map();
 
   el.moduleTiles.forEach((tile) => {
     const rect = tile.getBoundingClientRect();
     const center = rect.top + rect.height / 2;
     const strength = Math.max(0, 1 - (Math.abs(center - viewportFocus) / falloff));
+    strengths.set(tile, strength);
 
     if (strength > activeStrength) {
       activeStrength = strength;
@@ -1593,18 +1603,10 @@ function updateScrollTileMotion() {
 
   el.moduleTiles.forEach((tile) => {
     const isActive = tile === activeTile && activeStrength > 0.16;
+    const focusStrength = strengths.get(tile) || 0;
     tile.classList.toggle("is-scroll-active", isActive);
-
-    if (!isActive) {
-      setTileMotion(tile, {});
-      return;
-    }
-
-    const easedStrength = activeStrength ** 1.6;
-    setTileMotion(tile, {
-      lift: 5 + (easedStrength * 10),
-      scale: 1 + (easedStrength * 0.008),
-    });
+    setTileMotion(tile, {});
+    setTileFocus(tile, focusStrength ** 1.7);
   });
 }
 
