@@ -69,24 +69,21 @@ body {
 
 .home-title {
   position: relative;
-  max-width: 100%;
+  width: fit-content;
   overflow: visible;
   font-size: clamp(4.2rem, 11vw, 9rem);
-  letter-spacing: -0.055em;
-  line-height: 0.82;
+  letter-spacing: -0.06em;
+  line-height: 0.72;
 }
 
-.logo-word {
-  display: inline-flex;
-  align-items: baseline;
+.home-title > span {
+  display: block;
   width: max-content;
-  white-space: nowrap;
-  isolation: isolate;
 }
 
 .logo-train {
   position: relative;
-  display: inline-block;
+  margin-left: clamp(1.5rem, 7vw, 6rem);
   color: var(--primary);
   transform-origin: left center;
   will-change: transform, filter;
@@ -118,7 +115,16 @@ h2 {
 }
 
 .module-title {
-  font-size: clamp(2rem, 5vw, 3.3rem);
+  max-width: 100%;
+  font-size: clamp(2rem, 7vw, 3.3rem);
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.card h2 {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .hero-copy,
@@ -249,6 +255,11 @@ h2 {
 
 .module-tile strong span {
   display: block;
+  max-width: 100%;
+}
+
+.module-tile-avl strong {
+  font-size: clamp(2.4rem, 5.2vw, 4.7rem);
 }
 
 .module-copy {
@@ -277,7 +288,7 @@ h2 {
 
 @media (hover: hover) and (pointer: fine) {
   .home-title.is-riding .logo-train {
-    animation: train-ride 1120ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: train-ride 900ms cubic-bezier(0.42, 0, 0.72, 0.3) both;
   }
 
   .module-tile:hover {
@@ -681,6 +692,36 @@ h2 {
 .sort-info span {
   color: var(--muted);
   line-height: 1.45;
+}
+
+.step-explanation {
+  margin-top: 1rem;
+  border: 1px solid rgba(13, 107, 95, 0.18);
+  border-radius: 16px;
+  background: rgba(13, 107, 95, 0.045);
+}
+
+.step-explanation summary {
+  padding: 0.9rem 1rem;
+  color: var(--primary-strong);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.step-explanation-content {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 1rem 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.step-explanation-content p {
+  margin: 0;
+}
+
+.step-explanation-content strong {
+  color: var(--text);
 }
 
 .runtime-case-grid {
@@ -1239,39 +1280,41 @@ button:disabled {
 
 @keyframes train-ride {
   0% {
-    color: var(--primary);
+    opacity: 1;
     filter: blur(0);
     text-shadow: none;
-    transform: translateX(0) skewX(0deg);
+    transform: translateX(0) scaleX(1);
   }
 
-  18% {
-    color: var(--secondary);
+  16% {
+    opacity: 1;
     filter: blur(0);
-    transform: translateX(0.35rem) skewX(-1deg);
+    text-shadow: -0.04em 0 rgba(13, 107, 95, 0.18);
+    transform: translateX(0.12em) scaleX(1.01);
   }
 
-  58% {
-    color: var(--secondary);
-    filter: blur(0.9px);
+  48% {
+    opacity: 1;
+    filter: blur(0.7px);
     text-shadow:
-      -0.14em 0 0 rgba(217, 95, 67, 0.18),
-      -0.32em 0 0 rgba(217, 95, 67, 0.08);
-    transform: translateX(clamp(2.4rem, 7vw, 6rem)) skewX(-4deg);
-  }
-
-  82% {
-    color: var(--secondary);
-    filter: blur(0.35px);
-    text-shadow: -0.1em 0 0 rgba(217, 95, 67, 0.12);
-    transform: translateX(clamp(1.2rem, 3vw, 2.2rem)) skewX(-1deg);
+      -0.08em 0 rgba(13, 107, 95, 0.28),
+      -0.18em 0 rgba(13, 107, 95, 0.12);
+    transform: translateX(18vw) scaleX(1.035);
   }
 
   100% {
-    color: var(--primary);
-    filter: blur(0);
-    text-shadow: none;
-    transform: translateX(0) skewX(0deg);
+    opacity: 0;
+    filter: blur(1.4px);
+    text-shadow:
+      -0.1em 0 rgba(13, 107, 95, 0.22),
+      -0.24em 0 rgba(13, 107, 95, 0.08);
+    transform: translateX(110vw) scaleX(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-title.is-riding .logo-train {
+    animation: none;
   }
 }
 
@@ -1470,6 +1513,10 @@ button:disabled {
   .module-tile strong {
     margin-bottom: 1.25rem;
     font-size: clamp(2.65rem, 13vw, 3.8rem);
+  }
+
+  .module-tile-avl strong {
+    font-size: clamp(2.35rem, 11vw, 3.6rem);
   }
 
   .snippet-wrap,

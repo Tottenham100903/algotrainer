@@ -16,9 +16,8 @@
         <header class="hero hero-home">
           <p class="eyebrow">Dein Lernbereich</p>
           <h1 class="home-title">
-            <span class="logo-word">
-              <span class="logo-algo">Algo</span><span class="logo-train">Train</span>
-            </span>
+            <span class="logo-algo">Algo</span>
+            <span class="logo-train">Train.</span>
           </h1>
           <p class="hero-copy">
             Wähle ein Thema und starte direkt mit dem Training.
@@ -254,6 +253,11 @@
               <span id="sort-note"></span>
             </div>
 
+            <details class="step-explanation">
+              <summary>Aktuellen Schritt genauer erklären</summary>
+              <div id="sort-step-detail" class="step-explanation-content"></div>
+            </details>
+
             <div id="sort-info" class="sort-info"></div>
           </section>
 
@@ -375,6 +379,11 @@
               <div id="sq-visual" class="sq-visual" aria-live="polite"></div>
               <p id="sq-note" class="visual-note"></p>
             </div>
+
+            <details class="step-explanation">
+              <summary>Prinzip genauer erklären</summary>
+              <div id="sq-detail" class="step-explanation-content"></div>
+            </details>
           </section>
 
           <section class="card module-grid-full is-hidden" id="graph-card">
@@ -429,6 +438,10 @@
               </svg>
               <div>
                 <p id="graph-note" class="visual-note"></p>
+                <details class="step-explanation">
+                  <summary>Aktuellen Schritt genauer erklären</summary>
+                  <div id="graph-step-detail" class="step-explanation-content"></div>
+                </details>
                 <div id="graph-matrix" class="graph-matrix is-hidden"></div>
               </div>
             </div>

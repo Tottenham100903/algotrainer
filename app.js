@@ -500,42 +500,48 @@ const masterPatterns = [
 const sortAlgorithms = {
   selection: {
     name: "Selectionsort",
-    idea: "Sucht wiederholt das kleinste Element im unsortierten Bereich und tauscht es nach vorne.",
+    idea: "Teilt das Array in einen sortierten linken und einen unsortierten rechten Bereich. Pro Durchlauf wird das kleinste noch unsortierte Element gesucht und an die nächste freie Position links getauscht.",
+    stepWhy: "Nach einem vollständigen Durchlauf ist die nächste Position links endgültig korrekt. Der sortierte Bereich wächst dadurch genau um ein Element.",
     stable: "Nein",
     inPlace: "Ja",
     runtimes: { best: "O(n^2)", average: "O(n^2)", worst: "O(n^2)" },
   },
   insertion: {
     name: "Insertionsort",
-    idea: "Baut links einen sortierten Bereich auf und fügt jedes neue Element passend ein.",
+    idea: "Baut links schrittweise einen sortierten Bereich auf. Das aktuelle Element wird zwischengespeichert, größere Werte werden nach rechts verschoben und die entstandene Lücke wird passend gefüllt.",
+    stepWhy: "Alle Elemente links der aktuellen Position bleiben sortiert. Verschoben werden nur Werte, die größer als das einzufügende Element sind.",
     stable: "Ja",
     inPlace: "Ja",
     runtimes: { best: "O(n)", average: "O(n^2)", worst: "O(n^2)" },
   },
   bubble: {
     name: "Bubblesort",
-    idea: "Vergleicht Nachbarn und schiebt große Werte schrittweise nach rechts.",
+    idea: "Vergleicht immer zwei benachbarte Werte. Stehen sie falsch herum, werden sie vertauscht; so wandert der größte noch unsortierte Wert pro Runde bis an das rechte Ende.",
+    stepWhy: "Nach einer vollständigen Runde ist das rechte Ende korrekt. Ein einzelner Tausch ordnet zunächst nur das gerade betrachtete Nachbarpaar.",
     stable: "Ja",
     inPlace: "Ja",
     runtimes: { best: "O(n)", average: "O(n^2)", worst: "O(n^2)" },
   },
   merge: {
     name: "Mergesort",
-    idea: "Teilt das Array rekursiv und führt sortierte Teilbereiche wieder zusammen.",
+    idea: "Teilt das Array rekursiv bis zu Einzelelementen. Danach werden jeweils zwei sortierte Teilbereiche verglichen und in der richtigen Reihenfolge zu einem größeren Bereich zusammengeführt.",
+    stepWhy: "Beim Zusammenführen ist das kleinere vordere Element sicher das nächste im Ergebnis. So bleibt der neu aufgebaute Teilbereich jederzeit sortiert.",
     stable: "Ja",
     inPlace: "Nein",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)" },
   },
   heap: {
     name: "Heapsort",
-    idea: "Baut einen Max-Heap und legt das größte Element wiederholt ans Ende.",
+    idea: "Formt das Array zunächst zu einem Max-Heap, dessen Wurzel das größte Element enthält. Die Wurzel wird ans freie Ende getauscht und der verkleinerte Heap anschließend repariert.",
+    stepWhy: "Die Heap-Eigenschaft garantiert das Maximum an der Wurzel. Nach dem Tausch ist es endgültig einsortiert; Bubble-down repariert den verbleibenden Heap.",
     stable: "Nein",
     inPlace: "Ja",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n log n)" },
   },
   quick: {
     name: "Quicksort",
-    idea: "Partitioniert um ein Pivot; gute Pivots führen zu kleinen Rekursionstiefen.",
+    idea: "Wählt ein Pivot und partitioniert den Bereich so, dass kleinere Werte links und größere rechts davon liegen. Danach werden beide Seiten unabhängig rekursiv sortiert.",
+    stepWhy: "Nach der Partition steht das Pivot endgültig richtig. Die übrigen Werte sind noch nicht vollständig sortiert, liegen aber bereits auf der richtigen Seite des Pivots.",
     stable: "Nein",
     inPlace: "Ja",
     runtimes: { best: "O(n log n)", average: "O(n log n)", worst: "O(n^2)" },
@@ -949,6 +955,7 @@ const el = {
   sortPrev: document.getElementById("sort-prev"),
   sortNext: document.getElementById("sort-next"),
   sortInfo: document.getElementById("sort-info"),
+  sortStepDetail: document.getElementById("sort-step-detail"),
   sortQuestionTitle: document.getElementById("sort-question-title"),
   sortBestOptions: document.getElementById("sort-best-options"),
   sortAverageOptions: document.getElementById("sort-average-options"),
@@ -967,9 +974,11 @@ const el = {
   stackQueueValue: document.getElementById("sq-value"),
   stackQueueVisual: document.getElementById("sq-visual"),
   stackQueueNote: document.getElementById("sq-note"),
+  stackQueueDetail: document.getElementById("sq-detail"),
   graphCard: document.getElementById("graph-card"),
   graphAlgorithm: document.getElementById("graph-algorithm"),
   graphNote: document.getElementById("graph-note"),
+  graphStepDetail: document.getElementById("graph-step-detail"),
   graphMatrix: document.getElementById("graph-matrix"),
   avlQuizCard: document.getElementById("avl-quiz-card"),
   avlSandboxCard: document.getElementById("avl-sandbox-card"),
@@ -1097,7 +1106,7 @@ function playLogoRide() {
   el.homeTitle.classList.add("is-riding");
   state.logoRideTimer = window.setTimeout(() => {
     el.homeTitle.classList.remove("is-riding");
-  }, 1250);
+  }, 940);
 }
 
 function createRuntimeQuestion() {
@@ -1497,6 +1506,16 @@ function renderSortStep() {
 
   el.sortNote.textContent = step.note;
   el.sortStepCount.textContent = `Schritt ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
+  const algorithm = sortAlgorithms[el.sortAlgorithm.value];
+  const activeValues = [...step.active].map((index) => step.array[index]);
+  const activeText = activeValues.length
+    ? `Gerade betrachtet: ${activeValues.join(", ")}. Orange markiert die beteiligten Werte; grüne Werte sind bereits als sortiert markiert.`
+    : "Gerade wird kein einzelner Wert verglichen. Grün markierte Werte gelten bereits als sortiert.";
+  el.sortStepDetail.innerHTML = `
+    <p><strong>Was passiert?</strong> ${step.note}</p>
+    <p><strong>Was zeigen die Farben?</strong> ${activeText}</p>
+    <p><strong>Warum ist das korrekt?</strong> ${algorithm.stepWhy}</p>
+  `;
   el.sortPrev.disabled = state.sortStepIndex === 0;
   el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
 }
@@ -1688,6 +1707,11 @@ function renderStackQueue(resetNote = true) {
       ? "LIFO: Das oberste Element wird zuerst entfernt."
       : "FIFO: Das vorderste Element wird zuerst entfernt.";
   }
+  el.stackQueueDetail.innerHTML = isStack
+    ? `<p><strong>Stack (LIFO):</strong> Push legt ein neues Element oben ab. Pop entfernt genau dieses oberste und damit zuletzt eingefügte Element.</p>
+       <p><strong>Aktueller Zustand:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[state.stackQueueItems.length - 1])} liegt oben und würde als Nächstes entfernt.` : "Der Stack ist leer; Pop kann kein Element liefern."}</p>`
+    : `<p><strong>Queue (FIFO):</strong> Enqueue fügt hinten an, Dequeue entfernt vorne. So bleibt die zeitliche Reihenfolge der Einträge erhalten.</p>
+       <p><strong>Aktueller Zustand:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[0])} steht vorne und würde als Nächstes entfernt.` : "Die Queue ist leer; Dequeue kann kein Element liefern."}</p>`;
 }
 
 function resetGraphVisualization() {
@@ -1712,6 +1736,21 @@ function renderGraphStep() {
     node.classList.toggle("is-active", step.active === name);
   });
   el.graphNote.textContent = `Schritt ${state.graphStepIndex + 1} von ${steps.length}: ${step.note}`;
+  const graphDetails = {
+    bfs: "Die Queue arbeitet nach FIFO. Darum werden erst alle direkt erreichbaren Nachbarn verarbeitet, bevor die Suche eine Ebene tiefer geht. In ungewichteten Graphen findet BFS so Wege mit möglichst wenigen Kanten.",
+    dfs: "Ein Stack merkt sich den aktuellen Pfad. Erst wenn kein unbesuchter Nachbar mehr existiert, springt DFS zurück und probiert am letzten Verzweigungspunkt den nächsten Weg.",
+    dijkstra: "Der aktive Knoten hat unter allen offenen Knoten die kleinste vorläufige Distanz. Bei nichtnegativen Kantengewichten kann ein späterer Umweg diesen Wert nicht mehr verbessern.",
+    backtracking: "Eine Entscheidung wird probeweise zum aktuellen Pfad hinzugefügt. Führt sie in eine Sackgasse, wird sie zurückgenommen und anschließend die nächste Möglichkeit getestet.",
+    floyd: "Für jedes Knotenpaar wird geprüft, ob der Weg über den aktuellen Zwischenknoten kürzer ist: dist(i,j) = min(dist(i,j), dist(i,k) + dist(k,j)).",
+  };
+  const visitedText = step.visited.length
+    ? `Bereits abgeschlossen oder fest berücksichtigt: ${step.visited.join(", ")}.`
+    : "Noch kein Knoten ist abgeschlossen; dies ist der Ausgangszustand.";
+  el.graphStepDetail.innerHTML = `
+    <p><strong>Was passiert?</strong> ${step.note}</p>
+    <p><strong>Aktueller Zustand:</strong> ${step.active} ist aktiv. ${visitedText}</p>
+    <p><strong>Warum dieser Schritt?</strong> ${graphDetails[algorithm]}</p>
+  `;
   el.graphMatrix.classList.toggle("is-hidden", algorithm !== "floyd");
   el.graphMatrix.textContent = step.matrix || "";
   document.getElementById("graph-next").disabled = state.graphStepIndex >= steps.length - 1;
