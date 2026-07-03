@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlgoTrain</title>
+  <title>InfoTrain</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260702">
+  <link rel="stylesheet" href="styles.css?v=20260703">
 </head>
 <body>
   <div class="page-shell">
@@ -51,15 +51,68 @@ queue: [A, C, D]</pre>
 
         <header class="hero hero-home">
           <h1 class="home-title">
-            <span class="logo-algo">Algo</span>
+            <span class="logo-info">Info</span>
             <span class="logo-train">Train.</span>
           </h1>
           <p class="hero-copy">
-            Wähle ein Thema und starte direkt mit dem Training.
+            Deine Lernplattform für Informatik.
           </p>
         </header>
 
-        <section class="home-grid" aria-label="Module auswählen">
+        <section class="home-grid subject-grid" aria-label="Fachbereiche auswählen">
+          <button class="module-tile subject-tile subject-tile-algorithmics" type="button" data-open-view="algorithmics">
+            <span class="subject-tag">Interaktiv</span>
+            <strong>
+              <span>Algorith</span>
+              <span>mik</span>
+            </strong>
+            <span class="module-copy">Algorithmen analysieren, visualisieren und mit abwechslungsreichen Aufgaben trainieren.</span>
+            <span class="module-cta">Bereich öffnen <span aria-hidden="true">→</span></span>
+          </button>
+
+          <button class="module-tile subject-tile subject-tile-basics" type="button" data-open-view="basics">
+            <span class="subject-tag">Demnächst</span>
+            <strong>
+              <span>Informatik</span>
+              <span>Grundlagen</span>
+            </strong>
+            <span class="module-copy">Grundbegriffe, Zahlensysteme, Logik und die Funktionsweise von Computersystemen.</span>
+            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+          </button>
+
+          <button class="module-tile subject-tile subject-tile-programming" type="button" data-open-view="programming">
+            <span class="subject-tag">Demnächst</span>
+            <strong>
+              <span>Program</span>
+              <span>mieren</span>
+            </strong>
+            <span class="module-copy">Code lesen, eigene Lösungen entwickeln und Programmierkonzepte praktisch anwenden.</span>
+            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+          </button>
+
+          <button class="module-tile subject-tile subject-tile-data-science" type="button" data-open-view="data-science">
+            <span class="subject-tag">Demnächst</span>
+            <strong>
+              <span>Data</span>
+              <span>Science</span>
+            </strong>
+            <span class="module-copy">Daten untersuchen, Muster erkennen und statistische Methoden visuell verstehen.</span>
+            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+          </button>
+        </section>
+      </section>
+
+      <section id="algorithmics-view" class="app-view is-hidden">
+        <header class="module-hero subject-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <div>
+            <p class="eyebrow">Fachbereich</p>
+            <h1 class="module-title">Algorithmik</h1>
+            <p class="hero-copy">Wähle ein Thema und starte direkt mit dem Training.</p>
+          </div>
+        </header>
+
+        <section class="home-grid algorithm-grid" aria-label="Algorithmik-Module auswählen">
           <button class="module-tile module-tile-runtime" type="button" data-open-view="runtime">
             <strong>
               <span>Lauf</span>
@@ -107,9 +160,57 @@ queue: [A, C, D]</pre>
         </section>
       </section>
 
-      <section id="runtime-view" class="app-view is-hidden">
+      <section id="basics-view" class="app-view is-hidden">
         <header class="module-hero">
           <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <div>
+            <p class="eyebrow">Fachbereich</p>
+            <h1 class="module-title">Informatik-Grundlagen</h1>
+            <p class="hero-copy">Dieser Lernbereich wird als Nächstes aufgebaut.</p>
+          </div>
+        </header>
+        <div class="empty-subject-card">
+          <span class="empty-subject-mark" aria-hidden="true">01</span>
+          <p class="section-label">In Vorbereitung</p>
+          <h2>Hier entsteht dein Grundlagenbereich.</h2>
+        </div>
+      </section>
+
+      <section id="programming-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <div>
+            <p class="eyebrow">Fachbereich</p>
+            <h1 class="module-title">Programmieren</h1>
+            <p class="hero-copy">Dieser Lernbereich wird als Nächstes aufgebaut.</p>
+          </div>
+        </header>
+        <div class="empty-subject-card">
+          <span class="empty-subject-mark" aria-hidden="true">&lt;/&gt;</span>
+          <p class="section-label">In Vorbereitung</p>
+          <h2>Hier entstehen interaktive Programmierübungen.</h2>
+        </div>
+      </section>
+
+      <section id="data-science-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <div>
+            <p class="eyebrow">Fachbereich</p>
+            <h1 class="module-title">Data Science</h1>
+            <p class="hero-copy">Dieser Lernbereich wird als Nächstes aufgebaut.</p>
+          </div>
+        </header>
+        <div class="empty-subject-card">
+          <span class="empty-subject-mark" aria-hidden="true">∑</span>
+          <p class="section-label">In Vorbereitung</p>
+          <h2>Hier entsteht dein Werkzeugkasten für Daten.</h2>
+        </div>
+      </section>
+
+      <section id="runtime-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-algorithmics>Zurück zu Algorithmik</button>
           <div>
             <p class="eyebrow">Modul 1</p>
             <h1 class="module-title">Laufzeiten</h1>
@@ -152,7 +253,7 @@ queue: [A, C, D]</pre>
 
       <section id="master-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-algorithmics>Zurück zu Algorithmik</button>
           <div>
             <p class="eyebrow">Modul 2</p>
             <h1 class="module-title">Master-Theorem</h1>
@@ -295,7 +396,7 @@ queue: [A, C, D]</pre>
 
       <section id="sorting-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-algorithmics>Zurück zu Algorithmik</button>
           <div>
             <p class="eyebrow">Modul 3</p>
             <h1 class="module-title">Sortierverfahren</h1>
@@ -391,7 +492,7 @@ queue: [A, C, D]</pre>
 
       <section id="search-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-algorithmics>Zurück zu Algorithmik</button>
           <div>
             <p class="eyebrow">Suchalgorithmen</p>
             <h1 class="module-title">Suchen</h1>
@@ -440,7 +541,7 @@ queue: [A, C, D]</pre>
 
       <section id="avl-view" class="app-view is-hidden">
         <header class="module-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <button class="secondary-btn back-btn" type="button" data-back-algorithmics>Zurück zu Algorithmik</button>
           <div>
             <p class="eyebrow">Modul 4</p>
             <h1 class="module-title">Datenstrukturen</h1>
@@ -727,6 +828,6 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
-  <script src="app.js?v=20260702"></script>
+  <script src="app.js?v=20260703"></script>
 </body>
 </html>

@@ -1565,6 +1565,10 @@ const el = {
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
   homeView: document.getElementById("home-view"),
+  algorithmicsView: document.getElementById("algorithmics-view"),
+  basicsView: document.getElementById("basics-view"),
+  programmingView: document.getElementById("programming-view"),
+  dataScienceView: document.getElementById("data-science-view"),
   runtimeView: document.getElementById("runtime-view"),
   masterView: document.getElementById("master-view"),
   sortingView: document.getElementById("sorting-view"),
@@ -1675,6 +1679,9 @@ document.querySelectorAll("[data-open-view]").forEach((button) => {
 });
 document.querySelectorAll("[data-back-home]").forEach((button) => {
   button.addEventListener("click", () => setActiveView("home"));
+});
+document.querySelectorAll("[data-back-algorithmics]").forEach((button) => {
+  button.addEventListener("click", () => setActiveView("algorithmics"));
 });
 el.moduleTiles.forEach((tile) => {
   tile.addEventListener("pointermove", updateTilePointerMotion);
@@ -1798,6 +1805,10 @@ function setActiveView(viewName) {
 
   const views = {
     home: el.homeView,
+    algorithmics: el.algorithmicsView,
+    basics: el.basicsView,
+    programming: el.programmingView,
+    "data-science": el.dataScienceView,
     runtime: el.runtimeView,
     master: el.masterView,
     sorting: el.sortingView,
@@ -1911,7 +1922,8 @@ function queueScrollTileMotion() {
 }
 
 function updateScrollTileMotion() {
-  if (state.currentView !== "home" || supportsPointerHover() || prefersReducedMotion()) {
+  const tileViewActive = state.currentView === "home" || state.currentView === "algorithmics";
+  if (!tileViewActive || supportsPointerHover() || prefersReducedMotion()) {
     el.moduleTiles.forEach((tile) => {
       tile.classList.remove("is-scroll-active");
       setTileMotion(tile, {});

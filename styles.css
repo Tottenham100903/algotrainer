@@ -555,6 +555,118 @@ h2 {
     linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(232, 244, 249, 0.94));
 }
 
+.subject-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.subject-tile {
+  min-height: 390px;
+}
+
+.subject-tile strong {
+  margin-top: auto;
+}
+
+.subject-tile-basics strong {
+  font-size: clamp(2.25rem, 4.1vw, 4rem);
+}
+
+.subject-tag {
+  align-self: flex-start;
+  border: 1px solid rgba(31, 42, 48, 0.12);
+  border-radius: 999px;
+  padding: 0.42rem 0.7rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.54);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.subject-tile-algorithmics {
+  color: #f8fffc;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 38%),
+    radial-gradient(circle at 84% 12%, rgba(240, 163, 95, 0.45), transparent 28%),
+    linear-gradient(145deg, #075d54, #0d7668 58%, #174941);
+}
+
+.subject-tile-algorithmics .subject-tag {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.subject-tile-algorithmics .module-copy {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.subject-tile-algorithmics .module-cta {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffd49e;
+}
+
+.subject-tile-basics {
+  background:
+    radial-gradient(circle at 82% 16%, rgba(217, 95, 67, 0.22), transparent 32%),
+    linear-gradient(145deg, rgba(255, 252, 246, 0.97), rgba(249, 233, 221, 0.95));
+}
+
+.subject-tile-programming {
+  background:
+    radial-gradient(circle at 84% 16%, rgba(28, 105, 154, 0.22), transparent 32%),
+    linear-gradient(145deg, rgba(255, 252, 246, 0.97), rgba(229, 242, 248, 0.95));
+}
+
+.subject-tile-data-science {
+  background:
+    radial-gradient(circle at 82% 16%, rgba(196, 148, 52, 0.24), transparent 32%),
+    linear-gradient(145deg, rgba(255, 252, 246, 0.97), rgba(248, 240, 211, 0.95));
+}
+
+.subject-hero {
+  margin-bottom: 0.5rem;
+}
+
+.algorithm-grid {
+  padding-bottom: 2rem;
+}
+
+.empty-subject-card {
+  position: relative;
+  min-height: 360px;
+  margin: 0 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 28px;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38), transparent 42%),
+    rgba(255, 251, 244, 0.76);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.empty-subject-card h2 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.empty-subject-mark {
+  position: absolute;
+  right: -0.04em;
+  bottom: -0.28em;
+  color: rgba(13, 107, 95, 0.07);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(9rem, 26vw, 20rem);
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
 .module-hero {
   display: grid;
   gap: 1rem;
@@ -2460,6 +2572,21 @@ button:disabled {
 
   .home-grid {
     padding-inline: 0.1rem;
+  }
+
+  .subject-tile {
+    min-height: 360px;
+  }
+
+  .subject-tile-basics strong {
+    font-size: clamp(2.2rem, 11vw, 3.25rem);
+  }
+
+  .empty-subject-card {
+    min-height: 320px;
+    margin-inline: 0.1rem;
+    padding: 1.25rem;
+    border-radius: 20px;
   }
 
   #home-view {
