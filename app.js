@@ -2333,7 +2333,7 @@ function updateLanguageMenu(language) {
 function initializeKrugoWelcome() {
   let hasMetKrugo = false;
   try {
-    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo") === "true";
+    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo-v2") === "true";
   } catch {
     // Krugo can still introduce himself when storage is unavailable.
   }
@@ -2353,7 +2353,7 @@ function dismissKrugoWelcome(remember = false) {
   document.body.classList.remove("krugo-is-speaking");
   if (remember) {
     try {
-      window.localStorage.setItem("infotrain-met-krugo", "true");
+      window.localStorage.setItem("infotrain-met-krugo-v2", "true");
     } catch {
       // Dismissing the welcome still works without persistent storage.
     }

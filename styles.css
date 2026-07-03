@@ -70,14 +70,12 @@ body.krugo-is-speaking {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  display: grid;
-  place-items: center;
+  display: block;
   overflow: hidden;
-  padding: 1.5rem;
   background:
-    linear-gradient(135deg, rgba(7, 41, 47, 0.74), rgba(20, 31, 39, 0.56)),
-    rgba(10, 23, 27, 0.34);
-  backdrop-filter: blur(13px);
+    radial-gradient(circle at 12% 88%, rgba(246, 169, 59, 0.18), transparent 28%),
+    rgba(7, 28, 32, 0.2);
+  backdrop-filter: blur(3px);
   animation: krugo-curtain-in 420ms ease both;
 }
 
@@ -88,7 +86,9 @@ body.krugo-is-speaking {
 
 .krugo-welcome-glow {
   position: absolute;
-  width: min(42rem, 90vw);
+  bottom: -15rem;
+  left: -10rem;
+  width: min(42rem, 95vw);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(248, 189, 91, 0.3), transparent 68%);
@@ -96,12 +96,14 @@ body.krugo-is-speaking {
 }
 
 .krugo-scene {
-  position: relative;
+  position: absolute;
+  bottom: 1.2rem;
+  left: clamp(1rem, 4vw, 4rem);
   display: grid;
-  grid-template-columns: 14rem minmax(18rem, 31rem);
-  gap: 2rem;
-  align-items: center;
-  width: min(49rem, 100%);
+  grid-template-columns: 13rem minmax(18rem, 32rem);
+  gap: 1.4rem;
+  align-items: end;
+  width: min(51rem, calc(100% - 2rem));
 }
 
 .krugo-character {
@@ -109,7 +111,7 @@ body.krugo-is-speaking {
   width: 13rem;
   height: 19rem;
   filter: drop-shadow(0 28px 24px rgba(2, 18, 22, 0.28));
-  animation: krugo-arrives 850ms cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+  animation: krugo-arrives 900ms 180ms cubic-bezier(0.16, 0.9, 0.24, 1.15) both;
 }
 
 .krugo-shadow {
@@ -350,7 +352,8 @@ body.krugo-is-speaking {
   color: #203337;
   background: rgba(255, 253, 248, 0.96);
   box-shadow: 0 2rem 5rem rgba(2, 18, 22, 0.3);
-  animation: krugo-speech-in 650ms 350ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+  margin-bottom: 5.2rem;
+  animation: krugo-speech-in 580ms 900ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
 }
 
 .krugo-speech::before {
@@ -394,14 +397,19 @@ body.krugo-is-speaking {
 @keyframes krugo-arrives {
   from {
     opacity: 0;
-    transform: translateY(7rem) rotate(-7deg);
+    transform: translate(-115%, 30%) rotate(-18deg);
+  }
+
+  72% {
+    transform: translate(0.5rem, -0.35rem) rotate(3deg);
   }
 }
 
 @keyframes krugo-speech-in {
   from {
     opacity: 0;
-    transform: translateX(2rem) scale(0.9);
+    transform: translate(-1.5rem, 1.5rem) scale(0.82);
+    transform-origin: left bottom;
   }
 }
 
@@ -419,21 +427,20 @@ body.krugo-is-speaking {
 }
 
 @media (max-width: 680px) {
-  .krugo-welcome {
-    align-items: end;
-    padding: 1rem;
-  }
-
   .krugo-scene {
+    bottom: 0.7rem;
+    left: 0.7rem;
     grid-template-columns: 1fr;
     gap: 0;
     justify-items: center;
+    width: calc(100% - 1.4rem);
   }
 
   .krugo-character {
+    justify-self: start;
     width: 10rem;
     height: 14.6rem;
-    margin-bottom: -1.2rem;
+    margin: 0 0 -1.2rem 0.2rem;
     scale: 0.76;
     transform-origin: bottom center;
   }
@@ -441,8 +448,10 @@ body.krugo-is-speaking {
   .krugo-speech {
     z-index: 10;
     width: 100%;
+    margin: 0;
     border-radius: 1.5rem;
     padding: 1.35rem;
+    animation-delay: 850ms;
   }
 
   .krugo-speech::before {
