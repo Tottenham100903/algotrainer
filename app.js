@@ -2994,11 +2994,42 @@ function renderMasterLearning(options = {}) {
         <h3>${stepTitle}</h3>
         <p>${formatInlineMathLabel(stepText)}</p>
       </div>
+      ${renderMasterStepMemory(lesson, state.masterLearnStep)}
     </article>
   `;
   el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
   el.masterLearnPrev.disabled = state.masterLearnStep === 0;
   el.masterLearnNext.disabled = state.masterLearnStep === lesson.steps.length - 1;
+}
+
+function renderMasterStepMemory(lesson, currentStep) {
+  if (currentStep === 0) {
+    return `
+      <aside class="master-step-memory is-empty">
+        <strong>Roter Faden</strong>
+        <p>Starte mit diesem Schritt. Die Erkenntnisse werden hier gesammelt, sobald du weitergehst.</p>
+      </aside>
+    `;
+  }
+
+  const previousSteps = lesson.steps.slice(0, currentStep);
+  return `
+    <aside class="master-step-memory">
+      <strong>Bisher erkannt</strong>
+      <ol>
+        ${previousSteps.map(([title, text]) => `
+          <li>
+            <span>${title}</span>
+            <p>${formatInlineMathLabel(compactStepMemory(text))}</p>
+          </li>
+        `).join("")}
+      </ol>
+    </aside>
+  `;
+}
+
+function compactStepMemory(text) {
+  return String(text).split(". ")[0].replace(/\.$/, "");
 }
 
 el.masterLearnExample.addEventListener("click", (event) => {

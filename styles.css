@@ -330,6 +330,100 @@ body.theme-dark .checkpoint-task {
   background: rgba(28, 44, 49, 0.9);
 }
 
+body.theme-dark .settings-item,
+body.theme-dark .learning-path-entry,
+body.theme-dark .learning-path-summary div,
+body.theme-dark .path-card,
+body.theme-dark .recurrence-box,
+body.theme-dark .help-box,
+body.theme-dark .help-card,
+body.theme-dark .case-help div,
+body.theme-dark .master-work-step,
+body.theme-dark .master-general-form,
+body.theme-dark .master-parameter-grid p,
+body.theme-dark .master-step-actions,
+body.theme-dark .master-example-option,
+body.theme-dark .master-focus-step,
+body.theme-dark .master-step-memory,
+body.theme-dark .custom-recurrence-box,
+body.theme-dark .syntax-guide p,
+body.theme-dark .custom-example-chips button,
+body.theme-dark .master-solution,
+body.theme-dark .search-cell,
+body.theme-dark .hash-bucket,
+body.theme-dark .search-info div,
+body.theme-dark .sort-info div,
+body.theme-dark .step-explanation,
+body.theme-dark .topological-edges span,
+body.theme-dark .topological-result,
+body.theme-dark .ds-list span,
+body.theme-dark .ds-map span,
+body.theme-dark .ds-buckets span,
+body.theme-dark .ds-graph span,
+body.theme-dark .ds-heap span {
+  border-color: var(--line);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top right, rgba(72, 184, 167, 0.12), transparent 38%),
+    rgba(28, 44, 49, 0.9);
+}
+
+body.theme-dark .master-rule-option,
+body.theme-dark .choices label,
+body.theme-dark .custom-recurrence-input input,
+body.theme-dark .master-parameter-inputs input,
+body.theme-dark .master-calculation-input input,
+body.theme-dark .master-work-step select {
+  border-color: var(--line);
+  color: var(--text);
+  background:
+    linear-gradient(145deg, rgba(35, 50, 54, 0.98), rgba(24, 37, 41, 0.96));
+}
+
+body.theme-dark .master-rule-option.is-active,
+body.theme-dark .master-example-option.is-active {
+  border-color: rgba(239, 138, 104, 0.62);
+  background:
+    radial-gradient(circle at top right, rgba(239, 138, 104, 0.18), transparent 42%),
+    rgba(35, 50, 54, 0.98);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+}
+
+body.theme-dark .master-focus-content,
+body.theme-dark .step-explanation-content {
+  border-color: var(--line);
+}
+
+body.theme-dark .hero-copy,
+body.theme-dark .section-copy,
+body.theme-dark .operation-subline,
+body.theme-dark .feedback,
+body.theme-dark .log-box,
+body.theme-dark .module-copy,
+body.theme-dark .rule-detail,
+body.theme-dark .master-parameter-grid span,
+body.theme-dark .master-example-option small,
+body.theme-dark .master-focus-content > p:last-child,
+body.theme-dark .master-step-memory p,
+body.theme-dark .master-rule-hint,
+body.theme-dark .help-card p,
+body.theme-dark .master-solution ol,
+body.theme-dark .syntax-guide p,
+body.theme-dark .sort-info span,
+body.theme-dark .tree-motion-hint,
+body.theme-dark .tree-preview-note {
+  color: #c8d4d8;
+}
+
+body.theme-dark .secondary-btn {
+  color: #ffb39b;
+  background: rgba(239, 138, 104, 0.16);
+}
+
+body.theme-dark .secondary-btn:not(:disabled):hover {
+  background: rgba(239, 138, 104, 0.24);
+}
+
 .page-shell {
   width: min(var(--shell-width), calc(100% - 2rem));
   margin: 0 auto;
@@ -2204,6 +2298,10 @@ h2 {
   padding-top: 0.08em;
 }
 
+.frac span {
+  color: inherit;
+}
+
 .help-box {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2963,6 +3061,9 @@ h2 {
 }
 
 .master-step-actions {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 4;
   margin-top: 1rem;
   border: 1px solid rgba(13, 107, 95, 0.16);
   border-radius: 16px;
@@ -3098,6 +3199,48 @@ h2 {
   color: var(--muted);
   font-size: 1.04rem;
   line-height: 1.65;
+}
+
+.master-step-memory {
+  border: 1px solid rgba(13, 107, 95, 0.14);
+  border-radius: 16px;
+  padding: 0.85rem 0.95rem;
+  background: rgba(13, 107, 95, 0.055);
+}
+
+.master-step-memory > strong {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.master-step-memory ol {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.master-step-memory li {
+  color: var(--primary-strong);
+}
+
+.master-step-memory span {
+  font-weight: 800;
+}
+
+.master-step-memory p {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.master-step-memory.is-empty p {
+  margin: 0;
 }
 
 .master-step-actions .step-count {
