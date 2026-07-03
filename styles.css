@@ -570,6 +570,275 @@ body.krugo-is-speaking {
   }
 }
 
+/* Direct station selection replaces the former world map. */
+.boarding-message {
+  top: 13%;
+  grid-template-columns: 5.5rem minmax(24rem, 38rem);
+}
+
+.boarding-message > div {
+  padding: clamp(1.15rem, 2.3vw, 1.7rem);
+}
+
+.boarding-message h2 {
+  font-size: clamp(1.55rem, 3.5vw, 2.5rem);
+}
+
+.boarding-destinations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.boarding-destinations button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.7rem;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(15, 102, 93, 0.15);
+  border-radius: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  color: #1b4544;
+  background:
+    linear-gradient(105deg, rgba(255,255,255,0.8), rgba(232, 245, 239, 0.82));
+  box-shadow: 0 0.35rem 0.8rem rgba(29, 76, 70, 0.08);
+  text-align: left;
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    color 220ms ease,
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.boarding-destinations button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(110deg, transparent 15%, rgba(255,255,255,0.55) 45%, transparent 75%);
+  translate: -100% 0;
+  transition: opacity 180ms ease, translate 480ms ease;
+}
+
+.boarding-destinations button:hover,
+.boarding-destinations button:focus-visible {
+  border-color: rgba(13, 107, 95, 0.55);
+  box-shadow: 0 0.65rem 1.25rem rgba(29, 76, 70, 0.16);
+  transform: translateY(-0.18rem);
+}
+
+.boarding-destinations button:hover::after {
+  opacity: 1;
+  translate: 100% 0;
+}
+
+.boarding-destinations button.is-selected {
+  border-color: #0d6b5f;
+  color: white;
+  background: linear-gradient(135deg, #138475, #07584f);
+  box-shadow: 0 0.65rem 1.4rem rgba(13, 107, 95, 0.24);
+  transform: translateY(-0.15rem) scale(1.015);
+}
+
+.boarding-destinations button span {
+  display: grid;
+  width: 2.1rem;
+  height: 2.1rem;
+  place-items: center;
+  border-radius: 0.55rem;
+  color: #0d6b5f;
+  background: rgba(13, 107, 95, 0.1);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.boarding-destinations button.is-selected span {
+  color: #684615;
+  background: #ffd477;
+}
+
+.boarding-destinations strong {
+  position: relative;
+  z-index: 2;
+  font-size: 0.82rem;
+}
+
+.boarding-selection {
+  min-height: 1.25rem;
+  margin: 0 0 0.65rem !important;
+  color: #0d6b5f !important;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+#board-infotrain {
+  position: relative;
+  min-width: 13rem;
+  overflow: hidden;
+}
+
+#board-infotrain:not(:disabled)::after {
+  content: "→";
+  display: inline-block;
+  margin-left: 0.7rem;
+  animation: boarding-arrow 1.2s ease-in-out infinite;
+}
+
+.world-boarding.is-departing {
+  animation: station-camera-depart 1.6s cubic-bezier(0.45, 0.05, 0.7, 0.3) both;
+}
+
+.world-boarding.is-departing .boarding-platform {
+  animation: platform-rush 1.2s 150ms linear both;
+}
+
+.world-boarding.is-departing .boarding-skyline {
+  animation: skyline-rush 1.25s 180ms ease-in both;
+}
+
+.world-boarding.is-departing .train-wheel {
+  animation: train-wheel-spin 220ms linear infinite;
+}
+
+.world-boarding.is-departing .train-smoke {
+  animation-duration: 420ms;
+}
+
+#learning-route .learning-path-stage::after {
+  content: "";
+  position: absolute;
+  inset: 46% -10% auto;
+  z-index: 0;
+  height: 22%;
+  opacity: 0.38;
+  background:
+    radial-gradient(ellipse at 10% 100%, #2d7958 0 17%, transparent 17.5%),
+    radial-gradient(ellipse at 34% 100%, #3d8c5f 0 25%, transparent 25.5%),
+    radial-gradient(ellipse at 63% 100%, #27724f 0 20%, transparent 20.5%),
+    radial-gradient(ellipse at 88% 100%, #418f61 0 26%, transparent 26.5%);
+  pointer-events: none;
+}
+
+#learning-route::before,
+#learning-route::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 8rem;
+  height: 2rem;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.58);
+  filter: blur(0.1rem);
+  pointer-events: none;
+  animation: route-cloud-pass 18s linear infinite;
+}
+
+#learning-route::before {
+  top: 17%;
+  left: -10rem;
+}
+
+#learning-route::after {
+  top: 29%;
+  left: -14rem;
+  scale: 0.68;
+  animation-delay: -9s;
+}
+
+.path-node {
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.85, 0.2, 1.2),
+    box-shadow 280ms ease,
+    filter 280ms ease;
+}
+
+.learning-path-step:not(.is-locked) .path-node:hover {
+  filter: brightness(1.06);
+  transform: translateY(-0.35rem) scale(1.08);
+}
+
+.path-avatar {
+  transition-timing-function: cubic-bezier(0.45, 0.05, 0.2, 1);
+}
+
+@keyframes boarding-arrow {
+  50% { translate: 0.35rem 0; }
+}
+
+@keyframes station-camera-depart {
+  0%, 14% { filter: blur(0); }
+  48% { filter: blur(0); transform: scale(1.015); }
+  100% { opacity: 0; filter: blur(8px); transform: scale(1.08); }
+}
+
+@keyframes platform-rush {
+  to { background-position: -20rem 0; }
+}
+
+@keyframes skyline-rush {
+  to { opacity: 0.08; translate: 22% 0; }
+}
+
+@keyframes route-cloud-pass {
+  to { translate: calc(100vw + 26rem) 0; }
+}
+
+@media (max-width: 760px) {
+  .boarding-message {
+    top: 12%;
+    grid-template-columns: 3.8rem minmax(0, 1fr);
+  }
+
+  .boarding-message > div {
+    padding: 0.9rem;
+  }
+
+  .boarding-message h2 {
+    font-size: 1.3rem;
+  }
+
+  .boarding-message p:not(.section-label) {
+    margin-bottom: 0.6rem;
+  }
+
+  .boarding-destinations {
+    gap: 0.38rem;
+    margin-top: 0.6rem;
+  }
+
+  .boarding-destinations button {
+    grid-template-columns: 1.6rem 1fr;
+    gap: 0.35rem;
+    min-height: 2.7rem;
+    padding: 0.4rem;
+  }
+
+  .boarding-destinations button span {
+    width: 1.55rem;
+    height: 1.55rem;
+    font-size: 0.58rem;
+  }
+
+  .boarding-destinations strong {
+    overflow-wrap: anywhere;
+    font-size: 0.68rem;
+  }
+
+  .boarding-selection {
+    font-size: 0.6rem;
+  }
+
+  #board-infotrain {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 /* Learning world */
 .learning-desk {
   position: absolute;
@@ -6864,5 +7133,34 @@ button:disabled {
   .learning-desk.world-has-arrived > .learning-world,
   .learning-desk.world-has-arrived > .desk-hint {
     animation-duration: 1ms;
+  }
+}
+
+/* Final station layout wins over the former introductory arrangement. */
+#world-boarding .boarding-message {
+  top: 13%;
+  grid-template-columns: 5.5rem minmax(24rem, 38rem);
+}
+
+#world-boarding .boarding-message > div {
+  padding: clamp(1.15rem, 2.3vw, 1.7rem);
+}
+
+#world-boarding .boarding-message h2 {
+  font-size: clamp(1.55rem, 3.5vw, 2.5rem);
+}
+
+@media (max-width: 760px) {
+  #world-boarding .boarding-message {
+    top: 12%;
+    grid-template-columns: 3.8rem minmax(0, 1fr);
+  }
+
+  #world-boarding .boarding-message > div {
+    padding: 0.9rem;
+  }
+
+  #world-boarding .boarding-message h2 {
+    font-size: 1.3rem;
   }
 }

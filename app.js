@@ -1849,6 +1849,7 @@ const el = {
   krugoLater: document.getElementById("krugo-later"),
   worldBoarding: document.getElementById("world-boarding"),
   boardInfoTrain: document.getElementById("board-infotrain"),
+  boardingSelection: document.getElementById("boarding-selection"),
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -1859,7 +1860,6 @@ const el = {
   learningRoute: document.getElementById("learning-route"),
   learningRouteTitle: document.getElementById("learning-route-title"),
   learningBooks: [...document.querySelectorAll("[data-learning-book]")],
-  worldTrain: document.getElementById("world-train"),
   backToLearningDesk: document.getElementById("back-to-learning-desk"),
   learningPointsToggle: document.getElementById("learning-points-toggle"),
   learningPointsPanel: document.getElementById("learning-points-panel"),
@@ -2051,6 +2051,12 @@ el.boardInfoTrain.addEventListener("click", boardInfoTrain);
 window.addEventListener("infotrain:languagechange", (event) => {
   updateLanguageMenu(event.detail.language);
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
+  const selectedStation = el.learningBooks.find((button) => button.classList.contains("is-selected"));
+  if (selectedStation) {
+    el.boardingSelection.textContent = t("boarding.selected", {
+      station: translatedLearningTopic(state.learningTopic),
+    });
+  }
   renderLearningPathState();
 });
 document.addEventListener("keydown", (event) => {
@@ -2092,7 +2098,7 @@ el.checkpointButtons.forEach((button) => {
   button.addEventListener("click", () => openCheckpoint(Number(button.dataset.checkpoint)));
 });
 el.learningBooks.forEach((book) => {
-  book.addEventListener("click", () => openLearningBook(book));
+  book.addEventListener("click", () => selectBoardingDestination(book));
 });
 el.backToLearningDesk.addEventListener("click", resetLearningDesk);
 el.learningPointsToggle.addEventListener("click", () => {
@@ -2372,21 +2378,39 @@ function beginKrugoJourney() {
   dismissKrugoWelcome(true);
   window.setTimeout(() => {
     setActiveView("learning-path");
-    el.learningDesk.classList.add("is-boarding");
-    el.worldBoarding.classList.remove("is-hidden", "is-departing");
-    window.setTimeout(() => el.boardInfoTrain.focus(), 450);
+    window.setTimeout(() => el.learningBooks[0]?.focus(), 450);
   }, 430);
 }
 
+function selectBoardingDestination(button) {
+  el.learningBooks.forEach((item) => item.classList.toggle("is-selected", item === button));
+  state.learningTopic = button.dataset.learningBook;
+  el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
+  el.boardingSelection.textContent = t("boarding.selected", {
+    station: translatedLearningTopic(state.learningTopic),
+  });
+  el.boardInfoTrain.disabled = false;
+  el.boardInfoTrain.focus();
+}
+
 function boardInfoTrain() {
+  if (el.boardInfoTrain.disabled) {
+    return;
+  }
   el.worldBoarding.classList.add("is-departing");
   el.boardInfoTrain.disabled = true;
   window.setTimeout(() => {
-    el.learningDesk.classList.remove("is-boarding");
-    el.learningDesk.classList.add("world-has-arrived");
+    el.learningDesk.classList.add("is-hidden");
+    el.learningRoute.classList.remove("is-hidden");
     el.worldBoarding.classList.add("is-hidden");
     el.worldBoarding.classList.remove("is-departing");
-    el.boardInfoTrain.disabled = false;
+    el.learningPointsPanel.classList.add("is-hidden");
+    el.learningPointsToggle.setAttribute("aria-expanded", "false");
+    renderLearningPathState();
+    state.pathDemoIndex = state.learningTopic === "Algorithmik"
+      ? Math.max(0, state.learningUnlocked - 1)
+      : 0;
+    window.requestAnimationFrame(() => movePathAvatar(state.pathDemoIndex, true));
   }, 1600);
 }
 
@@ -2413,42 +2437,6 @@ function saveLearningProgress() {
   }
 }
 
-function openLearningBook(book) {
-  window.clearTimeout(state.learningBookTimer);
-  const worldRect = el.learningDesk.getBoundingClientRect();
-  const regionRect = book.getBoundingClientRect();
-  const trainRect = el.worldTrain.getBoundingClientRect();
-  const offsetX = regionRect.left + (regionRect.width / 2) - (trainRect.left + (trainRect.width / 2));
-  const offsetY = regionRect.top + (regionRect.height / 2) - (trainRect.top + (trainRect.height / 2));
-
-  el.learningBooks.forEach((item) => item.classList.remove("is-selected"));
-  book.classList.add("is-selected");
-  el.worldTrain.style.setProperty("--train-x", `${offsetX}px`);
-  el.worldTrain.style.setProperty("--train-y", `${offsetY}px`);
-  el.worldTrain.classList.add("is-travelling");
-  state.learningTopic = book.dataset.learningBook;
-  el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
-
-  state.learningBookTimer = window.setTimeout(() => {
-    el.worldTrain.classList.add("is-arriving");
-    state.learningBookTimer = window.setTimeout(() => {
-      el.learningDesk.classList.add("is-zooming");
-      state.learningBookTimer = window.setTimeout(() => {
-        el.learningDesk.classList.add("is-hidden");
-        el.learningRoute.classList.remove("is-hidden");
-        el.learningPointsPanel.classList.add("is-hidden");
-        el.learningPointsToggle.setAttribute("aria-expanded", "false");
-        renderLearningPathState();
-        state.pathDemoIndex = state.learningTopic === "Algorithmik"
-          ? Math.max(0, state.learningUnlocked - 1)
-          : 0;
-        window.requestAnimationFrame(() => movePathAvatar(state.pathDemoIndex, true));
-        state.learningBookTimer = null;
-      }, 450);
-    }, 650);
-  }, Math.min(350, Math.max(180, worldRect.width / 5)));
-}
-
 function resetLearningDesk() {
   window.clearTimeout(state.learningBookTimer);
   stopLearningPathPreview();
@@ -2457,16 +2445,15 @@ function resetLearningDesk() {
   el.learningPointsToggle.setAttribute("aria-expanded", "false");
   closeCheckpointTask();
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
-  el.learningDesk.classList.remove("is-boarding", "world-has-arrived");
-  el.worldBoarding.classList.add("is-hidden");
+  el.learningDesk.classList.add("is-boarding");
+  el.learningDesk.classList.remove("world-has-arrived");
+  el.worldBoarding.classList.remove("is-hidden");
   el.worldBoarding.classList.remove("is-departing");
-  el.boardInfoTrain.disabled = false;
+  el.boardInfoTrain.disabled = true;
+  el.boardingSelection.textContent = t("boarding.selectHint");
   el.learningBooks.forEach((book) => {
     book.classList.remove("is-selected");
   });
-  el.worldTrain.classList.remove("is-travelling", "is-arriving");
-  el.worldTrain.style.removeProperty("--train-x");
-  el.worldTrain.style.removeProperty("--train-y");
   state.learningBookTimer = null;
 }
 
@@ -2496,7 +2483,7 @@ function movePathAvatar(stepIndex, instant = false) {
 
 function renderLearningPathState() {
   const algorithmicsActive = state.learningTopic === "Algorithmik";
-  const unlocked = algorithmicsActive ? state.learningUnlocked : 0;
+  const unlocked = algorithmicsActive ? state.learningUnlocked : 1;
   const points = algorithmicsActive ? state.learningPoints : 0;
 
   el.learningPointsValue.textContent = String(points);
