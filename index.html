@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-desk">
+  <link rel="stylesheet" href="styles.css?v=20260703-books">
 </head>
 <body>
   <div class="page-shell">
@@ -120,54 +120,70 @@ queue: [A, C, D]</pre>
           </div>
         </header>
 
-        <div class="learning-path-summary">
-          <div>
-            <span>Aktuelle Punkte</span>
-            <strong>0</strong>
+        <div id="learning-desk" class="learning-desk">
+          <div class="desk-monitor" aria-hidden="true"><span>InfoTrain</span></div>
+          <div class="desk-keyboard" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
           </div>
-          <div>
-            <span>Freigeschaltet</span>
-            <strong>1 / 6</strong>
+          <div class="desk-mug" aria-hidden="true"></div>
+          <div class="desk-pencil" aria-hidden="true"></div>
+
+          <div class="desk-books" aria-label="Oberthema auswählen">
+            <button class="desk-book book-algorithmics" type="button" data-learning-book="Algorithmik">
+              <span class="book-spine">Algorithmik</span>
+              <span class="book-cover"><small>InfoTrain</small>Algorithmik</span>
+              <span class="book-pages"></span>
+            </button>
+            <button class="desk-book book-basics" type="button" data-learning-book="Informatik-Grundlagen">
+              <span class="book-spine">Grundlagen</span>
+              <span class="book-cover"><small>InfoTrain</small>Grundlagen</span>
+              <span class="book-pages"></span>
+            </button>
+            <button class="desk-book book-programming" type="button" data-learning-book="Programmieren">
+              <span class="book-spine">Programmieren</span>
+              <span class="book-cover"><small>InfoTrain</small>Programmieren</span>
+              <span class="book-pages"></span>
+            </button>
+            <button class="desk-book book-data" type="button" data-learning-book="Data Science">
+              <span class="book-spine">Data Science</span>
+              <span class="book-cover"><small>InfoTrain</small>Data Science</span>
+              <span class="book-pages"></span>
+            </button>
           </div>
-          <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button">
-            Bewegung testen
-          </button>
+          <p class="desk-hint">Wähle ein Buch und öffne deinen Lernpfad.</p>
         </div>
 
-        <div class="learning-path-stage">
-          <div id="path-avatar" class="path-avatar" aria-hidden="true">
-            <span class="avatar-antenna"></span>
-            <span class="avatar-head"><i></i><i></i></span>
-            <span class="avatar-body">IT</span>
-            <span class="avatar-shadow"></span>
+        <div id="learning-route" class="learning-route is-hidden">
+          <div class="route-toolbar">
+            <button id="back-to-learning-desk" class="secondary-btn" type="button">Zurück zum Schreibtisch</button>
+            <div>
+              <p class="section-label">Geöffnetes Buch</p>
+              <h2 id="learning-route-title">Algorithmik</h2>
+            </div>
           </div>
 
-          <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen">
-            <li class="learning-path-step is-current" data-path-step="1">
-              <span class="path-node">1</span>
-              <div class="path-card"><span class="path-status">Start</span><h2>Lektion 1</h2></div>
-            </li>
-            <li class="learning-path-step is-locked" data-path-step="2">
-              <span class="path-node">2</span>
-              <div class="path-card"><span class="path-status">20 Punkte</span><h2>Lektion 2</h2></div>
-            </li>
-            <li class="learning-path-step is-locked" data-path-step="3">
-              <span class="path-node">3</span>
-              <div class="path-card"><span class="path-status">45 Punkte</span><h2>Lektion 3</h2></div>
-            </li>
-            <li class="learning-path-step is-locked" data-path-step="4">
-              <span class="path-node">4</span>
-              <div class="path-card"><span class="path-status">75 Punkte</span><h2>Lektion 4</h2></div>
-            </li>
-            <li class="learning-path-step is-locked" data-path-step="5">
-              <span class="path-node">5</span>
-              <div class="path-card"><span class="path-status">110 Punkte</span><h2>Lektion 5</h2></div>
-            </li>
-            <li class="learning-path-step is-locked" data-path-step="6">
-              <span class="path-node">6</span>
-              <div class="path-card"><span class="path-status">150 Punkte</span><h2>Abschluss</h2></div>
-            </li>
-          </ol>
+          <div class="learning-path-summary">
+            <div><span>Aktuelle Punkte</span><strong>0</strong></div>
+            <div><span>Freigeschaltet</span><strong>1 / 6</strong></div>
+            <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button">Bewegung testen</button>
+          </div>
+
+          <div class="learning-path-stage">
+            <div id="path-avatar" class="path-avatar" aria-hidden="true">
+              <span class="avatar-antenna"></span>
+              <span class="avatar-head"><i></i><i></i></span>
+              <span class="avatar-body">IT</span>
+              <span class="avatar-shadow"></span>
+            </div>
+            <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen">
+              <li class="learning-path-step is-current" data-path-step="1"><span class="path-node">1</span><div class="path-card"><span class="path-status">Start</span><h2>Lektion 1</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="2"><span class="path-node">2</span><div class="path-card"><span class="path-status">20 Punkte</span><h2>Lektion 2</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="3"><span class="path-node">3</span><div class="path-card"><span class="path-status">45 Punkte</span><h2>Lektion 3</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="4"><span class="path-node">4</span><div class="path-card"><span class="path-status">75 Punkte</span><h2>Lektion 4</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="5"><span class="path-node">5</span><div class="path-card"><span class="path-status">110 Punkte</span><h2>Lektion 5</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="6"><span class="path-node">6</span><div class="path-card"><span class="path-status">150 Punkte</span><h2>Abschluss</h2></div></li>
+            </ol>
+          </div>
         </div>
       </section>
 
@@ -897,6 +913,6 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
-  <script src="app.js?v=20260703-desk"></script>
+  <script src="app.js?v=20260703-books"></script>
 </body>
 </html>

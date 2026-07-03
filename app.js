@@ -1560,6 +1560,7 @@ const state = {
   tileScrollFrame: null,
   pathDemoTimer: null,
   pathDemoIndex: 0,
+  learningBookTimer: null,
 };
 
 const el = {
@@ -1569,6 +1570,11 @@ const el = {
   pathAvatar: document.getElementById("path-avatar"),
   pathSteps: [...document.querySelectorAll("[data-path-step]")],
   pathPreview: document.getElementById("preview-learning-path"),
+  learningDesk: document.getElementById("learning-desk"),
+  learningRoute: document.getElementById("learning-route"),
+  learningRouteTitle: document.getElementById("learning-route-title"),
+  learningBooks: [...document.querySelectorAll("[data-learning-book]")],
+  backToLearningDesk: document.getElementById("back-to-learning-desk"),
   homeView: document.getElementById("home-view"),
   learningPathView: document.getElementById("learning-path-view"),
   algorithmicsView: document.getElementById("algorithmics-view"),
@@ -1696,11 +1702,15 @@ el.moduleTiles.forEach((tile) => {
 window.addEventListener("scroll", queueScrollTileMotion, { passive: true });
 window.addEventListener("resize", () => {
   queueScrollTileMotion();
-  if (state.currentView === "learning-path") {
+  if (state.currentView === "learning-path" && !el.learningRoute.classList.contains("is-hidden")) {
     movePathAvatar(state.pathDemoIndex, true);
   }
 });
 el.pathPreview.addEventListener("click", previewLearningPath);
+el.learningBooks.forEach((book) => {
+  book.addEventListener("click", () => openLearningBook(book));
+});
+el.backToLearningDesk.addEventListener("click", resetLearningDesk);
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
@@ -1815,6 +1825,7 @@ function setActiveView(viewName) {
   }
   if (viewName !== "learning-path") {
     stopLearningPathPreview();
+    window.clearTimeout(state.learningBookTimer);
   }
   state.currentView = viewName;
 
@@ -1846,13 +1857,38 @@ function setActiveView(viewName) {
     createDataStructureQuestion();
   }
   if (viewName === "learning-path") {
-    state.pathDemoIndex = 0;
-    window.requestAnimationFrame(() => movePathAvatar(0, true));
+    resetLearningDesk();
   }
 
   queueScrollTileMotion();
   playLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openLearningBook(book) {
+  window.clearTimeout(state.learningBookTimer);
+  el.learningBooks.forEach((item) => item.classList.toggle("is-opening", item === book));
+  el.learningRouteTitle.textContent = book.dataset.learningBook;
+
+  state.learningBookTimer = window.setTimeout(() => {
+    el.learningDesk.classList.add("is-zooming");
+    state.learningBookTimer = window.setTimeout(() => {
+      el.learningDesk.classList.add("is-hidden");
+      el.learningRoute.classList.remove("is-hidden");
+      state.pathDemoIndex = 0;
+      window.requestAnimationFrame(() => movePathAvatar(0, true));
+      state.learningBookTimer = null;
+    }, 650);
+  }, 480);
+}
+
+function resetLearningDesk() {
+  window.clearTimeout(state.learningBookTimer);
+  stopLearningPathPreview();
+  el.learningRoute.classList.add("is-hidden");
+  el.learningDesk.classList.remove("is-hidden", "is-zooming");
+  el.learningBooks.forEach((book) => book.classList.remove("is-opening"));
+  state.learningBookTimer = null;
 }
 
 function movePathAvatar(stepIndex, instant = false) {
