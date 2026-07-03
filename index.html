@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-krugo-corner">
+  <link rel="stylesheet" href="styles.css?v=20260703-learning-world">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -150,54 +150,63 @@ queue: [A, C, D]</pre>
       <section id="learning-path-view" class="app-view immersive-learning-view is-hidden">
         <div id="learning-desk" class="learning-desk">
           <button class="immersive-exit" type="button" data-back-home>← <span data-i18n="learning.home">Startseite</span></button>
-          <div class="desk-monitor" aria-hidden="true">
-            <div class="monitor-shell">
-              <span class="monitor-camera"></span>
-              <div class="monitor-screen">
-                <span class="monitor-code">&lt;/&gt;</span>
-                <i></i><i></i><i></i>
-              </div>
-            </div>
-            <span class="monitor-neck"></span>
-            <span class="monitor-foot"></span>
+          <div class="world-sky" aria-hidden="true">
+            <span class="world-sun"></span>
+            <span class="world-cloud cloud-one"></span>
+            <span class="world-cloud cloud-two"></span>
+            <span class="world-mountain mountain-one"></span>
+            <span class="world-mountain mountain-two"></span>
           </div>
-          <div class="desk-keyboard" aria-hidden="true">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-          </div>
-          <div class="desk-pencil" aria-hidden="true"></div>
 
-          <div class="desk-books" aria-label="Oberthema auswählen">
-            <button class="desk-book book-algorithmics" type="button" data-learning-book="Algorithmik">
-              <span class="book-spine">Algorithmik</span>
-              <span class="book-cover">Algorithmik</span>
-              <span class="book-pages"></span>
-              <span class="book-open-spread"><i></i><i></i></span>
+          <header class="world-heading">
+            <p class="section-label">InfoTrain</p>
+            <h1 data-i18n="learning.worldTitle">Die Welt der Informatik</h1>
+            <p data-i18n="learning.worldCopy">Wähle ein Reiseziel. Krugo bringt dich zu den nächsten Lektionen.</p>
+          </header>
+
+          <div class="learning-world" aria-label="Fachbereich auswählen" data-i18n-aria-label="learning.chooseRegion">
+            <span class="world-rail rail-main" aria-hidden="true"></span>
+            <span class="world-rail rail-branch-one" aria-hidden="true"></span>
+            <span class="world-rail rail-branch-two" aria-hidden="true"></span>
+
+            <button class="world-region region-basics" type="button" data-learning-book="Informatik-Grundlagen">
+              <span class="region-landmark region-campus" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="region-name" data-i18n="topics.basics">Grundlagen</span>
+              <small data-i18n="learning.enterRegion">Region entdecken</small>
             </button>
-            <button class="desk-book book-basics" type="button" data-learning-book="Informatik-Grundlagen">
-              <span class="book-spine">Grundlagen</span>
-              <span class="book-cover">Grundlagen</span>
-              <span class="book-pages"></span>
-              <span class="book-open-spread"><i></i><i></i></span>
+            <button class="world-region region-programming" type="button" data-learning-book="Programmieren">
+              <span class="region-landmark region-code-city" aria-hidden="true"><i>&lt;/&gt;</i><i></i><i></i></span>
+              <span class="region-name" data-i18n="topics.programming">Programmieren</span>
+              <small data-i18n="learning.enterRegion">Region entdecken</small>
             </button>
-            <button class="desk-book book-programming" type="button" data-learning-book="Programmieren">
-              <span class="book-spine">Programmieren</span>
-              <span class="book-cover">Programmieren</span>
-              <span class="book-pages"></span>
-              <span class="book-open-spread"><i></i><i></i></span>
+            <button class="world-region region-algorithmics" type="button" data-learning-book="Algorithmik">
+              <span class="region-landmark region-tree" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="region-name" data-i18n="topics.algorithmics">Algorithmik</span>
+              <small data-i18n="learning.enterRegion">Region entdecken</small>
             </button>
-            <button class="desk-book book-data" type="button" data-learning-book="Data Science">
-              <span class="book-spine">Data Science</span>
-              <span class="book-cover">Data Science</span>
-              <span class="book-pages"></span>
-              <span class="book-open-spread"><i></i><i></i></span>
+            <button class="world-region region-data" type="button" data-learning-book="Data Science">
+              <span class="region-landmark region-data-lab" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="region-name" data-i18n="topics.dataScience">Data Science</span>
+              <small data-i18n="learning.enterRegion">Region entdecken</small>
             </button>
+
+            <div id="world-train" class="world-train" aria-hidden="true">
+              <span class="train-smoke"></span>
+              <span class="train-engine">
+                <i class="train-window"><b></b><b></b></i>
+                <i class="train-badge">IT</i>
+                <i class="train-chimney"></i>
+              </span>
+              <span class="train-wheel wheel-one"></span>
+              <span class="train-wheel wheel-two"></span>
+            </div>
           </div>
-          <p class="desk-hint" data-i18n="learning.chooseBook">Wähle ein Buch und öffne deinen Lernpfad.</p>
+          <p class="desk-hint" data-i18n="learning.chooseRegionHint">Wähle eine Region und fahre mit Krugo los.</p>
         </div>
 
         <div id="learning-route" class="learning-route is-hidden">
           <div class="route-toolbar">
-            <button id="back-to-learning-desk" class="secondary-btn" type="button" data-i18n="learning.backToDesk">Zurück zum Schreibtisch</button>
+            <button id="back-to-learning-desk" class="secondary-btn" type="button" data-i18n="learning.backToWorld">Zurück zur Welt</button>
             <span id="learning-route-title" class="route-topic">Algorithmik</span>
             <button id="learning-points-toggle" class="points-toggle" type="button" aria-expanded="false">★ 0 Punkte</button>
           </div>
@@ -210,9 +219,13 @@ queue: [A, C, D]</pre>
 
           <div class="learning-path-stage">
             <div id="path-avatar" class="path-avatar" aria-hidden="true">
-              <span class="avatar-antenna"></span>
-              <span class="avatar-head"><i></i><i></i></span>
-              <span class="avatar-body">IT</span>
+              <span class="path-engine">
+                <i class="path-engine-window"><b></b><b></b></i>
+                <i class="path-engine-stack"></i>
+                <i class="path-engine-mark">IT</i>
+              </span>
+              <span class="path-wheel path-wheel-one"></span>
+              <span class="path-wheel path-wheel-two"></span>
               <span class="avatar-shadow"></span>
             </div>
             <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen" data-i18n-aria-label="learning.pathLabel">
@@ -1131,6 +1144,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-krugo-corner"></script>
+  <script type="module" src="app.js?v=20260703-learning-world"></script>
 </body>
 </html>

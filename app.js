@@ -1857,6 +1857,7 @@ const el = {
   learningRoute: document.getElementById("learning-route"),
   learningRouteTitle: document.getElementById("learning-route-title"),
   learningBooks: [...document.querySelectorAll("[data-learning-book]")],
+  worldTrain: document.getElementById("world-train"),
   backToLearningDesk: document.getElementById("back-to-learning-desk"),
   learningPointsToggle: document.getElementById("learning-points-toggle"),
   learningPointsPanel: document.getElementById("learning-points-panel"),
@@ -2389,20 +2390,22 @@ function saveLearningProgress() {
 
 function openLearningBook(book) {
   window.clearTimeout(state.learningBookTimer);
-  const deskRect = el.learningDesk.getBoundingClientRect();
-  const bookRect = book.getBoundingClientRect();
-  const offsetX = deskRect.left + (deskRect.width / 2) - (bookRect.left + (bookRect.width / 2));
-  const offsetY = deskRect.top + (deskRect.height / 2) - (bookRect.top + (bookRect.height / 2));
+  const worldRect = el.learningDesk.getBoundingClientRect();
+  const regionRect = book.getBoundingClientRect();
+  const trainRect = el.worldTrain.getBoundingClientRect();
+  const offsetX = regionRect.left + (regionRect.width / 2) - (trainRect.left + (trainRect.width / 2));
+  const offsetY = regionRect.top + (regionRect.height / 2) - (trainRect.top + (trainRect.height / 2));
 
-  el.learningBooks.forEach((item) => item.classList.remove("is-focusing", "is-opening"));
-  book.style.setProperty("--book-dx", `${offsetX}px`);
-  book.style.setProperty("--book-dy", `${offsetY}px`);
-  book.classList.add("is-focusing");
+  el.learningBooks.forEach((item) => item.classList.remove("is-selected"));
+  book.classList.add("is-selected");
+  el.worldTrain.style.setProperty("--train-x", `${offsetX}px`);
+  el.worldTrain.style.setProperty("--train-y", `${offsetY}px`);
+  el.worldTrain.classList.add("is-travelling");
   state.learningTopic = book.dataset.learningBook;
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
 
   state.learningBookTimer = window.setTimeout(() => {
-    book.classList.add("is-opening");
+    el.worldTrain.classList.add("is-arriving");
     state.learningBookTimer = window.setTimeout(() => {
       el.learningDesk.classList.add("is-zooming");
       state.learningBookTimer = window.setTimeout(() => {
@@ -2416,9 +2419,9 @@ function openLearningBook(book) {
           : 0;
         window.requestAnimationFrame(() => movePathAvatar(state.pathDemoIndex, true));
         state.learningBookTimer = null;
-      }, 650);
-    }, 1050);
-  }, 700);
+      }, 450);
+    }, 650);
+  }, Math.min(350, Math.max(180, worldRect.width / 5)));
 }
 
 function resetLearningDesk() {
@@ -2430,10 +2433,11 @@ function resetLearningDesk() {
   closeCheckpointTask();
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
   el.learningBooks.forEach((book) => {
-    book.classList.remove("is-focusing", "is-opening");
-    book.style.removeProperty("--book-dx");
-    book.style.removeProperty("--book-dy");
+    book.classList.remove("is-selected");
   });
+  el.worldTrain.classList.remove("is-travelling", "is-arriving");
+  el.worldTrain.style.removeProperty("--train-x");
+  el.worldTrain.style.removeProperty("--train-y");
   state.learningBookTimer = null;
 }
 
