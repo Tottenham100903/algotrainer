@@ -1575,6 +1575,8 @@ const el = {
   learningRouteTitle: document.getElementById("learning-route-title"),
   learningBooks: [...document.querySelectorAll("[data-learning-book]")],
   backToLearningDesk: document.getElementById("back-to-learning-desk"),
+  learningPointsToggle: document.getElementById("learning-points-toggle"),
+  learningPointsPanel: document.getElementById("learning-points-panel"),
   homeView: document.getElementById("home-view"),
   learningPathView: document.getElementById("learning-path-view"),
   algorithmicsView: document.getElementById("algorithmics-view"),
@@ -1711,6 +1713,11 @@ el.learningBooks.forEach((book) => {
   book.addEventListener("click", () => openLearningBook(book));
 });
 el.backToLearningDesk.addEventListener("click", resetLearningDesk);
+el.learningPointsToggle.addEventListener("click", () => {
+  const expanded = el.learningPointsToggle.getAttribute("aria-expanded") === "true";
+  el.learningPointsToggle.setAttribute("aria-expanded", String(!expanded));
+  el.learningPointsPanel.classList.toggle("is-hidden", expanded);
+});
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
@@ -1828,6 +1835,7 @@ function setActiveView(viewName) {
     window.clearTimeout(state.learningBookTimer);
   }
   state.currentView = viewName;
+  document.body.classList.toggle("immersive-active", viewName === "learning-path");
 
   const views = {
     home: el.homeView,
@@ -1875,6 +1883,8 @@ function openLearningBook(book) {
     state.learningBookTimer = window.setTimeout(() => {
       el.learningDesk.classList.add("is-hidden");
       el.learningRoute.classList.remove("is-hidden");
+      el.learningPointsPanel.classList.add("is-hidden");
+      el.learningPointsToggle.setAttribute("aria-expanded", "false");
       state.pathDemoIndex = 0;
       window.requestAnimationFrame(() => movePathAvatar(0, true));
       state.learningBookTimer = null;
@@ -1886,6 +1896,8 @@ function resetLearningDesk() {
   window.clearTimeout(state.learningBookTimer);
   stopLearningPathPreview();
   el.learningRoute.classList.add("is-hidden");
+  el.learningPointsPanel.classList.add("is-hidden");
+  el.learningPointsToggle.setAttribute("aria-expanded", "false");
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
   el.learningBooks.forEach((book) => book.classList.remove("is-opening"));
   state.learningBookTimer = null;

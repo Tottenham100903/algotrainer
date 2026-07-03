@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-books">
+  <link rel="stylesheet" href="styles.css?v=20260703-fullscreen">
 </head>
 <body>
   <div class="page-shell">
@@ -110,22 +110,13 @@ queue: [A, C, D]</pre>
         </section>
       </section>
 
-      <section id="learning-path-view" class="app-view is-hidden">
-        <header class="module-hero learning-path-hero">
-          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
-          <div>
-            <p class="eyebrow">Deine Route</p>
-            <h1 class="module-title">Lernpfad</h1>
-            <p class="hero-copy">Sammle Punkte in einer Lektion, um die nächste Station freizuschalten.</p>
-          </div>
-        </header>
-
+      <section id="learning-path-view" class="app-view immersive-learning-view is-hidden">
         <div id="learning-desk" class="learning-desk">
+          <button class="immersive-exit" type="button" data-back-home>← Startseite</button>
           <div class="desk-monitor" aria-hidden="true"><span>InfoTrain</span></div>
           <div class="desk-keyboard" aria-hidden="true">
             <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
           </div>
-          <div class="desk-mug" aria-hidden="true"></div>
           <div class="desk-pencil" aria-hidden="true"></div>
 
           <div class="desk-books" aria-label="Oberthema auswählen">
@@ -156,15 +147,13 @@ queue: [A, C, D]</pre>
         <div id="learning-route" class="learning-route is-hidden">
           <div class="route-toolbar">
             <button id="back-to-learning-desk" class="secondary-btn" type="button">Zurück zum Schreibtisch</button>
-            <div>
-              <p class="section-label">Geöffnetes Buch</p>
-              <h2 id="learning-route-title">Algorithmik</h2>
-            </div>
+            <span id="learning-route-title" class="route-topic">Algorithmik</span>
+            <button id="learning-points-toggle" class="points-toggle" type="button" aria-expanded="false">★ 0 Punkte</button>
           </div>
 
-          <div class="learning-path-summary">
-            <div><span>Aktuelle Punkte</span><strong>0</strong></div>
-            <div><span>Freigeschaltet</span><strong>1 / 6</strong></div>
+          <div id="learning-points-panel" class="points-panel is-hidden">
+            <p><span>Punkte</span><strong>0</strong></p>
+            <p><span>Freigeschaltet</span><strong>1 / 6</strong></p>
             <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button">Bewegung testen</button>
           </div>
 
@@ -913,6 +902,6 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
-  <script src="app.js?v=20260703-books"></script>
+  <script src="app.js?v=20260703-fullscreen"></script>
 </body>
 </html>
