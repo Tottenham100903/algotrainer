@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-destinations">
+  <link rel="stylesheet" href="styles.css?v=20260703-guided-basics">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -38,7 +38,7 @@
       <div class="krugo-speech">
         <p class="section-label" data-i18n="krugo.introduction">Dein Reisebegleiter</p>
         <h2 id="krugo-welcome-title" data-i18n="krugo.greeting">Hey, ich bin Krugo!</h2>
-        <p data-i18n="krugo.message">Ich bin hier, um dir die Welt der Informatik zu zeigen. Komm, steig mit mir in den InfoTrain!</p>
+        <p data-i18n="krugo.message">Lass uns gemeinsam in den InfoTrain steigen und mit den Grundlagen der Informatik beginnen!</p>
         <div class="krugo-actions">
           <button id="krugo-start" class="primary-btn" type="button" data-i18n="krugo.start">Los geht’s!</button>
           <button id="krugo-later" class="secondary-btn" type="button" data-i18n="krugo.later">Später</button>
@@ -156,22 +156,27 @@ queue: [A, C, D]</pre>
             <div class="boarding-clock" aria-hidden="true"><i></i><i></i></div>
             <div class="boarding-sign"><span>InfoTrain</span><small data-i18n="boarding.platform">Gleis 01</small></div>
             <div class="boarding-message">
-              <span class="boarding-krugo" aria-hidden="true">
-                <i class="boarding-cap"></i>
-                <i class="boarding-face"><b></b><b></b></i>
+              <span class="boarding-krugo-full krugo-character" aria-hidden="true">
+                <span class="krugo-shadow"></span>
+                <span class="krugo-antenna"><i></i></span>
+                <span class="krugo-cap"><i></i></span>
+                <span class="krugo-ear krugo-ear-left"></span>
+                <span class="krugo-ear krugo-ear-right"></span>
+                <span class="krugo-head">
+                  <span class="krugo-face">
+                    <i class="krugo-eye"></i><i class="krugo-eye"></i><i class="krugo-smile"></i>
+                  </span>
+                </span>
+                <span class="krugo-neck"></span>
+                <span class="krugo-body"><i class="krugo-badge">IT</i><i class="krugo-light"></i></span>
+                <span class="krugo-arm krugo-arm-left"><i></i></span>
+                <span class="krugo-arm krugo-arm-right"><i></i></span>
               </span>
               <div>
                 <p class="section-label">Krugo</p>
-                <h2 id="boarding-title" data-i18n="boarding.title">Wohin soll unsere Reise gehen?</h2>
-                <p data-i18n="boarding.copy">Wähle eine Station. Danach steigen wir gemeinsam in den InfoTrain.</p>
-                <div class="boarding-destinations" aria-label="Station auswählen" data-i18n-aria-label="boarding.chooseStation">
-                  <button type="button" data-learning-book="Informatik-Grundlagen"><span>01</span><strong data-i18n="topics.basics">Grundlagen</strong></button>
-                  <button type="button" data-learning-book="Programmieren"><span>02</span><strong data-i18n="topics.programming">Programmieren</strong></button>
-                  <button type="button" data-learning-book="Algorithmik"><span>03</span><strong data-i18n="topics.algorithmics">Algorithmik</strong></button>
-                  <button type="button" data-learning-book="Data Science"><span>04</span><strong data-i18n="topics.dataScience">Data Science</strong></button>
-                </div>
-                <p id="boarding-selection" class="boarding-selection" aria-live="polite" data-i18n="boarding.selectHint">Wähle zuerst eine Station aus.</p>
-                <button id="board-infotrain" class="primary-btn" type="button" disabled data-i18n="boarding.button">Gemeinsam einsteigen</button>
+                <h2 id="boarding-title" data-i18n="boarding.title">Unser InfoTrain steht bereit.</h2>
+                <p data-i18n="boarding.copy">Komm, wir steigen gemeinsam ein und fahren direkt zu den Grundlagen.</p>
+                <button id="board-infotrain" class="primary-btn" type="button" data-i18n="boarding.button">Mit Krugo einsteigen</button>
               </div>
             </div>
             <div class="boarding-train" aria-hidden="true">
@@ -1138,6 +1143,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-destinations"></script>
+  <script type="module" src="app.js?v=20260703-guided-basics"></script>
 </body>
 </html>

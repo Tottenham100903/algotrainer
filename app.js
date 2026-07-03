@@ -1849,7 +1849,6 @@ const el = {
   krugoLater: document.getElementById("krugo-later"),
   worldBoarding: document.getElementById("world-boarding"),
   boardInfoTrain: document.getElementById("board-infotrain"),
-  boardingSelection: document.getElementById("boarding-selection"),
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -1859,7 +1858,6 @@ const el = {
   learningDesk: document.getElementById("learning-desk"),
   learningRoute: document.getElementById("learning-route"),
   learningRouteTitle: document.getElementById("learning-route-title"),
-  learningBooks: [...document.querySelectorAll("[data-learning-book]")],
   backToLearningDesk: document.getElementById("back-to-learning-desk"),
   learningPointsToggle: document.getElementById("learning-points-toggle"),
   learningPointsPanel: document.getElementById("learning-points-panel"),
@@ -2051,12 +2049,6 @@ el.boardInfoTrain.addEventListener("click", boardInfoTrain);
 window.addEventListener("infotrain:languagechange", (event) => {
   updateLanguageMenu(event.detail.language);
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
-  const selectedStation = el.learningBooks.find((button) => button.classList.contains("is-selected"));
-  if (selectedStation) {
-    el.boardingSelection.textContent = t("boarding.selected", {
-      station: translatedLearningTopic(state.learningTopic),
-    });
-  }
   renderLearningPathState();
 });
 document.addEventListener("keydown", (event) => {
@@ -2096,9 +2088,6 @@ el.checkpointAnswers.forEach((button) => {
 });
 el.checkpointButtons.forEach((button) => {
   button.addEventListener("click", () => openCheckpoint(Number(button.dataset.checkpoint)));
-});
-el.learningBooks.forEach((book) => {
-  book.addEventListener("click", () => selectBoardingDestination(book));
 });
 el.backToLearningDesk.addEventListener("click", resetLearningDesk);
 el.learningPointsToggle.addEventListener("click", () => {
@@ -2343,7 +2332,7 @@ function updateLanguageMenu(language) {
 function initializeKrugoWelcome() {
   let hasMetKrugo = false;
   try {
-    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo-v3") === "true";
+    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo-v4") === "true";
   } catch {
     // Krugo can still introduce himself when storage is unavailable.
   }
@@ -2363,7 +2352,7 @@ function dismissKrugoWelcome(remember = false) {
   document.body.classList.remove("krugo-is-speaking");
   if (remember) {
     try {
-      window.localStorage.setItem("infotrain-met-krugo-v3", "true");
+      window.localStorage.setItem("infotrain-met-krugo-v4", "true");
     } catch {
       // Dismissing the welcome still works without persistent storage.
     }
@@ -2377,26 +2366,16 @@ function dismissKrugoWelcome(remember = false) {
 function beginKrugoJourney() {
   dismissKrugoWelcome(true);
   window.setTimeout(() => {
+    state.learningTopic = "Informatik-Grundlagen";
+    el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
     setActiveView("learning-path");
-    window.setTimeout(() => el.learningBooks[0]?.focus(), 450);
+    window.setTimeout(() => el.boardInfoTrain.focus(), 450);
   }, 430);
 }
 
-function selectBoardingDestination(button) {
-  el.learningBooks.forEach((item) => item.classList.toggle("is-selected", item === button));
-  state.learningTopic = button.dataset.learningBook;
-  el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
-  el.boardingSelection.textContent = t("boarding.selected", {
-    station: translatedLearningTopic(state.learningTopic),
-  });
-  el.boardInfoTrain.disabled = false;
-  el.boardInfoTrain.focus();
-}
-
 function boardInfoTrain() {
-  if (el.boardInfoTrain.disabled) {
-    return;
-  }
+  state.learningTopic = "Informatik-Grundlagen";
+  el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
   el.worldBoarding.classList.add("is-departing");
   el.boardInfoTrain.disabled = true;
   window.setTimeout(() => {
@@ -2449,11 +2428,7 @@ function resetLearningDesk() {
   el.learningDesk.classList.remove("world-has-arrived");
   el.worldBoarding.classList.remove("is-hidden");
   el.worldBoarding.classList.remove("is-departing");
-  el.boardInfoTrain.disabled = true;
-  el.boardingSelection.textContent = t("boarding.selectHint");
-  el.learningBooks.forEach((book) => {
-    book.classList.remove("is-selected");
-  });
+  el.boardInfoTrain.disabled = false;
   state.learningBookTimer = null;
 }
 
