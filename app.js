@@ -1875,21 +1875,32 @@ function setActiveView(viewName) {
 
 function openLearningBook(book) {
   window.clearTimeout(state.learningBookTimer);
-  el.learningBooks.forEach((item) => item.classList.toggle("is-opening", item === book));
+  const deskRect = el.learningDesk.getBoundingClientRect();
+  const bookRect = book.getBoundingClientRect();
+  const offsetX = deskRect.left + (deskRect.width / 2) - (bookRect.left + (bookRect.width / 2));
+  const offsetY = deskRect.top + (deskRect.height / 2) - (bookRect.top + (bookRect.height / 2));
+
+  el.learningBooks.forEach((item) => item.classList.remove("is-focusing", "is-opening"));
+  book.style.setProperty("--book-dx", `${offsetX}px`);
+  book.style.setProperty("--book-dy", `${offsetY}px`);
+  book.classList.add("is-focusing");
   el.learningRouteTitle.textContent = book.dataset.learningBook;
 
   state.learningBookTimer = window.setTimeout(() => {
-    el.learningDesk.classList.add("is-zooming");
+    book.classList.add("is-opening");
     state.learningBookTimer = window.setTimeout(() => {
-      el.learningDesk.classList.add("is-hidden");
-      el.learningRoute.classList.remove("is-hidden");
-      el.learningPointsPanel.classList.add("is-hidden");
-      el.learningPointsToggle.setAttribute("aria-expanded", "false");
-      state.pathDemoIndex = 0;
-      window.requestAnimationFrame(() => movePathAvatar(0, true));
-      state.learningBookTimer = null;
-    }, 650);
-  }, 480);
+      el.learningDesk.classList.add("is-zooming");
+      state.learningBookTimer = window.setTimeout(() => {
+        el.learningDesk.classList.add("is-hidden");
+        el.learningRoute.classList.remove("is-hidden");
+        el.learningPointsPanel.classList.add("is-hidden");
+        el.learningPointsToggle.setAttribute("aria-expanded", "false");
+        state.pathDemoIndex = 0;
+        window.requestAnimationFrame(() => movePathAvatar(0, true));
+        state.learningBookTimer = null;
+      }, 650);
+    }, 1050);
+  }, 700);
 }
 
 function resetLearningDesk() {
@@ -1899,7 +1910,11 @@ function resetLearningDesk() {
   el.learningPointsPanel.classList.add("is-hidden");
   el.learningPointsToggle.setAttribute("aria-expanded", "false");
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
-  el.learningBooks.forEach((book) => book.classList.remove("is-opening"));
+  el.learningBooks.forEach((book) => {
+    book.classList.remove("is-focusing", "is-opening");
+    book.style.removeProperty("--book-dx");
+    book.style.removeProperty("--book-dy");
+  });
   state.learningBookTimer = null;
 }
 

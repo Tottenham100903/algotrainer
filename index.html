@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-fullscreen">
+  <link rel="stylesheet" href="styles.css?v=20260703-real3d">
 </head>
 <body>
   <div class="page-shell">
@@ -113,7 +113,18 @@ queue: [A, C, D]</pre>
       <section id="learning-path-view" class="app-view immersive-learning-view is-hidden">
         <div id="learning-desk" class="learning-desk">
           <button class="immersive-exit" type="button" data-back-home>← Startseite</button>
-          <div class="desk-monitor" aria-hidden="true"><span>InfoTrain</span></div>
+          <div class="desk-monitor" aria-hidden="true">
+            <div class="monitor-shell">
+              <span class="monitor-camera"></span>
+              <div class="monitor-screen">
+                <span class="monitor-logo">InfoTrain</span>
+                <span class="monitor-code">&lt;/&gt;</span>
+                <i></i><i></i><i></i>
+              </div>
+            </div>
+            <span class="monitor-neck"></span>
+            <span class="monitor-foot"></span>
+          </div>
           <div class="desk-keyboard" aria-hidden="true">
             <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
           </div>
@@ -124,21 +135,25 @@ queue: [A, C, D]</pre>
               <span class="book-spine">Algorithmik</span>
               <span class="book-cover"><small>InfoTrain</small>Algorithmik</span>
               <span class="book-pages"></span>
+              <span class="book-open-spread"><i></i><i></i></span>
             </button>
             <button class="desk-book book-basics" type="button" data-learning-book="Informatik-Grundlagen">
               <span class="book-spine">Grundlagen</span>
               <span class="book-cover"><small>InfoTrain</small>Grundlagen</span>
               <span class="book-pages"></span>
+              <span class="book-open-spread"><i></i><i></i></span>
             </button>
             <button class="desk-book book-programming" type="button" data-learning-book="Programmieren">
               <span class="book-spine">Programmieren</span>
               <span class="book-cover"><small>InfoTrain</small>Programmieren</span>
               <span class="book-pages"></span>
+              <span class="book-open-spread"><i></i><i></i></span>
             </button>
             <button class="desk-book book-data" type="button" data-learning-book="Data Science">
               <span class="book-spine">Data Science</span>
               <span class="book-cover"><small>InfoTrain</small>Data Science</span>
               <span class="book-pages"></span>
+              <span class="book-open-spread"><i></i><i></i></span>
             </button>
           </div>
           <p class="desk-hint">Wähle ein Buch und öffne deinen Lernpfad.</p>
@@ -902,6 +917,6 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
-  <script src="app.js?v=20260703-fullscreen"></script>
+  <script src="app.js?v=20260703-real3d"></script>
 </body>
 </html>
