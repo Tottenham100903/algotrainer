@@ -202,7 +202,12 @@ body.menu-open {
 }
 
 .settings-switch-row {
-  cursor: default;
+  cursor: pointer;
+}
+
+.settings-switch-row:focus-visible {
+  outline: 3px solid rgba(13, 107, 95, 0.28);
+  outline-offset: 3px;
 }
 
 .theme-switch {

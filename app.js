@@ -1569,6 +1569,7 @@ const el = {
   menuOverlay: document.getElementById("menu-overlay"),
   settingsMenu: document.getElementById("settings-menu"),
   themeToggle: document.getElementById("theme-toggle"),
+  darkmodeSetting: document.getElementById("darkmode-setting"),
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -1701,6 +1702,18 @@ el.menuToggle.addEventListener("click", () => {
 el.menuClose.addEventListener("click", closeSettingsMenu);
 el.menuOverlay.addEventListener("click", closeSettingsMenu);
 el.themeToggle.addEventListener("change", () => setTheme(el.themeToggle.checked));
+el.darkmodeSetting.addEventListener("click", (event) => {
+  if (event.target.closest(".theme-switch")) {
+    return;
+  }
+  setTheme(!el.themeToggle.checked);
+});
+el.darkmodeSetting.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    setTheme(!el.themeToggle.checked);
+  }
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeSettingsMenu();
@@ -1928,6 +1941,7 @@ function initializeTheme() {
 function setTheme(darkMode, persist = true) {
   document.body.classList.toggle("theme-dark", darkMode);
   el.themeToggle.checked = darkMode;
+  el.darkmodeSetting.setAttribute("aria-checked", String(darkMode));
   if (!persist) {
     return;
   }
