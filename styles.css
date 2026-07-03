@@ -288,9 +288,11 @@ h2 {
 }
 
 .hero-home .hero-copy {
-  max-width: 32ch;
+  width: max-content;
+  max-width: none;
   margin: 0 0 0.35rem;
   font-size: clamp(1rem, 1.8vw, 1.25rem);
+  white-space: nowrap;
 }
 
 .home-grid,
@@ -2283,7 +2285,9 @@ button:disabled {
   }
 
   .hero-home .hero-copy {
+    width: auto;
     max-width: 32ch;
+    white-space: normal;
   }
 
   .home-grid,
