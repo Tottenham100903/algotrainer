@@ -79,32 +79,32 @@ queue: [A, C, D]</pre>
           </button>
 
           <button class="module-tile subject-tile subject-tile-basics" type="button" data-open-view="basics">
-            <span class="subject-tag">Demnächst</span>
+            <span class="subject-tag">Neu</span>
             <strong>
               <span>Informatik</span>
               <span>Grundlagen</span>
             </strong>
-            <span class="module-copy">Grundbegriffe, Zahlensysteme, Logik und die Funktionsweise von Computersystemen.</span>
+            <span class="module-copy">Daten, Modellierung, Automaten und Datenbanken als Landkarte der Informatik verstehen.</span>
             <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
           </button>
 
           <button class="module-tile subject-tile subject-tile-programming" type="button" data-open-view="programming">
-            <span class="subject-tag">Demnächst</span>
+            <span class="subject-tag">Neu</span>
             <strong>
               <span>Program</span>
               <span>mieren</span>
             </strong>
-            <span class="module-copy">Code lesen, eigene Lösungen entwickeln und Programmierkonzepte praktisch anwenden.</span>
+            <span class="module-copy">Python, Java, C++, HTML und Web-Grundlagen über Codeverständnis trainieren.</span>
             <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
           </button>
 
           <button class="module-tile subject-tile subject-tile-data-science" type="button" data-open-view="data-science">
-            <span class="subject-tag">Demnächst</span>
+            <span class="subject-tag">Neu</span>
             <strong>
               <span>Data</span>
               <span>Science</span>
             </strong>
-            <span class="module-copy">Daten untersuchen, Muster erkennen und statistische Methoden visuell verstehen.</span>
+            <span class="module-copy">MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.</span>
             <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
           </button>
         </section>
@@ -267,13 +267,39 @@ queue: [A, C, D]</pre>
           <div>
             <p class="eyebrow">Fachbereich</p>
             <h1 class="module-title">Informatik-Grundlagen</h1>
-            <p class="hero-copy">Dieser Lernbereich wird als Nächstes aufgebaut.</p>
+            <p class="hero-copy">Baue ein Gefühl für die Informatik auf: Begriffe, Modelle und Denkweisen, bevor es tief in einzelne Werkzeuge geht.</p>
           </div>
         </header>
-        <div class="empty-subject-card">
-          <span class="empty-subject-mark" aria-hidden="true">01</span>
-          <p class="section-label">In Vorbereitung</p>
-          <h2>Hier entsteht dein Grundlagenbereich.</h2>
+
+        <nav id="basics-topic-nav" class="topic-nav learning-topic-nav" aria-label="Grundlagen-Themen auswählen"></nav>
+
+        <div class="module-grid subject-learning-grid">
+          <section class="card subject-overview-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Orientierung</p>
+                <h2 id="basics-topic-title"></h2>
+              </div>
+            </div>
+            <p id="basics-topic-copy" class="section-copy"></p>
+            <div id="basics-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-task-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Erste Aufgabe</p>
+                <h2 id="basics-question-title"></h2>
+              </div>
+              <button id="new-basics-question" class="secondary-btn" type="button">Neue Aufgabe</button>
+            </div>
+            <p id="basics-question" class="subject-question"></p>
+            <form id="basics-options" class="choices"></form>
+            <div class="actions quiz-actions">
+              <button id="check-basics-question" class="primary-btn" type="button">Antwort prüfen</button>
+            </div>
+            <div id="basics-feedback" class="feedback" aria-live="polite"></div>
+          </section>
         </div>
       </section>
 
@@ -283,13 +309,40 @@ queue: [A, C, D]</pre>
           <div>
             <p class="eyebrow">Fachbereich</p>
             <h1 class="module-title">Programmieren</h1>
-            <p class="hero-copy">Dieser Lernbereich wird als Nächstes aufgebaut.</p>
+            <p class="hero-copy">Lies Code bewusst, erkenne Sprachunterschiede und trainiere Konzepte, die in Python, Java, C++, HTML und JavaScript wiederkehren.</p>
           </div>
         </header>
-        <div class="empty-subject-card">
-          <span class="empty-subject-mark" aria-hidden="true">&lt;/&gt;</span>
-          <p class="section-label">In Vorbereitung</p>
-          <h2>Hier entstehen interaktive Programmierübungen.</h2>
+
+        <nav id="programming-topic-nav" class="topic-nav learning-topic-nav" aria-label="Programmier-Themen auswählen"></nav>
+
+        <div class="module-grid subject-learning-grid">
+          <section class="card subject-overview-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Orientierung</p>
+                <h2 id="programming-topic-title"></h2>
+              </div>
+            </div>
+            <p id="programming-topic-copy" class="section-copy"></p>
+            <div id="programming-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-task-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Codeaufgabe</p>
+                <h2 id="programming-question-title"></h2>
+              </div>
+              <button id="new-programming-question" class="secondary-btn" type="button">Neue Aufgabe</button>
+            </div>
+            <div id="programming-snippet" class="snippet-wrap subject-snippet is-hidden"><pre><code></code></pre></div>
+            <p id="programming-question" class="subject-question"></p>
+            <form id="programming-options" class="choices"></form>
+            <div class="actions quiz-actions">
+              <button id="check-programming-question" class="primary-btn" type="button">Antwort prüfen</button>
+            </div>
+            <div id="programming-feedback" class="feedback" aria-live="polite"></div>
+          </section>
         </div>
       </section>
 
@@ -299,13 +352,40 @@ queue: [A, C, D]</pre>
           <div>
             <p class="eyebrow">Fachbereich</p>
             <h1 class="module-title">Data Science</h1>
-            <p class="hero-copy">Dieser Lernbereich wird als Nächstes aufgebaut.</p>
+            <p class="hero-copy">Übe Datenfragen praktisch: Tabellen verstehen, SQL-Abfragen lesen und später große Daten mit PySpark einordnen.</p>
           </div>
         </header>
-        <div class="empty-subject-card">
-          <span class="empty-subject-mark" aria-hidden="true">∑</span>
-          <p class="section-label">In Vorbereitung</p>
-          <h2>Hier entsteht dein Werkzeugkasten für Daten.</h2>
+
+        <nav id="data-science-topic-nav" class="topic-nav learning-topic-nav" aria-label="Data-Science-Themen auswählen"></nav>
+
+        <div class="module-grid subject-learning-grid">
+          <section class="card subject-overview-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Orientierung</p>
+                <h2 id="data-science-topic-title"></h2>
+              </div>
+            </div>
+            <p id="data-science-topic-copy" class="section-copy"></p>
+            <div id="data-science-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-task-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Datenaufgabe</p>
+                <h2 id="data-science-question-title"></h2>
+              </div>
+              <button id="new-data-science-question" class="secondary-btn" type="button">Neue Aufgabe</button>
+            </div>
+            <div id="data-science-snippet" class="snippet-wrap subject-snippet is-hidden"><pre><code></code></pre></div>
+            <p id="data-science-question" class="subject-question"></p>
+            <form id="data-science-options" class="choices"></form>
+            <div class="actions quiz-actions">
+              <button id="check-data-science-question" class="primary-btn" type="button">Antwort prüfen</button>
+            </div>
+            <div id="data-science-feedback" class="feedback" aria-live="polite"></div>
+          </section>
         </div>
       </section>
 
@@ -381,7 +461,7 @@ queue: [A, C, D]</pre>
                   <button class="master-rule-option is-active" type="button" data-master-learn-case="Divide and Conquer / Master-Theorem" aria-pressed="true">
                     <span class="rule-main">Master-Theorem</span>
                     <span class="rule-detail">gleich große Teilprobleme</span>
-                    <span class="rule-formula">aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></span>
+                    <span class="rule-formula"><span class="math-token math-token-a">a</span>T(<span class="frac"><span>n</span><span class="math-token math-token-b">b</span></span>) + <span class="math-token math-token-c">c</span> · n<sup><span class="math-token math-token-d">d</span></sup></span>
                   </button>
                   <button class="master-rule-option" type="button" data-master-learn-case="Subtract and Conquer" aria-pressed="false">
                     <span class="rule-main">Subtract and Conquer</span>
@@ -399,7 +479,13 @@ queue: [A, C, D]</pre>
 
             <div id="master-learn-overview" class="master-general-form">
               <p class="tree-label">Grundidee</p>
-              <p class="master-main-formula">T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup></p>
+              <p class="master-main-formula">T(n) = <span class="math-token math-token-a">a</span>T(<span class="frac"><span>n</span><span class="math-token math-token-b">b</span></span>) + <span class="math-token math-token-c">c</span> · n<sup><span class="math-token math-token-d">d</span></sup></p>
+              <div class="formula-legend">
+                <span><i class="math-token math-token-a">a</i> Teilprobleme</span>
+                <span><i class="math-token math-token-b">b</i> Verkleinerung</span>
+                <span><i class="math-token math-token-c">c</i> Faktor</span>
+                <span><i class="math-token math-token-d">d</i> Exponent</span>
+              </div>
               <div class="master-parameter-grid">
                 <p><strong>Master</strong><span>Vergleiche d mit log<sub>b</sub>(a)</span></p>
                 <p><strong>Subtract</strong><span>Entfalte die Ebenen als Summe</span></p>

@@ -612,6 +612,345 @@ const masterCaseChoices = [
   },
 ];
 
+const subjectLearningAreas = {
+  basics: {
+    defaultTopic: "daten",
+    topics: {
+      daten: {
+        nav: "Daten & Information",
+        title: "Daten und Informationen",
+        copy: "Daten sind Zeichen oder Messwerte. Information entsteht erst, wenn diese Daten in einem Kontext interpretiert werden.",
+        concepts: [
+          ["Daten", "Rohwerte wie 42, true, Pixelwerte oder Tabellenzellen."],
+          ["Information", "Bedeutung, die durch Kontext entsteht: 42 kann Alter, Temperatur oder ID sein."],
+          ["Codierung", "Regeln, mit denen Informationen als Daten dargestellt werden, etwa Binärzahlen oder Zeichenkodierung."],
+        ],
+        questions: [
+          {
+            title: "Begriff unterscheiden",
+            question: "Welche Aussage beschreibt den Unterschied zwischen Daten und Information am besten?",
+            choices: [
+              "Daten erhalten Bedeutung erst durch Interpretation im Kontext.",
+              "Information ist immer binär, Daten sind immer Text.",
+              "Daten und Information meinen exakt dasselbe.",
+              "Information entsteht nur in relationalen Datenbanken.",
+            ],
+            answer: "Daten erhalten Bedeutung erst durch Interpretation im Kontext.",
+            explanation: "Der Kontext macht aus einem Rohwert eine Aussage. Die Zahl 21 ist nur ein Datum; als Alter oder Punktzahl wird sie Information.",
+          },
+        ],
+      },
+      datenbanken: {
+        nav: "Datenbanken",
+        title: "Relationale Datenbanken",
+        copy: "Relationale Datenbanken organisieren Informationen in Tabellen. Beziehungen entstehen über Schlüssel statt über doppelt gespeicherte Werte.",
+        concepts: [
+          ["Relation", "Eine Tabelle mit Zeilen und Spalten."],
+          ["Primärschlüssel", "Eindeutige Kennung einer Zeile, zum Beispiel kunden_id."],
+          ["Fremdschlüssel", "Verweis auf einen Primärschlüssel in einer anderen Tabelle."],
+        ],
+        questions: [
+          {
+            title: "Schlüssel erkennen",
+            question: "Eine Tabelle Bestellung enthält kunden_id. Diese verweist auf Kunde.id. Was ist kunden_id in Bestellung?",
+            choices: ["Fremdschlüssel", "Primärschlüssel der Kundentabelle", "Attribut ohne Beziehung", "Sortierschlüssel"],
+            answer: "Fremdschlüssel",
+            explanation: "kunden_id verweist aus Bestellung heraus auf eine Zeile in Kunde. Genau diese Verweisrolle nennt man Fremdschlüssel.",
+          },
+        ],
+      },
+      modellierung: {
+        nav: "Modellierung",
+        title: "UML, Syntax und Automaten",
+        copy: "Modellierung macht Strukturen sichtbar, bevor man sie implementiert: Klassen, Regeln, Zustände und Übergänge.",
+        concepts: [
+          ["UML-Klasse", "Beschreibt Attribute, Methoden und Beziehungen eines Objekttyps."],
+          ["Syntaxbeschreibung", "Legt fest, welche Zeichenfolgen formal gültig sind."],
+          ["Endlicher Automat", "Verarbeitet Eingaben über Zustände und Übergänge."],
+        ],
+        questions: [
+          {
+            title: "Modell wählen",
+            question: "Du möchtest beschreiben, dass ein Login zwischen 'ausgeloggt', 'eingeloggt' und 'gesperrt' wechseln kann. Welches Modell passt am besten?",
+            choices: ["Endlicher Automat", "Primärschlüssel", "Merge Sort", "Histogramm"],
+            answer: "Endlicher Automat",
+            explanation: "Zustände und Übergänge sind genau die Sprache endlicher Automaten. UML-Klassen wären eher für Objektstrukturen geeignet.",
+          },
+        ],
+      },
+      berechenbarkeit: {
+        nav: "Berechenbarkeit",
+        title: "Turingmaschinen und Grenzen",
+        copy: "Berechenbarkeit fragt, was Algorithmen grundsätzlich leisten können und wo es prinzipielle Grenzen gibt.",
+        concepts: [
+          ["Turingmaschine", "Abstraktes Rechenmodell mit Band, Kopf, Zuständen und Übergangsregeln."],
+          ["Algorithmus", "Endliche, eindeutige Vorschrift zur Lösung eines Problems."],
+          ["Grenzen", "Manche Probleme sind nicht algorithmisch entscheidbar."],
+        ],
+        questions: [
+          {
+            title: "Grundidee verstehen",
+            question: "Wozu nutzt man Turingmaschinen in der Informatik vor allem?",
+            choices: [
+              "Als abstraktes Modell, um Berechenbarkeit zu untersuchen.",
+              "Als schnellere Variante relationaler Datenbanken.",
+              "Als Sprache für Webseitenlayouts.",
+              "Als Sortierverfahren für Arrays.",
+            ],
+            answer: "Als abstraktes Modell, um Berechenbarkeit zu untersuchen.",
+            explanation: "Turingmaschinen sind kein Praxiswerkzeug für Datenbanken oder Webseiten, sondern ein theoretisches Modell für Rechenbarkeit.",
+          },
+        ],
+      },
+      ueberblick: {
+        nav: "Überblick",
+        title: "Landkarte der Informatik",
+        copy: "Grundlagen verbinden die anderen Lernfelder: Algorithmik analysiert Verfahren, Programmieren setzt sie um, Data Science arbeitet mit Daten, KI lernt Muster.",
+        concepts: [
+          ["Algorithmik", "Wie löse ich ein Problem effizient?"],
+          ["Programmieren", "Wie formuliere ich eine Lösung als ausführbaren Code?"],
+          ["Data Science & KI", "Wie nutze ich Daten, um Fragen zu beantworten oder Muster zu lernen?"],
+        ],
+        questions: [
+          {
+            title: "Lernfeld zuordnen",
+            question: "Ein Lerninhalt erklärt, warum binäre Suche O(log n) benötigt. In welches Feld gehört er am klarsten?",
+            choices: ["Algorithmik", "Programmieren", "Relationale Datenbanken", "UML-Modellierung"],
+            answer: "Algorithmik",
+            explanation: "Hier geht es um Verfahren und Effizienz. Die konkrete Umsetzung in Python oder Java wäre dann Programmieren.",
+          },
+        ],
+      },
+    },
+  },
+  programming: {
+    defaultTopic: "python",
+    topics: {
+      python: {
+        nav: "Python",
+        title: "Python lesen",
+        copy: "Python eignet sich gut für Algorithmik, Automatisierung und Datenarbeit, weil die Syntax nah an Pseudocode liegt.",
+        concepts: [
+          ["Einrückung", "Blöcke entstehen durch Einrückung statt durch geschweifte Klammern."],
+          ["Listen", "Flexible Sequenzen, die mit Schleifen und Indizes verarbeitet werden."],
+          ["Funktionen", "Wiederverwendbare Blöcke mit Parametern und Rückgabewerten."],
+        ],
+        questions: [
+          {
+            title: "Python-Ausgabe",
+            snippet: asCode(["werte = [2, 4, 6]", "summe = 0", "for wert in werte:", "    summe += wert", "print(summe)"]),
+            question: "Welche Ausgabe erzeugt der Code?",
+            choices: ["12", "246", "6", "Fehler wegen Einrückung"],
+            answer: "12",
+            explanation: "Die Schleife addiert 2, 4 und 6. Dadurch steht am Ende 12 in summe.",
+          },
+        ],
+      },
+      java: {
+        nav: "Java",
+        title: "Java-Grundidee",
+        copy: "Java ist stark typisiert und objektorientiert. Viele Konzepte wie Klassen, Methoden und Sichtbarkeit werden hier sehr explizit.",
+        concepts: [
+          ["Typen", "Variablen haben feste Typen wie int, double oder String."],
+          ["Klassen", "Bündeln Zustand und Verhalten in einem Bauplan."],
+          ["main", "Typischer Einstiegspunkt eines Java-Programms."],
+        ],
+        questions: [
+          {
+            title: "Typ verstehen",
+            snippet: asCode(["int punkte = 7;", "punkte = punkte + 3;"]),
+            question: "Welchen Wert hat punkte nach diesen Zeilen?",
+            choices: ["10", "73", "7", "Der Typ int erlaubt keine Addition"],
+            answer: "10",
+            explanation: "int speichert ganze Zahlen. Die zweite Zeile addiert 3 zum bisherigen Wert 7.",
+          },
+        ],
+      },
+      cpp: {
+        nav: "C++",
+        title: "C++ bewusst lesen",
+        copy: "C++ ist nah an Speicher- und Laufzeitfragen. Für Grundlagen sind Typen, Schleifen und Referenzen besonders wichtig.",
+        concepts: [
+          ["Compiler", "C++ wird vor der Ausführung übersetzt."],
+          ["Vektor", "std::vector ist ein dynamisches Array."],
+          ["Referenz", "Kann auf bestehende Werte zeigen, ohne sie zu kopieren."],
+        ],
+        questions: [
+          {
+            title: "Schleife lesen",
+            snippet: asCode(["int sum = 0;", "for (int i = 1; i <= 3; i++) {", "  sum += i;", "}"]),
+            question: "Welcher Wert steht am Ende in sum?",
+            choices: ["6", "3", "4", "9"],
+            answer: "6",
+            explanation: "Die Schleife addiert 1 + 2 + 3. Das ergibt 6.",
+          },
+        ],
+      },
+      web: {
+        nav: "HTML/CSS/JS",
+        title: "Web-Grundlagen",
+        copy: "HTML beschreibt Struktur, CSS Gestaltung und JavaScript Verhalten. Diese Trennung verhindert Durcheinander im Code.",
+        concepts: [
+          ["HTML", "Semantische Struktur: Überschriften, Absätze, Buttons, Formulare."],
+          ["CSS", "Layout, Farben, Abstände und responsive Darstellung."],
+          ["JavaScript", "Interaktion, Zustände und dynamische Inhalte."],
+        ],
+        questions: [
+          {
+            title: "Rolle zuordnen",
+            snippet: asCode(["<button class=\"primary-btn\">Speichern</button>"]),
+            question: "Was beschreibt diese Zeile hauptsächlich?",
+            choices: ["HTML-Struktur", "CSS-Farbregel", "Java-Klasse", "SQL-Abfrage"],
+            answer: "HTML-Struktur",
+            explanation: "Die Zeile erzeugt ein Button-Element. Die Klasse kann CSS ansprechen, ist aber selbst noch keine CSS-Regel.",
+          },
+        ],
+      },
+      konzepte: {
+        nav: "Konzepte",
+        title: "Sprachübergreifende Konzepte",
+        copy: "Viele Ideen bleiben gleich, auch wenn die Syntax wechselt: Variablen, Bedingungen, Schleifen, Funktionen und Datenstrukturen.",
+        concepts: [
+          ["Variable", "Benannter Speicher für einen Wert."],
+          ["Bedingung", "Entscheidet, welcher Codepfad ausgeführt wird."],
+          ["Schleife", "Wiederholt einen Block, bis eine Bedingung endet."],
+        ],
+        questions: [
+          {
+            title: "Konzept erkennen",
+            question: "Welches Konzept steckt hinter 'solange die Liste noch Elemente hat, wiederhole den Schritt'?",
+            choices: ["Schleife", "Klasse", "Primärschlüssel", "HTML-Tag"],
+            answer: "Schleife",
+            explanation: "Eine Schleife wiederholt Code abhängig von einer Bedingung oder über eine Sammlung.",
+          },
+        ],
+      },
+    },
+  },
+  dataScience: {
+    defaultTopic: "datenblick",
+    topics: {
+      datenblick: {
+        nav: "Datenblick",
+        title: "Daten verstehen",
+        copy: "Data Science beginnt nicht mit Modellen, sondern mit guten Fragen an Daten: Was bedeuten Spalten, Zeilen, Werte und Ausreißer?",
+        concepts: [
+          ["Zeile", "Ein Beobachtungsfall, zum Beispiel eine Bestellung."],
+          ["Spalte", "Ein Merkmal, zum Beispiel Preis oder Datum."],
+          ["Datenqualität", "Fehlende, falsche oder uneinheitliche Werte beeinflussen Ergebnisse."],
+        ],
+        questions: [
+          {
+            title: "Tabellenverständnis",
+            question: "In einer Tabelle orders steht jede Zeile für eine Bestellung. Was beschreibt dann die Spalte amount?",
+            choices: ["Ein Merkmal jeder Bestellung", "Eine ganze Datenbank", "Immer einen Primärschlüssel", "Ein Machine-Learning-Modell"],
+            answer: "Ein Merkmal jeder Bestellung",
+            explanation: "Eine Spalte beschreibt ein Merkmal, das für jede Zeile einen Wert haben kann.",
+          },
+        ],
+      },
+      mysql: {
+        nav: "MySQL",
+        title: "SQL mit MySQL",
+        copy: "SQL beantwortet Fragen an Tabellen. Für den Anfang sind SELECT, WHERE, GROUP BY und JOIN die wichtigsten Bausteine.",
+        concepts: [
+          ["SELECT", "Wählt Spalten oder berechnete Werte aus."],
+          ["WHERE", "Filtert Zeilen vor der Auswertung."],
+          ["GROUP BY", "Fasst Zeilen zu Gruppen zusammen, etwa pro Kunde."],
+        ],
+        questions: [
+          {
+            title: "SQL lesen",
+            snippet: asCode(["SELECT customer_id, COUNT(*)", "FROM orders", "GROUP BY customer_id;"]),
+            question: "Was liefert diese Abfrage?",
+            choices: [
+              "Die Anzahl der Bestellungen pro Kunde.",
+              "Alle Kunden ohne Bestellung.",
+              "Den höchsten Bestellwert pro Tag.",
+              "Eine zufällige Stichprobe aus orders.",
+            ],
+            answer: "Die Anzahl der Bestellungen pro Kunde.",
+            explanation: "GROUP BY customer_id bildet Kundengruppen; COUNT(*) zählt die Zeilen je Gruppe.",
+          },
+        ],
+      },
+      pyspark: {
+        nav: "PySpark",
+        title: "PySpark einordnen",
+        copy: "PySpark verarbeitet große Datenmengen verteilt. Es ist sinnvoll, wenn Daten zu groß für einfache lokale Auswertung werden.",
+        concepts: [
+          ["DataFrame", "Tabellarische Datenstruktur mit Spaltennamen."],
+          ["Transformation", "Beschreibt eine Umformung, etwa filter oder select."],
+          ["Action", "Löst die Berechnung aus, etwa count oder show."],
+        ],
+        questions: [
+          {
+            title: "PySpark-Idee",
+            snippet: asCode(["orders.filter(orders.amount > 100).count()"]),
+            question: "Was ist die fachliche Bedeutung dieser Zeile?",
+            choices: [
+              "Zähle Bestellungen mit Betrag über 100.",
+              "Sortiere alle Bestellungen alphabetisch.",
+              "Lösche alle Bestellungen unter 100.",
+              "Erzeuge ein UML-Klassendiagramm.",
+            ],
+            answer: "Zähle Bestellungen mit Betrag über 100.",
+            explanation: "filter behält passende Zeilen, count zählt sie. Das ist eine typische DataFrame-Auswertung.",
+          },
+        ],
+      },
+      analyse: {
+        nav: "Analyse",
+        title: "Aggregation und Muster",
+        copy: "Viele Datenfragen laufen auf Aggregation hinaus: zählen, summieren, gruppieren, vergleichen und Muster vorsichtig interpretieren.",
+        concepts: [
+          ["Aggregation", "Viele Zeilen werden zu Kennzahlen zusammengefasst."],
+          ["Korrelation", "Zwei Größen bewegen sich gemeinsam, ohne automatisch Ursache zu beweisen."],
+          ["Visualisierung", "Macht Verteilungen und Ausreißer sichtbar."],
+        ],
+        questions: [
+          {
+            title: "Interpretation",
+            question: "Warum beweist eine Korrelation allein noch keine Ursache?",
+            choices: [
+              "Weil ein dritter Faktor beide Größen beeinflussen kann.",
+              "Weil Korrelation nur bei Textdaten existiert.",
+              "Weil Korrelation immer falsch berechnet wird.",
+              "Weil Datenbanken keine Zahlen speichern können.",
+            ],
+            answer: "Weil ein dritter Faktor beide Größen beeinflussen kann.",
+            explanation: "Gemeinsames Auftreten ist ein Hinweis, aber kein Beweis für Ursache und Wirkung.",
+          },
+        ],
+      },
+      mlAusblick: {
+        nav: "ML-Ausblick",
+        title: "Brücke zu KI und maschinellem Lernen",
+        copy: "Maschinelles Lernen nutzt Daten, um Muster für Vorhersagen zu lernen. Es sollte später ein eigenes Lernfeld werden, statt Data Science zu überladen.",
+        concepts: [
+          ["Training", "Modell lernt Muster aus Beispieldaten."],
+          ["Testdaten", "Prüfen, ob das Modell auf neue Fälle übertragbar ist."],
+          ["Overfitting", "Modell merkt sich Trainingsdaten zu stark und generalisiert schlecht."],
+        ],
+        questions: [
+          {
+            title: "ML-Grundidee",
+            question: "Wozu trennt man Trainings- und Testdaten?",
+            choices: [
+              "Um zu prüfen, ob das Modell auf neue Daten generalisiert.",
+              "Um SQL-Abfragen schneller zu sortieren.",
+              "Um HTML und CSS zu trennen.",
+              "Um Primärschlüssel automatisch zu löschen.",
+            ],
+            answer: "Um zu prüfen, ob das Modell auf neue Daten generalisiert.",
+            explanation: "Ein Modell soll nicht nur bekannte Beispiele auswendig können, sondern auf neue Fälle sinnvoll reagieren.",
+          },
+        ],
+      },
+    },
+  },
+};
+
 const masterTrainingConfigs = {
   "Divide and Conquer / Master-Theorem": {
     heading: "Master-Theorem trainieren",
@@ -995,7 +1334,7 @@ const masterLearnCases = {
 
 const masterLearnTopics = {
   "Divide and Conquer / Master-Theorem": {
-    formula: 'T(n) = aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup>',
+    formula: 'T(n) = <span class="math-token math-token-a">a</span>T(<span class="frac"><span>n</span><span class="math-token math-token-b">b</span></span>) + <span class="math-token math-token-c">c</span> · n<sup><span class="math-token math-token-d">d</span></sup>',
     summary: "Nutze das Master-Theorem, wenn die Rekurrenz aus a gleich großen Teilproblemen der Größe n/b und einer polynomialen Zusatzarbeit c · n<sup>d</sup> besteht.",
     tiles: [
       ["a", "Anzahl der rekursiven Teilprobleme"],
@@ -1436,6 +1775,12 @@ const graphAlgorithmInfo = {
 const state = {
   currentView: "home",
   runtimeQuestion: null,
+  basicsTopic: subjectLearningAreas.basics.defaultTopic,
+  basicsQuestion: null,
+  programmingTopic: subjectLearningAreas.programming.defaultTopic,
+  programmingQuestion: null,
+  dataScienceTopic: subjectLearningAreas.dataScience.defaultTopic,
+  dataScienceQuestion: null,
   masterQuestion: null,
   showMasterHelp: false,
   masterSection: "learn",
@@ -1525,6 +1870,32 @@ const el = {
   runtimeSnippet: document.getElementById("runtime-snippet"),
   runtimeOptions: document.getElementById("runtime-options"),
   runtimeFeedback: document.getElementById("runtime-feedback"),
+  basicsTopicNav: document.getElementById("basics-topic-nav"),
+  basicsTopicTitle: document.getElementById("basics-topic-title"),
+  basicsTopicCopy: document.getElementById("basics-topic-copy"),
+  basicsConcepts: document.getElementById("basics-concepts"),
+  basicsQuestionTitle: document.getElementById("basics-question-title"),
+  basicsQuestion: document.getElementById("basics-question"),
+  basicsOptions: document.getElementById("basics-options"),
+  basicsFeedback: document.getElementById("basics-feedback"),
+  programmingTopicNav: document.getElementById("programming-topic-nav"),
+  programmingTopicTitle: document.getElementById("programming-topic-title"),
+  programmingTopicCopy: document.getElementById("programming-topic-copy"),
+  programmingConcepts: document.getElementById("programming-concepts"),
+  programmingQuestionTitle: document.getElementById("programming-question-title"),
+  programmingSnippet: document.getElementById("programming-snippet"),
+  programmingQuestion: document.getElementById("programming-question"),
+  programmingOptions: document.getElementById("programming-options"),
+  programmingFeedback: document.getElementById("programming-feedback"),
+  dataScienceTopicNav: document.getElementById("data-science-topic-nav"),
+  dataScienceTopicTitle: document.getElementById("data-science-topic-title"),
+  dataScienceTopicCopy: document.getElementById("data-science-topic-copy"),
+  dataScienceConcepts: document.getElementById("data-science-concepts"),
+  dataScienceQuestionTitle: document.getElementById("data-science-question-title"),
+  dataScienceSnippet: document.getElementById("data-science-snippet"),
+  dataScienceQuestion: document.getElementById("data-science-question"),
+  dataScienceOptions: document.getElementById("data-science-options"),
+  dataScienceFeedback: document.getElementById("data-science-feedback"),
   masterTitle: document.getElementById("master-title"),
   masterRecurrence: document.getElementById("master-recurrence"),
   masterTask: document.getElementById("master-task"),
@@ -1692,6 +2063,9 @@ el.learningPointsToggle.addEventListener("click", () => {
 });
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
+setupSubjectLearningArea("basics");
+setupSubjectLearningArea("programming");
+setupSubjectLearningArea("dataScience");
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
 el.solveCustomRecurrence.addEventListener("click", solveCustomRecurrence);
@@ -1792,6 +2166,9 @@ el.sandboxValue.addEventListener("keydown", (event) => {
 });
 
 createRuntimeQuestion();
+renderSubjectLearningArea("basics");
+renderSubjectLearningArea("programming");
+renderSubjectLearningArea("dataScience");
 createMasterQuestion();
 setMasterSection("learn");
 renderMasterLearning();
@@ -2264,6 +2641,126 @@ function checkRuntimeQuestion() {
   }
 }
 
+function setupSubjectLearningArea(areaKey) {
+  const refs = getSubjectRefs(areaKey);
+  refs.nav.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-subject-topic]");
+    if (!button) {
+      return;
+    }
+    state[`${areaKey}Topic`] = button.dataset.subjectTopic;
+    renderSubjectLearningArea(areaKey);
+  });
+  document.getElementById(`new-${subjectDomId(areaKey)}-question`).addEventListener("click", () => createSubjectQuestion(areaKey));
+  document.getElementById(`check-${subjectDomId(areaKey)}-question`).addEventListener("click", () => checkSubjectQuestion(areaKey));
+}
+
+function getSubjectRefs(areaKey) {
+  if (areaKey === "basics") {
+    return {
+      nav: el.basicsTopicNav,
+      title: el.basicsTopicTitle,
+      copy: el.basicsTopicCopy,
+      concepts: el.basicsConcepts,
+      questionTitle: el.basicsQuestionTitle,
+      snippet: null,
+      question: el.basicsQuestion,
+      options: el.basicsOptions,
+      feedback: el.basicsFeedback,
+    };
+  }
+  if (areaKey === "programming") {
+    return {
+      nav: el.programmingTopicNav,
+      title: el.programmingTopicTitle,
+      copy: el.programmingTopicCopy,
+      concepts: el.programmingConcepts,
+      questionTitle: el.programmingQuestionTitle,
+      snippet: el.programmingSnippet,
+      question: el.programmingQuestion,
+      options: el.programmingOptions,
+      feedback: el.programmingFeedback,
+    };
+  }
+  return {
+    nav: el.dataScienceTopicNav,
+    title: el.dataScienceTopicTitle,
+    copy: el.dataScienceTopicCopy,
+    concepts: el.dataScienceConcepts,
+    questionTitle: el.dataScienceQuestionTitle,
+    snippet: el.dataScienceSnippet,
+    question: el.dataScienceQuestion,
+    options: el.dataScienceOptions,
+    feedback: el.dataScienceFeedback,
+  };
+}
+
+function getSubjectArea(areaKey) {
+  return areaKey === "dataScience" ? subjectLearningAreas.dataScience : subjectLearningAreas[areaKey];
+}
+
+function subjectDomId(areaKey) {
+  return areaKey === "dataScience" ? "data-science" : areaKey;
+}
+
+function renderSubjectLearningArea(areaKey) {
+  const area = getSubjectArea(areaKey);
+  const refs = getSubjectRefs(areaKey);
+  const topicKey = state[`${areaKey}Topic`] || area.defaultTopic;
+  const topic = area.topics[topicKey] || area.topics[area.defaultTopic];
+
+  refs.nav.innerHTML = Object.entries(area.topics).map(([key, item]) => `
+    <button class="topic-nav-btn${key === topicKey ? " is-active" : ""}" type="button" data-subject-topic="${key}" aria-pressed="${key === topicKey}">
+      ${item.nav}
+    </button>
+  `).join("");
+  refs.title.textContent = topic.title;
+  refs.copy.textContent = topic.copy;
+  refs.concepts.innerHTML = topic.concepts.map(([label, text]) => `
+    <article class="concept-card">
+      <strong>${label}</strong>
+      <p>${formatInlineMathLabel(text)}</p>
+    </article>
+  `).join("");
+  createSubjectQuestion(areaKey);
+}
+
+function createSubjectQuestion(areaKey) {
+  const area = getSubjectArea(areaKey);
+  const refs = getSubjectRefs(areaKey);
+  const topic = area.topics[state[`${areaKey}Topic`]] || area.topics[area.defaultTopic];
+  const question = sample(topic.questions);
+  state[`${areaKey}Question`] = question;
+
+  refs.questionTitle.textContent = question.title;
+  refs.question.innerHTML = formatInlineMathLabel(question.question);
+  if (refs.snippet) {
+    refs.snippet.classList.toggle("is-hidden", !question.snippet);
+    refs.snippet.querySelector("code").textContent = question.snippet || "";
+  }
+  renderChoices(
+    refs.options,
+    subjectDomId(areaKey),
+    shuffle(question.choices).map((choice) => ({ value: choice, label: choice })),
+  );
+  setFeedback(refs.feedback, "");
+}
+
+function checkSubjectQuestion(areaKey) {
+  const refs = getSubjectRefs(areaKey);
+  const question = state[`${areaKey}Question`];
+  const selected = getSelectedValue(`${subjectDomId(areaKey)}-choice`);
+  if (!selected) {
+    setFeedback(refs.feedback, "Wähle zuerst eine Antwort aus. Danach bekommst du eine kurze Begründung.", "wrong");
+    return;
+  }
+  if (selected === question.answer) {
+    setFeedback(refs.feedback, `Richtig. ${question.explanation}`, "correct");
+    return;
+  }
+  setFeedback(refs.feedback, `Noch nicht. Korrekt ist: ${question.answer}. ${question.explanation}`, "wrong");
+}
+
 function createMasterQuestion() {
   const config = getMasterTrainingConfig();
   const pools = {
@@ -2285,7 +2782,7 @@ function createMasterQuestion() {
   };
   syncMasterTrainingTopic();
   el.masterTitle.textContent = `Klausuraufgabe: ${config.heading}`;
-  el.masterRecurrence.innerHTML = pattern.recurrenceHtml;
+  el.masterRecurrence.innerHTML = renderAnnotatedRecurrence(pattern, state.masterTrainingTopic);
   el.masterTask.innerHTML = config.task;
   renderMasterWorkflow(runtimeChoices);
   setFeedback(el.masterFeedback, "");
@@ -2586,10 +3083,10 @@ function renderMasterWorkflow(runtimeChoices) {
         <div>
           <p class="tree-label">Parameter selbst ablesen</p>
           <div class="master-parameter-inputs">
-            <label>a<input id="master-input-a" type="number" min="1" inputmode="numeric"></label>
-            <label>b<input id="master-input-b" type="number" min="2" inputmode="numeric"></label>
-            <label>c<input id="master-input-c" type="number" min="1" inputmode="numeric"></label>
-            <label>d<input id="master-input-d" type="number" min="0" inputmode="numeric"></label>
+            <label>${masterToken("a", "a")}<input id="master-input-a" type="number" min="1" inputmode="numeric"></label>
+            <label>${masterToken("b", "b")}<input id="master-input-b" type="number" min="2" inputmode="numeric"></label>
+            <label>${masterToken("c", "c")}<input id="master-input-c" type="number" min="1" inputmode="numeric"></label>
+            <label>${masterToken("d", "d")}<input id="master-input-d" type="number" min="0" inputmode="numeric"></label>
           </div>
         </div>
       </section>
@@ -2880,8 +3377,9 @@ function renderMasterLearning(options = {}) {
   el.masterLearnOverview.innerHTML = `
     <p class="tree-label">Grundidee</p>
     <p class="master-main-formula">${formatInlineMathLabel(topic.formula)}</p>
+    ${el.masterLearnCase.value === "Divide and Conquer / Master-Theorem" ? renderFormulaLegend() : ""}
     <div class="master-parameter-grid">
-      ${topic.tiles.map(([title, text]) => `<p><strong>${title}</strong><span>${formatInlineMathLabel(text)}</span></p>`).join("")}
+      ${topic.tiles.map(([title, text]) => `<p><strong>${formatMasterParameterTitle(title)}</strong><span>${formatInlineMathLabel(text)}</span></p>`).join("")}
     </div>
     <p class="section-copy">${formatInlineMathLabel(topic.summary)}</p>
   `;
@@ -2916,6 +3414,38 @@ function renderMasterLearning(options = {}) {
   el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
   el.masterLearnPrev.disabled = state.masterLearnStep === 0;
   el.masterLearnNext.disabled = state.masterLearnStep === lesson.steps.length - 1;
+}
+
+function renderFormulaLegend() {
+  return `
+    <div class="formula-legend">
+      <span>${masterToken("a", "a")} Teilprobleme</span>
+      <span>${masterToken("b", "b")} Verkleinerung</span>
+      <span>${masterToken("c", "c")} Faktor</span>
+      <span>${masterToken("d", "d")} Exponent</span>
+    </div>
+  `;
+}
+
+function masterToken(type, content) {
+  return `<span class="math-token math-token-${type}">${content}</span>`;
+}
+
+function formatMasterParameterTitle(title) {
+  return /^[abcd]$/.test(title) ? masterToken(title, title) : title;
+}
+
+function renderAnnotatedRecurrence(pattern, topic) {
+  if (topic !== "Divide and Conquer / Master-Theorem" || !Number.isFinite(pattern.a)) {
+    return pattern.recurrenceHtml;
+  }
+
+  const denominator = `<span class="frac"><span>n</span><span>${masterToken("b", pattern.b)}</span></span>`;
+  const coefficient = pattern.c === 1 ? "" : masterToken("c", pattern.c);
+  const work = pattern.d === 0
+    ? masterToken("c", pattern.c)
+    : `${coefficient}${pattern.d === 1 ? "n" : `n<sup>${masterToken("d", pattern.d)}</sup>`}`;
+  return `T(n) = ${masterToken("a", pattern.a)}T(${denominator}) + ${work}`;
 }
 
 function renderMasterStepMemory(lesson, currentStep) {
