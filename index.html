@@ -129,10 +129,21 @@ queue: [A, C, D]</pre>
             <span>Freigeschaltet</span>
             <strong>1 / 6</strong>
           </div>
+          <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button">
+            Bewegung testen
+          </button>
         </div>
 
-        <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen">
-          <li class="learning-path-step is-current">
+        <div class="learning-path-stage">
+          <div id="path-avatar" class="path-avatar" aria-hidden="true">
+            <span class="avatar-antenna"></span>
+            <span class="avatar-head"><i></i><i></i></span>
+            <span class="avatar-body">IT</span>
+            <span class="avatar-shadow"></span>
+          </div>
+
+          <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen">
+          <li class="learning-path-step is-current" data-path-step="1">
             <span class="path-node">1</span>
             <div class="path-card">
               <span class="path-status">Startbereit</span>
@@ -141,7 +152,7 @@ queue: [A, C, D]</pre>
               <button class="primary-btn" type="button" disabled>Lektion starten</button>
             </div>
           </li>
-          <li class="learning-path-step is-locked">
+          <li class="learning-path-step is-locked" data-path-step="2">
             <span class="path-node">2</span>
             <div class="path-card">
               <span class="path-status">20 Punkte benötigt</span>
@@ -149,7 +160,7 @@ queue: [A, C, D]</pre>
               <p>Wird nach erfolgreichem Abschluss der ersten Station freigeschaltet.</p>
             </div>
           </li>
-          <li class="learning-path-step is-locked">
+          <li class="learning-path-step is-locked" data-path-step="3">
             <span class="path-node">3</span>
             <div class="path-card">
               <span class="path-status">45 Punkte benötigt</span>
@@ -157,7 +168,7 @@ queue: [A, C, D]</pre>
               <p>Inhalte und Aufgaben werden später ergänzt.</p>
             </div>
           </li>
-          <li class="learning-path-step is-locked">
+          <li class="learning-path-step is-locked" data-path-step="4">
             <span class="path-node">4</span>
             <div class="path-card">
               <span class="path-status">75 Punkte benötigt</span>
@@ -165,7 +176,7 @@ queue: [A, C, D]</pre>
               <p>Inhalte und Aufgaben werden später ergänzt.</p>
             </div>
           </li>
-          <li class="learning-path-step is-locked">
+          <li class="learning-path-step is-locked" data-path-step="5">
             <span class="path-node">5</span>
             <div class="path-card">
               <span class="path-status">110 Punkte benötigt</span>
@@ -173,7 +184,7 @@ queue: [A, C, D]</pre>
               <p>Inhalte und Aufgaben werden später ergänzt.</p>
             </div>
           </li>
-          <li class="learning-path-step is-locked">
+          <li class="learning-path-step is-locked" data-path-step="6">
             <span class="path-node">6</span>
             <div class="path-card">
               <span class="path-status">150 Punkte benötigt</span>
@@ -181,7 +192,8 @@ queue: [A, C, D]</pre>
               <p>Die letzte Station des ersten Lernpfads.</p>
             </div>
           </li>
-        </ol>
+          </ol>
+        </div>
       </section>
 
       <section id="algorithmics-view" class="app-view is-hidden">

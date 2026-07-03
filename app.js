@@ -1558,12 +1558,17 @@ const state = {
   logoRideTimer: null,
   logoIntroPlayed: false,
   tileScrollFrame: null,
+  pathDemoTimer: null,
+  pathDemoIndex: 0,
 };
 
 const el = {
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
+  pathAvatar: document.getElementById("path-avatar"),
+  pathSteps: [...document.querySelectorAll("[data-path-step]")],
+  pathPreview: document.getElementById("preview-learning-path"),
   homeView: document.getElementById("home-view"),
   learningPathView: document.getElementById("learning-path-view"),
   algorithmicsView: document.getElementById("algorithmics-view"),
@@ -1689,7 +1694,13 @@ el.moduleTiles.forEach((tile) => {
   tile.addEventListener("pointerleave", () => resetTileMotion(tile));
 });
 window.addEventListener("scroll", queueScrollTileMotion, { passive: true });
-window.addEventListener("resize", queueScrollTileMotion);
+window.addEventListener("resize", () => {
+  queueScrollTileMotion();
+  if (state.currentView === "learning-path") {
+    movePathAvatar(state.pathDemoIndex, true);
+  }
+});
+el.pathPreview.addEventListener("click", previewLearningPath);
 document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
@@ -1802,6 +1813,9 @@ function setActiveView(viewName) {
   if (viewName !== "search") {
     stopSearchPlayback();
   }
+  if (viewName !== "learning-path") {
+    stopLearningPathPreview();
+  }
   state.currentView = viewName;
 
   const views = {
@@ -1831,10 +1845,75 @@ function setActiveView(viewName) {
   if (viewName === "avl") {
     createDataStructureQuestion();
   }
+  if (viewName === "learning-path") {
+    state.pathDemoIndex = 0;
+    window.requestAnimationFrame(() => movePathAvatar(0, true));
+  }
 
   queueScrollTileMotion();
   playLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function movePathAvatar(stepIndex, instant = false) {
+  const step = el.pathSteps[stepIndex];
+  const node = step?.querySelector(".path-node");
+  const stage = el.pathAvatar?.parentElement;
+  if (!node || !stage) {
+    return;
+  }
+
+  const stageRect = stage.getBoundingClientRect();
+  const nodeRect = node.getBoundingClientRect();
+  const x = nodeRect.left - stageRect.left + (nodeRect.width - el.pathAvatar.offsetWidth) / 2;
+  const y = nodeRect.top - stageRect.top + (nodeRect.height / 2) - el.pathAvatar.offsetHeight + 8;
+
+  el.pathAvatar.style.transitionDuration = instant ? "0ms" : "";
+  el.pathAvatar.style.setProperty("--avatar-x", `${x}px`);
+  el.pathAvatar.style.setProperty("--avatar-y", `${y}px`);
+  el.pathAvatar.classList.toggle("is-moving", !instant);
+  if (instant) {
+    window.requestAnimationFrame(() => {
+      el.pathAvatar.style.transitionDuration = "";
+    });
+  }
+}
+
+function previewLearningPath() {
+  stopLearningPathPreview();
+  state.pathDemoIndex = 0;
+  el.pathPreview.disabled = true;
+  movePathAvatar(0, true);
+
+  const advance = () => {
+    state.pathDemoIndex += 1;
+    movePathAvatar(state.pathDemoIndex);
+
+    if (state.pathDemoIndex < el.pathSteps.length - 1) {
+      state.pathDemoTimer = window.setTimeout(advance, 1050);
+      return;
+    }
+
+    state.pathDemoTimer = window.setTimeout(() => {
+      state.pathDemoIndex = 0;
+      movePathAvatar(0);
+      state.pathDemoTimer = window.setTimeout(() => {
+        el.pathAvatar.classList.remove("is-moving");
+        el.pathPreview.disabled = false;
+        state.pathDemoTimer = null;
+      }, 950);
+    }, 1300);
+  };
+
+  state.pathDemoTimer = window.setTimeout(advance, 350);
+}
+
+function stopLearningPathPreview() {
+  window.clearTimeout(state.pathDemoTimer);
+  state.pathDemoTimer = null;
+  state.pathDemoIndex = 0;
+  el.pathPreview.disabled = false;
+  el.pathAvatar.classList.remove("is-moving");
 }
 
 function playLogoRide() {
