@@ -1565,6 +1565,7 @@ const el = {
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
   homeView: document.getElementById("home-view"),
+  learningPathView: document.getElementById("learning-path-view"),
   algorithmicsView: document.getElementById("algorithmics-view"),
   basicsView: document.getElementById("basics-view"),
   programmingView: document.getElementById("programming-view"),
@@ -1805,6 +1806,7 @@ function setActiveView(viewName) {
 
   const views = {
     home: el.homeView,
+    "learning-path": el.learningPathView,
     algorithmics: el.algorithmicsView,
     basics: el.basicsView,
     programming: el.programmingView,

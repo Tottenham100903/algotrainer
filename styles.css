@@ -72,6 +72,49 @@ body {
   z-index: 1;
 }
 
+.learning-path-entry {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 3;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  border: 1px solid rgba(13, 107, 95, 0.18);
+  padding: 0.7rem 1rem;
+  color: var(--primary-strong);
+  background: rgba(255, 253, 248, 0.82);
+  box-shadow: 0 14px 32px rgba(78, 63, 34, 0.12);
+  text-align: left;
+  backdrop-filter: blur(12px);
+}
+
+.learning-path-entry span:last-child {
+  display: grid;
+  line-height: 1.05;
+  font-weight: 700;
+}
+
+.learning-path-entry small {
+  margin-bottom: 0.24rem;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.learning-path-entry-icon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: var(--primary);
+}
+
 .algorithm-wallpaper {
   position: fixed;
   inset: 0;
@@ -665,6 +708,136 @@ h2 {
   font-weight: 700;
   line-height: 1;
   pointer-events: none;
+}
+
+.learning-path-hero {
+  padding-bottom: 1rem;
+}
+
+.learning-path-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 940px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem;
+}
+
+.learning-path-summary div {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  padding: 1rem 1.2rem;
+  background: rgba(255, 251, 244, 0.76);
+  box-shadow: 0 12px 30px rgba(110, 87, 41, 0.1);
+}
+
+.learning-path-summary span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.learning-path-summary strong {
+  color: var(--primary);
+  font-size: 1.6rem;
+}
+
+.learning-path {
+  position: relative;
+  display: grid;
+  gap: 1.2rem;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+  list-style: none;
+}
+
+.learning-path::before {
+  content: "";
+  position: absolute;
+  top: 3rem;
+  bottom: 5rem;
+  left: 3.45rem;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(var(--primary) 0 10%, rgba(31, 42, 48, 0.12) 10%);
+}
+
+.learning-path-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.path-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  border: 3px solid rgba(31, 42, 48, 0.12);
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(78, 63, 34, 0.1);
+}
+
+.path-card {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 22px;
+  padding: 1.2rem;
+  background: rgba(255, 251, 244, 0.8);
+  box-shadow: 0 14px 32px rgba(110, 87, 41, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.path-card h2 {
+  margin: 0.35rem 0;
+}
+
+.path-card p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.path-status {
+  color: var(--secondary);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.learning-path-step.is-current .path-node {
+  border-color: var(--primary);
+  color: white;
+  background: var(--primary);
+  box-shadow: 0 10px 26px rgba(13, 107, 95, 0.28);
+}
+
+.learning-path-step.is-current .path-card {
+  border-color: rgba(13, 107, 95, 0.26);
+}
+
+.learning-path-step.is-locked .path-card {
+  opacity: 0.68;
+}
+
+.learning-path-step.is-locked .path-node::after {
+  content: "•";
+  position: absolute;
+  right: -0.18rem;
+  bottom: -0.5rem;
+  color: var(--secondary);
+  font-size: 1.5rem;
 }
 
 .module-hero {
@@ -2404,7 +2577,7 @@ button:disabled {
   .hero-home {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding-top: 3.5rem;
+    padding-top: 5.5rem;
   }
 
   .hero-home .eyebrow {
@@ -2572,6 +2745,39 @@ button:disabled {
 
   .home-grid {
     padding-inline: 0.1rem;
+  }
+
+  .learning-path-entry {
+    top: 0.5rem;
+    right: 0.25rem;
+  }
+
+  .learning-path-summary {
+    grid-template-columns: 1fr;
+    padding-inline: 0.1rem;
+  }
+
+  .learning-path {
+    padding-inline: 0.1rem;
+  }
+
+  .learning-path::before {
+    left: 1.85rem;
+  }
+
+  .learning-path-step {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .path-node {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .path-card {
+    padding: 1rem;
+    border-radius: 18px;
   }
 
   .subject-tile {
