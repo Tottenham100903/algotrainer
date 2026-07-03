@@ -2808,6 +2808,19 @@ h2 {
   margin-top: 1rem;
 }
 
+.master-step-actions {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 4;
+  margin-top: 1rem;
+  border: 1px solid rgba(13, 107, 95, 0.16);
+  border-radius: 16px;
+  padding: 0.65rem;
+  background: rgba(255, 253, 248, 0.9);
+  box-shadow: 0 14px 28px rgba(34, 46, 50, 0.08);
+  backdrop-filter: blur(12px);
+}
+
 .master-example-row + .master-example-row {
   margin-top: 0.85rem;
   padding-top: 0.85rem;
@@ -2850,7 +2863,16 @@ h2 {
   margin: 0;
 }
 
+.step-example-label {
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .master-learn-step h3 {
+  margin-top: 0.18rem;
   font-size: 1.02rem;
   line-height: 1.25;
 }
@@ -2865,6 +2887,52 @@ h2 {
   color: var(--primary-strong);
   font-family: "IBM Plex Mono", monospace;
   font-weight: 700;
+}
+
+.custom-recurrence-box {
+  margin-top: 1rem;
+  border: 1px solid rgba(13, 107, 95, 0.18);
+  border-radius: 18px;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(13, 107, 95, 0.08), transparent 46%),
+    rgba(255, 253, 248, 0.8);
+}
+
+.custom-solver-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.custom-recurrence-input {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.custom-recurrence-input input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface-strong);
+  color: var(--text);
+  font: inherit;
+}
+
+.custom-recurrence-box .master-solution {
+  margin-top: 0.85rem;
+}
+
+.custom-solver-error {
+  border-left-color: var(--wrong);
+  background: rgba(163, 50, 11, 0.07);
 }
 
 .ds-layout {
@@ -4163,6 +4231,16 @@ button:disabled {
     gap: 0.7rem;
   }
 
+  .master-step-actions {
+    top: 0.5rem;
+    justify-content: center;
+    padding: 0.55rem;
+  }
+
+  .master-step-actions button {
+    flex: 1 1 130px;
+  }
+
   .master-work-step,
   .master-learn-step {
     grid-template-columns: 1.8rem minmax(0, 1fr);
@@ -4205,16 +4283,22 @@ button:disabled {
   }
 
   .master-parameter-inputs label,
-  .master-calculation-input {
+  .master-calculation-input,
+  .custom-recurrence-input {
     font-size: 0.88rem;
   }
 
   .master-parameter-inputs input,
   .master-calculation-input input,
+  .custom-recurrence-input input,
   .master-work-step select {
     min-height: 44px;
     padding: 0.58rem 0.7rem;
     font-size: 0.95rem;
+  }
+
+  .custom-solver-row {
+    grid-template-columns: 1fr;
   }
 
   .snippet-wrap,

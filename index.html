@@ -398,13 +398,13 @@ queue: [A, C, D]</pre>
             </div>
 
             <div id="master-learn-example" class="recurrence-box"></div>
-            <div id="master-learn-steps" class="master-learn-steps"></div>
 
             <div class="actions master-step-actions">
               <button id="master-learn-prev" class="secondary-btn" type="button">Vorheriger Schritt</button>
               <span id="master-learn-count" class="step-count"></span>
               <button id="master-learn-next" class="primary-btn" type="button">Nächster Schritt</button>
             </div>
+            <div id="master-learn-steps" class="master-learn-steps"></div>
           </section>
 
           <section class="card is-hidden" id="master-card">
@@ -471,6 +471,19 @@ queue: [A, C, D]</pre>
             </div>
 
             <div id="master-workflow" class="master-workflow"></div>
+
+            <div class="custom-recurrence-box">
+              <p class="tree-label">Eigenes Beispiel lösen</p>
+              <div class="custom-solver-row">
+                <label class="custom-recurrence-input">
+                  Rekurrenz
+                  <input id="custom-recurrence-input" type="text" spellcheck="false" placeholder="z. B. T(n)=2T(n/2)+n">
+                </label>
+                <button id="solve-custom-recurrence" class="secondary-btn" type="button">Schrittweise lösen</button>
+              </div>
+              <p id="custom-recurrence-hint" class="master-rule-hint">Nutze die Syntax passend zum gewählten Übungsbereich, zum Beispiel T(n)=2T(n/2)+n, T(n)=T(n-1)+n oder T(n)=T(n/2)+T(n/4)+n.</p>
+              <div id="custom-recurrence-solution" class="master-solution is-hidden" aria-live="polite"></div>
+            </div>
 
             <div class="actions quiz-actions">
               <button id="check-master" class="primary-btn" type="button">Antwort prüfen</button>

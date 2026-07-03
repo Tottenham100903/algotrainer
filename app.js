@@ -1618,6 +1618,10 @@ const el = {
   masterLearnPrev: document.getElementById("master-learn-prev"),
   masterLearnNext: document.getElementById("master-learn-next"),
   masterWorkflow: document.getElementById("master-workflow"),
+  customRecurrenceInput: document.getElementById("custom-recurrence-input"),
+  customRecurrenceHint: document.getElementById("custom-recurrence-hint"),
+  customRecurrenceSolution: document.getElementById("custom-recurrence-solution"),
+  solveCustomRecurrence: document.getElementById("solve-custom-recurrence"),
   sortAlgorithm: document.getElementById("sort-algorithm"),
   sortBars: document.getElementById("sort-bars"),
   sortNote: document.getElementById("sort-note"),
@@ -1754,6 +1758,12 @@ document.getElementById("new-runtime").addEventListener("click", createRuntimeQu
 document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
+el.solveCustomRecurrence.addEventListener("click", solveCustomRecurrence);
+el.customRecurrenceInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    solveCustomRecurrence();
+  }
+});
 el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 document.querySelectorAll("[data-master-section]").forEach((button) => {
   button.addEventListener("click", () => setMasterSection(button.dataset.masterSection));
@@ -2246,6 +2256,7 @@ function createMasterQuestion() {
   setFeedback(el.masterFeedback, "");
   el.masterSolution.classList.add("is-hidden");
   el.masterSolution.innerHTML = "";
+  clearCustomRecurrenceSolution();
 }
 
 function checkMasterQuestion() {
@@ -2259,13 +2270,13 @@ function checkMasterQuestion() {
   if (!firstError) {
     setFeedback(
       el.masterFeedback,
-      "Vollständig richtig. Du hast die Rekurrenz in einer klausurtauglichen Reihenfolge hergeleitet.",
+      `Vollständig richtig. ${state.masterQuestion.explanation} Du hast die Rekurrenz in einer klausurtauglichen Reihenfolge hergeleitet.`,
       "correct",
     );
   } else {
     setFeedback(
       el.masterFeedback,
-      `Der erste fehlerhafte Rechenschritt ist: ${firstError[1]}. Vergleiche deine Eingabe mit der Herleitung darunter und versuche anschließend eine neue Aufgabe.`,
+      `Der erste fehlerhafte Rechenschritt ist: ${firstError[1]}. Warum: ${state.masterQuestion.explanation} Vergleiche deine Eingabe mit der Herleitung darunter und korrigiere ab diesem Schritt.`,
       "wrong",
     );
   }
@@ -2277,6 +2288,257 @@ function checkMasterQuestion() {
     </ol>
   `;
   el.masterSolution.classList.remove("is-hidden");
+}
+
+function clearCustomRecurrenceSolution() {
+  if (!el.customRecurrenceSolution) {
+    return;
+  }
+  el.customRecurrenceSolution.classList.add("is-hidden");
+  el.customRecurrenceSolution.innerHTML = "";
+}
+
+function solveCustomRecurrence() {
+  const rawInput = el.customRecurrenceInput.value.trim();
+  if (!rawInput) {
+    renderCustomRecurrenceResult(
+      "Syntax fehlt",
+      ["Gib zuerst eine Rekurrenz ein. Beispiel: T(n)=2T(n/2)+n."],
+      true,
+    );
+    return;
+  }
+
+  const topic = state.masterTrainingTopic;
+  const normalized = normalizeRecurrenceSyntax(rawInput);
+  let result;
+
+  if (topic === "Divide and Conquer / Master-Theorem") {
+    result = solveMasterRecurrence(normalized);
+  } else if (topic === "Subtract and Conquer") {
+    result = solveSubtractRecurrence(normalized);
+  } else {
+    result = solveSubstitutionRecurrence(normalized);
+  }
+
+  if (!result) {
+    renderCustomRecurrenceResult(
+      "Syntax passt noch nicht",
+      [customSolverSyntaxHint(topic)],
+      true,
+    );
+    return;
+  }
+
+  renderCustomRecurrenceResult(result.title, result.steps, false);
+}
+
+function normalizeRecurrenceSyntax(input) {
+  return input
+    .toLowerCase()
+    .replaceAll(" ", "")
+    .replaceAll("·", "*")
+    .replaceAll("−", "-")
+    .replaceAll("≤", "<=")
+    .replaceAll("t(n)=", "")
+    .replaceAll("cn", "c*n");
+}
+
+function renderCustomRecurrenceResult(title, steps, isError) {
+  el.customRecurrenceSolution.classList.toggle("custom-solver-error", isError);
+  el.customRecurrenceSolution.innerHTML = `
+    <p class="tree-label">${title}</p>
+    <ol>
+      ${steps.map((step) => `<li>${formatInlineMathLabel(step)}</li>`).join("")}
+    </ol>
+  `;
+  el.customRecurrenceSolution.classList.remove("is-hidden");
+}
+
+function customSolverSyntaxHint(topic) {
+  if (topic === "Divide and Conquer / Master-Theorem") {
+    return "Für das Master-Theorem nutze T(n)=aT(n/b)+c*n^d, zum Beispiel T(n)=3T(n/2)+n oder T(n)=2T(n/2)+5*n^2.";
+  }
+  if (topic === "Subtract and Conquer") {
+    return "Für Subtract and Conquer nutze ein einzelnes Teilproblem, zum Beispiel T(n)=T(n-1)+n oder T(n)=T(n/2)+1.";
+  }
+  return "Für Substitution nutze eine Form, die eine Schranke beweist, zum Beispiel T(n)=T(n/2)+T(n/4)+n oder T(n)=T(n-1)+T(n-2)+1.";
+}
+
+function solveMasterRecurrence(input) {
+  const match = input.match(/^(\d*)t\(n\/(\d+)\)\+(.+)$/);
+  if (!match) {
+    return null;
+  }
+
+  const a = Number(match[1] || 1);
+  const b = Number(match[2]);
+  const work = parsePolynomialWork(match[3]);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a < 1 || b < 2 || !work) {
+    return null;
+  }
+
+  const p = Math.log(a) / Math.log(b);
+  const prettyP = prettyNumber(p);
+  const comparison = Math.abs(work.d - p) < 0.001
+    ? "d = log<sub>b</sub>(a)"
+    : work.d < p
+      ? "d < log<sub>b</sub>(a)"
+      : "d > log<sub>b</sub>(a)";
+  const result = work.d < p - 0.001
+    ? `O(n^log_${b}(${a}))`
+    : Math.abs(work.d - p) < 0.001
+      ? `${orderForPower(work.d).replace(")", " log n)")}`
+      : orderForPower(work.d);
+  const reason = work.d < p - 0.001
+    ? "Die Rekursion dominiert, weil der Rekursionsbaum schneller wächst als die Zusatzarbeit pro Ebene."
+    : Math.abs(work.d - p) < 0.001
+      ? "Rekursion und Zusatzarbeit sind gleich stark, deshalb kommt ein zusätzlicher log-Faktor dazu."
+      : "Die Zusatzarbeit dominiert, weil c · n^d stärker wächst als die rekursive Verzweigung.";
+
+  return {
+    title: "Schrittweise Lösung",
+    steps: [
+      `Form erkennen: T(n)=aT(n/b)+c*n^d mit a=${a}, b=${b}, c=${work.c}, d=${work.d}.`,
+      `Vergleichsexponent berechnen: log_${b}(${a}) = ${prettyP}.`,
+      `Vergleichen: ${comparison}.`,
+      `${reason}`,
+      `Ergebnis: T(n) = ${result}.`,
+    ],
+  };
+}
+
+function parsePolynomialWork(value) {
+  if (/^\d+$/.test(value)) {
+    return { c: Number(value), d: 0 };
+  }
+
+  const normalized = value.replace(/^\*/, "");
+  const simple = normalized.match(/^(\d+)?\*?n(?:\^(\d+))?$/);
+  if (simple) {
+    return {
+      c: Number(simple[1] || 1),
+      d: Number(simple[2] || 1),
+    };
+  }
+
+  return null;
+}
+
+function solveSubtractRecurrence(input) {
+  const minusMatch = input.match(/^t\(n-(\d+)\)\+(.+)$/);
+  if (minusMatch) {
+    const k = Number(minusMatch[1]);
+    const work = parseSubtractWork(minusMatch[2]);
+    if (!work || k < 1) {
+      return null;
+    }
+    const result = work.kind === "constant" ? "O(n)" : orderForPower(work.power + 1);
+    const sum = work.kind === "constant"
+      ? "1 + 1 + ... + 1"
+      : `1^${work.power} + 2^${work.power} + ... + n^${work.power}`;
+    return {
+      title: "Schrittweise Lösung",
+      steps: [
+        `Reduktion erkennen: n wird pro Schritt um ${k} kleiner.`,
+        `Rekursionstiefe: etwa n/${k}, also O(n) Ebenen.`,
+        `Entfalten: Es entsteht die Summe ${sum}.`,
+        work.kind === "constant"
+          ? "Konstante Arbeit pro Ebene über linear viele Ebenen ergibt O(n)."
+          : `Die Potenzsumme bis n hat Ordnung O(n^${work.power + 1}).`,
+        `Ergebnis: T(n) = ${result}.`,
+      ],
+    };
+  }
+
+  const shrinkMatch = input.match(/^t\(n\/(\d+)\)\+(.+)$/);
+  if (shrinkMatch) {
+    const b = Number(shrinkMatch[1]);
+    const work = parseSubtractWork(shrinkMatch[2]);
+    if (!work || b < 2) {
+      return null;
+    }
+    const result = work.kind === "constant" ? "O(log n)" : orderForPower(work.power);
+    return {
+      title: "Schrittweise Lösung",
+      steps: [
+        `Reduktion erkennen: n wird pro Schritt durch ${b} geteilt.`,
+        "Rekursionstiefe: Nach O(log n) Ebenen ist die Eingabe konstant klein.",
+        work.kind === "constant"
+          ? "Auf jeder Ebene fällt konstante Arbeit an."
+          : `Beim Entfalten entsteht eine geometrische Summe wie n^${work.power} + (n/${b})^${work.power} + ... .`,
+        work.kind === "constant"
+          ? "Konstante Arbeit über logarithmisch viele Ebenen ergibt O(log n)."
+          : "Eine fallende geometrische Summe wird durch ihren ersten Term dominiert.",
+        `Ergebnis: T(n) = ${result}.`,
+      ],
+    };
+  }
+
+  return null;
+}
+
+function parseSubtractWork(value) {
+  if (value === "1" || /^\d+$/.test(value)) {
+    return { kind: "constant", power: 0 };
+  }
+  const work = parsePolynomialWork(value);
+  return work ? { kind: "polynomial", power: work.d } : null;
+}
+
+function solveSubstitutionRecurrence(input) {
+  const linearBranch = input.match(/^t\(n\/(\d+)\)\+t\(n\/(\d+)\)\+n$/);
+  if (linearBranch) {
+    const first = Number(linearBranch[1]);
+    const second = Number(linearBranch[2]);
+    const fractionSum = (1 / first) + (1 / second);
+    if (fractionSum >= 1) {
+      return null;
+    }
+    const cBound = Math.ceil(1 / (1 - fractionSum));
+    return {
+      title: "Schrittweise Lösung",
+      steps: [
+        "Vermutung: T(n) ≤ c · n.",
+        `Einsetzen: T(n) ≤ c(n/${first}) + c(n/${second}) + n.`,
+        `Zusammenfassen: T(n) ≤ ${prettyNumber(fractionSum)}c · n + n.`,
+        `Damit T(n) ≤ c · n gilt, reicht c ≥ ${cBound}.`,
+        "Ergebnis: T(n) = O(n).",
+      ],
+    };
+  }
+
+  if (input === "t(n-1)+t(n-2)+1") {
+    return {
+      title: "Schrittweise Lösung",
+      steps: [
+        "Vermutung: T(n) ≤ c · 2^n.",
+        "Einsetzen: T(n) ≤ c2^(n-1) + c2^(n-2) + 1.",
+        "Zusammenfassen: c2^(n-1) + c2^(n-2) = 3c · 2^(n-2), also kleiner als c · 2^n.",
+        "Für eine ausreichend große Konstante c wird auch das +1 abgefangen.",
+        "Ergebnis: T(n) = O(2^n).",
+      ],
+    };
+  }
+
+  return null;
+}
+
+function prettyNumber(value) {
+  if (Math.abs(value - Math.round(value)) < 0.001) {
+    return String(Math.round(value));
+  }
+  return value.toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+function orderForPower(power) {
+  if (power === 0) {
+    return "O(1)";
+  }
+  if (power === 1) {
+    return "O(n)";
+  }
+  return `O(n^${power})`;
 }
 
 function renderMasterWorkflow(runtimeChoices) {
@@ -2419,14 +2681,14 @@ function renderMasterWorkflow(runtimeChoices) {
 
 function buildMasterApplicationChecks(selectedRuntime) {
   if (!selectedRuntime) {
-    setFeedback(el.masterFeedback, "Leite zuerst die Laufzeit ab.", "wrong");
+    setFeedback(el.masterFeedback, "Leite zuerst die Laufzeit ab. Ohne Laufzeitentscheidung kann die Herleitung noch nicht vollständig geprüft werden.", "wrong");
     return null;
   }
 
   if (state.masterTrainingTopic === "Divide and Conquer / Master-Theorem") {
     const inputs = ["a", "b", "c", "d", "p"].map((key) => document.getElementById(`master-input-${key}`));
     if (inputs.some((input) => !input || input.value.trim() === "")) {
-      setFeedback(el.masterFeedback, "Fülle zuerst alle Parameter und den Vergleichsexponenten aus.", "wrong");
+      setFeedback(el.masterFeedback, "Fülle zuerst alle Parameter und den Vergleichsexponenten aus. Diese Werte bestimmen, welcher Master-Fall gilt.", "wrong");
       return null;
     }
 
@@ -2453,7 +2715,7 @@ function buildMasterApplicationChecks(selectedRuntime) {
     const expansion = getSelectedValue("subtract-expansion-choice");
 
     if (!reduction.trim() || !depth.trim() || !expansion) {
-      setFeedback(el.masterFeedback, "Bestimme zuerst Reduktion, Tiefe und entstehende Summe.", "wrong");
+      setFeedback(el.masterFeedback, "Bestimme zuerst Reduktion, Tiefe und entstehende Summe. Beim Entfalten hängt die Laufzeit genau von diesen drei Beobachtungen ab.", "wrong");
       return null;
     }
 
@@ -2470,7 +2732,7 @@ function buildMasterApplicationChecks(selectedRuntime) {
   const condition = document.getElementById("substitution-condition").value;
 
   if (!guess.trim() || !inserted || !condition.trim()) {
-    setFeedback(el.masterFeedback, "Fülle zuerst Vermutung, Einsetzen und Bedingung aus.", "wrong");
+    setFeedback(el.masterFeedback, "Fülle zuerst Vermutung, Einsetzen und Bedingung aus. Bei Substitution ist die Schranke erst bewiesen, wenn die eingesetzte Ungleichung stabil bleibt.", "wrong");
     return null;
   }
 
@@ -2529,6 +2791,10 @@ function syncMasterTrainingTopic() {
   el.masterTrainingHeading.textContent = config.heading;
   el.masterTrainingCopy.innerHTML = config.copy;
   el.masterTrainingTopic.value = state.masterTrainingTopic;
+  if (el.customRecurrenceHint) {
+    el.customRecurrenceHint.innerHTML = formatInlineMathLabel(customSolverSyntaxHint(state.masterTrainingTopic));
+  }
+  clearCustomRecurrenceSolution();
 
   document.querySelectorAll("[data-master-training-topic]").forEach((button) => {
     const active = button.dataset.masterTrainingTopic === state.masterTrainingTopic;
@@ -2561,10 +2827,10 @@ function changeMasterLearningStep(direction) {
     0,
     Math.min(steps.length - 1, state.masterLearnStep + direction),
   );
-  renderMasterLearning();
+  renderMasterLearning({ scrollCurrent: true });
 }
 
-function renderMasterLearning() {
+function renderMasterLearning(options = {}) {
   const topic = masterLearnTopics[el.masterLearnCase.value];
   if (!topic) {
     return;
@@ -2587,18 +2853,37 @@ function renderMasterLearning() {
       </div>
     `).join("")}
   `;
-  const steps = topic.lessons.flatMap((lesson) => lesson.steps);
+  const steps = topic.lessons.flatMap((lesson, lessonIndex) => lesson.steps.map(([title, text]) => ({
+    title,
+    text,
+    lessonIndex,
+    lessonFormula: lesson.formula,
+  })));
   el.masterLearnSteps.innerHTML = steps
-    .map(([title, text], index) => `
+    .map((step, index) => `
       <article class="master-learn-step${index <= state.masterLearnStep ? " is-visible" : ""}${index === state.masterLearnStep ? " is-current" : ""}">
         <strong>${index + 1}</strong>
-        <div><h3>${title}</h3><p>${formatInlineMathLabel(text)}</p></div>
+        <div>
+          <p class="step-example-label">Beispiel ${step.lessonIndex + 1}: ${formatInlineMathLabel(step.lessonFormula)}</p>
+          <h3>${step.title}</h3>
+          <p>${formatInlineMathLabel(step.text)}</p>
+        </div>
       </article>
     `)
     .join("");
   el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${steps.length}`;
   el.masterLearnPrev.disabled = state.masterLearnStep === 0;
   el.masterLearnNext.disabled = state.masterLearnStep === steps.length - 1;
+
+  if (options.scrollCurrent) {
+    window.requestAnimationFrame(() => {
+      const currentStep = el.masterLearnSteps.querySelector(".master-learn-step.is-current");
+      currentStep?.scrollIntoView({
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+        block: "center",
+      });
+    });
+  }
 }
 
 function resetSortValues() {
@@ -3257,10 +3542,14 @@ function checkSortQuestion() {
 
   const runtimes = state.sortQuestion.algorithm.runtimes;
   if (selectedBest === runtimes.best && selectedAverage === runtimes.average && selectedWorst === runtimes.worst) {
-    setFeedback(el.sortFeedback, `Richtig. ${state.sortQuestion.algorithm.name}: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}.`, "correct");
+    setFeedback(el.sortFeedback, `Richtig. ${state.sortQuestion.algorithm.name}: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}. Warum: ${state.sortQuestion.algorithm.idea}`, "correct");
     return;
   }
-  setFeedback(el.sortFeedback, `Noch nicht. Korrekt ist: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}.`, "wrong");
+  setFeedback(
+    el.sortFeedback,
+    `Noch nicht. Korrekt ist: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}. Warum: ${state.sortQuestion.algorithm.idea}`,
+    "wrong",
+  );
 }
 
 function normalizeDataStructureTopic(topic) {
@@ -3777,7 +4066,11 @@ function applyAVLAnswer() {
   if (state.showAVLPreview) {
     previewAVLRotation(true);
   }
-  setFeedback(el.avlFeedback, `Noch nicht richtig. ${selected} führt nicht zum korrekten AVL-Endzustand.`, "wrong");
+  setFeedback(
+    el.avlFeedback,
+    `Noch nicht richtig. ${selected} führt nicht zum korrekten AVL-Endzustand. Richtig ist ${state.avlQuestion.rotation}, weil die Rotation am unausgeglichenen Knoten ${state.avlQuestion.pivot} den Höhenunterschied wieder auf höchstens 1 bringt.`,
+    "wrong",
+  );
 }
 
 function mutateSandbox(mode, explicitValue = null) {
@@ -4019,6 +4312,11 @@ function formatInlineMathLabel(value) {
   return formatPlainFractions(text)
     .replace(/2\^\(([^)]+)\)/g, "2<sup>$1</sup>")
     .replace(/n\^\(([^)]+)\)/g, "n<sup>$1</sup>")
+    .replace(/n\^log_(\d+)\((\d+)\)/g, "n<sup>log<sub>$1</sub>($2)</sup>")
+    .replace(/log_(\d+)\((\d+)\)/g, "log<sub>$1</sub>($2)")
+    .replace(/n\^(\d+)/g, "n<sup>$1</sup>")
+    .replace(/n\^([a-z])/g, "n<sup>$1</sup>")
+    .replace(/log\^(\d+) n/g, "log<sup>$1</sup> n")
     .replaceAll("n^log_2(3)", "n<sup>log<sub>2</sub>(3)</sup>")
     .replaceAll("n^log_2(8)", "n<sup>log<sub>2</sub>(8)</sup>")
     .replaceAll("n^log_3(9)", "n<sup>log<sub>3</sub>(9)</sup>")
@@ -4026,13 +4324,18 @@ function formatInlineMathLabel(value) {
     .replaceAll("n^2 log n", "n<sup>2</sup> log n")
     .replaceAll("n^3", "n<sup>3</sup>")
     .replaceAll("n^2", "n<sup>2</sup>")
-    .replaceAll("2^n", "2<sup>n</sup>");
+    .replaceAll("2^n", "2<sup>n</sup>")
+    .replaceAll("*", " · ");
 }
 
 function formatPlainFractions(value) {
   return String(value)
     .replaceAll("3cn/4", '3c · <span class="frac"><span>n</span><span>4</span></span>')
     .replaceAll("cn/4", 'c · <span class="frac"><span>n</span><span>4</span></span>')
+    .replace(/(\d+)c\(n\/(\d+)\)/g, '$1c(<span class="frac"><span>n</span><span>$2</span></span>)')
+    .replace(/(\d+)c\(n \/ (\d+)\)/g, '$1c(<span class="frac"><span>n</span><span>$2</span></span>)')
+    .replace(/c\(n\/(\d+)\)/g, 'c(<span class="frac"><span>n</span><span>$1</span></span>)')
+    .replace(/c\(n \/ (\d+)\)/g, 'c(<span class="frac"><span>n</span><span>$1</span></span>)')
     .replaceAll("c(n/2)", 'c(<span class="frac"><span>n</span><span>2</span></span>)')
     .replaceAll("c(n / 2)", 'c(<span class="frac"><span>n</span><span>2</span></span>)')
     .replaceAll("c(n/4)", 'c(<span class="frac"><span>n</span><span>4</span></span>)')
@@ -4048,7 +4351,9 @@ function formatPlainFractions(value) {
     .replaceAll("n/4", '<span class="frac"><span>n</span><span>4</span></span>')
     .replaceAll("n / 4", '<span class="frac"><span>n</span><span>4</span></span>')
     .replaceAll("n/5", '<span class="frac"><span>n</span><span>5</span></span>')
-    .replaceAll("n / 5", '<span class="frac"><span>n</span><span>5</span></span>');
+    .replaceAll("n / 5", '<span class="frac"><span>n</span><span>5</span></span>')
+    .replace(/n\/(\d+)/g, '<span class="frac"><span>n</span><span>$1</span></span>')
+    .replace(/n \/ (\d+)/g, '<span class="frac"><span>n</span><span>$1</span></span>');
 }
 
 function setFeedback(node, text, type = "") {
