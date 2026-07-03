@@ -20,8 +20,10 @@ import {
   sample,
   shuffle,
 } from "./js/utils.js?v=20260703-modules";
+import { englishSubjectLearningAreas } from "./js/content-en.js";
 import {
   applyLanguage,
+  currentLanguage,
   initializeLanguage,
   languageNames,
   t,
@@ -958,9 +960,9 @@ const subjectLearningAreas = {
 };
 
 const subjectModes = [
-  { key: "learn", label: "Erklärung" },
-  { key: "guided", label: "Geführte Übung" },
-  { key: "exam", label: "Klausuraufgabe" },
+  { key: "learn", label: { de: "Erklärung", en: "Explanation" } },
+  { key: "guided", label: { de: "Geführte Übung", en: "Guided practice" } },
+  { key: "exam", label: { de: "Klausuraufgabe", en: "Exam task" } },
 ];
 
 const subjectAreaEnhancements = {
@@ -2928,6 +2930,7 @@ window.addEventListener("infotrain:languagechange", (event) => {
   updateLanguageMenu(event.detail.language);
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
   renderLearningPathState();
+  syncLocalizedContent();
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
@@ -3099,6 +3102,7 @@ createAVLQuestion();
 resetSandbox(true);
 syncMasterHelpVisibility();
 syncAVLPreviewVisibility();
+syncLocalizedContent();
 setActiveView("home");
 
 function setActiveView(viewName) {
@@ -3485,6 +3489,146 @@ function closeCheckpointTask() {
   el.checkpointTask.classList.add("is-hidden");
 }
 
+const staticEnglishText = new Map([
+  ["Zurück zur Startseite", "Back to home"],
+  ["Zurück zu Algorithmik", "Back to Algorithms"],
+  ["Fachbereich", "Subject area"],
+  ["Modul 1", "Module 1"],
+  ["Modul 2", "Module 2"],
+  ["Modul 3", "Module 3"],
+  ["Modul 4", "Module 4"],
+  ["Algorithmik", "Algorithms"],
+  ["Informatik-Grundlagen", "Computer Science Basics"],
+  ["Programmieren", "Programming"],
+  ["Informationsmanagement", "Information Management"],
+  ["Data Science & Datenbanken", "Data Science & Databases"],
+  ["Wähle ein Thema und starte direkt mit dem Training.", "Choose a topic and start practicing right away."],
+  ["Baue ein Gefühl für die Informatik auf: Begriffe, Modelle und Denkweisen, bevor es tief in einzelne Werkzeuge geht.", "Build intuition for computer science: terms, models and ways of thinking before going deep into individual tools."],
+  ["Lies Code bewusst, erkenne Sprachunterschiede und trainiere Konzepte, die in Python, Java, C++, HTML und JavaScript wiederkehren.", "Read code deliberately, recognize language differences and practice concepts shared by Python, Java, C++, HTML and JavaScript."],
+  ["Übe Datenfragen praktisch: Tabellen, SQL, Normalformen, ER-Modelle und PySpark schrittweise verstehen.", "Practice data questions hands-on: understand tables, SQL, normal forms, ER models and PySpark step by step."],
+  ["Verstehe Informationsbedarf, ERP-Prozesse, Projektlogik und Process Mining anhand klausurnaher Fälle.", "Understand information needs, ERP processes, project logic and process mining through exam-oriented cases."],
+  ["Orientierung", "Orientation"],
+  ["Visualisierung", "Visualization"],
+  ["Geführte Übung", "Guided practice"],
+  ["Klausuraufgabe", "Exam task"],
+  ["Neue Aufgabe", "New task"],
+  ["Neue Frage", "New question"],
+  ["Hinweis anzeigen", "Show hint"],
+  ["Antwort prüfen", "Check answer"],
+  ["Musterlösung", "Model solution"],
+  ["Laufzeiten", "Runtime complexity"],
+  ["Master Theorem", "Master Theorem"],
+  ["Sortierverfahren", "Sorting algorithms"],
+  ["Suchverfahren", "Search algorithms"],
+  ["Datenstrukturen", "Data structures"],
+  ["Rekursive Python-Schnipsel lesen und die asymptotische Laufzeit einschätzen.", "Read recursive Python snippets and estimate their asymptotic runtime."],
+  ["Verfahren erkennen, Fälle bestimmen und Rekurrenzen mit der passenden Methode lösen.", "Recognize methods, determine cases and solve recurrences with the right technique."],
+  ["Heapsort, Mergesort, Selectionsort und weitere Verfahren visuell Schritt für Schritt verstehen.", "Understand heapsort, mergesort, selection sort and other algorithms visually step by step."],
+  ["Lineare, binäre und Interpolationssuche visuell vergleichen und verstehen.", "Compare and understand linear, binary and interpolation search visually."],
+  ["Listen, Graphen, Hashmaps, Binär-, Splay- und AVL-Bäume gezielt trainieren.", "Practice lists, graphs, hash maps, binary, splay and AVL trees deliberately."],
+  ["Training starten →", "Start training →"],
+  ["Visualisierung starten →", "Start visualization →"],
+  ["Rekursion und Laufzeiten", "Recursion and runtime complexity"],
+  ["Code-Schnipsel analysieren", "Analyze code snippet"],
+  ["Lies den Python-Schnipsel und wähle die asymptotische Laufzeit.", "Read the Python snippet and choose the asymptotic runtime."],
+  ["Schritt-für-Schritt-Erklärung", "Step-by-step explanation"],
+  ["Anwendungsübungen", "Application practice"],
+  ["Erklärmodus", "Explanation mode"],
+  ["Methode auswählen", "Choose method"],
+  ["Beispiel auswählen", "Choose example"],
+  ["Vorheriger Schritt", "Previous step"],
+  ["Nächster Schritt", "Next step"],
+  ["Hilfestellung anzeigen", "Show help"],
+  ["Hilfestellung ausblenden", "Hide help"],
+  ["Rekurrenz selbst lösen", "Solve your own recurrence"],
+  ["Lösen", "Solve"],
+  ["Algorithmus verstehen", "Understand the algorithm"],
+  ["Wähle ein Verfahren und gehe die Schritte manuell oder automatisch durch.", "Choose an algorithm and walk through the steps manually or automatically."],
+  ["Verfahren", "Algorithm"],
+  ["Neue Werte", "New values"],
+  ["Ein Schritt zurück", "One step back"],
+  ["Abspielen", "Play"],
+  ["Ein Schritt weiter", "One step forward"],
+  ["Aktuellen Schritt genauer erklären", "Explain the current step"],
+  ["Abfrage", "Quiz"],
+  ["Laufzeiten trainieren", "Practice runtimes"],
+  ["Suchalgorithmen", "Search algorithms"],
+  ["Suchen", "Search"],
+  ["Wert im Array finden", "Find a value in the array"],
+  ["Zielwert", "Target value"],
+  ["Datenstruktur-Modus", "Data-structure mode"],
+  ["Datenstruktur-Training", "Data-structure training"],
+  ["Grundlagen", "Basics"],
+  ["Szenario", "Scenario"],
+  ["Frage", "Question"],
+  ["Neue Aufgabe", "New task"],
+  ["Binäre Suchbäume", "Binary search trees"],
+  ["Zurücksetzen", "Reset"],
+  ["Wert", "Value"],
+  ["Einfügen", "Insert"],
+  ["Prinzip genauer erklären", "Explain the principle"],
+  ["Graphalgorithmen", "Graph algorithms"],
+  ["Graphen Schritt für Schritt", "Graphs step by step"],
+  ["Nächster Schritt", "Next step"],
+  ["Prioritätsstruktur", "Priority structure"],
+  ["Min-Heap und Max-Heap", "Min-heap and max-heap"],
+  ["Heap-Typ", "Heap type"],
+  ["Wurzel entfernen", "Remove root"],
+  ["AVL-Rotationen", "AVL rotations"],
+  ["Hilfe anzeigen", "Show help"],
+  ["Hilfe / Vorschau", "Help / preview"],
+  ["Vor der Rotation", "Before rotation"],
+  ["Rotation anwenden", "Apply rotation"],
+  ["AVL-Sandbox", "AVL sandbox"],
+  ["Baum leeren", "Clear tree"],
+  ["Bereich ansehen →", "View section →"],
+  ["Bereich öffnen →", "Open section →"],
+  ["Bereich ansehen", "View section"],
+  ["Bereich öffnen", "Open section"],
+  ["ERP, Geschäftsprozesse und Process Mining klausurnah verstehen und anwenden.", "Understand ERP, business processes and process mining through exam-oriented practice."],
+  ["Datenstrukturen", "Data structures"],
+  ["Training", "Training"],
+  ["Visualisierung", "Visualization"],
+  ["Datenstrukturen", "Data structures"],
+  ["AVL-Bäume", "AVL trees"],
+  ["Binärbäume", "Binary trees"],
+  ["Splaybäume", "Splay trees"],
+  ["Listen", "Lists"],
+  ["Wörterbücher", "Dictionaries"],
+  ["Graphen", "Graphs"],
+  ["Stacks & Queues", "Stacks & Queues"],
+]);
+
+function syncLocalizedContent() {
+  ["basics", "programming", "dataScience", "informationManagement"].forEach(renderSubjectLearningArea);
+  applyStaticTextLanguage();
+}
+
+function applyStaticTextLanguage() {
+  document.querySelectorAll("button, h1, h2, p, label, option, summary, span, strong, small").forEach((node) => {
+    if (node.children.length > 0) {
+      return;
+    }
+    if (!isEnglish()) {
+      node.dataset.deText = node.textContent;
+      return;
+    }
+    if (!node.dataset.deText) {
+      node.dataset.deText = node.textContent;
+    }
+    const original = node.dataset.deText.trim();
+    if (isEnglish() && staticEnglishText.has(original)) {
+      node.textContent = preserveOuterWhitespace(node.dataset.deText, staticEnglishText.get(original));
+    }
+  });
+}
+
+function preserveOuterWhitespace(original, replacement) {
+  const prefix = original.match(/^\s*/u)?.[0] || "";
+  const suffix = original.match(/\s*$/u)?.[0] || "";
+  return `${prefix}${replacement}${suffix}`;
+}
+
 function answerCheckpointTask(answer) {
   if (answer !== "O(log n)") {
     el.checkpointFeedback.textContent = t("learning.wrong");
@@ -3675,7 +3819,7 @@ function createRuntimeQuestion() {
   ]);
 
   state.runtimeQuestion = { ...built, title: pattern.title, choices };
-  el.runtimeTitle.textContent = pattern.title;
+  el.runtimeTitle.textContent = algorithmText(pattern.title);
   el.runtimeSnippet.textContent = built.code;
   renderChoices(el.runtimeOptions, "runtime", choices);
   setFeedback(el.runtimeFeedback, "");
@@ -3684,20 +3828,22 @@ function createRuntimeQuestion() {
 function checkRuntimeQuestion() {
   const selected = getSelectedValue("runtime-choice");
   if (!selected) {
-    setFeedback(el.runtimeFeedback, "Wähle erst eine Laufzeit aus.", "wrong");
+    setFeedback(el.runtimeFeedback, algorithmText("Wähle erst eine Laufzeit aus."), "wrong");
     return;
   }
 
   if (selected === state.runtimeQuestion.answer) {
     setFeedback(
       el.runtimeFeedback,
-      `Richtig: ${selected}. ${state.runtimeQuestion.explanation}`,
+      `${isEnglish() ? "Correct" : "Richtig"}: ${selected}. ${algorithmText(state.runtimeQuestion.explanation)}`,
       "correct",
     );
   } else {
     setFeedback(
       el.runtimeFeedback,
-      `Noch nicht: Korrekt ist ${state.runtimeQuestion.answer}. ${state.runtimeQuestion.explanation}`,
+      isEnglish()
+        ? `Not quite: the correct answer is ${state.runtimeQuestion.answer}. ${algorithmText(state.runtimeQuestion.explanation)}`
+        : `Noch nicht: Korrekt ist ${state.runtimeQuestion.answer}. ${state.runtimeQuestion.explanation}`,
       "wrong",
     );
   }
@@ -3751,6 +3897,9 @@ function getSubjectRefs(areaKey) {
 }
 
 function getSubjectArea(areaKey) {
+  if (isEnglish()) {
+    return englishSubjectLearningAreas[areaKey] || subjectLearningAreas[areaKey];
+  }
   return subjectLearningAreas[areaKey];
 }
 
@@ -3762,21 +3911,115 @@ function subjectDomId(areaKey) {
   return ids[areaKey] || areaKey;
 }
 
+function isEnglish() {
+  return currentLanguage() === "en";
+}
+
+function localized(value) {
+  if (value && typeof value === "object") {
+    return value[currentLanguage()] || value.en || value.de || "";
+  }
+  return value;
+}
+
+function uiText(key) {
+  const strings = {
+    answerFirst: {
+      de: "Gib zuerst eine Antwort. Danach bekommst du eine Begründung und kannst mit der Musterlösung abgleichen.",
+      en: "Answer first. Then you will get an explanation and can compare your work with the model solution.",
+    },
+    correct: { de: "Richtig.", en: "Correct." },
+    notYet: { de: "Noch nicht.", en: "Not quite." },
+    examTip: { de: "Klausurtipp", en: "Exam tip" },
+    guidedPractice: { de: "Geführte Übung", en: "Guided practice" },
+    examTask: { de: "Klausuraufgabe", en: "Exam task" },
+    shortAnswer: { de: "Kurze Antwort", en: "Short answer" },
+    shortAnswerPlaceholder: {
+      de: "Formuliere deine Lösung in Stichpunkten.",
+      en: "Write your answer in short bullet-like notes.",
+    },
+    missing: { de: "Es fehlen", en: "Missing" },
+    tooMuch: { de: "Zu viel gewählt", en: "Selected unnecessarily" },
+    multiAdvice: {
+      de: "Vergleiche jede Aussage einzeln mit der Regel, statt nach Bauchgefühl zu bündeln.",
+      en: "Check each statement against the rule individually instead of grouping by intuition.",
+    },
+    textAdvice: {
+      de: "Deine Antwort enthält noch nicht genug Kernbegriffe. Nutze die Musterlösung als Checkliste und prüfe, ob Regel, Begründung und Ergebnis vorkommen.",
+      en: "Your answer does not yet contain enough key terms. Use the model solution as a checklist: rule, reasoning and result should be present.",
+    },
+    correctWouldBe: { de: "Korrekt wäre", en: "The correct answer would be" },
+    ruleAdvice: {
+      de: "Prüfe die zugrunde liegende Regel und nicht nur das Endergebnis.",
+      en: "Check the underlying rule, not only the final result.",
+    },
+    defaultHint: {
+      de: "Zerlege die Aufgabe in Begriff, Regel und Anwendungsschritt.",
+      en: "Break the task into term, rule and application step.",
+    },
+    modelSolution: { de: "Musterlösung", en: "Model solution" },
+    defaultSolution: {
+      de: "Vergleiche deine Antwort mit den zentralen Begriffen der Erklärung.",
+      en: "Compare your answer with the key terms from the explanation.",
+    },
+    examHintLabel: { de: "Klausurhinweis", en: "Exam note" },
+    defaultExamHint: {
+      de: "Achte auf Begriffe, Bedingungen und Zwischenschritte. Genau dort entstehen die meisten Folgefehler.",
+      en: "Watch the terminology, conditions and intermediate steps. Most follow-up errors start there.",
+    },
+  };
+  return localized(strings[key] || key);
+}
+
+const algorithmEnglishText = new Map([
+  ["Code-Schnipsel analysieren", "Analyze code snippet"],
+  ["Wähle erst eine Laufzeit aus.", "Choose a runtime first."],
+  ["Die Funktion beendet sich immer sofort; der rekursive Zweig wird nie erreicht.", "The function always returns immediately; the recursive branch is never reached."],
+  ["Pro Aufruf passiert nur konstante Arbeit, und n sinkt linear.", "Each call performs only constant work and n decreases linearly."],
+  ["Jeder Aufruf erzeugt zwei Teilaufrufe der Größe n-1.", "Each call creates two subcalls of size n-1."],
+  ["n wird in jedem Schritt halbiert, also gibt es logarithmisch viele Aufrufe.", "n is halved in every step, so there are logarithmically many calls."],
+  ["Die Reihe n + n/2 + n/4 + ... summiert sich zu O(n).", "The series n + n/2 + n/4 + ... sums to O(n)."],
+  ["Mehrfaches Wurzelziehen reduziert die Eingabe extrem schnell.", "Repeated square-root reduction shrinks the input extremely quickly."],
+  ["Es gilt T(n) = T(n-1) + O(n), also entsteht eine quadratische Summe.", "The recurrence is T(n) = T(n-1) + O(n), which creates a quadratic sum."],
+  ["Jeder Schritt reduziert n um 1 und führt sonst nur konstante Arbeit aus.", "Each step reduces n by 1 and otherwise performs only constant work."],
+  ["Master-Theorem: T(n) = 2T(n/2) + O(1) ergibt O(n).", "Master theorem: T(n) = 2T(n/2) + O(1) gives O(n)."],
+  ["Master-Theorem: T(n) = 2T(n/2) + O(n) ergibt O(n log n).", "Master theorem: T(n) = 2T(n/2) + O(n) gives O(n log n)."],
+  ["Die äußere Schleife läuft linear oft, die innere Schleife logarithmisch oft.", "The outer loop runs linearly many times; the inner loop runs logarithmically many times."],
+  ["Die verschachtelte Summe 0 + 1 + ... + (n-1) wächst quadratisch.", "The nested sum 0 + 1 + ... + (n-1) grows quadratically."],
+  ["Für jede Position wird der restliche unsortierte Bereich durchsucht.", "For each position, the remaining unsorted part is scanned."],
+  ["Im Worst Case wird jedes Element einmal geprüft.", "In the worst case every element is checked once."],
+  ["Jeder Zeiger bewegt sich nur in eine Richtung; zusammen gibt es höchstens linear viele Schritte.", "Each pointer moves in only one direction; together they create at most linear work."],
+  ["Die Schleife läuft n-mal; Hashmap-Zugriffe sind im Durchschnitt O(1).", "The loop runs n times; hash-map access is O(1) on average."],
+  ["Jeder Knoten und jede Kante wird bei der Breitensuche höchstens konstant oft betrachtet.", "In breadth-first search, every vertex and edge is considered only a constant number of times."],
+]);
+
+function algorithmText(text) {
+  if (!isEnglish()) {
+    return text;
+  }
+  return algorithmEnglishText.get(text) || text;
+}
+
 function renderSubjectLearningArea(areaKey) {
   const area = getSubjectArea(areaKey);
   const refs = getSubjectRefs(areaKey);
-  const topicKey = state[`${areaKey}Topic`] || area.defaultTopic;
+  let topicKey = state[`${areaKey}Topic`] || area.defaultTopic;
+  if (!area.topics[topicKey]) {
+    topicKey = area.defaultTopic;
+    state[`${areaKey}Topic`] = topicKey;
+  }
   const mode = state[`${areaKey}Mode`] || "learn";
   const topic = area.topics[topicKey] || area.topics[area.defaultTopic];
 
   refs.nav.innerHTML = Object.entries(area.topics).map(([key, item]) => `
     <button class="topic-nav-btn${key === topicKey ? " is-active" : ""}" type="button" data-subject-topic="${key}" aria-pressed="${key === topicKey}">
-      ${item.nav}
+      <strong>${item.nav}</strong>
+      <span>${formatInlineMathLabel(item.copy || item.title)}</span>
     </button>
   `).join("");
   refs.modeNav.innerHTML = subjectModes.map((item) => `
     <button class="section-tab-btn${item.key === mode ? " is-active" : ""}" type="button" data-subject-mode="${item.key}" aria-pressed="${item.key === mode}">
-      ${item.label}
+      ${localized(item.label)}
     </button>
   `).join("");
   refs.title.textContent = topic.title;
@@ -3784,7 +4027,7 @@ function renderSubjectLearningArea(areaKey) {
   refs.learningGoals.innerHTML = (topic.learningGoals || []).map((goal) => `<li>${formatInlineMathLabel(goal)}</li>`).join("");
   refs.explanation.innerHTML = `
     <p>${formatInlineMathLabel(topic.explanation || topic.copy)}</p>
-    <p><strong>Klausurhinweis:</strong> ${formatInlineMathLabel(topic.examHint || "Achte auf Begriffe, Bedingungen und Zwischenschritte. Genau dort entstehen die meisten Folgefehler.")}</p>
+    <p><strong>${uiText("examHintLabel")}:</strong> ${formatInlineMathLabel(topic.examHint || uiText("defaultExamHint"))}</p>
   `;
   refs.concepts.innerHTML = topic.concepts.map(([label, text]) => `
     <article class="concept-card">
@@ -3793,7 +4036,18 @@ function renderSubjectLearningArea(areaKey) {
     </article>
   `).join("");
   renderSubjectVisualization(refs, topic.visualization);
+  syncSubjectModeVisibility(refs, mode);
   createSubjectQuestion(areaKey);
+}
+
+function syncSubjectModeVisibility(refs, mode) {
+  const overviewCard = refs.title.closest(".subject-overview-card");
+  const visualCard = refs.visual.closest(".subject-visual-card");
+  const taskCard = refs.question.closest(".subject-task-card");
+
+  overviewCard?.classList.toggle("is-hidden", mode !== "learn");
+  visualCard?.classList.toggle("is-hidden", mode === "exam");
+  taskCard?.classList.toggle("is-hidden", mode === "learn");
 }
 
 function createSubjectQuestion(areaKey) {
@@ -3807,7 +4061,7 @@ function createSubjectQuestion(areaKey) {
   const question = sample(pool);
   state[`${areaKey}Question`] = question;
 
-  refs.taskMeta.textContent = `${mode === "exam" ? "Klausuraufgabe" : "Geführte Übung"} · Level ${question.level || 1} · ${subjectTaskTypeLabel(question.type)}`;
+  refs.taskMeta.textContent = `${mode === "exam" ? uiText("examTask") : uiText("guidedPractice")} · Level ${question.level || 1} · ${subjectTaskTypeLabel(question.type)}`;
   refs.questionTitle.textContent = question.title;
   refs.question.innerHTML = formatInlineMathLabel(question.question);
   if (refs.snippet) {
@@ -3827,16 +4081,16 @@ function checkSubjectQuestion(areaKey) {
   const question = state[`${areaKey}Question`];
   const answer = getSubjectAnswer(subjectDomId(areaKey), question);
   if (!hasSubjectAnswer(answer, question)) {
-    setFeedback(refs.feedback, "Gib zuerst eine Antwort. Danach bekommst du eine Begründung und kannst mit der Musterlösung abgleichen.", "wrong");
+    setFeedback(refs.feedback, uiText("answerFirst"), "wrong");
     return;
   }
   const result = evaluateSubjectAnswer(answer, question);
   if (result.correct) {
-    setFeedback(refs.feedback, `Richtig. ${question.explanation || ""} ${question.examRelevance ? `Klausurtipp: ${question.examRelevance}` : ""}`, "correct");
+    setFeedback(refs.feedback, `${uiText("correct")} ${question.explanation || ""} ${question.examRelevance ? `${uiText("examTip")}: ${question.examRelevance}` : ""}`, "correct");
     return;
   }
   const mistake = subjectMistakeFeedback(answer, question);
-  setFeedback(refs.feedback, `Noch nicht. ${mistake}${question.explanation ? ` ${question.explanation}` : ""}`, "wrong");
+  setFeedback(refs.feedback, `${uiText("notYet")} ${mistake}${question.explanation ? ` ${question.explanation}` : ""}`, "wrong");
 }
 
 function renderSubjectTaskInput(container, name, question) {
@@ -3844,8 +4098,8 @@ function renderSubjectTaskInput(container, name, question) {
   if (question.type === "text") {
     container.innerHTML = `
       <label class="text-answer-label">
-        <span>Kurze Antwort</span>
-        <textarea name="${name}-text" rows="4" placeholder="Formuliere deine Lösung in Stichpunkten."></textarea>
+        <span>${uiText("shortAnswer")}</span>
+        <textarea name="${name}-text" rows="4" placeholder="${uiText("shortAnswerPlaceholder")}"></textarea>
       </label>
     `;
     return;
@@ -3897,22 +4151,22 @@ function subjectMistakeFeedback(answer, question) {
     const missing = [...expected].filter((item) => !chosen.has(item));
     const extra = [...chosen].filter((item) => !expected.has(item));
     return [
-      missing.length ? `Es fehlen: ${missing.join(", ")}.` : "",
-      extra.length ? `Zu viel gewählt: ${extra.join(", ")}.` : "",
-      "Vergleiche jede Aussage einzeln mit der Regel, statt nach Bauchgefühl zu bündeln.",
+      missing.length ? `${uiText("missing")}: ${missing.join(", ")}.` : "",
+      extra.length ? `${uiText("tooMuch")}: ${extra.join(", ")}.` : "",
+      uiText("multiAdvice"),
     ].filter(Boolean).join(" ");
   }
   if (question.type === "text") {
-    return "Deine Antwort enthält noch nicht genug Kernbegriffe. Nutze die Musterlösung als Checkliste und prüfe, ob Regel, Begründung und Ergebnis vorkommen.";
+    return uiText("textAdvice");
   }
-  return question.commonMistakes?.[answer] || `Korrekt wäre: ${question.answer}. Prüfe die zugrunde liegende Regel und nicht nur das Endergebnis.`;
+  return question.commonMistakes?.[answer] || `${uiText("correctWouldBe")}: ${question.answer}. ${uiText("ruleAdvice")}`;
 }
 
 function showSubjectHint(areaKey) {
   const refs = getSubjectRefs(areaKey);
   const question = state[`${areaKey}Question`];
   refs.hint.classList.remove("is-hidden");
-  refs.hint.innerHTML = formatInlineMathLabel(question.hint || "Zerlege die Aufgabe in Begriff, Regel und Anwendungsschritt.");
+  refs.hint.innerHTML = formatInlineMathLabel(question.hint || uiText("defaultHint"));
 }
 
 function showSubjectSolution(areaKey) {
@@ -3920,8 +4174,8 @@ function showSubjectSolution(areaKey) {
   const question = state[`${areaKey}Question`];
   refs.solution.classList.remove("is-hidden");
   refs.solution.innerHTML = `
-    <strong>Musterlösung</strong>
-    <p>${formatInlineMathLabel(question.solution || question.explanation || "Vergleiche deine Antwort mit den zentralen Begriffen der Erklärung.")}</p>
+    <strong>${uiText("modelSolution")}</strong>
+    <p>${formatInlineMathLabel(question.solution || question.explanation || uiText("defaultSolution"))}</p>
   `;
 }
 
@@ -3929,9 +4183,9 @@ function subjectTaskTypeLabel(type) {
   return {
     single: "Single Choice",
     multi: "Multiple Choice",
-    truefalse: "Wahr/Falsch",
-    text: "Kurzantwort",
-  }[type] || "Aufgabe";
+    truefalse: isEnglish() ? "True/False" : "Wahr/Falsch",
+    text: isEnglish() ? "Short answer" : "Kurzantwort",
+  }[type] || (isEnglish() ? "Task" : "Aufgabe");
 }
 
 function renderSubjectVisualization(refs, visualization = {}) {

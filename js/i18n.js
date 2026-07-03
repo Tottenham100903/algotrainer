@@ -10,10 +10,8 @@ const translations = {
     "subjects.basics": "Grundlagen",
     "subjects.basicsCopy": "Daten, Modellierung, Automaten und Datenbanken als Landkarte der Informatik verstehen.",
     "subjects.program": "Programmieren",
-    "subjects.ming": "",
     "subjects.programmingCopy": "Python, Java, C++, HTML und Web-Grundlagen über Codeverständnis trainieren.",
     "subjects.algorith": "Algorithmik",
-    "subjects.mics": "",
     "subjects.algorithmicsCopy": "Algorithmen analysieren, visualisieren und mit abwechslungsreichen Aufgaben trainieren.",
     "subjects.dataCopy": "MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.",
     "menu.title": "Menü",
@@ -79,10 +77,8 @@ const translations = {
     "subjects.basics": "Science Basics",
     "subjects.basicsCopy": "Understand data, modelling, automata and databases as a map of computer science.",
     "subjects.program": "Programming",
-    "subjects.ming": "",
     "subjects.programmingCopy": "Practise Python, Java, C++, HTML and web fundamentals through code comprehension.",
     "subjects.algorith": "Algorithms",
-    "subjects.mics": "",
     "subjects.algorithmicsCopy": "Analyse and visualise algorithms, then practise them with varied exercises.",
     "subjects.dataCopy": "Use MySQL, PySpark and data analysis as a toolkit for practical data scenarios.",
     "menu.title": "Menu",
@@ -148,10 +144,8 @@ const translations = {
     "subjects.basics": "l’informatique",
     "subjects.basicsCopy": "Comprends les données, la modélisation, les automates et les bases de données.",
     "subjects.program": "Programmation",
-    "subjects.ming": "",
     "subjects.programmingCopy": "Entraîne-toi avec Python, Java, C++, HTML et les bases du Web.",
     "subjects.algorith": "Algorithmique",
-    "subjects.mics": "",
     "subjects.algorithmicsCopy": "Analyse et visualise les algorithmes grâce à des exercices variés.",
     "subjects.dataCopy": "Utilise MySQL, PySpark et l’analyse de données dans des scénarios pratiques.",
     "menu.title": "Menu",
@@ -217,10 +211,8 @@ const translations = {
     "subjects.basics": "informática",
     "subjects.basicsCopy": "Comprende datos, modelado, autómatas y bases de datos como mapa de la informática.",
     "subjects.program": "Programación",
-    "subjects.ming": "",
     "subjects.programmingCopy": "Practica Python, Java, C++, HTML y fundamentos web comprendiendo el código.",
     "subjects.algorith": "Algorítmica",
-    "subjects.mics": "",
     "subjects.algorithmicsCopy": "Analiza y visualiza algoritmos con ejercicios variados.",
     "subjects.dataCopy": "Utiliza MySQL, PySpark y análisis de datos en situaciones prácticas.",
     "menu.title": "Menú",
@@ -292,6 +284,10 @@ export function t(key, variables = {}) {
     (text, [name, replacement]) => text.replaceAll(`{${name}}`, String(replacement)),
     value,
   );
+}
+
+export function currentLanguage() {
+  return activeLanguage;
 }
 
 export function applyLanguage(language, persist = true) {
