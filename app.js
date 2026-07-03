@@ -3601,7 +3601,28 @@ const staticEnglishText = new Map([
 
 function syncLocalizedContent() {
   ["basics", "programming", "dataScience", "informationManagement"].forEach(renderSubjectLearningArea);
+  syncAlgorithmLocalizedContent();
   applyStaticTextLanguage();
+}
+
+function syncAlgorithmLocalizedContent() {
+  if (el.masterView && !el.masterView.classList.contains("is-hidden")) {
+    syncMasterTrainingTopic();
+    renderMasterLearning();
+    if (state.masterQuestion) {
+      el.masterTitle.textContent = `${algorithmText("Klausuraufgabe")}: ${algorithmText(getMasterTrainingConfig().heading)}`;
+      renderMasterWorkflow(state.masterQuestion.runtimeChoices);
+    }
+  }
+  if (state.sortSteps?.length) {
+    renderSortStep();
+  }
+  if (state.searchSteps?.length) {
+    renderSearchStep();
+  }
+  if (el.avlView && !el.avlView.classList.contains("is-hidden")) {
+    setDataStructureTopic(state.dataStructureTopic);
+  }
 }
 
 function applyStaticTextLanguage() {
@@ -3973,6 +3994,52 @@ function uiText(key) {
 
 const algorithmEnglishText = new Map([
   ["Code-Schnipsel analysieren", "Analyze code snippet"],
+  ["Klausuraufgabe", "Exam task"],
+  ["Musterlösung", "Model solution"],
+  ["Grundidee", "Core idea"],
+  ["Beispiel auswählen", "Choose example"],
+  ["Hilfestellung ausblenden", "Hide help"],
+  ["Hilfestellung anzeigen", "Show help"],
+  ["Schrittweise Lösung", "Step-by-step solution"],
+  ["Syntax fehlt", "Syntax is missing"],
+  ["Syntax passt noch nicht", "The syntax does not match yet"],
+  ["Gib zuerst eine Rekurrenz ein. Beispiel: T(n)=2T(n/2)+n.", "Enter a recurrence first. Example: T(n)=2T(n/2)+n."],
+  ["Für das Master-Theorem nutze T(n)=aT(n/b)+c*n^d, zum Beispiel T(n)=3T(n/2)+n oder T(n)=2T(n/2)+5*n^2.", "For the Master theorem use T(n)=aT(n/b)+c*n^d, for example T(n)=3T(n/2)+n or T(n)=2T(n/2)+5*n^2."],
+  ["Für Subtract and Conquer nutze ein einzelnes Teilproblem, zum Beispiel T(n)=T(n-1)+n oder T(n)=T(n/2)+1.", "For Subtract and Conquer use a single subproblem, for example T(n)=T(n-1)+n or T(n)=T(n/2)+1."],
+  ["Für Substitution nutze eine Form, die eine Schranke beweist, zum Beispiel T(n)=T(n/2)+T(n/4)+n oder T(n)=T(n-1)+T(n-2)+1.", "For substitution use a form that proves a bound, for example T(n)=T(n/2)+T(n/4)+n or T(n)=T(n-1)+T(n-2)+1."],
+  ["Wähle Best, Average und Worst Case aus.", "Choose best, average and worst case."],
+  ["Datenstruktur-Training", "Data structure training"],
+  ["Training", "Training"],
+  ["Binärbäume", "Binary trees"],
+  ["Splaybäume", "Splay trees"],
+  ["Graphen", "Graphs"],
+  ["Heaps", "Heaps"],
+  ["AVL-Bäume", "AVL trees"],
+  ["B-Bäume", "B-trees"],
+  ["Stacks & Queues", "Stacks & Queues"],
+  ["Normaler Binärbaum", "Regular binary tree"],
+  ["Splaybaum", "Splay tree"],
+  ["Binärer Suchbaum", "Binary search tree"],
+  ["Datenstruktur", "Data structure"],
+  ["Stapel", "Stack"],
+  ["Warteschlange", "Queue"],
+  ["Keine Rotation", "No rotation"],
+  ["Wähle erst eine Antwort aus.", "Choose an answer first."],
+  ["Wähle erst eine Rotation aus.", "Choose a rotation first."],
+  ["Gib bitte eine ganze Zahl ein.", "Please enter an integer."],
+  ["Gib zuerst einen Wert ein.", "Enter a value first."],
+  ["Gib zuerst eine Zahl ein.", "Enter a number first."],
+  ["Die Struktur ist bereits leer.", "The structure is already empty."],
+  ["Der Heap ist bereits leer.", "The heap is already empty."],
+  ["Die Array-Indizes zeigen die interne Speicherung des vollständigen Binärbaums.", "The array indices show the internal storage of the complete binary tree."],
+  ["LIFO: Das oberste Element wird zuerst entfernt.", "LIFO: The top element is removed first."],
+  ["FIFO: Das vorderste Element wird zuerst entfernt.", "FIFO: The front element is removed first."],
+  ["Start links beim ersten Element.", "Start on the left at the first element."],
+  ["Das gesamte sortierte Array ist der Suchbereich.", "The whole sorted array is the search interval."],
+  ["Schätze die Position aus Zielwert und Wertebereich.", "Estimate the position from the target value and value range."],
+  ["Topologische Reihenfolge", "Topological order"],
+  ["noch leer", "still empty"],
+  ["Kein Knoten mit Eingangsgrad 0.", "No vertex with in-degree 0."],
   ["Wähle erst eine Laufzeit aus.", "Choose a runtime first."],
   ["Die Funktion beendet sich immer sofort; der rekursive Zweig wird nie erreicht.", "The function always returns immediately; the recursive branch is never reached."],
   ["Pro Aufruf passiert nur konstante Arbeit, und n sinkt linear.", "Each call performs only constant work and n decreases linearly."],
@@ -3991,6 +4058,172 @@ const algorithmEnglishText = new Map([
   ["Jeder Zeiger bewegt sich nur in eine Richtung; zusammen gibt es höchstens linear viele Schritte.", "Each pointer moves in only one direction; together they create at most linear work."],
   ["Die Schleife läuft n-mal; Hashmap-Zugriffe sind im Durchschnitt O(1).", "The loop runs n times; hash-map access is O(1) on average."],
   ["Jeder Knoten und jede Kante wird bei der Breitensuche höchstens konstant oft betrachtet.", "In breadth-first search, every vertex and edge is considered only a constant number of times."],
+  ["Master-Theorem trainieren", "Practice the Master theorem"],
+  ["Subtract and Conquer trainieren", "Practice Subtract and Conquer"],
+  ["Substitution trainieren", "Practice substitution"],
+  ["Rekurrenz analysieren", "Analyze recurrence"],
+  ["Bestimme Verfahren, Fall/Begründung und Laufzeitklasse.", "Determine method, case/reasoning and runtime class."],
+  ["Parameter ablesen", "Read off parameters"],
+  ["Rekursionsanteil berechnen", "Calculate recursive contribution"],
+  ["Exponenten vergleichen", "Compare exponents"],
+  ["Ergebnis ableiten", "Derive result"],
+  ["Verfahren erkennen", "Identify method"],
+  ["Rekurrenz entfalten", "Expand recurrence"],
+  ["Summe formulieren", "Formulate sum"],
+  ["Ebenen aufschreiben", "Write down levels"],
+  ["Summe bewerten", "Evaluate sum"],
+  ["Vermutung wählen", "Choose a guess"],
+  ["Induktionsannahme einsetzen", "Substitute induction hypothesis"],
+  ["Ungleichung vereinfachen", "Simplify inequality"],
+  ["Wachstum einschätzen", "Estimate growth"],
+  ["Obere Schranke vermuten", "Guess an upper bound"],
+  ["Einsetzen", "Substitute"],
+  ["Anzahl der rekursiven Teilprobleme", "Number of recursive subproblems"],
+  ["Verkleinerungsfaktor der Eingabe", "Shrink factor of the input"],
+  ["konstanter Faktor der Zusatzarbeit", "constant factor of the extra work"],
+  ["Exponent der Zusatzarbeit n<sup>d</sup>", "exponent of the extra work n<sup>d</sup>"],
+  ["Wie stark wird n kleiner?", "How strongly does n shrink?"],
+  ["Wie viele Rekursionsschritte entstehen?", "How many recursion steps occur?"],
+  ["Welche Zusatzarbeit g(n) fällt pro Ebene an?", "What extra work g(n) occurs per level?"],
+  ["Welche Reihe entsteht beim Entfalten?", "Which series appears during expansion?"],
+  ["Welche O-Schranke ist plausibel?", "Which O-bound is plausible?"],
+  ["Ersetze rekursive Terme durch die Induktionsannahme", "Replace recursive terms by the induction hypothesis"],
+  ["Wähle c so, dass die Ungleichung aufgeht", "Choose c so the inequality works"],
+  ["Basisfall und Induktionsschritt sichern die Schranke", "Base case and induction step secure the bound"],
+  ["Löse die Rekurrenz wie in einer Klausur: Lies die Master-Parameter ab, berechne log<sub>b</sub>(a), wähle den Dominanzfall und leite daraus die Laufzeit her.", "Solve the recurrence as in an exam: read off the Master parameters, compute log<sub>b</sub>(a), choose the dominance case and derive the runtime."],
+  ["Löse die Rekurrenz durch Entfalten: Bestimme, wie die Eingabe kleiner wird, formuliere die entstehende Summe und leite daraus die Laufzeit her.", "Solve the recurrence by expansion: determine how the input shrinks, formulate the resulting sum and derive the runtime."],
+  ["Löse die Rekurrenz über eine Vermutung: Wähle eine passende Schranke, setze sie für kleinere Eingaben ein und prüfe, ob die Ungleichung stabil bleibt.", "Solve the recurrence via a guess: choose a suitable bound, substitute it for smaller inputs and check whether the inequality remains stable."],
+  ["Bestimme a, b, c und d. Berechne log<sub>b</sub>(a), vergleiche d damit und leite den passenden Master-Fall ab.", "Determine a, b, c and d. Compute log<sub>b</sub>(a), compare d with it and derive the matching Master case."],
+  ["Entfalte die Rekurrenz: Bestimme Reduktion, Rekursionstiefe, entstehende Summe und daraus die Laufzeit.", "Expand the recurrence: determine reduction, recursion depth, resulting sum and the runtime derived from it."],
+  ["Wähle eine plausible Schranke, setze die Induktionsannahme ein und prüfe die Bedingung für die Konstante.", "Choose a plausible bound, substitute the induction hypothesis and check the condition for the constant."],
+  ["Ja", "Yes"],
+  ["Nein", "No"],
+  ["Nicht anwendbar", "Not applicable"],
+  ["Teilt das Array in einen sortierten linken und einen unsortierten rechten Bereich. Pro Durchlauf wird das kleinste noch unsortierte Element gesucht und an die nächste freie Position links getauscht.", "Splits the array into a sorted left part and an unsorted right part. Each pass finds the smallest still unsorted element and swaps it into the next free position on the left."],
+  ["Nach einem vollständigen Durchlauf ist die nächste Position links endgültig korrekt. Der sortierte Bereich wächst dadurch genau um ein Element.", "After one full pass, the next position on the left is final. The sorted region grows by exactly one element."],
+  ["Baut links schrittweise einen sortierten Bereich auf. Das aktuelle Element wird zwischengespeichert, größere Werte werden nach rechts verschoben und die entstandene Lücke wird passend gefüllt.", "Builds a sorted region on the left step by step. The current element is stored temporarily, larger values are shifted right and the gap is filled correctly."],
+  ["Alle Elemente links der aktuellen Position bleiben sortiert. Verschoben werden nur Werte, die größer als das einzufügende Element sind.", "All elements left of the current position remain sorted. Only values larger than the inserted element are shifted."],
+  ["Vergleicht immer zwei benachbarte Werte. Stehen sie falsch herum, werden sie vertauscht; so wandert der größte noch unsortierte Wert pro Runde bis an das rechte Ende.", "Always compares two adjacent values. If they are in the wrong order, they are swapped; thus the largest still unsorted value moves to the right end each round."],
+  ["Nach einer vollständigen Runde ist das rechte Ende korrekt. Ein einzelner Tausch ordnet zunächst nur das gerade betrachtete Nachbarpaar.", "After one full round, the right end is correct. A single swap initially only orders the adjacent pair being considered."],
+  ["Teilt das Array rekursiv bis zu Einzelelementen. Danach werden jeweils zwei sortierte Teilbereiche verglichen und in der richtigen Reihenfolge zu einem größeren Bereich zusammengeführt.", "Recursively splits the array down to single elements. Then two sorted subranges are compared and merged into a larger sorted range."],
+  ["Beim Zusammenführen ist das kleinere vordere Element sicher das nächste im Ergebnis. So bleibt der neu aufgebaute Teilbereich jederzeit sortiert.", "During merging, the smaller front element is certainly next in the result. This keeps the newly built subrange sorted at all times."],
+  ["Formt das Array zunächst zu einem Max-Heap, dessen Wurzel das größte Element enthält. Die Wurzel wird ans freie Ende getauscht und der verkleinerte Heap anschließend repariert.", "First turns the array into a max-heap whose root contains the largest element. The root is swapped to the free end and the reduced heap is repaired."],
+  ["Die Heap-Eigenschaft garantiert das Maximum an der Wurzel. Nach dem Tausch ist es endgültig einsortiert; Bubble-down repariert den verbleibenden Heap.", "The heap property guarantees the maximum at the root. After the swap it is final; bubble-down repairs the remaining heap."],
+  ["Wählt ein Pivot und partitioniert den Bereich so, dass kleinere Werte links und größere rechts davon liegen. Danach werden beide Seiten unabhängig rekursiv sortiert.", "Chooses a pivot and partitions the range so smaller values are left and larger values are right of it. Then both sides are sorted recursively."],
+  ["Nach der Partition steht das Pivot endgültig richtig. Die übrigen Werte sind noch nicht vollständig sortiert, liegen aber bereits auf der richtigen Seite des Pivots.", "After partitioning, the pivot is final. The remaining values are not fully sorted yet, but already lie on the correct side of the pivot."],
+  ["Ordnet die Knoten eines gerichteten azyklischen Graphen so, dass jede Voraussetzung vor dem davon abhängigen Knoten erscheint. Kahn wählt dafür wiederholt einen Knoten mit Eingangsgrad 0.", "Orders the vertices of a directed acyclic graph so each prerequisite appears before the dependent vertex. Kahn's algorithm repeatedly chooses a vertex with in-degree 0."],
+  ["Ein Knoten ohne eingehende Kante hat keine offene Voraussetzung und darf daher als Nächstes ausgegeben werden. Seine ausgehenden Kanten werden anschließend entfernt.", "A vertex without incoming edges has no open prerequisite and may be output next. Its outgoing edges are then removed."],
+  ["Listen", "Lists"],
+  ["Wörterbücher", "Dictionaries"],
+  ["Hashmaps", "Hash maps"],
+  ["Tiefensuche", "Depth-first search"],
+  ["Min-Heap", "Min-heap"],
+  ["Max-Heap", "Max-heap"],
+  ["Welche Operation ist bei einer Array-Liste typischerweise O(1)?", "Which operation is typically O(1) for an array list?"],
+  ["Zugriff auf Index 3", "Accessing index 3"],
+  ["Einfügen am Anfang", "Inserting at the beginning"],
+  ["Suchen nach Wert 21", "Searching for value 21"],
+  ["Löschen aus der Mitte ohne Index", "Deleting from the middle without an index"],
+  ["Array-Listen speichern Elemente zusammenhängend; direkter Indexzugriff ist konstant.", "Array lists store elements contiguously; direct index access is constant."],
+  ["Was ist bei einer einfach verketteten Liste ohne Tail-Zeiger besonders teuer?", "What is especially expensive in a singly linked list without a tail pointer?"],
+  ["Vorne einfügen", "Insert at the front"],
+  ["Erstes Element lesen", "Read first element"],
+  ["Hinten einfügen", "Insert at the back"],
+  ["Nachfolger eines bekannten Knotens lesen", "Read successor of a known node"],
+  ["Ohne Tail-Zeiger muss man erst bis zum letzten Knoten laufen.", "Without a tail pointer, you first have to traverse to the last node."],
+  ["Was passiert typischerweise beim Einfügen in die Mitte einer Array-Liste?", "What typically happens when inserting into the middle of an array list?"],
+  ["Elemente rechts davon werden verschoben", "Elements to the right are shifted"],
+  ["Nur ein Zeiger wird geändert", "Only one pointer is changed"],
+  ["Die Liste wird automatisch balanciert", "The list is automatically balanced"],
+  ["Die Hashfunktion wird neu berechnet", "The hash function is recomputed"],
+  ["Bei Array-Listen müssen nachfolgende Elemente Platz machen; das kostet im Worst Case O(n).", "In array lists, following elements must make room; in the worst case this costs O(n)."],
+  ["Welche Denkweise passt am besten zu einem Wörterbuch?", "Which mental model best matches a dictionary?"],
+  ["Werte werden über Schlüssel gefunden", "Values are found through keys"],
+  ["Werte sind nur über Positionen erreichbar", "Values are only reachable through positions"],
+  ["Alle Werte bleiben automatisch sortiert", "All values stay automatically sorted"],
+  ["Jeder Zugriff muss linear suchen", "Every access must search linearly"],
+  ["Wörterbücher modellieren Key-Value-Zugriff, nicht Positionszugriff.", "Dictionaries model key-value access, not positional access."],
+  ["Was sollte in einem Wörterbuch eindeutig sein?", "What should be unique in a dictionary?"],
+  ["Der Schlüssel", "The key"],
+  ["Der Wert", "The value"],
+  ["Die Einfügezeit", "The insertion time"],
+  ["Die Speicheradresse", "The memory address"],
+  ["Ein Wörterbuch ordnet jedem Schlüssel höchstens einen aktuellen Wert zu.", "A dictionary maps each key to at most one current value."],
+  ["Was zeigt der Bucket mit Tom und Zoe?", "What does the bucket with Tom and Zoe show?"],
+  ["Eine Kollision", "A collision"],
+  ["Eine perfekte Hashfunktion", "A perfect hash function"],
+  ["Eine Heap-Verletzung", "A heap violation"],
+  ["Eine Kollision entsteht, wenn verschiedene Schlüssel im selben Bucket landen.", "A collision occurs when different keys land in the same bucket."],
+  ["Um die Last pro Bucket zu senken", "To reduce the load per bucket"],
+  ["Resizing hält den Load Factor klein und stabilisiert erwartete O(1)-Operationen.", "Resizing keeps the load factor small and stabilizes expected O(1) operations."],
+  ["Chaining mit Listen pro Bucket", "Chaining with lists per bucket"],
+  ["Beim Chaining speichert ein Bucket mehrere Einträge, die denselben Index erhalten.", "With chaining, a bucket stores multiple entries that receive the same index."],
+  ["DFS startet bei A und besucht Nachbarn in angegebener Reihenfolge. Welche Reihenfolge entsteht?", "DFS starts at A and visits neighbors in the given order. Which order results?"],
+  ["DFS geht zuerst so tief wie möglich über B nach D und kehrt dann zu C/E zurück.", "DFS first goes as deep as possible via B to D and then returns to C/E."],
+  ["Warum braucht DFS eine visited-Menge?", "Why does DFS need a visited set?"],
+  ["Um Zyklen nicht endlos zu besuchen", "To avoid visiting cycles forever"],
+  ["Bei Zyklen kann DFS sonst immer wieder dieselben Knoten erreichen.", "With cycles, DFS could otherwise reach the same vertices again and again."],
+  ["Welche Datenstruktur passt zur iterativen Tiefensuche?", "Which data structure fits iterative DFS?"],
+  ["DFS verfolgt einen Pfad in die Tiefe; iterativ bildet ein Stack dieses Verhalten ab.", "DFS follows a path into depth; iteratively, a stack models this behavior."],
+  ["Welches Element steht bei einem gültigen Min-Heap immer an der Wurzel?", "Which element is always at the root of a valid min-heap?"],
+  ["Das kleinste Element", "The smallest element"],
+  ["Das größte Element", "The largest element"],
+  ["Das zuletzt eingefügte Element", "The last inserted element"],
+  ["Ein zufälliges Pivot", "A random pivot"],
+  ["Im Min-Heap ist jeder Elternknoten kleiner oder gleich seinen Kindern.", "In a min-heap, every parent is smaller than or equal to its children."],
+  ["Welche Aussage beschreibt einen Max-Heap korrekt?", "Which statement correctly describes a max-heap?"],
+  ["Eltern sind größer oder gleich ihren Kindern", "Parents are greater than or equal to their children"],
+  ["Eltern sind kleiner oder gleich ihren Kindern", "Parents are smaller than or equal to their children"],
+  ["Die Blätter sind immer sortiert", "The leaves are always sorted"],
+  ["Die Inorder-Reihenfolge ist sortiert", "The inorder order is sorted"],
+  ["Beim Max-Heap steht das Maximum oben; die Ordnung gilt lokal zwischen Eltern und Kindern.", "In a max-heap, the maximum is at the top; the order holds locally between parents and children."],
+  ["Welches Element wird bei einem Stack als Nächstes entfernt?", "Which element is removed next from a stack?"],
+  ["Ein Stack arbeitet nach LIFO: Das zuletzt eingefügte Element wird zuerst entfernt.", "A stack works by LIFO: the last inserted element is removed first."],
+  ["Welches Element verlässt eine Queue als Nächstes?", "Which element leaves a queue next?"],
+  ["Ein zufälliges Element", "A random element"],
+  ["Eine Queue arbeitet nach FIFO: Das zuerst eingefügte Element wird zuerst entfernt.", "A queue works by FIFO: the first inserted element is removed first."],
+  ["Warum ist das Einfügen in der Mitte einer Array-Liste typischerweise O(n)?", "Why is inserting into the middle of an array list typically O(n)?"],
+  ["Nachfolgende Elemente müssen verschoben werden", "Subsequent elements must be shifted"],
+  ["Für die neue Lücke müssen im Worst Case linear viele Elemente nach rechts rücken.", "For the new gap, linearly many elements must move to the right in the worst case."],
+  ["Welche Information speichert ein Knoten einer einfach verketteten Liste?", "What information does a node of a singly linked list store?"],
+  ["Wert und Verweis auf den Nachfolger", "Value and reference to the successor"],
+  ["Nur seinen Array-Index", "Only its array index"],
+  ["Immer zwei Kindknoten", "Always two child nodes"],
+  ["Eine Hashfunktion", "A hash function"],
+  ["Die Verkettung entsteht durch den Zeiger auf den jeweils nächsten Knoten.", "The linkage is created by the pointer to the next node."],
+  ["Mitgliedschaftstest", "Membership test"],
+  ["Sortieren", "Sorting"],
+  ["Der Mitgliedschaftstest fragt nur die Existenz des Schlüssels ab.", "The membership test only checks whether the key exists."],
+  ["Zugriffe auf diesen Bucket werden langsamer", "Accesses to this bucket become slower"],
+  ["Bei Chaining müssen innerhalb des Buckets mehrere Einträge verglichen werden.", "With chaining, several entries inside the bucket must be compared."],
+  ["An welcher Position wird ein neuer Heap-Wert zunächst eingefügt?", "At which position is a new heap value inserted first?"],
+  ["Am nächsten freien Platz der untersten Ebene", "At the next free position on the lowest level"],
+  ["Immer direkt an der Wurzel", "Always directly at the root"],
+  ["An einer zufälligen Stelle", "At a random position"],
+  ["Links neben die Wurzel", "Left of the root"],
+  ["So bleibt der Baum vollständig; danach repariert Bubble-up die Heap-Eigenschaft.", "This keeps the tree complete; afterwards bubble-up repairs the heap property."],
+  ["Breitensuche", "Breadth-first search"],
+  ["Ziel: Einen Graphen Ebene für Ebene durchsuchen und in ungewichteten Graphen kürzeste Wege nach Anzahl der Kanten finden. Grundidee: Eine Queue verarbeitet zuerst alle nahen Knoten.", "Goal: search a graph level by level and find shortest paths by number of edges in unweighted graphs. Core idea: a queue processes nearby vertices first."],
+  ["Ziel: Pfade vollständig verfolgen, Zusammenhang prüfen oder Zyklen entdecken. Grundidee: Mit Stack oder Rekursion so tief wie möglich gehen und danach zurückkehren.", "Goal: follow paths completely, check connectivity or detect cycles. Core idea: use a stack or recursion to go as deep as possible and then return."],
+  ["Ziel: Kürzeste Wege von einem Startknoten bei nichtnegativen Kantengewichten bestimmen. Grundidee: Immer den noch offenen Knoten mit der kleinsten bekannten Distanz fest auswählen.", "Goal: determine shortest paths from a start vertex with nonnegative edge weights. Core idea: always settle the open vertex with the smallest known distance."],
+  ["Ziel: Durch systematisches Ausprobieren einen gültigen Weg oder eine Lösung finden. Grundidee: Eine Entscheidung treffen, bei einer Sackgasse zurückgehen und den nächsten Zweig testen.", "Goal: find a valid path or solution through systematic trial. Core idea: make a decision, backtrack at a dead end and test the next branch."],
+  ["a = 8, b = 2, c = 3, d = 2 und log<sub>2</sub>(8) = 3. Weil d &lt; log<sub>b</sub>(a), dominiert die Rekursion.", "a = 8, b = 2, c = 3, d = 2 and log<sub>2</sub>(8) = 3. Since d &lt; log<sub>b</sub>(a), recursion dominates."],
+  ["a = 2, b = 2, c = 5, d = 1 und log<sub>2</sub>(2) = 1. Bei Gleichheit kommt ein zusätzlicher Log-Faktor hinzu.", "a = 2, b = 2, c = 5, d = 1 and log<sub>2</sub>(2) = 1. In the equal case, an additional log factor appears."],
+  ["a = 3, b = 3, c = 6, d = 2 und log<sub>3</sub>(3) = 1. Weil d &gt; log<sub>b</sub>(a), dominiert die Zusatzarbeit.", "a = 3, b = 3, c = 6, d = 2 and log<sub>3</sub>(3) = 1. Since d &gt; log<sub>b</sub>(a), the extra work dominates."],
+  ["a = 9, b = 3, c = 2, d = 2 und log<sub>3</sub>(9) = 2. Der Gleichgewichtsfall liefert n<sup>2</sup> log n.", "a = 9, b = 3, c = 2, d = 2 and log<sub>3</sub>(9) = 2. The balanced case yields n<sup>2</sup> log n."],
+  ["Die Rekurrenz sinkt pro Schritt um 1. Beim Entfalten entsteht die arithmetische Summe 1 + 2 + ... + n, also O(n<sup>2</sup>).", "The recurrence decreases by 1 each step. Expansion creates the arithmetic sum 1 + 2 + ... + n, so O(n<sup>2</sup>)."],
+  ["Die Eingabe halbiert sich pro Schritt. Dadurch gibt es logarithmisch viele Ebenen mit konstanter Arbeit.", "The input halves each step. Therefore there are logarithmically many levels with constant work."],
+  ["Die entstehende geometrische Summe ist durch ein konstantes Vielfaches von n beschränkt.", "The resulting geometric sum is bounded by a constant multiple of n."],
+  ["Mit T(k) ≤ c · k folgt T(n) ≤ 3cn/4 + n. Für c ≥ 4 bleibt die lineare Schranke stabil.", "With T(k) ≤ c · k, T(n) ≤ 3cn/4 + n follows. For c ≥ 4, the linear bound remains stable."],
+  ["Die beiden fast gleich großen Teilprobleme lassen sich durch eine exponentielle Schranke abfangen.", "The two almost equally large subproblems can be bounded by an exponential bound."],
+  ["Die Rekursion dominiert, weil der Rekursionsbaum schneller wächst als die Zusatzarbeit pro Ebene.", "Recursion dominates because the recursion tree grows faster than the extra work per level."],
+  ["Rekursion und Zusatzarbeit sind gleich stark, deshalb kommt ein zusätzlicher log-Faktor dazu.", "Recursion and extra work are equally strong, so an additional log factor appears."],
+  ["Die Zusatzarbeit dominiert, weil c · n^d stärker wächst als die rekursive Verzweigung.", "The extra work dominates because c · n^d grows faster than the recursive branching."],
+  ["Konstante Arbeit pro Ebene über linear viele Ebenen ergibt O(n).", "Constant work per level over linearly many levels gives O(n)."],
+  ["Konstante Arbeit über logarithmisch viele Ebenen ergibt O(log n).", "Constant work over logarithmically many levels gives O(log n)."],
+  ["Eine fallende geometrische Summe wird durch ihren ersten Term dominiert.", "A decreasing geometric sum is dominated by its first term."],
+  ["Ergebnis: T(n) = O(n).", "Result: T(n) = O(n)."],
+  ["Ergebnis: T(n) = O(2^n).", "Result: T(n) = O(2^n)."],
 ]);
 
 function algorithmText(text) {
@@ -3998,6 +4231,53 @@ function algorithmText(text) {
     return text;
   }
   return algorithmEnglishText.get(text) || text;
+}
+
+function algorithmHtml(html) {
+  if (!isEnglish()) {
+    return html;
+  }
+  let translated = String(html);
+  algorithmEnglishText.forEach((english, german) => {
+    translated = translated.replaceAll(german, english);
+  });
+  return translated
+    .replaceAll("Parameter selbst ablesen", "Read off the parameters yourself")
+    .replaceAll("Vergleichsexponent berechnen", "Calculate the comparison exponent")
+    .replaceAll("d mit log<sub>b</sub>(a) vergleichen", "Compare d with log<sub>b</sub>(a)")
+    .replaceAll("Laufzeit aus dem Vergleich ableiten", "Derive the runtime from the comparison")
+    .replaceAll("Aus dem Vergleich folgt der Fall", "The comparison determines the case")
+    .replaceAll("Rekursion dominiert", "recursion dominates")
+    .replaceAll("Gleichgewicht", "balanced case")
+    .replaceAll("Zusatzarbeit dominiert", "extra work dominates")
+    .replaceAll("Reduktion erkennen", "Identify the reduction")
+    .replaceAll("Rekursionstiefe bestimmen", "Determine recursion depth")
+    .replaceAll("Entstehende Summe auswählen", "Choose the resulting sum")
+    .replaceAll("Laufzeit ableiten", "Derive runtime")
+    .replaceAll("Schranke vermuten", "Guess the bound")
+    .replaceAll("Induktionsannahme einsetzen", "Substitute the induction hypothesis")
+    .replaceAll("Bedingung für die Konstante prüfen", "Check the condition for the constant")
+    .replaceAll("Beispiel", "Example")
+    .replaceAll("Ergebnis", "Result")
+    .replaceAll("Jedes Beispiel wird einzeln erklärt. Wechsel oben das Beispiel, wenn du eine andere Rekurrenz sehen willst.", "Each example is explained separately. Switch the example above if you want to see another recurrence.")
+    .replaceAll("Teilprobleme", "subproblems")
+    .replaceAll("Verkleinerung", "shrink factor")
+    .replaceAll("Faktor", "factor")
+    .replaceAll("Exponent", "exponent")
+    .replaceAll("Was passiert?", "What happens?")
+    .replaceAll("Was zeigen die Farben?", "What do the colors show?")
+    .replaceAll("Warum ist das korrekt?", "Why is this correct?")
+    .replaceAll("Verfügbar", "Available")
+    .replaceAll("Anwendungsfall", "Use case")
+    .replaceAll("Voraussetzung", "Prerequisite")
+    .replaceAll("Laufzeit", "Runtime")
+    .replaceAll("Idee", "Idea")
+    .replaceAll("Stabil", "Stable")
+    .replaceAll("In-place", "In-place")
+    .replaceAll("Aktueller Zustand", "Current state")
+    .replaceAll("Warum dieser Schritt?", "Why this step?")
+    .replaceAll("als Nächstes", "next")
+    .replaceAll("(leer)", "(empty)");
 }
 
 function renderSubjectLearningArea(areaKey) {
@@ -4266,9 +4546,9 @@ function createMasterQuestion() {
     runtimeChoices,
   };
   syncMasterTrainingTopic();
-  el.masterTitle.textContent = `Klausuraufgabe: ${config.heading}`;
+  el.masterTitle.textContent = `${algorithmText("Klausuraufgabe")}: ${algorithmText(config.heading)}`;
   el.masterRecurrence.innerHTML = renderAnnotatedRecurrence(pattern, state.masterTrainingTopic);
-  el.masterTask.innerHTML = config.task;
+  el.masterTask.innerHTML = algorithmHtml(config.task);
   renderMasterWorkflow(runtimeChoices);
   setFeedback(el.masterFeedback, "");
   el.masterSolution.classList.add("is-hidden");
@@ -4287,19 +4567,23 @@ function checkMasterQuestion() {
   if (!firstError) {
     setFeedback(
       el.masterFeedback,
-      `Vollständig richtig. ${state.masterQuestion.explanation} Du hast die Rekurrenz in einer klausurtauglichen Reihenfolge hergeleitet.`,
+      isEnglish()
+        ? `Completely correct. ${algorithmText(state.masterQuestion.explanation)} You derived the recurrence in an exam-ready order.`
+        : `Vollständig richtig. ${state.masterQuestion.explanation} Du hast die Rekurrenz in einer klausurtauglichen Reihenfolge hergeleitet.`,
       "correct",
     );
   } else {
     setFeedback(
       el.masterFeedback,
-      `Der erste fehlerhafte Rechenschritt ist: ${firstError[1]}. Warum: ${state.masterQuestion.explanation} Vergleiche deine Eingabe mit der Herleitung darunter und korrigiere ab diesem Schritt.`,
+      isEnglish()
+        ? `The first incorrect calculation step is: ${firstError[1]}. Why: ${algorithmText(state.masterQuestion.explanation)} Compare your input with the derivation below and correct from this step onward.`
+        : `Der erste fehlerhafte Rechenschritt ist: ${firstError[1]}. Warum: ${state.masterQuestion.explanation} Vergleiche deine Eingabe mit der Herleitung darunter und korrigiere ab diesem Schritt.`,
       "wrong",
     );
   }
 
   el.masterSolution.innerHTML = `
-    <p class="tree-label">Musterlösung</p>
+    <p class="tree-label">${algorithmText("Musterlösung")}</p>
     <ol>
       ${renderMasterSolutionSteps()}
     </ol>
@@ -4364,7 +4648,7 @@ function normalizeRecurrenceSyntax(input) {
 function renderCustomRecurrenceResult(title, steps, isError) {
   el.customRecurrenceSolution.classList.toggle("custom-solver-error", isError);
   el.customRecurrenceSolution.innerHTML = `
-    <p class="tree-label">${title}</p>
+    <p class="tree-label">${algorithmText(title)}</p>
     <ol>
       ${steps.map((step) => `<li>${formatInlineMathLabel(step)}</li>`).join("")}
     </ol>
@@ -4562,7 +4846,7 @@ function renderMasterWorkflow(runtimeChoices) {
   const topic = state.masterTrainingTopic;
 
   if (topic === "Divide and Conquer / Master-Theorem") {
-    el.masterWorkflow.innerHTML = `
+    el.masterWorkflow.innerHTML = algorithmHtml(`
       <section class="master-work-step">
         <span>1</span>
         <div>
@@ -4599,14 +4883,14 @@ function renderMasterWorkflow(runtimeChoices) {
           <p class="master-rule-hint">Aus dem Vergleich folgt der Fall: d &lt; log<sub>b</sub>(a) → Rekursion dominiert, d = log<sub>b</sub>(a) → Gleichgewicht, d &gt; log<sub>b</sub>(a) → Zusatzarbeit dominiert.</p>
         </div>
       </section>
-    `;
+    `);
     renderChoices(document.getElementById("master-comparison-options"), "master-comparison", [
       { value: "d<p", label: "d &lt; log<sub>b</sub>(a)<small>Rekursion dominiert → O(n<sup>log<sub>b</sub>(a)</sup>)</small>" },
       { value: "d=p", label: "d = log<sub>b</sub>(a)<small>Gleichgewicht → O(n<sup>d</sup> log n)</small>" },
       { value: "d>p", label: "d &gt; log<sub>b</sub>(a)<small>Zusatzarbeit dominiert → O(n<sup>d</sup>)</small>" },
     ]);
   } else if (topic === "Subtract and Conquer") {
-    el.masterWorkflow.innerHTML = `
+    el.masterWorkflow.innerHTML = algorithmHtml(`
       <section class="master-work-step">
         <span>1</span>
         <div>
@@ -4639,7 +4923,7 @@ function renderMasterWorkflow(runtimeChoices) {
           <form id="master-runtime-options" class="choices compact-choices"></form>
         </div>
       </section>
-    `;
+    `);
     renderChoices(document.getElementById("subtract-expansion-options"), "subtract-expansion", shuffle([
       state.masterQuestion.expansion,
       "1 + 1 + ... + 1 über n Ebenen",
@@ -4647,7 +4931,7 @@ function renderMasterWorkflow(runtimeChoices) {
       "n<sup>2</sup> + n + 1",
     ]).map((label) => ({ value: label, label })));
   } else {
-    el.masterWorkflow.innerHTML = `
+    el.masterWorkflow.innerHTML = algorithmHtml(`
       <section class="master-work-step">
         <span>1</span>
         <div>
@@ -4680,7 +4964,7 @@ function renderMasterWorkflow(runtimeChoices) {
           <form id="master-runtime-options" class="choices compact-choices"></form>
         </div>
       </section>
-    `;
+    `);
     renderChoices(document.getElementById("substitution-inserted-options"), "substitution-inserted", shuffle([
       state.masterQuestion.inserted,
       "c(n - 1) + n ≤ c · n",
@@ -4719,10 +5003,10 @@ function buildMasterApplicationChecks(selectedRuntime) {
     const selectedComparison = getSelectedValue("master-comparison-choice");
 
     return [
-      [["a", "b", "c", "d"].every((key) => values[key] === state.masterQuestion[key]), "Parameter a, b, c und d"],
-      [Math.abs(values.p - state.masterQuestion.p) < 0.01, "Vergleichsexponent"],
-      [selectedComparison === state.masterQuestion.comparison, "Vergleich von d und dem Vergleichsexponenten"],
-      [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
+      [["a", "b", "c", "d"].every((key) => values[key] === state.masterQuestion[key]), algorithmText("Parameter a, b, c und d")],
+      [Math.abs(values.p - state.masterQuestion.p) < 0.01, algorithmText("Vergleichsexponent")],
+      [selectedComparison === state.masterQuestion.comparison, algorithmText("Vergleich von d und dem Vergleichsexponenten")],
+      [selectedRuntime === state.masterQuestion.answer, algorithmText("Laufzeit")],
     ];
   }
 
@@ -4737,10 +5021,10 @@ function buildMasterApplicationChecks(selectedRuntime) {
     }
 
     return [
-      [sameMathText(reduction, state.masterQuestion.reduction), "Reduktion der Eingabe"],
-      [sameMathText(depth, state.masterQuestion.depth), "Rekursionstiefe"],
-      [expansion === state.masterQuestion.expansion, "entstehende Summe"],
-      [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
+      [sameMathText(reduction, state.masterQuestion.reduction), algorithmText("Reduktion der Eingabe")],
+      [sameMathText(depth, state.masterQuestion.depth), algorithmText("Rekursionstiefe")],
+      [expansion === state.masterQuestion.expansion, algorithmText("entstehende Summe")],
+      [selectedRuntime === state.masterQuestion.answer, algorithmText("Laufzeit")],
     ];
   }
 
@@ -4754,10 +5038,10 @@ function buildMasterApplicationChecks(selectedRuntime) {
   }
 
   return [
-    [sameMathText(guess, state.masterQuestion.guess), "vermutete Schranke"],
-    [inserted === state.masterQuestion.inserted, "eingesetzte Induktionsannahme"],
-    [sameMathText(condition, state.masterQuestion.condition), "Bedingung für die Konstante"],
-    [selectedRuntime === state.masterQuestion.answer, "Laufzeit"],
+    [sameMathText(guess, state.masterQuestion.guess), algorithmText("vermutete Schranke")],
+    [inserted === state.masterQuestion.inserted, algorithmText("eingesetzte Induktionsannahme")],
+    [sameMathText(condition, state.masterQuestion.condition), algorithmText("Bedingung für die Konstante")],
+    [selectedRuntime === state.masterQuestion.answer, algorithmText("Laufzeit")],
   ];
 }
 
@@ -4765,26 +5049,26 @@ function renderMasterSolutionSteps() {
   if (state.masterTrainingTopic === "Divide and Conquer / Master-Theorem") {
     return `
       <li><strong>Parameter:</strong> a=${state.masterQuestion.a}, b=${state.masterQuestion.b}, c=${state.masterQuestion.c}, d=${state.masterQuestion.d}.</li>
-      <li><strong>Berechnen:</strong> log<sub>${state.masterQuestion.b}</sub>(${state.masterQuestion.a}) = ${state.masterQuestion.p}.</li>
-      <li><strong>Fall:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
-      <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+      <li><strong>${isEnglish() ? "Calculate" : "Berechnen"}:</strong> log<sub>${state.masterQuestion.b}</sub>(${state.masterQuestion.a}) = ${state.masterQuestion.p}.</li>
+      <li><strong>${isEnglish() ? "Case" : "Fall"}:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
+      <li><strong>${isEnglish() ? "Conclude" : "Folgern"}:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} ${isEnglish() ? "Therefore T(n) =" : "Also gilt T(n) ="} ${formatOrderLabel(state.masterQuestion.answer)}.</li>
     `;
   }
 
   if (state.masterTrainingTopic === "Subtract and Conquer") {
     return `
-      <li><strong>Reduktion:</strong> ${formatInlineMathLabel(state.masterQuestion.reduction)}; dadurch entsteht Tiefe ${formatInlineMathLabel(state.masterQuestion.depth)}.</li>
-      <li><strong>Entfalten:</strong> ${formatInlineMathLabel(state.masterQuestion.expansion)}.</li>
-      <li><strong>Einordnen:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
-      <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+      <li><strong>${isEnglish() ? "Reduction" : "Reduktion"}:</strong> ${formatInlineMathLabel(state.masterQuestion.reduction)}; ${isEnglish() ? "this creates depth" : "dadurch entsteht Tiefe"} ${formatInlineMathLabel(state.masterQuestion.depth)}.</li>
+      <li><strong>${isEnglish() ? "Expand" : "Entfalten"}:</strong> ${formatInlineMathLabel(state.masterQuestion.expansion)}.</li>
+      <li><strong>${isEnglish() ? "Classify" : "Einordnen"}:</strong> ${formatMasterCaseLabel(state.masterQuestion.caseName)}.</li>
+      <li><strong>${isEnglish() ? "Conclude" : "Folgern"}:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} ${isEnglish() ? "Therefore T(n) =" : "Also gilt T(n) ="} ${formatOrderLabel(state.masterQuestion.answer)}.</li>
     `;
   }
 
   return `
-    <li><strong>Vermutung:</strong> ${formatInlineMathLabel(state.masterQuestion.guess)}.</li>
-    <li><strong>Einsetzen:</strong> ${formatInlineMathLabel(state.masterQuestion.inserted)}.</li>
-    <li><strong>Bedingung:</strong> ${state.masterQuestion.condition}.</li>
-    <li><strong>Folgern:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} Also gilt T(n) = ${formatOrderLabel(state.masterQuestion.answer)}.</li>
+    <li><strong>${isEnglish() ? "Guess" : "Vermutung"}:</strong> ${formatInlineMathLabel(state.masterQuestion.guess)}.</li>
+    <li><strong>${isEnglish() ? "Substitute" : "Einsetzen"}:</strong> ${formatInlineMathLabel(state.masterQuestion.inserted)}.</li>
+    <li><strong>${isEnglish() ? "Condition" : "Bedingung"}:</strong> ${state.masterQuestion.condition}.</li>
+    <li><strong>${isEnglish() ? "Conclude" : "Folgern"}:</strong> ${formatInlineMathLabel(state.masterQuestion.explanation)} ${isEnglish() ? "Therefore T(n) =" : "Also gilt T(n) ="} ${formatOrderLabel(state.masterQuestion.answer)}.</li>
   `;
 }
 
@@ -4795,7 +5079,7 @@ function toggleMasterHelp() {
 
 function syncMasterHelpVisibility() {
   el.masterHelp.classList.toggle("is-hidden", !state.showMasterHelp);
-  el.masterHelpToggle.textContent = state.showMasterHelp ? "Hilfestellung ausblenden" : "Hilfestellung anzeigen";
+  el.masterHelpToggle.textContent = state.showMasterHelp ? algorithmText("Hilfestellung ausblenden") : algorithmText("Hilfestellung anzeigen");
 }
 
 function getMasterTrainingConfig() {
@@ -4805,8 +5089,8 @@ function getMasterTrainingConfig() {
 
 function syncMasterTrainingTopic() {
   const config = getMasterTrainingConfig();
-  el.masterTrainingHeading.textContent = config.heading;
-  el.masterTrainingCopy.innerHTML = config.copy;
+  el.masterTrainingHeading.textContent = algorithmText(config.heading);
+  el.masterTrainingCopy.innerHTML = algorithmHtml(config.copy);
   el.masterTrainingTopic.value = state.masterTrainingTopic;
   renderCustomRecurrenceExamples();
   if (el.customRecurrenceHint) {
@@ -4861,7 +5145,7 @@ function renderMasterLearning(options = {}) {
   const activeTopicName = el.masterLearnCase.value;
 
   el.masterLearnOverview.innerHTML = `
-    <p class="tree-label">Grundidee</p>
+    <p class="tree-label">${algorithmText("Grundidee")}</p>
     <p class="master-main-formula">${formatInlineMathLabel(topic.formula)}</p>
     ${el.masterLearnCase.value === "Divide and Conquer / Master-Theorem" ? renderFormulaLegend() : ""}
     <div class="master-parameter-grid">
@@ -4870,34 +5154,34 @@ function renderMasterLearning(options = {}) {
     <p class="section-copy">${formatInlineMathLabel(topic.summary)}</p>
   `;
   el.masterLearnExample.innerHTML = `
-    <p class="tree-label">Beispiel auswählen</p>
+    <p class="tree-label">${algorithmText("Beispiel auswählen")}</p>
     <div class="master-example-options">
       ${topic.lessons.map((lessonItem, index) => `
         <button class="master-example-option${index === state.masterLearnLesson ? " is-active" : ""}" type="button" data-master-lesson="${index}" aria-pressed="${index === state.masterLearnLesson}">
-          <span>Beispiel ${index + 1}</span>
+          <span>${algorithmText("Beispiel")} ${index + 1}</span>
           <strong>${formatInlineMathLabel(renderLearningRecurrence(lessonItem, activeTopicName))}</strong>
-          <small>${formatInlineMathLabel(lessonItem.parameters)} · Ergebnis: ${formatInlineMathLabel(lessonItem.result)}</small>
+          <small>${formatInlineMathLabel(lessonItem.parameters)} · ${algorithmText("Ergebnis")}: ${formatInlineMathLabel(lessonItem.result)}</small>
         </button>
       `).join("")}
     </div>
-    <p class="master-rule-hint">Jedes Beispiel wird einzeln erklärt. Wechsel oben das Beispiel, wenn du eine andere Rekurrenz sehen willst.</p>
+    <p class="master-rule-hint">${algorithmText("Jedes Beispiel wird einzeln erklärt. Wechsel oben das Beispiel, wenn du eine andere Rekurrenz sehen willst.")}</p>
   `;
   el.masterLearnSteps.innerHTML = `
     <article class="master-focus-step">
       <div class="master-step-progress">
         ${lesson.steps.map((_, index) => `
-          <button class="master-step-dot${index === state.masterLearnStep ? " is-active" : ""}${index < state.masterLearnStep ? " is-done" : ""}" type="button" data-master-step="${index}" aria-label="Schritt ${index + 1}" aria-pressed="${index === state.masterLearnStep}">${index + 1}</button>
+          <button class="master-step-dot${index === state.masterLearnStep ? " is-active" : ""}${index < state.masterLearnStep ? " is-done" : ""}" type="button" data-master-step="${index}" aria-label="${isEnglish() ? "Step" : "Schritt"} ${index + 1}" aria-pressed="${index === state.masterLearnStep}">${index + 1}</button>
         `).join("")}
       </div>
       <div class="master-focus-content">
-        <p class="step-example-label">Beispiel ${state.masterLearnLesson + 1}: ${formatInlineMathLabel(renderLearningRecurrence(lesson, activeTopicName))}</p>
-        <h3>${stepTitle}</h3>
+        <p class="step-example-label">${algorithmText("Beispiel")} ${state.masterLearnLesson + 1}: ${formatInlineMathLabel(renderLearningRecurrence(lesson, activeTopicName))}</p>
+        <h3>${algorithmText(stepTitle)}</h3>
         <p>${formatInlineMathLabel(stepText)}</p>
       </div>
       ${renderMasterStepMemory(lesson, state.masterLearnStep)}
     </article>
   `;
-  el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
+  el.masterLearnCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
   el.masterLearnPrev.disabled = state.masterLearnStep === 0;
   el.masterLearnNext.disabled = state.masterLearnStep === lesson.steps.length - 1;
 }
@@ -4905,10 +5189,10 @@ function renderMasterLearning(options = {}) {
 function renderFormulaLegend() {
   return `
     <div class="formula-legend">
-      <span>${masterToken("a", "a")} Teilprobleme</span>
-      <span>${masterToken("b", "b")} Verkleinerung</span>
-      <span>${masterToken("c", "c")} Faktor</span>
-      <span>${masterToken("d", "d")} Exponent</span>
+      <span>${masterToken("a", "a")} ${isEnglish() ? "subproblems" : "Teilprobleme"}</span>
+      <span>${masterToken("b", "b")} ${isEnglish() ? "shrink factor" : "Verkleinerung"}</span>
+      <span>${masterToken("c", "c")} ${isEnglish() ? "factor" : "Faktor"}</span>
+      <span>${masterToken("d", "d")} ${isEnglish() ? "exponent" : "Exponent"}</span>
     </div>
   `;
 }
@@ -4945,8 +5229,8 @@ function renderMasterStepMemory(lesson, currentStep) {
   if (currentStep === 0) {
     return `
       <aside class="master-step-memory is-empty">
-        <strong>Roter Faden</strong>
-        <p>Starte mit diesem Schritt. Die Erkenntnisse werden hier gesammelt, sobald du weitergehst.</p>
+        <strong>${isEnglish() ? "Thread" : "Roter Faden"}</strong>
+        <p>${isEnglish() ? "Start with this step. Insights will be collected here as soon as you move forward." : "Starte mit diesem Schritt. Die Erkenntnisse werden hier gesammelt, sobald du weitergehst."}</p>
       </aside>
     `;
   }
@@ -4954,11 +5238,11 @@ function renderMasterStepMemory(lesson, currentStep) {
   const previousSteps = lesson.steps.slice(0, currentStep);
   return `
     <aside class="master-step-memory">
-      <strong>Bisher erkannt</strong>
+      <strong>${isEnglish() ? "So far" : "Bisher erkannt"}</strong>
       <ol>
         ${previousSteps.map(([title, text]) => `
           <li>
-            <span>${title}</span>
+            <span>${algorithmText(title)}</span>
             <p>${formatInlineMathLabel(compactStepMemory(text))}</p>
           </li>
         `).join("")}
@@ -5371,18 +5655,22 @@ function renderSortStep() {
     el.sortBars.appendChild(slot);
   });
 
-  el.sortNote.textContent = step.note;
-  el.sortStepCount.textContent = `Schritt ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
+  el.sortNote.textContent = algorithmText(step.note);
+  el.sortStepCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
   const algorithm = sortAlgorithms[el.sortAlgorithm.value];
   const activeValues = [...step.active].map((index) => step.array[index]);
   const activeText = activeValues.length
-    ? `Gerade betrachtet: ${activeValues.join(", ")}. Orange markiert die beteiligten Werte; grüne Werte sind bereits als sortiert markiert.`
-    : "Gerade wird kein einzelner Wert verglichen. Grün markierte Werte gelten bereits als sortiert.";
-  el.sortStepDetail.innerHTML = `
+    ? (isEnglish()
+      ? `Currently considered: ${activeValues.join(", ")}. Orange marks the involved values; green values are already marked as sorted.`
+      : `Gerade betrachtet: ${activeValues.join(", ")}. Orange markiert die beteiligten Werte; grüne Werte sind bereits als sortiert markiert.`)
+    : (isEnglish()
+      ? "No single value is being compared right now. Green values are already considered sorted."
+      : "Gerade wird kein einzelner Wert verglichen. Grün markierte Werte gelten bereits als sortiert.");
+  el.sortStepDetail.innerHTML = algorithmHtml(`
     <p><strong>Was passiert?</strong> ${step.note}</p>
     <p><strong>Was zeigen die Farben?</strong> ${activeText}</p>
     <p><strong>Warum ist das korrekt?</strong> ${algorithm.stepWhy}</p>
-  `;
+  `);
   el.sortPrev.disabled = state.sortStepIndex === 0;
   el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
 }
@@ -5404,29 +5692,29 @@ function renderTopologicalSortStep(step) {
       <div class="topological-edges">${edges.map((edge) => `<span>${edge}</span>`).join("")}</div>
     </div>
     <div class="topological-result">
-      <small>Topologische Reihenfolge</small>
-      <strong>${step.order.length ? step.order.join(" → ") : "noch leer"}</strong>
+      <small>${algorithmText("Topologische Reihenfolge")}</small>
+      <strong>${step.order.length ? step.order.join(" → ") : algorithmText("noch leer")}</strong>
     </div>
   `;
-  el.sortNote.textContent = step.note;
-  el.sortStepCount.textContent = `Schritt ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
-  el.sortStepDetail.innerHTML = `
+  el.sortNote.textContent = algorithmText(step.note);
+  el.sortStepCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
+  el.sortStepDetail.innerHTML = algorithmHtml(`
     <p><strong>Was passiert?</strong> ${step.note}</p>
-    <p><strong>Verfügbar:</strong> ${step.available.length ? step.available.join(", ") : "Kein Knoten mit Eingangsgrad 0."}</p>
+    <p><strong>Verfügbar:</strong> ${step.available.length ? step.available.join(", ") : algorithmText("Kein Knoten mit Eingangsgrad 0.")}</p>
     <p><strong>Warum ist das korrekt?</strong> ${sortAlgorithms.topological.stepWhy}</p>
-  `;
+  `);
   el.sortPrev.disabled = state.sortStepIndex === 0;
   el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
 }
 
 function renderSortInfo() {
   const algorithm = sortAlgorithms[el.sortAlgorithm.value];
-  el.sortInfo.innerHTML = `
+  el.sortInfo.innerHTML = algorithmHtml(`
     <div><strong>Idee</strong><span>${algorithm.idea}</span></div>
     <div><strong>Stabil</strong><span>${algorithm.stable}</span></div>
     <div><strong>In-place</strong><span>${algorithm.inPlace}</span></div>
     <div><strong>Laufzeit</strong><span>Best ${formatInlineMathLabel(algorithm.runtimes.best)}, Average ${formatInlineMathLabel(algorithm.runtimes.average)}, Worst ${formatInlineMathLabel(algorithm.runtimes.worst)}</span></div>
-  `;
+  `);
 }
 
 function previousSortStep() {
@@ -5452,7 +5740,7 @@ function toggleSortPlayback() {
     state.sortStepIndex = 0;
     renderSortStep();
   }
-  el.sortPlay.textContent = "Pause";
+  el.sortPlay.textContent = isEnglish() ? "Pause" : "Pause";
   state.sortTimer = window.setInterval(nextSortStep, sortPlaybackDelay);
 }
 
@@ -5462,7 +5750,7 @@ function stopSortPlayback() {
     state.sortTimer = null;
   }
   if (el.sortPlay) {
-    el.sortPlay.textContent = "Abspielen";
+    el.sortPlay.textContent = isEnglish() ? "Play" : "Abspielen";
   }
 }
 
@@ -5471,7 +5759,7 @@ function resetSearchValues() {
   state.searchValues = generateUniqueNumbers(9, 5, 90).sort((a, b) => a - b);
   el.searchTarget.innerHTML = [
     ...state.searchValues.map((value) => `<option value="${value}">${value}</option>`),
-    '<option value="99">99 (nicht enthalten)</option>',
+    `<option value="99">99 (${isEnglish() ? "not included" : "nicht enthalten"})</option>`,
   ].join("");
   el.searchTarget.value = String(sample(state.searchValues));
   rebuildSearchSteps();
@@ -5618,8 +5906,8 @@ function renderSearchStep() {
     ].filter(Boolean).join(" ");
     return `<div class="${classes}"><span>${value}</span><small>${index}</small></div>`;
   }).join("");
-  el.searchStepCount.textContent = `Schritt ${state.searchStepIndex + 1} / ${state.searchSteps.length}`;
-  el.searchNote.textContent = step.note;
+  el.searchStepCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.searchStepIndex + 1} / ${state.searchSteps.length}`;
+  el.searchNote.textContent = algorithmText(step.note);
   el.searchPrev.disabled = state.searchStepIndex === 0;
   el.searchNext.disabled = state.searchStepIndex >= state.searchSteps.length - 1;
   renderSearchInfo();
@@ -5634,29 +5922,34 @@ function renderHashSearchStep(step) {
         const probing = value === step.probeEntry;
         return `<span class="hash-entry${probing ? " is-probe" : ""}${probing && step.found ? " is-found" : ""}">${value}</span>`;
       }).join("")
-      : '<span class="hash-empty">leer</span>';
+      : `<span class="hash-empty">${isEnglish() ? "empty" : "leer"}</span>`;
     return `<div class="hash-bucket${active ? " is-active" : ""}"><small>Bucket ${index}</small><div>${content}</div></div>`;
   }).join("");
-  el.searchStepCount.textContent = `Schritt ${state.searchStepIndex + 1} / ${state.searchSteps.length}`;
-  el.searchNote.textContent = step.note;
+  el.searchStepCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.searchStepIndex + 1} / ${state.searchSteps.length}`;
+  el.searchNote.textContent = algorithmText(step.note);
   el.searchPrev.disabled = state.searchStepIndex === 0;
   el.searchNext.disabled = state.searchStepIndex >= state.searchSteps.length - 1;
   renderSearchInfo();
 }
 
 function renderSearchInfo() {
-  const info = {
+  const info = isEnglish() ? {
+    linear: ["Linear search", "Checks all elements one after another.", "Small or unsorted data.", "No sorting required.", "Best O(1), Average/Worst O(n)."],
+    binary: ["Binary search", "Halves the search interval after every comparison.", "Many searches in sorted data.", "Sorting and direct index access are required.", "Best O(1), Average/Worst O(log n)."],
+    interpolation: ["Interpolation search", "Estimates the position from the value distribution.", "Uniformly distributed, sorted numbers.", "Sorted numeric data that is as uniformly distributed as possible.", "Best O(1), Average O(log log n), Worst O(n)."],
+    hash: ["Hash-based search", "Computes a bucket from the key and only checks that bucket's entries.", "Dictionaries, sets, caches and fast key lookups.", "A suitable hash function and collision handling are required.", "Best/Average O(1), Worst O(n) with many collisions."],
+  } : {
     linear: ["Lineare Suche", "Prüft alle Elemente nacheinander.", "Kleine oder unsortierte Daten.", "Keine Sortierung erforderlich.", "Best O(1), Average/Worst O(n)."],
     binary: ["Binäre Suche", "Halbiert den Suchbereich nach jedem Vergleich.", "Viele Suchen in sortierten Daten.", "Sortierung und direkter Indexzugriff erforderlich.", "Best O(1), Average/Worst O(log n)."],
     interpolation: ["Interpolationssuche", "Schätzt die Position anhand der Werteverteilung.", "Gleichmäßig verteilte, sortierte Zahlen.", "Sortierte numerische und möglichst gleichmäßig verteilte Daten.", "Best O(1), Average O(log log n), Worst O(n)."],
     hash: ["Hash-basierte Suche", "Berechnet aus dem Schlüssel direkt einen Bucket und prüft nur dessen Einträge.", "Wörterbücher, Mengen, Caches und schnelle Schlüsselabfragen.", "Eine geeignete Hashfunktion und Kollisionsbehandlung sind erforderlich.", "Best/Average O(1), Worst O(n) bei vielen Kollisionen."],
   }[el.searchAlgorithm.value];
-  el.searchInfo.innerHTML = `
+  el.searchInfo.innerHTML = algorithmHtml(`
     <div><strong>${info[0]}: Idee</strong><span>${info[1]}</span></div>
     <div><strong>Anwendungsfall</strong><span>${info[2]}</span></div>
     <div><strong>Voraussetzung</strong><span>${info[3]}</span></div>
     <div><strong>Laufzeit</strong><span>${formatInlineMathLabel(info[4])}</span></div>
-  `;
+  `);
 }
 
 function previousSearchStep() {
@@ -5696,7 +5989,9 @@ function createSortQuestion() {
   const key = sample(Object.keys(sortAlgorithms).filter((name) => name !== "topological"));
   const algorithm = sortAlgorithms[key];
   state.sortQuestion = { key, algorithm };
-  el.sortQuestionTitle.textContent = `Welche Laufzeiten hat ${algorithm.name}?`;
+  el.sortQuestionTitle.textContent = isEnglish()
+    ? `What runtimes does ${algorithm.name} have?`
+    : `Welche Laufzeiten hat ${algorithm.name}?`;
   renderChoices(el.sortBestOptions, "sort-best", sortRuntimeChoices);
   renderChoices(el.sortAverageOptions, "sort-average", sortRuntimeChoices);
   renderChoices(el.sortWorstOptions, "sort-worst", sortRuntimeChoices);
@@ -5714,12 +6009,20 @@ function checkSortQuestion() {
 
   const runtimes = state.sortQuestion.algorithm.runtimes;
   if (selectedBest === runtimes.best && selectedAverage === runtimes.average && selectedWorst === runtimes.worst) {
-    setFeedback(el.sortFeedback, `Richtig. ${state.sortQuestion.algorithm.name}: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}. Warum: ${state.sortQuestion.algorithm.idea}`, "correct");
+    setFeedback(
+      el.sortFeedback,
+      isEnglish()
+        ? `Correct. ${state.sortQuestion.algorithm.name}: best ${runtimes.best}, average ${runtimes.average}, worst ${runtimes.worst}. Why: ${algorithmText(state.sortQuestion.algorithm.idea)}`
+        : `Richtig. ${state.sortQuestion.algorithm.name}: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}. Warum: ${state.sortQuestion.algorithm.idea}`,
+      "correct",
+    );
     return;
   }
   setFeedback(
     el.sortFeedback,
-    `Noch nicht. Korrekt ist: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}. Warum: ${state.sortQuestion.algorithm.idea}`,
+    isEnglish()
+      ? `Not yet. Correct is: best ${runtimes.best}, average ${runtimes.average}, worst ${runtimes.worst}. Why: ${algorithmText(state.sortQuestion.algorithm.idea)}`
+      : `Noch nicht. Korrekt ist: Best ${runtimes.best}, Average ${runtimes.average}, Worst ${runtimes.worst}. Warum: ${state.sortQuestion.algorithm.idea}`,
     "wrong",
   );
 }
@@ -5739,10 +6042,10 @@ function createDataStructureQuestion() {
   const question = sample(pool.length ? pool : dataStructureQuestions);
   state.dataStructureQuestion = question;
   el.dataStructureScenario.innerHTML = `
-    <p class="ds-topic">${question.topic}</p>
-    ${question.scenarioHtml}
+    <p class="ds-topic">${algorithmText(question.topic)}</p>
+    ${algorithmHtml(question.scenarioHtml)}
   `;
-  el.dataStructureQuestion.textContent = question.question;
+  el.dataStructureQuestion.textContent = algorithmText(question.question);
   renderChoices(el.dataStructureOptions, "ds", shuffle(question.choices));
   setFeedback(el.dataStructureFeedback, "");
 }
@@ -5797,7 +6100,7 @@ function setDataStructureTopic(topic) {
 
   if (showQuiz) {
     el.dataStructureSectionTitle.textContent =
-      topic === "Training" ? "Datenstruktur-Training" : `${topic}-Training`;
+      topic === "Training" ? algorithmText("Datenstruktur-Training") : `${algorithmText(topic)}-${algorithmText("Training")}`;
     createDataStructureQuestion();
   } else if (showStackQueue) {
     renderStackQueue();
@@ -5825,16 +6128,20 @@ function resetTreeFamily() {
 function insertTreeFamilyValue() {
   const value = Number(el.treeFamilyValue.value);
   if (!Number.isInteger(value)) {
-    el.treeFamilyNote.textContent = "Gib bitte eine ganze Zahl ein.";
+    el.treeFamilyNote.textContent = algorithmText("Gib bitte eine ganze Zahl ein.");
     return;
   }
   state.treeFamilyRoot = bstInsertOnly(state.treeFamilyRoot, value);
   refreshHeights(state.treeFamilyRoot);
   if (state.treeFamilyMode === "splay") {
     state.treeFamilyRoot = splayNode(state.treeFamilyRoot, value);
-    el.treeFamilyNote.textContent = `${value} wurde eingefügt und anschließend zur Wurzel gesplayt.`;
+    el.treeFamilyNote.textContent = isEnglish()
+      ? `${value} was inserted and then splayed to the root.`
+      : `${value} wurde eingefügt und anschließend zur Wurzel gesplayt.`;
   } else {
-    el.treeFamilyNote.textContent = `${value} wurde entsprechend der Suchbaumordnung eingefügt.`;
+    el.treeFamilyNote.textContent = isEnglish()
+      ? `${value} was inserted according to the binary search tree order.`
+      : `${value} wurde entsprechend der Suchbaumordnung eingefügt.`;
   }
   el.treeFamilyValue.value = "";
   renderTreeFamily();
@@ -5848,19 +6155,23 @@ function accessTreeFamilyNode(value) {
     );
     state.treeFamilyRoot = splayNode(state.treeFamilyRoot, value);
     refreshHeights(state.treeFamilyRoot);
-    el.treeFamilyNote.textContent = `Zugriff auf ${value}: Der Knoten wird durch Zig-, Zig-Zig- oder Zig-Zag-Rotationen zur Wurzel bewegt.`;
+    el.treeFamilyNote.textContent = isEnglish()
+      ? `Access ${value}: the node is moved to the root by zig, zig-zig or zig-zag rotations.`
+      : `Zugriff auf ${value}: Der Knoten wird durch Zig-, Zig-Zig- oder Zig-Zag-Rotationen zur Wurzel bewegt.`;
     renderTreeFamily(true);
     return;
   }
-  el.treeFamilyNote.textContent = `Knoten ${value} gefunden. Im normalen Binärbaum bleibt seine Position unverändert.`;
+  el.treeFamilyNote.textContent = isEnglish()
+    ? `Node ${value} found. In the regular binary tree its position does not change.`
+    : `Knoten ${value} gefunden. Im normalen Binärbaum bleibt seine Position unverändert.`;
 }
 
 function renderTreeFamily(replay = false) {
   const isSplay = state.treeFamilyMode === "splay";
-  el.treeFamilyTitle.textContent = isSplay ? "Splaybaum" : "Normaler Binärbaum";
+  el.treeFamilyTitle.textContent = isSplay ? algorithmText("Splaybaum") : algorithmText("Normaler Binärbaum");
   el.treeFamilyIdea.innerHTML = isSplay
-    ? "<strong>Splaybaum</strong><span>Jeder Zugriff bewegt den verwendeten Knoten zur Wurzel. Häufig genutzte Werte werden dadurch mit der Zeit besonders schnell erreichbar; amortisiert kosten Operationen O(log n).</span>"
-    : "<strong>Binärer Suchbaum</strong><span>Links stehen kleinere, rechts größere Werte. Suchen, Einfügen und Löschen kosten im Mittel O(log n), bei starker Schieflage jedoch O(n).</span>";
+    ? algorithmHtml("<strong>Splaybaum</strong><span>Jeder Zugriff bewegt den verwendeten Knoten zur Wurzel. Häufig genutzte Werte werden dadurch mit der Zeit besonders schnell erreichbar; amortisiert kosten Operationen O(log n).</span>")
+    : algorithmHtml("<strong>Binärer Suchbaum</strong><span>Links stehen kleinere, rechts größere Werte. Suchen, Einfügen und Löschen kosten im Mittel O(log n), bei starker Schieflage jedoch O(n).</span>");
   renderTree(el.treeFamilyVisual, state.treeFamilyRoot, {
     animate: replay,
     replay,
@@ -5920,27 +6231,27 @@ function changeStackQueueMode() {
 function addStackQueueItem() {
   const value = el.stackQueueValue.value.trim();
   if (!value) {
-    el.stackQueueNote.textContent = "Gib zuerst einen Wert ein.";
+    el.stackQueueNote.textContent = algorithmText("Gib zuerst einen Wert ein.");
     return;
   }
   state.stackQueueItems.push(value);
   el.stackQueueValue.value = "";
   el.stackQueueNote.textContent = state.stackQueueMode === "stack"
-    ? `${value} wurde oben auf den Stack gelegt.`
-    : `${value} wurde hinten in die Queue eingereiht.`;
+    ? (isEnglish() ? `${value} was pushed onto the top of the stack.` : `${value} wurde oben auf den Stack gelegt.`)
+    : (isEnglish() ? `${value} was enqueued at the back of the queue.` : `${value} wurde hinten in die Queue eingereiht.`);
   renderStackQueue(false);
 }
 
 function removeStackQueueItem() {
   if (!state.stackQueueItems.length) {
-    el.stackQueueNote.textContent = "Die Struktur ist bereits leer.";
+    el.stackQueueNote.textContent = algorithmText("Die Struktur ist bereits leer.");
     return;
   }
   const index = state.stackQueueMode === "stack" ? state.stackQueueItems.length - 1 : 0;
   const [removed] = state.stackQueueItems.splice(index, 1);
   el.stackQueueNote.textContent = state.stackQueueMode === "stack"
-    ? `${removed} wurde per Pop entfernt.`
-    : `${removed} wurde per Dequeue entfernt.`;
+    ? (isEnglish() ? `${removed} was removed by pop.` : `${removed} wurde per Pop entfernt.`)
+    : (isEnglish() ? `${removed} was removed by dequeue.` : `${removed} wurde per Dequeue entfernt.`);
   renderStackQueue(false);
 }
 
@@ -5960,22 +6271,28 @@ function renderStackQueue(resetNote = true) {
   el.stackQueueVisual.innerHTML = state.stackQueueItems
     .map((item, index) => {
       const isNext = isStack ? index === state.stackQueueItems.length - 1 : index === 0;
-      return `<div class="sq-item${isNext ? " is-next" : ""}"><span>${escapeAttribute(item)}</span>${isNext ? "<small>als Nächstes</small>" : ""}</div>`;
+      return `<div class="sq-item${isNext ? " is-next" : ""}"><span>${escapeAttribute(item)}</span>${isNext ? `<small>${isEnglish() ? "next" : "als Nächstes"}</small>` : ""}</div>`;
     })
     .join("");
   if (!state.stackQueueItems.length) {
-    el.stackQueueVisual.innerHTML = '<p class="tree-empty">(leer)</p>';
+    el.stackQueueVisual.innerHTML = `<p class="tree-empty">${isEnglish() ? "(empty)" : "(leer)"}</p>`;
   }
   if (resetNote) {
     el.stackQueueNote.textContent = isStack
-      ? "LIFO: Das oberste Element wird zuerst entfernt."
-      : "FIFO: Das vorderste Element wird zuerst entfernt.";
+      ? algorithmText("LIFO: Das oberste Element wird zuerst entfernt.")
+      : algorithmText("FIFO: Das vorderste Element wird zuerst entfernt.");
   }
   el.stackQueueDetail.innerHTML = isStack
-    ? `<p><strong>Stack (LIFO):</strong> Push legt ein neues Element oben ab. Pop entfernt genau dieses oberste und damit zuletzt eingefügte Element.</p>
-       <p><strong>Aktueller Zustand:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[state.stackQueueItems.length - 1])} liegt oben und würde als Nächstes entfernt.` : "Der Stack ist leer; Pop kann kein Element liefern."}</p>`
-    : `<p><strong>Queue (FIFO):</strong> Enqueue fügt hinten an, Dequeue entfernt vorne. So bleibt die zeitliche Reihenfolge der Einträge erhalten.</p>
-       <p><strong>Aktueller Zustand:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[0])} steht vorne und würde als Nächstes entfernt.` : "Die Queue ist leer; Dequeue kann kein Element liefern."}</p>`;
+    ? (isEnglish()
+      ? `<p><strong>Stack (LIFO):</strong> Push places a new element on top. Pop removes exactly that top, most recently inserted element.</p>
+       <p><strong>Current state:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[state.stackQueueItems.length - 1])} is on top and would be removed next.` : "The stack is empty; pop cannot return an element."}</p>`
+      : `<p><strong>Stack (LIFO):</strong> Push legt ein neues Element oben ab. Pop entfernt genau dieses oberste und damit zuletzt eingefügte Element.</p>
+       <p><strong>Aktueller Zustand:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[state.stackQueueItems.length - 1])} liegt oben und würde als Nächstes entfernt.` : "Der Stack ist leer; Pop kann kein Element liefern."}</p>`)
+    : (isEnglish()
+      ? `<p><strong>Queue (FIFO):</strong> Enqueue appends at the back, dequeue removes from the front. This preserves the chronological order of entries.</p>
+       <p><strong>Current state:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[0])} is at the front and would be removed next.` : "The queue is empty; dequeue cannot return an element."}</p>`
+      : `<p><strong>Queue (FIFO):</strong> Enqueue fügt hinten an, Dequeue entfernt vorne. So bleibt die zeitliche Reihenfolge der Einträge erhalten.</p>
+       <p><strong>Aktueller Zustand:</strong> ${state.stackQueueItems.length ? `${escapeAttribute(state.stackQueueItems[0])} steht vorne und würde als Nächstes entfernt.` : "Die Queue ist leer; Dequeue kann kein Element liefern."}</p>`);
 }
 
 function resetGraphVisualization() {
@@ -6000,8 +6317,8 @@ function renderGraphStep() {
     node.classList.toggle("is-visited", step.visited.includes(name));
     node.classList.toggle("is-active", step.active === name);
   });
-  el.graphNote.textContent = `Schritt ${state.graphStepIndex + 1} von ${steps.length}: ${step.note}`;
-  el.graphIdea.innerHTML = `<strong>${info.title}</strong><span>${info.text}</span>`;
+  el.graphNote.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.graphStepIndex + 1} ${isEnglish() ? "of" : "von"} ${steps.length}: ${algorithmText(step.note)}`;
+  el.graphIdea.innerHTML = algorithmHtml(`<strong>${info.title}</strong><span>${info.text}</span>`);
   const graphDetails = {
     bfs: "Die Queue arbeitet nach FIFO. Darum werden erst alle direkt erreichbaren Nachbarn verarbeitet, bevor die Suche eine Ebene tiefer geht. In ungewichteten Graphen findet BFS so Wege mit möglichst wenigen Kanten.",
     dfs: "Ein Stack merkt sich den aktuellen Pfad. Erst wenn kein unbesuchter Nachbar mehr existiert, springt DFS zurück und probiert am letzten Verzweigungspunkt den nächsten Weg.",
@@ -6012,11 +6329,11 @@ function renderGraphStep() {
   const visitedText = step.visited.length
     ? `Bereits abgeschlossen oder fest berücksichtigt: ${step.visited.join(", ")}.`
     : "Noch kein Knoten ist abgeschlossen; dies ist der Ausgangszustand.";
-  el.graphStepDetail.innerHTML = `
+  el.graphStepDetail.innerHTML = algorithmHtml(`
     <p><strong>Was passiert?</strong> ${step.note}</p>
     <p><strong>Aktueller Zustand:</strong> ${step.active} ist aktiv. ${visitedText}</p>
     <p><strong>Warum dieser Schritt?</strong> ${graphDetails[algorithm]}</p>
-  `;
+  `);
   el.graphMatrix.classList.toggle("is-hidden", algorithm !== "floyd");
   el.graphMatrix.textContent = step.matrix || "";
   document.getElementById("graph-next").disabled = state.graphStepIndex >= steps.length - 1;
@@ -6039,7 +6356,7 @@ function resetHeap() {
 function addHeapValue() {
   const value = Number(el.heapValue.value);
   if (!Number.isFinite(value)) {
-    el.heapNote.textContent = "Gib zuerst eine Zahl ein.";
+    el.heapNote.textContent = algorithmText("Gib zuerst eine Zahl ein.");
     return;
   }
 
@@ -6054,13 +6371,15 @@ function addHeapValue() {
     index = parent;
   }
   el.heapValue.value = "";
-  el.heapNote.textContent = `${value} wurde eingefügt und per Bubble-up einsortiert.`;
+  el.heapNote.textContent = isEnglish()
+    ? `${value} was inserted and ordered by bubble-up.`
+    : `${value} wurde eingefügt und per Bubble-up einsortiert.`;
   renderHeap(false);
 }
 
 function extractHeapRoot() {
   if (!state.heapItems.length) {
-    el.heapNote.textContent = "Der Heap ist bereits leer.";
+    el.heapNote.textContent = algorithmText("Der Heap ist bereits leer.");
     return;
   }
   const removed = state.heapItems[0];
@@ -6085,7 +6404,9 @@ function extractHeapRoot() {
       index = preferred;
     }
   }
-  el.heapNote.textContent = `${removed} wurde entfernt; der Ersatzwert wurde per Bubble-down einsortiert.`;
+  el.heapNote.textContent = isEnglish()
+    ? `${removed} was removed; the replacement value was ordered by bubble-down.`
+    : `${removed} wurde entfernt; der Ersatzwert wurde per Bubble-down einsortiert.`;
   renderHeap(false);
 }
 
@@ -6096,8 +6417,8 @@ function heapComesFirst(first, second) {
 function renderHeap(resetNote = true) {
   el.heapMode.value = state.heapMode;
   el.heapGoal.textContent = state.heapMode === "min"
-    ? "Min-Heap: Der kleinste Wert steht immer an der Wurzel."
-    : "Max-Heap: Der größte Wert steht immer an der Wurzel.";
+    ? (isEnglish() ? "Min-heap: the smallest value is always at the root." : "Min-Heap: Der kleinste Wert steht immer an der Wurzel.")
+    : (isEnglish() ? "Max-heap: the largest value is always at the root." : "Max-Heap: Der größte Wert steht immer an der Wurzel.");
   el.heapVisual.innerHTML = "";
 
   let start = 0;
@@ -6116,10 +6437,10 @@ function renderHeap(resetNote = true) {
     width *= 2;
   }
   if (!state.heapItems.length) {
-    el.heapVisual.innerHTML = '<p class="tree-empty">(leer)</p>';
+    el.heapVisual.innerHTML = `<p class="tree-empty">${isEnglish() ? "(empty)" : "(leer)"}</p>`;
   }
   if (resetNote) {
-    el.heapNote.textContent = "Die Array-Indizes zeigen die interne Speicherung des vollständigen Binärbaums.";
+    el.heapNote.textContent = algorithmText("Die Array-Indizes zeigen die interne Speicherung des vollständigen Binärbaums.");
   }
 }
 
@@ -6131,13 +6452,21 @@ function checkDataStructureQuestion() {
   }
 
   if (selected === state.dataStructureQuestion.answer) {
-    setFeedback(el.dataStructureFeedback, `Richtig. ${state.dataStructureQuestion.explanation}`, "correct");
+    setFeedback(
+      el.dataStructureFeedback,
+      isEnglish()
+        ? `Correct. ${algorithmText(state.dataStructureQuestion.explanation)}`
+        : `Richtig. ${state.dataStructureQuestion.explanation}`,
+      "correct",
+    );
     return;
   }
 
   setFeedback(
     el.dataStructureFeedback,
-    `Noch nicht. Korrekt ist: ${state.dataStructureQuestion.answer}. ${state.dataStructureQuestion.explanation}`,
+    isEnglish()
+      ? `Not yet. Correct is: ${algorithmText(state.dataStructureQuestion.answer)}. ${algorithmText(state.dataStructureQuestion.explanation)}`
+      : `Noch nicht. Korrekt ist: ${state.dataStructureQuestion.answer}. ${state.dataStructureQuestion.explanation}`,
     "wrong",
   );
 }
@@ -6224,14 +6553,22 @@ function applyAVLAnswer() {
     );
     renderTree(el.avlTreeBefore, cloneNode(state.avlQuestion.afterRoot), {
       pivot: state.avlQuestion.pivot,
-      motionHint: `Richtig: ${selected}. Der Ausgangsbaum wurde in den balancierten Endzustand rotiert.`,
+      motionHint: isEnglish()
+        ? `Correct: ${selected}. The starting tree was rotated into the balanced final state.`
+        : `Richtig: ${selected}. Der Ausgangsbaum wurde in den balancierten Endzustand rotiert.`,
       replay: true,
       showStats: false,
     });
     if (state.showAVLPreview) {
       previewAVLRotation(true);
     }
-    setFeedback(el.avlFeedback, `Richtig: ${selected}. Genau diese Rotation stellt die AVL-Balance wieder her.`, "correct");
+    setFeedback(
+      el.avlFeedback,
+      isEnglish()
+        ? `Correct: ${selected}. Exactly this rotation restores the AVL balance.`
+        : `Richtig: ${selected}. Genau diese Rotation stellt die AVL-Balance wieder her.`,
+      "correct",
+    );
     return;
   }
 
@@ -6240,7 +6577,9 @@ function applyAVLAnswer() {
   }
   setFeedback(
     el.avlFeedback,
-    `Noch nicht richtig. ${selected} führt nicht zum korrekten AVL-Endzustand. Richtig ist ${state.avlQuestion.rotation}, weil die Rotation am unausgeglichenen Knoten ${state.avlQuestion.pivot} den Höhenunterschied wieder auf höchstens 1 bringt.`,
+    isEnglish()
+      ? `Not quite. ${selected} does not lead to the correct AVL final state. Correct is ${state.avlQuestion.rotation}, because the rotation at the unbalanced node ${state.avlQuestion.pivot} brings the height difference back to at most 1.`
+      : `Noch nicht richtig. ${selected} führt nicht zum korrekten AVL-Endzustand. Richtig ist ${state.avlQuestion.rotation}, weil die Rotation am unausgeglichenen Knoten ${state.avlQuestion.pivot} den Höhenunterschied wieder auf höchstens 1 bringt.`,
     "wrong",
   );
 }
@@ -6454,7 +6793,7 @@ function formatOrderLabel(value) {
 
 function formatMasterCaseLabel(value) {
   const match = masterCaseChoices.find((choice) => choice.value === value);
-  return match ? match.label : value;
+  return algorithmHtml(match ? match.label : value);
 }
 
 function sameMathText(actual, expected) {
@@ -6476,12 +6815,12 @@ function normalizeMathText(value) {
 }
 
 function formatInlineMathLabel(value) {
-  const text = String(value);
+  const text = String(algorithmText(value));
   if (text.includes("<")) {
-    return formatPlainFractions(text);
+    return algorithmHtml(formatPlainFractions(text));
   }
 
-  return formatPlainFractions(text)
+  return algorithmHtml(formatPlainFractions(text)
     .replace(/2\^\(([^)]+)\)/g, "2<sup>$1</sup>")
     .replace(/n\^\(([^)]+)\)/g, "n<sup>$1</sup>")
     .replace(/n\^log_(\d+)\((\d+)\)/g, "n<sup>log<sub>$1</sub>($2)</sup>")
@@ -6497,7 +6836,7 @@ function formatInlineMathLabel(value) {
     .replaceAll("n^3", "n<sup>3</sup>")
     .replaceAll("n^2", "n<sup>2</sup>")
     .replaceAll("2^n", "2<sup>n</sup>")
-    .replaceAll("*", " · ");
+    .replaceAll("*", " · "));
 }
 
 function formatPlainFractions(value) {
