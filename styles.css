@@ -62,6 +62,410 @@ body {
     linear-gradient(145deg, #f9f5ee 0%, var(--bg) 55%, #efe2ca 100%);
 }
 
+body.krugo-is-speaking {
+  overflow: hidden;
+}
+
+.krugo-welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 1.5rem;
+  background:
+    linear-gradient(135deg, rgba(7, 41, 47, 0.74), rgba(20, 31, 39, 0.56)),
+    rgba(10, 23, 27, 0.34);
+  backdrop-filter: blur(13px);
+  animation: krugo-curtain-in 420ms ease both;
+}
+
+.krugo-welcome.is-leaving {
+  pointer-events: none;
+  animation: krugo-curtain-out 420ms ease both;
+}
+
+.krugo-welcome-glow {
+  position: absolute;
+  width: min(42rem, 90vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(248, 189, 91, 0.3), transparent 68%);
+  animation: krugo-glow 3s ease-in-out infinite;
+}
+
+.krugo-scene {
+  position: relative;
+  display: grid;
+  grid-template-columns: 14rem minmax(18rem, 31rem);
+  gap: 2rem;
+  align-items: center;
+  width: min(49rem, 100%);
+}
+
+.krugo-character {
+  position: relative;
+  width: 13rem;
+  height: 19rem;
+  filter: drop-shadow(0 28px 24px rgba(2, 18, 22, 0.28));
+  animation: krugo-arrives 850ms cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+
+.krugo-shadow {
+  position: absolute;
+  bottom: 0.2rem;
+  left: 50%;
+  width: 8.5rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: rgba(4, 22, 27, 0.3);
+  filter: blur(5px);
+  transform: translateX(-50%);
+}
+
+.krugo-head {
+  position: absolute;
+  top: 4.15rem;
+  left: 1.4rem;
+  z-index: 5;
+  width: 10.2rem;
+  height: 7.5rem;
+  border: 0.28rem solid #e1e9e6;
+  border-radius: 43% 43% 38% 38%;
+  background: linear-gradient(145deg, #ffffff 5%, #cddbd8 62%, #94aaa8);
+  box-shadow:
+    inset 0.55rem 0.65rem 0.8rem rgba(255, 255, 255, 0.8),
+    inset -0.6rem -0.7rem 0.9rem rgba(38, 74, 78, 0.22);
+}
+
+.krugo-face {
+  position: absolute;
+  inset: 1.15rem 0.9rem 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 2.1rem;
+  border: 0.2rem solid rgba(77, 173, 159, 0.42);
+  border-radius: 39% 39% 34% 34%;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(85, 235, 208, 0.16), transparent 42%),
+    linear-gradient(145deg, #123941, #071f27);
+  box-shadow: inset 0 0 1.4rem rgba(41, 218, 186, 0.16);
+}
+
+.krugo-eye {
+  width: 0.72rem;
+  height: 1.2rem;
+  margin-top: 1.35rem;
+  border-radius: 999px;
+  background: #68f1cf;
+  box-shadow: 0 0 0.75rem #3bdab7;
+  animation: krugo-blink 4.5s infinite;
+}
+
+.krugo-smile {
+  position: absolute;
+  bottom: 1.05rem;
+  left: 50%;
+  width: 2.2rem;
+  height: 0.9rem;
+  border-bottom: 0.25rem solid #68f1cf;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.krugo-ear {
+  position: absolute;
+  top: 6.45rem;
+  z-index: 3;
+  width: 1.6rem;
+  height: 3.1rem;
+  border: 0.22rem solid #d8e3e0;
+  background: linear-gradient(#f7faf9, #9fb2af);
+}
+
+.krugo-ear-left {
+  left: 0.45rem;
+  border-radius: 0.9rem 0.25rem 0.25rem 0.9rem;
+}
+
+.krugo-ear-right {
+  right: 0.45rem;
+  border-radius: 0.25rem 0.9rem 0.9rem 0.25rem;
+}
+
+.krugo-antenna {
+  position: absolute;
+  top: 1.85rem;
+  left: 50%;
+  z-index: 3;
+  width: 0.28rem;
+  height: 2.8rem;
+  border-radius: 99px;
+  background: #9db2af;
+  transform: translateX(-50%) rotate(6deg);
+  transform-origin: bottom;
+}
+
+.krugo-antenna i {
+  position: absolute;
+  top: -0.55rem;
+  left: 50%;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 0.18rem solid #d9e6e3;
+  border-radius: 50%;
+  background: #f6a93b;
+  box-shadow: 0 0 1rem rgba(246, 169, 59, 0.75);
+  transform: translateX(-50%);
+}
+
+.krugo-cap {
+  position: absolute;
+  top: 2.5rem;
+  left: 2.35rem;
+  z-index: 8;
+  width: 8.3rem;
+  height: 2.6rem;
+  border-radius: 4rem 4rem 0.7rem 0.7rem;
+  background: linear-gradient(145deg, #178477, #07574f);
+  box-shadow: inset 0 0.3rem rgba(255, 255, 255, 0.16);
+  transform: rotate(-2deg);
+}
+
+.krugo-cap::after {
+  content: "";
+  position: absolute;
+  right: -0.7rem;
+  bottom: -0.35rem;
+  width: 5.1rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: #064b45;
+  transform: rotate(5deg);
+}
+
+.krugo-cap i {
+  position: absolute;
+  top: 0.7rem;
+  left: 50%;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 0.16rem solid #ffe5ac;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.krugo-neck {
+  position: absolute;
+  top: 11.1rem;
+  left: 50%;
+  width: 2.8rem;
+  height: 1.6rem;
+  border-radius: 0.4rem;
+  background: #819995;
+  transform: translateX(-50%);
+}
+
+.krugo-body {
+  position: absolute;
+  top: 12rem;
+  left: 2.55rem;
+  z-index: 4;
+  width: 7.9rem;
+  height: 5.5rem;
+  border: 0.25rem solid #dce7e4;
+  border-radius: 1.6rem 1.6rem 2.5rem 2.5rem;
+  background: linear-gradient(145deg, #f7faf9, #a7bbb7);
+  box-shadow: inset -0.5rem -0.5rem 0.8rem rgba(36, 74, 78, 0.18);
+}
+
+.krugo-badge {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(145deg, #18a18e, #08675d);
+  box-shadow: 0 0.45rem 0.8rem rgba(8, 103, 93, 0.25);
+  font-style: normal;
+  font-weight: 700;
+  transform: translateX(-50%);
+}
+
+.krugo-light {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.7rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #f6a93b;
+  box-shadow: 0 0 0.55rem #f6a93b;
+}
+
+.krugo-arm {
+  position: absolute;
+  top: 12.6rem;
+  z-index: 2;
+  width: 2rem;
+  height: 5.2rem;
+  border: 0.22rem solid #d9e5e2;
+  border-radius: 1.2rem;
+  background: linear-gradient(90deg, #9db2ae, #edf3f1);
+  transform-origin: 50% 0.8rem;
+}
+
+.krugo-arm i {
+  position: absolute;
+  bottom: -0.6rem;
+  left: 50%;
+  width: 2.2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #dce7e4;
+  transform: translateX(-50%);
+}
+
+.krugo-arm-left {
+  left: 1.5rem;
+  transform: rotate(13deg);
+}
+
+.krugo-arm-right {
+  right: 1.35rem;
+  animation: krugo-wave 1.1s ease-in-out 0.75s 3 alternate;
+  transform: rotate(-48deg);
+}
+
+.krugo-speech {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 2rem 2rem 2rem 0.55rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  color: #203337;
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 2rem 5rem rgba(2, 18, 22, 0.3);
+  animation: krugo-speech-in 650ms 350ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+
+.krugo-speech::before {
+  content: "";
+  position: absolute;
+  bottom: 1.5rem;
+  left: -1.25rem;
+  border-width: 1.1rem 1.35rem 0 0;
+  border-style: solid;
+  border-color: transparent rgba(255, 253, 248, 0.96) transparent transparent;
+}
+
+.krugo-speech h2 {
+  margin: 0.35rem 0 0.65rem;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  letter-spacing: -0.05em;
+}
+
+.krugo-speech > p:not(.section-label) {
+  max-width: 36ch;
+  margin: 0;
+  color: #536367;
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.krugo-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+@keyframes krugo-curtain-in {
+  from { opacity: 0; }
+}
+
+@keyframes krugo-curtain-out {
+  to { opacity: 0; }
+}
+
+@keyframes krugo-arrives {
+  from {
+    opacity: 0;
+    transform: translateY(7rem) rotate(-7deg);
+  }
+}
+
+@keyframes krugo-speech-in {
+  from {
+    opacity: 0;
+    transform: translateX(2rem) scale(0.9);
+  }
+}
+
+@keyframes krugo-wave {
+  to { transform: rotate(-125deg); }
+}
+
+@keyframes krugo-blink {
+  0%, 46%, 50%, 100% { transform: scaleY(1); }
+  48% { transform: scaleY(0.08); }
+}
+
+@keyframes krugo-glow {
+  50% { opacity: 0.65; transform: scale(1.08); }
+}
+
+@media (max-width: 680px) {
+  .krugo-welcome {
+    align-items: end;
+    padding: 1rem;
+  }
+
+  .krugo-scene {
+    grid-template-columns: 1fr;
+    gap: 0;
+    justify-items: center;
+  }
+
+  .krugo-character {
+    width: 10rem;
+    height: 14.6rem;
+    margin-bottom: -1.2rem;
+    scale: 0.76;
+    transform-origin: bottom center;
+  }
+
+  .krugo-speech {
+    z-index: 10;
+    width: 100%;
+    border-radius: 1.5rem;
+    padding: 1.35rem;
+  }
+
+  .krugo-speech::before {
+    display: none;
+  }
+
+  .krugo-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .krugo-character,
+  .krugo-speech,
+  .krugo-welcome,
+  .krugo-welcome-glow,
+  .krugo-arm-right,
+  .krugo-eye {
+    animation: none;
+  }
+}
+
 body.immersive-active {
   overflow: hidden;
 }

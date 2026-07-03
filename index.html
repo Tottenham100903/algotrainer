@@ -7,9 +7,46 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-i18n">
+  <link rel="stylesheet" href="styles.css?v=20260703-krugo">
 </head>
 <body>
+  <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
+    <div class="krugo-welcome-glow" aria-hidden="true"></div>
+    <div class="krugo-scene">
+      <div class="krugo-character" aria-hidden="true">
+        <span class="krugo-shadow"></span>
+        <span class="krugo-antenna"><i></i></span>
+        <span class="krugo-cap"><i></i></span>
+        <span class="krugo-ear krugo-ear-left"></span>
+        <span class="krugo-ear krugo-ear-right"></span>
+        <span class="krugo-head">
+          <span class="krugo-face">
+            <i class="krugo-eye"></i>
+            <i class="krugo-eye"></i>
+            <i class="krugo-smile"></i>
+          </span>
+        </span>
+        <span class="krugo-neck"></span>
+        <span class="krugo-body">
+          <i class="krugo-badge">IT</i>
+          <i class="krugo-light"></i>
+        </span>
+        <span class="krugo-arm krugo-arm-left"><i></i></span>
+        <span class="krugo-arm krugo-arm-right"><i></i></span>
+      </div>
+
+      <div class="krugo-speech">
+        <p class="section-label" data-i18n="krugo.introduction">Dein Reisebegleiter</p>
+        <h2 id="krugo-welcome-title" data-i18n="krugo.greeting">Hey, ich bin Krugo!</h2>
+        <p data-i18n="krugo.message">Komm, steig mit mir in den InfoTrain und entdecke die Welt der Informatik.</p>
+        <div class="krugo-actions">
+          <button id="krugo-start" class="primary-btn" type="button" data-i18n="krugo.start">Los geht’s!</button>
+          <button id="krugo-later" class="secondary-btn" type="button" data-i18n="krugo.later">Später</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="page-shell">
     <main>
       <section id="home-view" class="app-view app-view-active">
@@ -1094,6 +1131,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-i18n"></script>
+  <script type="module" src="app.js?v=20260703-krugo"></script>
 </body>
 </html>

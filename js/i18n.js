@@ -48,6 +48,11 @@ const translations = {
     "topics.basics": "Grundlagen",
     "topics.programming": "Programmieren",
     "topics.dataScience": "Data Science",
+    "krugo.introduction": "Dein Reisebegleiter",
+    "krugo.greeting": "Hey, ich bin Krugo!",
+    "krugo.message": "Komm, steig mit mir in den InfoTrain und entdecke die Welt der Informatik.",
+    "krugo.start": "Los geht’s!",
+    "krugo.later": "Später",
   },
   en: {
     "common.new": "New",
@@ -98,6 +103,11 @@ const translations = {
     "topics.basics": "Computer Science Basics",
     "topics.programming": "Programming",
     "topics.dataScience": "Data Science",
+    "krugo.introduction": "Your travel companion",
+    "krugo.greeting": "Hey, I’m Krugo!",
+    "krugo.message": "Come aboard the InfoTrain with me and discover the world of computer science.",
+    "krugo.start": "Let’s go!",
+    "krugo.later": "Later",
   },
   fr: {
     "common.new": "Nouveau",
@@ -148,6 +158,11 @@ const translations = {
     "topics.basics": "Bases de l’informatique",
     "topics.programming": "Programmation",
     "topics.dataScience": "Data Science",
+    "krugo.introduction": "Ton compagnon de voyage",
+    "krugo.greeting": "Salut, moi c’est Krugo !",
+    "krugo.message": "Monte avec moi dans l’InfoTrain et découvre le monde de l’informatique.",
+    "krugo.start": "C’est parti !",
+    "krugo.later": "Plus tard",
   },
   es: {
     "common.new": "Nuevo",
@@ -198,6 +213,11 @@ const translations = {
     "topics.basics": "Fundamentos de informática",
     "topics.programming": "Programación",
     "topics.dataScience": "Data Science",
+    "krugo.introduction": "Tu compañero de viaje",
+    "krugo.greeting": "¡Hola, soy Krugo!",
+    "krugo.message": "Sube conmigo al InfoTrain y descubre el mundo de la informática.",
+    "krugo.start": "¡Vamos!",
+    "krugo.later": "Más tarde",
   },
 };
 

@@ -1844,6 +1844,9 @@ const el = {
   languageOptions: document.getElementById("language-options"),
   currentLanguageLabel: document.getElementById("current-language-label"),
   languageButtons: [...document.querySelectorAll("[data-language]")],
+  krugoWelcome: document.getElementById("krugo-welcome"),
+  krugoStart: document.getElementById("krugo-start"),
+  krugoLater: document.getElementById("krugo-later"),
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -2009,6 +2012,7 @@ const el = {
 initializeTheme();
 initializeLearningProgress();
 updateLanguageMenu(initializeLanguage());
+initializeKrugoWelcome();
 el.menuToggle.addEventListener("click", () => {
   const isOpen = el.menuToggle.getAttribute("aria-expanded") === "true";
   isOpen ? closeSettingsMenu() : openSettingsMenu();
@@ -2038,6 +2042,8 @@ el.languageButtons.forEach((button) => {
     updateLanguageMenu(language);
   });
 });
+el.krugoStart.addEventListener("click", () => dismissKrugoWelcome(true));
+el.krugoLater.addEventListener("click", () => dismissKrugoWelcome(true));
 window.addEventListener("infotrain:languagechange", (event) => {
   updateLanguageMenu(event.detail.language);
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
@@ -2045,6 +2051,10 @@ window.addEventListener("infotrain:languagechange", (event) => {
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    if (!el.krugoWelcome.classList.contains("is-hidden")) {
+      dismissKrugoWelcome();
+      return;
+    }
     closeSettingsMenu();
   }
 });
@@ -2318,6 +2328,40 @@ function updateLanguageMenu(language) {
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
+}
+
+function initializeKrugoWelcome() {
+  let hasMetKrugo = false;
+  try {
+    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo") === "true";
+  } catch {
+    // Krugo can still introduce himself when storage is unavailable.
+  }
+  if (hasMetKrugo) {
+    return;
+  }
+
+  window.setTimeout(() => {
+    el.krugoWelcome.classList.remove("is-hidden");
+    document.body.classList.add("krugo-is-speaking");
+    el.krugoStart.focus();
+  }, 650);
+}
+
+function dismissKrugoWelcome(remember = false) {
+  el.krugoWelcome.classList.add("is-leaving");
+  document.body.classList.remove("krugo-is-speaking");
+  if (remember) {
+    try {
+      window.localStorage.setItem("infotrain-met-krugo", "true");
+    } catch {
+      // Dismissing the welcome still works without persistent storage.
+    }
+  }
+  window.setTimeout(() => {
+    el.krugoWelcome.classList.add("is-hidden");
+    el.krugoWelcome.classList.remove("is-leaving");
+  }, 420);
 }
 
 function initializeLearningProgress() {
