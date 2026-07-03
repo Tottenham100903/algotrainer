@@ -957,6 +957,812 @@ const subjectLearningAreas = {
   },
 };
 
+const subjectModes = [
+  { key: "learn", label: "Erklärung" },
+  { key: "guided", label: "Geführte Übung" },
+  { key: "exam", label: "Klausuraufgabe" },
+];
+
+const subjectAreaEnhancements = {
+  basics: {
+    defaultTopic: "zahlensysteme",
+    topics: {
+      zahlensysteme: {
+        nav: "Zahlensysteme",
+        title: "Binär, Hex und Zweierkomplement",
+        copy: "Zahlendarstellung ist klausurrelevant, weil viele Fehler beim Stellenwert, beim Vorzeichenbit oder beim Overflow entstehen.",
+        learningGoals: ["Binär- und Hexzahlen einordnen", "Zweierkomplement schrittweise bilden", "Overflow-Regel erklären"],
+        explanation: "Im Binärsystem zählt jede Stelle eine Zweierpotenz. Im Zweierkomplement steht das höchstwertige Bit für das Vorzeichen. Für eine negative Zahl invertierst du die positive Darstellung und addierst 1. Typischer Denkfehler: Nicht das letzte Bit entscheidet über das Vorzeichen, sondern das linke Bit.",
+        concepts: [
+          ["Stellenwert", "1011₂ bedeutet 8 + 0 + 2 + 1 = 11."],
+          ["Zweierkomplement", "Invertieren und 1 addieren; dadurch sind Additionen technisch einheitlich möglich."],
+          ["Overflow", "Bei gleicher Vorzeichenaddition entsteht ein Ergebnis mit falschem Vorzeichen."],
+        ],
+        visualization: {
+          title: "8-Bit-Darstellung",
+          type: "bit-grid",
+          bits: "11111011",
+          rows: [
+            ["Ausgang", "+5 = 00000101"],
+            ["Invertieren", "11111010"],
+            ["+1 addieren", "11111011 = -5"],
+          ],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Zweierkomplement bilden",
+            question: "Welche 8-Bit-Darstellung ist -5 im Zweierkomplement?",
+            choices: ["11111011", "10000101", "11111010", "00000101"],
+            answer: "11111011",
+            hint: "Starte mit +5 = 00000101, invertiere alle Bits und addiere 1.",
+            explanation: "00000101 wird zu 11111010, plus 1 ergibt 11111011. Das linke Bit zeigt das negative Vorzeichen.",
+            commonMistakes: {
+              "10000101": "Das wäre Vorzeichen-Betrag-Denken. Im Zweierkomplement wird nicht nur ein Vorzeichenbit gesetzt.",
+              "11111010": "Du hast invertiert, aber die abschließende +1 vergessen.",
+            },
+            solution: "00000101 → 11111010 → 11111011.",
+            examRelevance: "Sehr typisch in Klausuren zu Zahlendarstellung und Overflow.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "multi",
+            level: 4,
+            title: "Overflow erkennen",
+            question: "Welche Aussagen zu 8-Bit-Zweierkomplement sind korrekt?",
+            choices: [
+              "01111111 + 00000001 erzeugt Overflow.",
+              "Das höchstwertige Bit ist für das Vorzeichen entscheidend.",
+              "11111111 entspricht +255.",
+              "Overflow kann bei Addition zweier positiver Zahlen entstehen.",
+            ],
+            answer: [
+              "01111111 + 00000001 erzeugt Overflow.",
+              "Das höchstwertige Bit ist für das Vorzeichen entscheidend.",
+              "Overflow kann bei Addition zweier positiver Zahlen entstehen.",
+            ],
+            hint: "Prüfe Vorzeichen vor und nach der Addition.",
+            explanation: "127 + 1 kippt in 10000000 und damit in den negativen Bereich. 11111111 entspricht im Zweierkomplement -1, nicht +255.",
+            solution: "Korrekt sind 1, 2 und 4. Aussage 3 verwechselt unsigned mit Zweierkomplement.",
+          },
+        ],
+      },
+      boolesch: {
+        nav: "Boolesche Algebra",
+        title: "Wahrheitstabellen, DNF und KNF",
+        copy: "Boolesche Algebra prüft, ob du logische Ausdrücke strukturiert auswerten und Normalformen erkennen kannst.",
+        learningGoals: ["Operatoren sicher lesen", "DNF und KNF unterscheiden", "Wahrheitstabellen nutzen"],
+        explanation: "Eine DNF ist eine Oder-Verknüpfung von Und-Blöcken. Eine KNF ist eine Und-Verknüpfung von Oder-Blöcken. Klausurtrick: Schaue auf die oberste Verknüpfung, nicht nur auf einzelne Klammern.",
+        concepts: [
+          ["DNF", "Oder von Konjunktionen, zum Beispiel (A ∧ B) ∨ (¬A ∧ C)."],
+          ["KNF", "Und von Disjunktionen, zum Beispiel (A ∨ B) ∧ (¬A ∨ C)."],
+          ["KDNF/KKNF", "Kanonische Formen enthalten alle Variablen in jedem Block."],
+        ],
+        visualization: {
+          title: "Ausdrucksbaum",
+          type: "logic-tree",
+          nodes: ["∨", "A ∧ B", "¬A ∧ C"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Normalform erkennen",
+            question: "Welche Form hat (A ∧ B) ∨ (¬A ∧ C)?",
+            choices: ["DNF", "KNF", "Weder noch", "Automat"],
+            answer: "DNF",
+            hint: "Die oberste Verknüpfung ist ein Oder zwischen Und-Blöcken.",
+            explanation: "Der Ausdruck ist eine Disjunktion von Konjunktionen und erfüllt damit die DNF-Struktur.",
+            solution: "Oberste Ebene: ∨. Darunter: zwei ∧-Terme. Also DNF.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "truefalse",
+            level: 4,
+            title: "KNF/DNF begründen",
+            question: "(A ∨ B) ∧ (¬A ∨ C) ist eine KNF.",
+            choices: ["Wahr", "Falsch"],
+            answer: "Wahr",
+            hint: "KNF bedeutet: Und von Oder-Blöcken.",
+            explanation: "Die oberste Verknüpfung ist ∧, die einzelnen Klammern sind Oder-Terme. Genau das ist KNF.",
+            solution: "Wahr, weil (A ∨ B) und (¬A ∨ C) Disjunktionen sind und beide konjunktiv verbunden werden.",
+          },
+        ],
+      },
+      automaten: {
+        nav: "Automaten",
+        title: "Endliche Automaten und Grammatiken",
+        copy: "Automaten helfen, Zustände, Übergänge und akzeptierte Wörter präzise zu prüfen.",
+        learningGoals: ["Zustände und Übergänge lesen", "Akzeptanz simulieren", "Automat und Grammatik trennen"],
+        explanation: "Ein endlicher Automat verarbeitet ein Wort Zeichen für Zeichen. Nach jedem Zeichen folgt er genau einem Übergang. Am Ende entscheidet der erreichte Zustand, ob das Wort akzeptiert wird.",
+        concepts: [
+          ["Startzustand", "Hier beginnt die Verarbeitung."],
+          ["Endzustand", "Ist nach dem letzten Zeichen ein Endzustand erreicht, wird akzeptiert."],
+          ["Übergang", "Regel der Form: von Zustand q mit Zeichen a nach Zustand p."],
+        ],
+        visualization: {
+          title: "Mini-Automat für gerade Anzahl von 1en",
+          type: "automaton",
+          states: ["q0 Start/Ende", "q1"],
+          transitions: ["q0 --1--> q1", "q1 --1--> q0", "0 bleibt im Zustand"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Wort akzeptieren",
+            question: "Ein Automat wechselt bei jeder 1 zwischen q0 und q1. q0 ist Endzustand. Wird 101 akzeptiert?",
+            choices: ["Ja", "Nein", "Nur wenn 0 verboten ist", "Nicht entscheidbar"],
+            answer: "Ja",
+            hint: "Zähle nur die Einsen: 101 enthält zwei Einsen.",
+            explanation: "Start in q0, erste 1 nach q1, 0 bleibt, zweite 1 zurück nach q0. q0 ist Endzustand.",
+            solution: "q0 --1--> q1 --0--> q1 --1--> q0. Akzeptiert.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Automat erklären",
+            question: "Beschreibe kurz, welche Sprache ein Automat akzeptiert, der bei jeder 1 den Zustand wechselt und q0 als Endzustand hat.",
+            answer: ["gerade", "anzahl", "1"],
+            hint: "Welche Eigenschaft zählt der Automat?",
+            explanation: "Eine gute Antwort nennt die gerade Anzahl von Einsen. Nullen ändern die Parität nicht.",
+            solution: "Der Automat akzeptiert alle Wörter mit gerader Anzahl von 1en.",
+          },
+        ],
+      },
+      computersysteme: {
+        nav: "Computersysteme",
+        title: "Speicherhierarchie und Rechnergrundlagen",
+        copy: "Computersysteme verbinden Hardware, Speicherarten und die Frage, warum Zugriffsgeschwindigkeit und Persistenz verschieden sind.",
+        learningGoals: ["SRAM und DRAM unterscheiden", "Speicherhierarchie ordnen", "Flüchtigkeit erklären"],
+        explanation: "Je näher ein Speicher am Prozessor liegt, desto schneller und meist kleiner ist er. Register und Cache sind sehr schnell, Hauptspeicher ist größer, SSD/Festplatte dauerhaft, aber langsamer.",
+        concepts: [
+          ["SRAM", "Sehr schnell, teurer, typisch für Cache."],
+          ["DRAM", "Hauptspeicher, muss regelmäßig aufgefrischt werden."],
+          ["Persistenz", "Daten bleiben nach dem Ausschalten erhalten, etwa auf SSD."],
+        ],
+        visualization: {
+          title: "Speicherhierarchie",
+          type: "pipeline",
+          steps: ["Register", "Cache/SRAM", "RAM/DRAM", "SSD", "Archiv"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 1,
+            title: "Speicherart einordnen",
+            question: "Welche Speicherart wird typischerweise für Cache verwendet?",
+            choices: ["SRAM", "DRAM", "SSD", "Magnetband"],
+            answer: "SRAM",
+            hint: "Cache braucht besonders schnellen Zugriff.",
+            explanation: "SRAM ist schnell und teuer, deshalb eignet er sich für kleine Cache-Speicher.",
+            solution: "Cache → SRAM; Hauptspeicher → DRAM; dauerhafter Speicher → SSD/HDD.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "multi",
+            level: 4,
+            title: "Speicherhierarchie begründen",
+            question: "Welche Aussagen zur Speicherhierarchie sind korrekt?",
+            choices: ["Register sind sehr schnell und sehr klein.", "SSD ist flüchtiger als RAM.", "DRAM wird typischerweise als Hauptspeicher genutzt.", "Cache liegt konzeptionell näher an der CPU als SSD."],
+            answer: ["Register sind sehr schnell und sehr klein.", "DRAM wird typischerweise als Hauptspeicher genutzt.", "Cache liegt konzeptionell näher an der CPU als SSD."],
+            hint: "Ordne nach CPU-Nähe und Persistenz.",
+            explanation: "SSD ist nicht flüchtiger als RAM; sie ist persistent. Register, Cache und RAM sind schneller, aber flüchtig.",
+            solution: "Korrekt sind 1, 3 und 4.",
+          },
+        ],
+      },
+    },
+  },
+  programming: {
+    defaultTopic: "javaOop",
+    topics: {
+      javaOop: {
+        nav: "Java OOP",
+        title: "Klassen, Konstruktoren und Vererbung",
+        copy: "Java-Aufgaben prüfen oft, ob du Objektzustand, Konstruktoren, Überschreiben und Interfaces sauber trennst.",
+        learningGoals: ["Konstruktoren erkennen", "Vererbung erklären", "Überschreiben von Überladen trennen"],
+        explanation: "Eine Klasse ist ein Bauplan. Der Konstruktor initialisiert neue Objekte. Überschreiben bedeutet: Unterklasse liefert eine neue Implementierung derselben Methodensignatur. Überladen bedeutet: gleicher Methodenname, aber andere Parameterliste.",
+        concepts: [
+          ["Konstruktor", "Hat keinen Rückgabetyp und trägt den Klassennamen."],
+          ["Override", "Gleiche Signatur in Unterklasse, andere Implementierung."],
+          ["Interface", "Legt Verhalten vertraglich fest, ohne zwingend Zustand zu speichern."],
+        ],
+        visualization: {
+          title: "Vererbungshierarchie",
+          type: "uml",
+          boxes: ["Person", "Student extends Person", "Dozent extends Person"],
+        },
+        guidedTasks: [
+          {
+            type: "multi",
+            level: 2,
+            title: "Konstruktoren verstehen",
+            snippet: asCode(["class Konto {", "  private int saldo;", "  Konto(int start) {", "    saldo = start;", "  }", "}"]),
+            question: "Welche Aussagen sind korrekt?",
+            choices: ["Konto(int start) ist ein Konstruktor.", "Der Konstruktor hat keinen Rückgabetyp.", "saldo ist lokal im Konstruktor.", "start initialisiert den Objektzustand."],
+            answer: ["Konto(int start) ist ein Konstruktor.", "Der Konstruktor hat keinen Rückgabetyp.", "start initialisiert den Objektzustand."],
+            hint: "Achte auf Klassennamen, Rückgabetyp und Feldzugriff.",
+            explanation: "saldo ist ein Feld der Klasse. Der Konstruktor setzt dieses Feld mit dem Parameter start.",
+            solution: "Korrekt sind 1, 2 und 4.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "UML in Java übersetzen",
+            question: "Eine UML-Klasse Buch hat Attribut titel:String und Methode getTitel():String. Welche Java-Bausteine müssen in der Klasse vorkommen?",
+            answer: ["class", "String", "getTitel"],
+            hint: "Nenne Klassendeklaration, Feld und Methode.",
+            explanation: "Eine passende Lösung enthält eine Klasse Buch, ein String-Feld titel und eine Methode String getTitel().",
+            solution: "class Buch { private String titel; String getTitel() { return titel; } }",
+          },
+        ],
+      },
+      javaReferences: {
+        nav: "Java Referenzen",
+        title: "Referenzen vs. Objektkopien",
+        copy: "Ein häufiger Klausurfehler ist die Annahme, dass a = b ein Objekt kopiert. Tatsächlich wird nur die Referenz kopiert.",
+        learningGoals: ["Referenzzuweisung erklären", "Alias-Effekte erkennen", "Objekt und Variable unterscheiden"],
+        explanation: "Objektvariablen enthalten Referenzen. Bei a = b zeigen danach beide Variablen auf dasselbe Objekt. Änderungen über a sind dann auch über b sichtbar, weil es nur ein Objekt gibt.",
+        concepts: [
+          ["Referenz", "Verweis auf ein Objekt im Heap."],
+          ["Alias", "Mehrere Variablen zeigen auf dasselbe Objekt."],
+          ["Kopie", "Entsteht nur durch explizites Erzeugen/Kopieren eines neuen Objekts."],
+        ],
+        visualization: {
+          title: "Vorher/Nachher bei a = b",
+          type: "reference",
+          before: ["a → Objekt A", "b → Objekt B"],
+          after: ["a → Objekt B", "b → Objekt B", "Objekt A ohne Referenz"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Referenzzuweisung",
+            question: "Was passiert bei a = b, wenn a und b Objektvariablen sind?",
+            choices: ["a zeigt danach auf dasselbe Objekt wie b.", "Das Objekt von b wird vollständig kopiert.", "b zeigt danach auf a.", "Beide Objekte werden gelöscht."],
+            answer: "a zeigt danach auf dasselbe Objekt wie b.",
+            hint: "Bei Java werden Objektvariablen als Referenzen behandelt.",
+            explanation: "Die Referenz wird kopiert, nicht das Objekt. Danach gibt es zwei Variablen, die auf dasselbe Objekt zeigen.",
+            commonMistakes: {
+              "Das Objekt von b wird vollständig kopiert.": "Das ist der klassische Denkfehler. Eine Kopie bräuchte ein neues Objekt, zum Beispiel über Konstruktor oder clone-Logik.",
+            },
+            solution: "Nach a = b zeigen a und b auf dasselbe Objekt.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "single",
+            level: 4,
+            title: "Alias-Effekt",
+            snippet: asCode(["Box a = new Box(1);", "Box b = new Box(2);", "a = b;", "a.value = 7;", "System.out.println(b.value);"]),
+            question: "Welche Ausgabe entsteht?",
+            choices: ["7", "2", "1", "Compilerfehler"],
+            answer: "7",
+            hint: "Nach a = b zeigen beide Variablen auf dieselbe Box.",
+            explanation: "a.value verändert das Objekt, auf das auch b zeigt. Deshalb liest b.value den Wert 7.",
+            solution: "Ausgabe: 7.",
+          },
+        ],
+      },
+      python: {
+        nav: "Python",
+        title: "Kontrollfluss, Funktionen und Collections",
+        copy: "Python-Aufgaben prüfen oft, ob du Schleifen, Listenmutation und Dictionaries präzise Schritt für Schritt lesen kannst.",
+        learningGoals: ["Schleifen auswerten", "Listenmutation erkennen", "Dictionary-Zugriff verstehen"],
+        explanation: "Python-Code wird häufig nahe an Pseudocode gelesen. Trotzdem sind Mutation und Einrückung entscheidend: append verändert eine Liste, eine falsche Einrückung verändert den Kontrollfluss.",
+        concepts: [
+          ["Liste", "Geordnete, veränderbare Sammlung."],
+          ["Dictionary", "Schlüssel-Wert-Struktur mit schnellem Zugriff über Keys."],
+          ["Funktion", "Kapselt Schritte und kann Werte zurückgeben."],
+        ],
+        visualization: {
+          title: "Listenmutation",
+          type: "table",
+          headers: ["Schritt", "Liste"],
+          rows: [["Start", "[1, 2]"], ["append(3)", "[1, 2, 3]"], ["pop(0)", "[2, 3]"]],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Python-Ausgabe",
+            snippet: asCode(["werte = [1, 2]", "werte.append(3)", "print(werte[1])"]),
+            question: "Welche Ausgabe erzeugt der Code?",
+            choices: ["2", "3", "[1, 2, 3]", "IndexError"],
+            answer: "2",
+            hint: "Python-Indizes starten bei 0.",
+            explanation: "Nach append ist die Liste [1, 2, 3]. Index 1 ist das zweite Element, also 2.",
+            solution: "Ausgabe: 2.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Codefehler finden",
+            snippet: asCode(["def summe(xs):", "total = 0", "for x in xs:", "    total += x", "return total"]),
+            question: "Welcher Fehler ist in diesem Python-Code klausurtypisch?",
+            answer: ["einrückung", "indent"],
+            hint: "Welche Zeilen gehören zum Funktionsblock?",
+            explanation: "Der Funktionskörper muss eingerückt sein. total = 0 und return total stehen aktuell nicht im Block.",
+            solution: "Die Einrückung nach def ist falsch; der Funktionskörper muss eingerückt werden.",
+          },
+        ],
+      },
+      cpp: {
+        nav: "C++",
+        title: "C++ Grundlagen",
+        copy: "C++ verbindet Syntax mit Speicherdenken. Für Grundlagen reichen Schleifen, Typen, Vektoren und Referenzen.",
+        learningGoals: ["for-Schleifen lesen", "Wert und Referenz unterscheiden", "vector-Grundoperationen kennen"],
+        explanation: "In C++ ist der Typ oft explizit sichtbar. Referenzen mit & können einen vorhandenen Wert verändern, während normale Zuweisungen häufig kopieren.",
+        concepts: [
+          ["std::vector", "Dynamisches Array mit push_back und Indexzugriff."],
+          ["Referenz &", "Alias auf einen bestehenden Wert."],
+          ["Compiler", "Übersetzt Code vor der Ausführung."],
+        ],
+        visualization: {
+          title: "Vektor-Aufbau",
+          type: "array",
+          values: ["Index 0: 4", "Index 1: 7", "Index 2: 9"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            snippet: asCode(["int sum = 0;", "for (int i = 1; i <= 3; i++) {", "  sum += i;", "}"]),
+            title: "C++ Schleife",
+            question: "Welcher Wert steht am Ende in sum?",
+            choices: ["6", "3", "4", "9"],
+            answer: "6",
+            hint: "Die Schleife läuft für i = 1, 2, 3.",
+            explanation: "Es wird 1 + 2 + 3 addiert.",
+            solution: "sum = 6.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "truefalse",
+            level: 4,
+            title: "Referenz verstehen",
+            question: "Eine C++-Referenz kann als Alias auf eine bereits existierende Variable wirken.",
+            choices: ["Wahr", "Falsch"],
+            answer: "Wahr",
+            hint: "Denke an int& r = x.",
+            explanation: "Eine Referenz kann Änderungen am ursprünglichen Wert sichtbar machen.",
+            solution: "Wahr. int& r = x; r = 5; verändert x.",
+          },
+        ],
+      },
+    },
+  },
+  dataScience: {
+    defaultTopic: "relationen",
+    topics: {
+      relationen: {
+        nav: "Relationen",
+        title: "Relation, Schlüssel und funktionale Abhängigkeiten",
+        copy: "Datenbankklausuren prüfen oft, ob du Schlüsselminimalität und Attributabschluss sauber anwenden kannst.",
+        learningGoals: ["Relation/Tupel/Attribut unterscheiden", "Superkey und Candidate Key trennen", "Attributabschluss berechnen"],
+        explanation: "Ein Superkey identifiziert Tupel eindeutig, muss aber nicht minimal sein. Ein Candidate Key ist ein minimaler Superkey. Mit funktionalen Abhängigkeiten bestimmst du, welche Attribute aus einer Attributmenge folgen.",
+        concepts: [
+          ["Superkey", "Garantiert Eindeutigkeit, kann überflüssige Attribute enthalten."],
+          ["Candidate Key", "Minimaler Superkey ohne überflüssige Attribute."],
+          ["Attributabschluss", "Alle Attribute, die aus einer Menge funktional folgen."],
+        ],
+        visualization: {
+          title: "Attributabschluss",
+          type: "closure",
+          steps: ["Start: A⁺ = {A}", "A → B anwenden: {A, B}", "B → C anwenden: {A, B, C}", "A ist Candidate Key"],
+        },
+        guidedTasks: [
+          {
+            type: "multi",
+            level: 2,
+            title: "Candidate Key bestimmen",
+            question: "Gegeben R(A,B,C) mit A → B und B → C. Welche Attributmengen sind Candidate Keys?",
+            choices: ["{A}", "{A,B}", "{B}", "{A,C}"],
+            answer: ["{A}"],
+            hint: "Berechne A⁺ und prüfe anschließend Minimalität.",
+            explanation: "A bestimmt B und über B auch C. {A,B} ist zwar eindeutig, aber nicht minimal.",
+            commonMistakes: {
+              "{A,B}": "{A,B} ist ein Superkey, aber kein Candidate Key, weil A allein reicht.",
+              "{B}": "B bestimmt C, aber nicht A. Damit fehlt ein Attribut.",
+            },
+            solution: "A⁺ = {A,B,C}. Also ist {A} Candidate Key.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Minimalität begründen",
+            question: "Warum ist {A,B} in diesem Beispiel kein Candidate Key, obwohl {A,B} alle Attribute bestimmt?",
+            answer: ["nicht minimal", "a allein"],
+            hint: "Candidate Keys müssen minimal sein.",
+            explanation: "{A,B} enthält B überflüssig, weil A allein bereits A, B und C bestimmt.",
+            solution: "{A,B} ist nur Superkey. Candidate Key ist {A}, weil A allein alle Attribute bestimmt.",
+          },
+        ],
+      },
+      sql: {
+        nav: "SQL/MySQL",
+        title: "SQL-Ausführungslogik",
+        copy: "SQL wird klausurnah oft über die logische Reihenfolge verstanden: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY.",
+        learningGoals: ["WHERE und HAVING trennen", "JOIN-Ergebnisse bestimmen", "Aggregation erklären"],
+        explanation: "WHERE filtert Zeilen vor der Gruppierung. HAVING filtert Gruppen nach Aggregation. Ein häufiger Fehler ist, Aggregatbedingungen wie COUNT(*) > 2 in WHERE zu schreiben.",
+        concepts: [
+          ["WHERE", "Filter auf einzelne Zeilen vor GROUP BY."],
+          ["HAVING", "Filter auf Gruppen nach Aggregation."],
+          ["JOIN", "Kombiniert Tupel anhand einer Bedingung."],
+        ],
+        visualization: {
+          title: "Logische SQL-Reihenfolge",
+          type: "pipeline",
+          steps: ["FROM/JOIN", "WHERE", "GROUP BY", "HAVING", "SELECT", "ORDER BY"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "HAVING erkennen",
+            snippet: asCode(["SELECT customer_id, COUNT(*)", "FROM orders", "GROUP BY customer_id", "HAVING COUNT(*) > 2;"]),
+            question: "Warum steht COUNT(*) > 2 in HAVING?",
+            choices: ["Weil auf aggregierte Gruppen gefiltert wird.", "Weil WHERE keine Zahlen erlaubt.", "Weil SELECT immer zuletzt steht.", "Weil GROUP BY dadurch gelöscht wird."],
+            answer: "Weil auf aggregierte Gruppen gefiltert wird.",
+            hint: "COUNT(*) entsteht erst nach der Gruppierung.",
+            explanation: "Bedingungen auf Aggregaten gehören in HAVING, weil WHERE vor der Aggregation arbeitet.",
+            solution: "HAVING COUNT(*) > 2 filtert Kundengruppen mit mehr als zwei Bestellungen.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "SQL selbst formulieren",
+            question: "Formuliere den Kern einer SQL-Abfrage, die pro Kunde die Anzahl der Bestellungen zählt.",
+            answer: ["group by", "count", "customer"],
+            hint: "Du brauchst SELECT, COUNT und GROUP BY.",
+            explanation: "Die Musterlösung gruppiert nach customer_id und zählt die Zeilen je Gruppe.",
+            solution: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id;",
+          },
+        ],
+      },
+      normalformen: {
+        nav: "Normalformen",
+        title: "1NF, 2NF, 3NF und Abhängigkeiten",
+        copy: "Normalisierung macht Redundanzen sichtbar und verhindert Update-, Insert- und Delete-Anomalien.",
+        learningGoals: ["1NF/2NF/3NF unterscheiden", "partielle Abhängigkeit erkennen", "transitive Abhängigkeit erklären"],
+        explanation: "1NF fordert atomare Werte. 2NF verbietet partielle Abhängigkeiten von einem Teil eines zusammengesetzten Schlüssels. 3NF verbietet transitive Abhängigkeiten von Nicht-Schlüsselattributen.",
+        concepts: [
+          ["1NF", "Keine Listen oder wiederholten Gruppen in einem Feld."],
+          ["2NF", "Jedes Nicht-Schlüsselattribut hängt vom ganzen Schlüssel ab."],
+          ["3NF", "Keine Nicht-Schlüsselattribute bestimmen andere Nicht-Schlüsselattribute."],
+        ],
+        visualization: {
+          title: "Normalisierungsschritte",
+          type: "pipeline",
+          steps: ["Unnormalisierte Tabelle", "1NF: atomare Werte", "2NF: partielle Abhängigkeiten entfernen", "3NF: transitive Abhängigkeiten entfernen"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Partielle Abhängigkeit",
+            question: "Relation Bestellung(Position, Artikel, ArtikelName) hat Schlüssel (Position, Artikel). Artikel → ArtikelName. Welche Normalform ist verletzt?",
+            choices: ["2NF", "1NF", "BCNF ist immer erfüllt", "Keine"],
+            answer: "2NF",
+            hint: "ArtikelName hängt nur von Artikel ab, nicht vom ganzen zusammengesetzten Schlüssel.",
+            explanation: "Das ist eine partielle Abhängigkeit von einem Teil des zusammengesetzten Schlüssels und verletzt 2NF.",
+            solution: "Artikel und ArtikelName gehören in eine eigene Artikeltabelle.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "3NF-Verletzung erklären",
+            question: "Warum verletzt KundeID → PLZ und PLZ → Ort typischerweise die 3NF, wenn Ort in der Kundentabelle gespeichert wird?",
+            answer: ["transitiv", "plz", "ort"],
+            hint: "Ein Nicht-Schlüsselattribut bestimmt ein anderes Nicht-Schlüsselattribut.",
+            explanation: "Ort hängt transitiv über PLZ von KundeID ab. Dadurch entsteht Redundanz.",
+            solution: "Die Abhängigkeit KundeID → PLZ → Ort ist transitiv; PLZ/Ort sollte ausgelagert werden.",
+          },
+        ],
+      },
+      ermodellierung: {
+        nav: "ER-Modell",
+        title: "ER-Modellierung aus Text",
+        copy: "ER-Aufgaben verlangen, Entitäten, Beziehungen und Kardinalitäten aus Sprache strukturiert abzuleiten.",
+        learningGoals: ["Entitäten erkennen", "Kardinalitäten begründen", "Beziehungen sauber benennen"],
+        explanation: "Substantive mit eigener Identität werden oft Entitäten. Verben zwischen Entitäten weisen auf Beziehungen hin. Kardinalitäten entstehen aus Formulierungen wie 'genau ein', 'mehrere' oder 'optional'.",
+        concepts: [
+          ["Entität", "Objektklasse mit eigener Identität, etwa Kunde."],
+          ["Beziehung", "Zusammenhang zwischen Entitäten, etwa Kunde gibt Bestellung auf."],
+          ["Kardinalität", "Wie viele Objekte miteinander verbunden sein dürfen oder müssen."],
+        ],
+        visualization: {
+          title: "Mini-ER-Skizze",
+          type: "erd",
+          boxes: ["Kunde 1", "gibt auf", "n Bestellung"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Kardinalität lesen",
+            question: "Ein Kunde kann viele Bestellungen aufgeben, jede Bestellung gehört genau einem Kunden. Welche Kardinalität passt?",
+            choices: ["Kunde 1:n Bestellung", "Kunde n:m Bestellung", "Kunde 1:1 Bestellung", "Keine Beziehung"],
+            answer: "Kunde 1:n Bestellung",
+            hint: "Ein Kunde → viele Bestellungen; eine Bestellung → ein Kunde.",
+            explanation: "Vom Kunden zur Bestellung ist es 1:n.",
+            solution: "Kunde 1:n Bestellung.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Entitäten nennen",
+            question: "Text: Kunden bestellen Artikel. Eine Bestellung enthält mehrere Positionen. Nenne zwei zentrale Entitäten.",
+            answer: ["kunde", "bestellung"],
+            hint: "Suche Dinge mit eigener Identität.",
+            explanation: "Kunde und Bestellung sind zentrale Entitäten; Artikel und Position wären ebenfalls plausibel.",
+            solution: "Zum Beispiel Kunde, Bestellung, Artikel und Bestellposition.",
+          },
+        ],
+      },
+      pyspark: {
+        nav: "PySpark",
+        title: "PySpark DataFrames und Big-Data-Pipelines",
+        copy: "PySpark-Aufgaben prüfen, ob du Transformationen, Actions und Pipeline-Denken unterscheiden kannst.",
+        learningGoals: ["Transformation und Action unterscheiden", "DataFrame-Schritte erklären", "Lazy Evaluation einordnen"],
+        explanation: "Transformationen wie filter oder select beschreiben einen neuen DataFrame. Actions wie count oder show lösen die Ausführung aus. PySpark plant viele Schritte zunächst nur.",
+        concepts: [
+          ["Transformation", "filter, select, groupBy beschreiben Umformungen."],
+          ["Action", "count, show, collect lösen Berechnung aus."],
+          ["DAG", "Abhängigkeitsgraph der Verarbeitungsschritte."],
+        ],
+        visualization: {
+          title: "PySpark-Pipeline",
+          type: "pipeline",
+          steps: ["read orders", "filter amount > 100", "groupBy customer", "count"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Transformation oder Action",
+            snippet: asCode(["orders.filter(orders.amount > 100).count()"]),
+            question: "Welche Operation löst die Berechnung aus?",
+            choices: ["count()", "filter()", "orders.amount", "Der Punktoperator"],
+            answer: "count()",
+            hint: "Eine Action verlangt ein konkretes Ergebnis.",
+            explanation: "filter ist eine Transformation, count ist eine Action und stößt die Ausführung an.",
+            solution: "count() löst die Berechnung aus.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Pipeline erklären",
+            question: "Erkläre kurz, warum PySpark Transformationen oft lazy auswertet.",
+            answer: ["optimieren", "plan", "action"],
+            hint: "PySpark kann den Ausführungsplan verbessern, bevor eine Action kommt.",
+            explanation: "Lazy Evaluation erlaubt Optimierung und vermeidet unnötige Berechnungen, bis ein Ergebnis gebraucht wird.",
+            solution: "Transformationen bauen einen Plan auf; erst eine Action löst optimierte Ausführung aus.",
+          },
+        ],
+      },
+    },
+  },
+  informationManagement: {
+    defaultTopic: "im",
+    topics: {
+      im: {
+        nav: "Informationsmanagement",
+        title: "Informationsbedarf, Quellen und Nutzung",
+        copy: "Informationsmanagement fragt, welche Informationen eine Organisation braucht, woher sie kommen und wie sie nutzbar gemacht werden.",
+        learningGoals: ["IM-Ebenen einordnen", "Informationsquellen unterscheiden", "Stammdaten als Ressource verstehen"],
+        explanation: "Informationsmanagement verbindet strategische, organisatorische und technische Perspektiven. Typischer Fehler: SQL-Detailwissen mit Informationsmanagement zu vermischen. Hier geht es um Bedarf, Qualität, Nutzung und Steuerung von Information.",
+        concepts: [
+          ["Informationsbedarf", "Welche Information wird für eine Entscheidung benötigt?"],
+          ["Informationsquelle", "Intern oder extern, formal oder informell."],
+          ["Stammdaten", "Langfristig gültige Kerndaten wie Kunde, Material oder Lieferant."],
+        ],
+        visualization: {
+          title: "IM-Ebenenmodell",
+          type: "layers",
+          layers: ["Strategie", "Organisation", "Anwendungssysteme", "Datenbasis"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "IM-Fokus erkennen",
+            question: "Welche Frage gehört am klarsten zum Informationsmanagement?",
+            choices: ["Welche Informationen braucht der Vertrieb für Entscheidungen?", "Wie lautet die SQL-Syntax für INNER JOIN?", "Welche Rotation braucht ein AVL-Baum?", "Wie wird ein Python-Dictionary iteriert?"],
+            answer: "Welche Informationen braucht der Vertrieb für Entscheidungen?",
+            hint: "IM startet beim fachlichen Informationsbedarf.",
+            explanation: "Informationsmanagement betrachtet Bedarf, Quellen, Nutzung und Qualität von Information auf Organisationsebene.",
+            solution: "Die Vertriebsfrage ist fachlich-organisatorisch und damit IM.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Stammdaten begründen",
+            question: "Warum brauchen Stammdaten global eindeutige Schlüssel?",
+            answer: ["eindeutig", "system", "prozess"],
+            hint: "Denke an mehrere Systeme und Prozesse.",
+            explanation: "Ohne eindeutige Schlüssel entstehen Dubletten, falsche Zuordnungen und Prozessfehler über Systemgrenzen hinweg.",
+            solution: "Eindeutige Schlüssel verhindern Dubletten und ermöglichen konsistente Prozess- und Systemintegration.",
+          },
+        ],
+      },
+      erp: {
+        nav: "ERP-Prozesse",
+        title: "ERP, Nebenbücher und Prozessinteraktion",
+        copy: "ERP-Systeme integrieren Geschäftsprozesse. Klausuraufgaben prüfen oft Rollen, Organisationseinheiten und Datenflüsse.",
+        learningGoals: ["ERP-Prozessketten lesen", "Nebenbücher einordnen", "Kunde-Lieferant-Interaktion verstehen"],
+        explanation: "ERP verbindet Vertrieb, Beschaffung, Lager, Produktion und Finanzwesen. Nebenbücher verdichten Detailvorgänge später ins Hauptbuch. Ein Prozessschritt in einer Abteilung erzeugt oft Folgeeffekte in einer anderen.",
+        concepts: [
+          ["ERP", "Integriertes Anwendungssystem für betriebliche Prozesse."],
+          ["Nebenbuch", "Detailbuchhaltung, etwa Debitoren oder Kreditoren."],
+          ["Customizing", "System wird an Organisationsstruktur und Prozesse angepasst."],
+        ],
+        visualization: {
+          title: "Order-to-Cash-Prozess",
+          type: "pipeline",
+          steps: ["Kundenauftrag", "Lieferung", "Warenausgang", "Rechnung", "Zahlung"],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Nebenbuch einordnen",
+            question: "Wo werden offene Forderungen gegenüber Kunden typischerweise detailliert geführt?",
+            choices: ["Debitoren-Nebenbuch", "Quellcode-Repository", "AVL-Baum", "CPU-Register"],
+            answer: "Debitoren-Nebenbuch",
+            hint: "Debitoren sind Kunden mit Forderungen.",
+            explanation: "Das Debitoren-Nebenbuch enthält kundenbezogene Forderungsdetails, die ins Hauptbuch verdichtet werden.",
+            solution: "Debitoren-Nebenbuch.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Prozessfolge erklären",
+            question: "Nenne zwei Folgeeffekte, die ein Warenausgang im ERP typischerweise auslösen kann.",
+            answer: ["bestand", "buchung"],
+            hint: "Denke an Lager und Rechnungswesen.",
+            explanation: "Warenausgang reduziert Bestand und erzeugt buchhalterische Effekte, etwa Material-/Kostenbuchungen.",
+            solution: "Bestandsminderung im Lager und Buchung im Rechnungswesen; später kann die Fakturierung folgen.",
+          },
+        ],
+      },
+      systemauswahl: {
+        nav: "Systemauswahl",
+        title: "Nutzwertanalyse und Kriterien",
+        copy: "Systemauswahl-Aufgaben prüfen, ob du Muss-, Soll- und Kann-Kriterien sowie Gewichtungen begründet einsetzen kannst.",
+        learningGoals: ["Kriterienarten trennen", "Nutzwertanalyse lesen", "Projektentscheidungen begründen"],
+        explanation: "Muss-Kriterien sind Ausschlusskriterien. Soll-Kriterien werden bewertet und gewichtet. Kann-Kriterien erhöhen den Nutzen, sind aber nicht entscheidend. Typischer Fehler: Ein verletztes Muss-Kriterium durch hohe Punktzahl ausgleichen wollen.",
+        concepts: [
+          ["Muss-Kriterium", "Nicht erfüllt bedeutet Ausschluss."],
+          ["Soll-Kriterium", "Wird gewichtet bewertet."],
+          ["Nutzwert", "Gewichtete Punktzahl für Entscheidungsvergleich."],
+        ],
+        visualization: {
+          title: "Nutzwertmatrix",
+          type: "table",
+          headers: ["Kriterium", "Gewicht", "System A", "System B"],
+          rows: [["DSGVO", "Muss", "ja", "nein"], ["Kosten", "30%", "4", "5"], ["Usability", "20%", "3", "4"]],
+        },
+        guidedTasks: [
+          {
+            type: "single",
+            level: 2,
+            title: "Muss-Kriterium",
+            question: "Ein CRM-System erfüllt ein Muss-Kriterium nicht. Was folgt in einer sauberen Auswahl?",
+            choices: ["Es wird ausgeschlossen.", "Es gewinnt bei gutem Preis trotzdem.", "Das Muss-Kriterium wird zu Kann.", "Es bekommt automatisch volle Punktzahl."],
+            answer: "Es wird ausgeschlossen.",
+            hint: "Muss heißt Ausschlussbedingung.",
+            explanation: "Muss-Kriterien dürfen nicht durch andere Vorteile kompensiert werden.",
+            solution: "Das System scheidet aus.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Kriterium formulieren",
+            question: "Formuliere ein sinnvolles Muss-Kriterium für ein ERP-Cloud-Migrationsprojekt.",
+            answer: ["datenschutz", "verfügbarkeit", "schnittstelle", "compliance"],
+            hint: "Denke an harte Anforderungen, ohne die das Projekt nicht tragfähig ist.",
+            explanation: "Gute Muss-Kriterien sind prüfbar und projektkritisch, etwa DSGVO-Konformität oder benötigte Schnittstellen.",
+            solution: "Beispiel: Das System muss DSGVO-konform sein und die bestehende Finanzbuchhaltungsschnittstelle unterstützen.",
+          },
+        ],
+      },
+      processMining: {
+        nav: "Process Mining",
+        title: "Ereignislogs, Regeln und Flattening",
+        copy: "Process Mining rekonstruiert und prüft Prozesse anhand von Ereignisdaten. Entscheidend sind Case-Begriff, Objektbezug und Ereignisreihenfolge.",
+        learningGoals: ["Ereignislog lesen", "Regelverletzungen erkennen", "Flattening nach Objekttyp erklären"],
+        explanation: "Klassisches Process Mining nutzt einen Case, etwa Bestellung. Objektzentriertes Process Mining betrachtet mehrere Objekte gleichzeitig, etwa Bestellung, Artikel und Paket. Flattening reduziert diese Sicht auf einen Objekttyp und kann Zusammenhänge verlieren.",
+        concepts: [
+          ["Event", "Aktivität mit Zeitstempel und Objektbezug."],
+          ["Case", "Prozessinstanz, entlang der Ereignisse sortiert werden."],
+          ["Flattening", "Objektzentriertes Log wird auf einen Case-Typ abgebildet."],
+        ],
+        visualization: {
+          title: "Ereignislog-Timeline",
+          type: "event-log",
+          events: [
+            ["10:00", "Bestellung angelegt", "Bestellung B1"],
+            ["10:04", "Artikel hinzugefügt", "Artikel A1"],
+            ["10:10", "Paket versendet", "Paket P1"],
+            ["10:12", "Zahlung erhalten", "Bestellung B1"],
+          ],
+        },
+        guidedTasks: [
+          {
+            type: "multi",
+            level: 3,
+            title: "Regelverletzung markieren",
+            question: "Regel: Paket darf erst nach Bezahlung versendet werden. Welche Ereignisse sind problematisch?",
+            choices: ["10:10 Paket versendet", "10:12 Zahlung erhalten", "10:04 Artikel hinzugefügt", "10:00 Bestellung angelegt"],
+            answer: ["10:10 Paket versendet"],
+            hint: "Vergleiche die Zeitpunkte von Versand und Zahlung.",
+            explanation: "Das Paket wird um 10:10 versendet, die Zahlung kommt erst um 10:12. Der Versand verletzt die Regel.",
+            solution: "Problematisch ist 10:10 Paket versendet.",
+          },
+        ],
+        examTasks: [
+          {
+            type: "text",
+            level: 4,
+            title: "Objektzentrierung erklären",
+            question: "Warum kann objektzentriertes Process Mining informativer sein als ein flach nach Bestellung erzeugtes Log?",
+            answer: ["mehrere", "objekte", "beziehungen"],
+            hint: "Denke an Bestellung, Artikel und Paket gleichzeitig.",
+            explanation: "OCPM erhält Beziehungen zwischen mehreren Objekttypen. Flattening kann Ereignisse duplizieren oder Zusammenhänge verlieren.",
+            solution: "OCPM betrachtet mehrere Objekttypen und ihre Beziehungen; ein flaches Case-Log kann diese Beziehungen verzerren.",
+          },
+        ],
+      },
+    },
+  },
+};
+
+function mergeSubjectAreaEnhancements() {
+  Object.entries(subjectAreaEnhancements).forEach(([areaKey, enhancement]) => {
+    const current = subjectLearningAreas[areaKey] || { defaultTopic: enhancement.defaultTopic, topics: {} };
+    subjectLearningAreas[areaKey] = {
+      ...current,
+      ...enhancement,
+      topics: {
+        ...current.topics,
+        ...enhancement.topics,
+      },
+    };
+  });
+}
+
+mergeSubjectAreaEnhancements();
+
 const masterTrainingConfigs = {
   "Divide and Conquer / Master-Theorem": {
     heading: "Master-Theorem trainieren",
@@ -1794,11 +2600,17 @@ const state = {
   currentView: "home",
   runtimeQuestion: null,
   basicsTopic: subjectLearningAreas.basics.defaultTopic,
+  basicsMode: "learn",
   basicsQuestion: null,
   programmingTopic: subjectLearningAreas.programming.defaultTopic,
+  programmingMode: "learn",
   programmingQuestion: null,
   dataScienceTopic: subjectLearningAreas.dataScience.defaultTopic,
+  dataScienceMode: "learn",
   dataScienceQuestion: null,
+  informationManagementTopic: subjectLearningAreas.informationManagement.defaultTopic,
+  informationManagementMode: "learn",
+  informationManagementQuestion: null,
   masterQuestion: null,
   showMasterHelp: false,
   masterSection: "learn",
@@ -1895,6 +2707,7 @@ const el = {
   basicsView: document.getElementById("basics-view"),
   programmingView: document.getElementById("programming-view"),
   dataScienceView: document.getElementById("data-science-view"),
+  informationManagementView: document.getElementById("information-management-view"),
   runtimeView: document.getElementById("runtime-view"),
   masterView: document.getElementById("master-view"),
   sortingView: document.getElementById("sorting-view"),
@@ -1905,31 +2718,72 @@ const el = {
   runtimeOptions: document.getElementById("runtime-options"),
   runtimeFeedback: document.getElementById("runtime-feedback"),
   basicsTopicNav: document.getElementById("basics-topic-nav"),
+  basicsModeNav: document.getElementById("basics-mode-nav"),
   basicsTopicTitle: document.getElementById("basics-topic-title"),
   basicsTopicCopy: document.getElementById("basics-topic-copy"),
+  basicsLearningGoals: document.getElementById("basics-learning-goals"),
+  basicsExplanation: document.getElementById("basics-explanation"),
   basicsConcepts: document.getElementById("basics-concepts"),
+  basicsVisualTitle: document.getElementById("basics-visual-title"),
+  basicsVisual: document.getElementById("basics-visual"),
+  basicsTaskMeta: document.getElementById("basics-task-meta"),
   basicsQuestionTitle: document.getElementById("basics-question-title"),
   basicsQuestion: document.getElementById("basics-question"),
   basicsOptions: document.getElementById("basics-options"),
+  basicsHint: document.getElementById("basics-hint"),
   basicsFeedback: document.getElementById("basics-feedback"),
+  basicsSolution: document.getElementById("basics-solution"),
   programmingTopicNav: document.getElementById("programming-topic-nav"),
+  programmingModeNav: document.getElementById("programming-mode-nav"),
   programmingTopicTitle: document.getElementById("programming-topic-title"),
   programmingTopicCopy: document.getElementById("programming-topic-copy"),
+  programmingLearningGoals: document.getElementById("programming-learning-goals"),
+  programmingExplanation: document.getElementById("programming-explanation"),
   programmingConcepts: document.getElementById("programming-concepts"),
+  programmingVisualTitle: document.getElementById("programming-visual-title"),
+  programmingVisual: document.getElementById("programming-visual"),
+  programmingTaskMeta: document.getElementById("programming-task-meta"),
   programmingQuestionTitle: document.getElementById("programming-question-title"),
   programmingSnippet: document.getElementById("programming-snippet"),
   programmingQuestion: document.getElementById("programming-question"),
   programmingOptions: document.getElementById("programming-options"),
+  programmingHint: document.getElementById("programming-hint"),
   programmingFeedback: document.getElementById("programming-feedback"),
+  programmingSolution: document.getElementById("programming-solution"),
   dataScienceTopicNav: document.getElementById("data-science-topic-nav"),
+  dataScienceModeNav: document.getElementById("data-science-mode-nav"),
   dataScienceTopicTitle: document.getElementById("data-science-topic-title"),
   dataScienceTopicCopy: document.getElementById("data-science-topic-copy"),
+  dataScienceLearningGoals: document.getElementById("data-science-learning-goals"),
+  dataScienceExplanation: document.getElementById("data-science-explanation"),
   dataScienceConcepts: document.getElementById("data-science-concepts"),
+  dataScienceVisualTitle: document.getElementById("data-science-visual-title"),
+  dataScienceVisual: document.getElementById("data-science-visual"),
+  dataScienceTaskMeta: document.getElementById("data-science-task-meta"),
   dataScienceQuestionTitle: document.getElementById("data-science-question-title"),
   dataScienceSnippet: document.getElementById("data-science-snippet"),
   dataScienceQuestion: document.getElementById("data-science-question"),
   dataScienceOptions: document.getElementById("data-science-options"),
+  dataScienceHint: document.getElementById("data-science-hint"),
   dataScienceFeedback: document.getElementById("data-science-feedback"),
+  dataScienceSolution: document.getElementById("data-science-solution"),
+  informationManagementTopicNav: document.getElementById("information-management-topic-nav"),
+  informationManagementModeNav: document.getElementById("information-management-mode-nav"),
+  informationManagementTopicTitle: document.getElementById("information-management-topic-title"),
+  informationManagementTopicCopy: document.getElementById("information-management-topic-copy"),
+  informationManagementLearningGoals: document.getElementById("information-management-learning-goals"),
+  informationManagementExplanation: document.getElementById("information-management-explanation"),
+  informationManagementConcepts: document.getElementById("information-management-concepts"),
+  informationManagementVisualTitle: document.getElementById("information-management-visual-title"),
+  informationManagementVisual: document.getElementById("information-management-visual"),
+  informationManagementTaskMeta: document.getElementById("information-management-task-meta"),
+  informationManagementQuestionTitle: document.getElementById("information-management-question-title"),
+  informationManagementSnippet: document.getElementById("information-management-snippet"),
+  informationManagementQuestion: document.getElementById("information-management-question"),
+  informationManagementOptions: document.getElementById("information-management-options"),
+  informationManagementHint: document.getElementById("information-management-hint"),
+  informationManagementFeedback: document.getElementById("information-management-feedback"),
+  informationManagementSolution: document.getElementById("information-management-solution"),
   masterTitle: document.getElementById("master-title"),
   masterRecurrence: document.getElementById("master-recurrence"),
   masterTask: document.getElementById("master-task"),
@@ -2124,6 +2978,7 @@ document.getElementById("check-runtime").addEventListener("click", checkRuntimeQ
 setupSubjectLearningArea("basics");
 setupSubjectLearningArea("programming");
 setupSubjectLearningArea("dataScience");
+setupSubjectLearningArea("informationManagement");
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
 el.solveCustomRecurrence.addEventListener("click", solveCustomRecurrence);
@@ -2227,6 +3082,7 @@ createRuntimeQuestion();
 renderSubjectLearningArea("basics");
 renderSubjectLearningArea("programming");
 renderSubjectLearningArea("dataScience");
+renderSubjectLearningArea("informationManagement");
 createMasterQuestion();
 setMasterSection("learn");
 renderMasterLearning();
@@ -2267,6 +3123,7 @@ function setActiveView(viewName) {
     basics: el.basicsView,
     programming: el.programmingView,
     "data-science": el.dataScienceView,
+    "information-management": el.informationManagementView,
     runtime: el.runtimeView,
     master: el.masterView,
     sorting: el.sortingView,
@@ -2856,62 +3713,60 @@ function setupSubjectLearningArea(areaKey) {
     state[`${areaKey}Topic`] = button.dataset.subjectTopic;
     renderSubjectLearningArea(areaKey);
   });
+  refs.modeNav.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-subject-mode]");
+    if (!button) {
+      return;
+    }
+    state[`${areaKey}Mode`] = button.dataset.subjectMode;
+    renderSubjectLearningArea(areaKey);
+  });
   document.getElementById(`new-${subjectDomId(areaKey)}-question`).addEventListener("click", () => createSubjectQuestion(areaKey));
   document.getElementById(`check-${subjectDomId(areaKey)}-question`).addEventListener("click", () => checkSubjectQuestion(areaKey));
+  document.getElementById(`hint-${subjectDomId(areaKey)}-question`).addEventListener("click", () => showSubjectHint(areaKey));
+  document.getElementById(`solution-${subjectDomId(areaKey)}-question`).addEventListener("click", () => showSubjectSolution(areaKey));
 }
 
 function getSubjectRefs(areaKey) {
-  if (areaKey === "basics") {
-    return {
-      nav: el.basicsTopicNav,
-      title: el.basicsTopicTitle,
-      copy: el.basicsTopicCopy,
-      concepts: el.basicsConcepts,
-      questionTitle: el.basicsQuestionTitle,
-      snippet: null,
-      question: el.basicsQuestion,
-      options: el.basicsOptions,
-      feedback: el.basicsFeedback,
-    };
-  }
-  if (areaKey === "programming") {
-    return {
-      nav: el.programmingTopicNav,
-      title: el.programmingTopicTitle,
-      copy: el.programmingTopicCopy,
-      concepts: el.programmingConcepts,
-      questionTitle: el.programmingQuestionTitle,
-      snippet: el.programmingSnippet,
-      question: el.programmingQuestion,
-      options: el.programmingOptions,
-      feedback: el.programmingFeedback,
-    };
-  }
+  const prefix = areaKey;
   return {
-    nav: el.dataScienceTopicNav,
-    title: el.dataScienceTopicTitle,
-    copy: el.dataScienceTopicCopy,
-    concepts: el.dataScienceConcepts,
-    questionTitle: el.dataScienceQuestionTitle,
-    snippet: el.dataScienceSnippet,
-    question: el.dataScienceQuestion,
-    options: el.dataScienceOptions,
-    feedback: el.dataScienceFeedback,
+    nav: el[`${prefix}TopicNav`],
+    modeNav: el[`${prefix}ModeNav`],
+    title: el[`${prefix}TopicTitle`],
+    copy: el[`${prefix}TopicCopy`],
+    learningGoals: el[`${prefix}LearningGoals`],
+    explanation: el[`${prefix}Explanation`],
+    concepts: el[`${prefix}Concepts`],
+    visualTitle: el[`${prefix}VisualTitle`],
+    visual: el[`${prefix}Visual`],
+    taskMeta: el[`${prefix}TaskMeta`],
+    questionTitle: el[`${prefix}QuestionTitle`],
+    snippet: el[`${prefix}Snippet`] || null,
+    question: el[`${prefix}Question`],
+    options: el[`${prefix}Options`],
+    hint: el[`${prefix}Hint`],
+    feedback: el[`${prefix}Feedback`],
+    solution: el[`${prefix}Solution`],
   };
 }
 
 function getSubjectArea(areaKey) {
-  return areaKey === "dataScience" ? subjectLearningAreas.dataScience : subjectLearningAreas[areaKey];
+  return subjectLearningAreas[areaKey];
 }
 
 function subjectDomId(areaKey) {
-  return areaKey === "dataScience" ? "data-science" : areaKey;
+  const ids = {
+    dataScience: "data-science",
+    informationManagement: "information-management",
+  };
+  return ids[areaKey] || areaKey;
 }
 
 function renderSubjectLearningArea(areaKey) {
   const area = getSubjectArea(areaKey);
   const refs = getSubjectRefs(areaKey);
   const topicKey = state[`${areaKey}Topic`] || area.defaultTopic;
+  const mode = state[`${areaKey}Mode`] || "learn";
   const topic = area.topics[topicKey] || area.topics[area.defaultTopic];
 
   refs.nav.innerHTML = Object.entries(area.topics).map(([key, item]) => `
@@ -2919,14 +3774,25 @@ function renderSubjectLearningArea(areaKey) {
       ${item.nav}
     </button>
   `).join("");
+  refs.modeNav.innerHTML = subjectModes.map((item) => `
+    <button class="section-tab-btn${item.key === mode ? " is-active" : ""}" type="button" data-subject-mode="${item.key}" aria-pressed="${item.key === mode}">
+      ${item.label}
+    </button>
+  `).join("");
   refs.title.textContent = topic.title;
   refs.copy.textContent = topic.copy;
+  refs.learningGoals.innerHTML = (topic.learningGoals || []).map((goal) => `<li>${formatInlineMathLabel(goal)}</li>`).join("");
+  refs.explanation.innerHTML = `
+    <p>${formatInlineMathLabel(topic.explanation || topic.copy)}</p>
+    <p><strong>Klausurhinweis:</strong> ${formatInlineMathLabel(topic.examHint || "Achte auf Begriffe, Bedingungen und Zwischenschritte. Genau dort entstehen die meisten Folgefehler.")}</p>
+  `;
   refs.concepts.innerHTML = topic.concepts.map(([label, text]) => `
     <article class="concept-card">
       <strong>${label}</strong>
       <p>${formatInlineMathLabel(text)}</p>
     </article>
   `).join("");
+  renderSubjectVisualization(refs, topic.visualization);
   createSubjectQuestion(areaKey);
 }
 
@@ -2934,36 +3800,196 @@ function createSubjectQuestion(areaKey) {
   const area = getSubjectArea(areaKey);
   const refs = getSubjectRefs(areaKey);
   const topic = area.topics[state[`${areaKey}Topic`]] || area.topics[area.defaultTopic];
-  const question = sample(topic.questions);
+  const mode = state[`${areaKey}Mode`] || "learn";
+  const pool = mode === "exam"
+    ? (topic.examTasks || topic.questions || topic.guidedTasks)
+    : (topic.guidedTasks || topic.questions || topic.examTasks);
+  const question = sample(pool);
   state[`${areaKey}Question`] = question;
 
+  refs.taskMeta.textContent = `${mode === "exam" ? "Klausuraufgabe" : "Geführte Übung"} · Level ${question.level || 1} · ${subjectTaskTypeLabel(question.type)}`;
   refs.questionTitle.textContent = question.title;
   refs.question.innerHTML = formatInlineMathLabel(question.question);
   if (refs.snippet) {
     refs.snippet.classList.toggle("is-hidden", !question.snippet);
     refs.snippet.querySelector("code").textContent = question.snippet || "";
   }
-  renderChoices(
-    refs.options,
-    subjectDomId(areaKey),
-    shuffle(question.choices).map((choice) => ({ value: choice, label: choice })),
-  );
+  renderSubjectTaskInput(refs.options, subjectDomId(areaKey), question);
+  refs.hint.classList.add("is-hidden");
+  refs.hint.innerHTML = "";
+  refs.solution.classList.add("is-hidden");
+  refs.solution.innerHTML = "";
   setFeedback(refs.feedback, "");
 }
 
 function checkSubjectQuestion(areaKey) {
   const refs = getSubjectRefs(areaKey);
   const question = state[`${areaKey}Question`];
-  const selected = getSelectedValue(`${subjectDomId(areaKey)}-choice`);
-  if (!selected) {
-    setFeedback(refs.feedback, "Wähle zuerst eine Antwort aus. Danach bekommst du eine kurze Begründung.", "wrong");
+  const answer = getSubjectAnswer(subjectDomId(areaKey), question);
+  if (!hasSubjectAnswer(answer, question)) {
+    setFeedback(refs.feedback, "Gib zuerst eine Antwort. Danach bekommst du eine Begründung und kannst mit der Musterlösung abgleichen.", "wrong");
     return;
   }
-  if (selected === question.answer) {
-    setFeedback(refs.feedback, `Richtig. ${question.explanation}`, "correct");
+  const result = evaluateSubjectAnswer(answer, question);
+  if (result.correct) {
+    setFeedback(refs.feedback, `Richtig. ${question.explanation || ""} ${question.examRelevance ? `Klausurtipp: ${question.examRelevance}` : ""}`, "correct");
     return;
   }
-  setFeedback(refs.feedback, `Noch nicht. Korrekt ist: ${question.answer}. ${question.explanation}`, "wrong");
+  const mistake = subjectMistakeFeedback(answer, question);
+  setFeedback(refs.feedback, `Noch nicht. ${mistake}${question.explanation ? ` ${question.explanation}` : ""}`, "wrong");
+}
+
+function renderSubjectTaskInput(container, name, question) {
+  container.innerHTML = "";
+  if (question.type === "text") {
+    container.innerHTML = `
+      <label class="text-answer-label">
+        <span>Kurze Antwort</span>
+        <textarea name="${name}-text" rows="4" placeholder="Formuliere deine Lösung in Stichpunkten."></textarea>
+      </label>
+    `;
+    return;
+  }
+
+  const inputType = question.type === "multi" ? "checkbox" : "radio";
+  shuffle(question.choices || []).forEach((choice) => {
+    const label = document.createElement("label");
+    label.innerHTML = `<input type="${inputType}" name="${name}-choice" value="${escapeAttribute(choice)}"><span>${formatInlineMathLabel(choice)}</span>`;
+    container.appendChild(label);
+  });
+}
+
+function getSubjectAnswer(name, question) {
+  if (question.type === "text") {
+    return document.querySelector(`[name="${name}-text"]`)?.value.trim() || "";
+  }
+  const selected = [...document.querySelectorAll(`input[name="${name}-choice"]:checked`)].map((input) => input.value);
+  return question.type === "multi" ? selected : (selected[0] || "");
+}
+
+function hasSubjectAnswer(answer, question) {
+  return question.type === "multi" ? answer.length > 0 : String(answer).trim().length > 0;
+}
+
+function evaluateSubjectAnswer(answer, question) {
+  if (question.type === "multi") {
+    const expected = [...question.answer].sort();
+    const actual = [...answer].sort();
+    return { correct: expected.length === actual.length && expected.every((item, index) => item === actual[index]) };
+  }
+  if (question.type === "text") {
+    const normalized = normalizeFreeText(answer);
+    const terms = Array.isArray(question.answer) ? question.answer : [question.answer];
+    const hits = terms.filter((term) => normalized.includes(normalizeFreeText(term)));
+    return { correct: hits.length >= Math.min(2, terms.length) };
+  }
+  return { correct: answer === question.answer };
+}
+
+function normalizeFreeText(value) {
+  return String(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function subjectMistakeFeedback(answer, question) {
+  if (question.type === "multi") {
+    const expected = new Set(question.answer);
+    const chosen = new Set(answer);
+    const missing = [...expected].filter((item) => !chosen.has(item));
+    const extra = [...chosen].filter((item) => !expected.has(item));
+    return [
+      missing.length ? `Es fehlen: ${missing.join(", ")}.` : "",
+      extra.length ? `Zu viel gewählt: ${extra.join(", ")}.` : "",
+      "Vergleiche jede Aussage einzeln mit der Regel, statt nach Bauchgefühl zu bündeln.",
+    ].filter(Boolean).join(" ");
+  }
+  if (question.type === "text") {
+    return "Deine Antwort enthält noch nicht genug Kernbegriffe. Nutze die Musterlösung als Checkliste und prüfe, ob Regel, Begründung und Ergebnis vorkommen.";
+  }
+  return question.commonMistakes?.[answer] || `Korrekt wäre: ${question.answer}. Prüfe die zugrunde liegende Regel und nicht nur das Endergebnis.`;
+}
+
+function showSubjectHint(areaKey) {
+  const refs = getSubjectRefs(areaKey);
+  const question = state[`${areaKey}Question`];
+  refs.hint.classList.remove("is-hidden");
+  refs.hint.innerHTML = formatInlineMathLabel(question.hint || "Zerlege die Aufgabe in Begriff, Regel und Anwendungsschritt.");
+}
+
+function showSubjectSolution(areaKey) {
+  const refs = getSubjectRefs(areaKey);
+  const question = state[`${areaKey}Question`];
+  refs.solution.classList.remove("is-hidden");
+  refs.solution.innerHTML = `
+    <strong>Musterlösung</strong>
+    <p>${formatInlineMathLabel(question.solution || question.explanation || "Vergleiche deine Antwort mit den zentralen Begriffen der Erklärung.")}</p>
+  `;
+}
+
+function subjectTaskTypeLabel(type) {
+  return {
+    single: "Single Choice",
+    multi: "Multiple Choice",
+    truefalse: "Wahr/Falsch",
+    text: "Kurzantwort",
+  }[type] || "Aufgabe";
+}
+
+function renderSubjectVisualization(refs, visualization = {}) {
+  refs.visualTitle.textContent = visualization.title || "Denkmodell";
+  refs.visual.innerHTML = subjectVisualizationHtml(visualization);
+}
+
+function subjectVisualizationHtml(visualization = {}) {
+  if (visualization.type === "pipeline") {
+    return `<ol class="subject-pipeline">${visualization.steps.map((step) => `<li>${formatInlineMathLabel(step)}</li>`).join("")}</ol>`;
+  }
+  if (visualization.type === "table") {
+    return `
+      <div class="subject-table">
+        <div class="subject-table-row subject-table-head">${visualization.headers.map((cell) => `<span>${cell}</span>`).join("")}</div>
+        ${visualization.rows.map((row) => `<div class="subject-table-row">${row.map((cell) => `<span>${formatInlineMathLabel(cell)}</span>`).join("")}</div>`).join("")}
+      </div>
+    `;
+  }
+  if (visualization.type === "bit-grid") {
+    return `
+      <div class="bit-grid">${visualization.bits.split("").map((bit) => `<span>${bit}</span>`).join("")}</div>
+      <ol class="subject-step-list">${visualization.rows.map(([label, text]) => `<li><strong>${label}</strong><span>${formatInlineMathLabel(text)}</span></li>`).join("")}</ol>
+    `;
+  }
+  if (visualization.type === "reference") {
+    return `
+      <div class="reference-visual">
+        <div><strong>Vorher</strong>${visualization.before.map((item) => `<span>${item}</span>`).join("")}</div>
+        <div><strong>Nachher</strong>${visualization.after.map((item) => `<span>${item}</span>`).join("")}</div>
+      </div>
+    `;
+  }
+  if (visualization.type === "event-log") {
+    return `<div class="event-log-visual">${visualization.events.map(([time, activity, object]) => `<p><strong>${time}</strong><span>${activity}</span><em>${object}</em></p>`).join("")}</div>`;
+  }
+  if (visualization.type === "layers") {
+    return `<div class="layer-visual">${visualization.layers.map((layer) => `<span>${layer}</span>`).join("")}</div>`;
+  }
+  if (visualization.type === "uml" || visualization.type === "erd") {
+    return `<div class="diagram-boxes">${visualization.boxes.map((box) => `<span>${formatInlineMathLabel(box)}</span>`).join("")}</div>`;
+  }
+  if (visualization.type === "automaton") {
+    return `
+      <div class="diagram-boxes">${visualization.states.map((stateLabel) => `<span>${stateLabel}</span>`).join("")}</div>
+      <ol class="subject-step-list">${visualization.transitions.map((transition) => `<li><span>${transition}</span></li>`).join("")}</ol>
+    `;
+  }
+  if (visualization.type === "logic-tree") {
+    return `<div class="logic-tree">${visualization.nodes.map((node) => `<span>${node}</span>`).join("")}</div>`;
+  }
+  if (visualization.type === "array") {
+    return `<div class="ds-list">${visualization.values.map((value) => `<span>${value}</span>`).join("")}</div>`;
+  }
+  if (visualization.type === "closure") {
+    return `<ol class="subject-step-list">${visualization.steps.map((step) => `<li><span>${formatInlineMathLabel(step)}</span></li>`).join("")}</ol>`;
+  }
+  return `<p class="section-copy">Nutze die Erklärung und die Aufgabe als gedankliche Visualisierung. Eine spezifische Grafik wird für dieses Thema später ergänzt.</p>`;
 }
 
 function createMasterQuestion() {

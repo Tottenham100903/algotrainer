@@ -142,6 +142,15 @@ queue: [A, C, D]</pre>
             <span class="module-copy" data-i18n="subjects.dataCopy">MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.</span>
             <span class="module-cta"><span data-i18n="common.viewSection">Bereich ansehen</span> <span aria-hidden="true">→</span></span>
           </button>
+
+          <button class="module-tile subject-tile subject-tile-information" type="button" data-open-view="information-management">
+            <span class="subject-tag">Neu</span>
+            <strong>
+              <span>Informationsmanagement</span>
+            </strong>
+            <span class="module-copy">ERP, Geschäftsprozesse und Process Mining klausurnah verstehen und anwenden.</span>
+            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+          </button>
         </section>
       </section>
 
@@ -339,6 +348,7 @@ queue: [A, C, D]</pre>
         </header>
 
         <nav id="basics-topic-nav" class="topic-nav learning-topic-nav" aria-label="Grundlagen-Themen auswählen"></nav>
+        <nav id="basics-mode-nav" class="section-tabs subject-mode-tabs" aria-label="Grundlagen-Lernmodus auswählen"></nav>
 
         <div class="module-grid subject-learning-grid">
           <section class="card subject-overview-card">
@@ -349,13 +359,25 @@ queue: [A, C, D]</pre>
               </div>
             </div>
             <p id="basics-topic-copy" class="section-copy"></p>
+            <ul id="basics-learning-goals" class="learning-goals"></ul>
+            <div id="basics-explanation" class="subject-explanation"></div>
             <div id="basics-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-visual-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Visualisierung</p>
+                <h2 id="basics-visual-title"></h2>
+              </div>
+            </div>
+            <div id="basics-visual" class="subject-visual"></div>
           </section>
 
           <section class="card subject-task-card">
             <div class="card-head">
               <div>
-                <p class="section-label">Erste Aufgabe</p>
+                <p id="basics-task-meta" class="section-label">Geführte Übung</p>
                 <h2 id="basics-question-title"></h2>
               </div>
               <button id="new-basics-question" class="secondary-btn" type="button">Neue Aufgabe</button>
@@ -363,9 +385,13 @@ queue: [A, C, D]</pre>
             <p id="basics-question" class="subject-question"></p>
             <form id="basics-options" class="choices"></form>
             <div class="actions quiz-actions">
+              <button id="hint-basics-question" class="secondary-btn" type="button">Hinweis anzeigen</button>
               <button id="check-basics-question" class="primary-btn" type="button">Antwort prüfen</button>
+              <button id="solution-basics-question" class="secondary-btn" type="button">Musterlösung</button>
             </div>
+            <div id="basics-hint" class="feedback hint-feedback is-hidden"></div>
             <div id="basics-feedback" class="feedback" aria-live="polite"></div>
+            <div id="basics-solution" class="master-solution is-hidden"></div>
           </section>
         </div>
       </section>
@@ -381,6 +407,7 @@ queue: [A, C, D]</pre>
         </header>
 
         <nav id="programming-topic-nav" class="topic-nav learning-topic-nav" aria-label="Programmier-Themen auswählen"></nav>
+        <nav id="programming-mode-nav" class="section-tabs subject-mode-tabs" aria-label="Programmier-Lernmodus auswählen"></nav>
 
         <div class="module-grid subject-learning-grid">
           <section class="card subject-overview-card">
@@ -391,13 +418,25 @@ queue: [A, C, D]</pre>
               </div>
             </div>
             <p id="programming-topic-copy" class="section-copy"></p>
+            <ul id="programming-learning-goals" class="learning-goals"></ul>
+            <div id="programming-explanation" class="subject-explanation"></div>
             <div id="programming-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-visual-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Visualisierung</p>
+                <h2 id="programming-visual-title"></h2>
+              </div>
+            </div>
+            <div id="programming-visual" class="subject-visual"></div>
           </section>
 
           <section class="card subject-task-card">
             <div class="card-head">
               <div>
-                <p class="section-label">Codeaufgabe</p>
+                <p id="programming-task-meta" class="section-label">Geführte Übung</p>
                 <h2 id="programming-question-title"></h2>
               </div>
               <button id="new-programming-question" class="secondary-btn" type="button">Neue Aufgabe</button>
@@ -406,9 +445,13 @@ queue: [A, C, D]</pre>
             <p id="programming-question" class="subject-question"></p>
             <form id="programming-options" class="choices"></form>
             <div class="actions quiz-actions">
+              <button id="hint-programming-question" class="secondary-btn" type="button">Hinweis anzeigen</button>
               <button id="check-programming-question" class="primary-btn" type="button">Antwort prüfen</button>
+              <button id="solution-programming-question" class="secondary-btn" type="button">Musterlösung</button>
             </div>
+            <div id="programming-hint" class="feedback hint-feedback is-hidden"></div>
             <div id="programming-feedback" class="feedback" aria-live="polite"></div>
+            <div id="programming-solution" class="master-solution is-hidden"></div>
           </section>
         </div>
       </section>
@@ -418,12 +461,13 @@ queue: [A, C, D]</pre>
           <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
           <div>
             <p class="eyebrow">Fachbereich</p>
-            <h1 class="module-title">Data Science</h1>
-            <p class="hero-copy">Übe Datenfragen praktisch: Tabellen verstehen, SQL-Abfragen lesen und später große Daten mit PySpark einordnen.</p>
+            <h1 class="module-title">Data Science &amp; Datenbanken</h1>
+            <p class="hero-copy">Übe Datenfragen praktisch: Tabellen, SQL, Normalformen, ER-Modelle und PySpark schrittweise verstehen.</p>
           </div>
         </header>
 
         <nav id="data-science-topic-nav" class="topic-nav learning-topic-nav" aria-label="Data-Science-Themen auswählen"></nav>
+        <nav id="data-science-mode-nav" class="section-tabs subject-mode-tabs" aria-label="Data-Science-Lernmodus auswählen"></nav>
 
         <div class="module-grid subject-learning-grid">
           <section class="card subject-overview-card">
@@ -434,13 +478,25 @@ queue: [A, C, D]</pre>
               </div>
             </div>
             <p id="data-science-topic-copy" class="section-copy"></p>
+            <ul id="data-science-learning-goals" class="learning-goals"></ul>
+            <div id="data-science-explanation" class="subject-explanation"></div>
             <div id="data-science-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-visual-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Visualisierung</p>
+                <h2 id="data-science-visual-title"></h2>
+              </div>
+            </div>
+            <div id="data-science-visual" class="subject-visual"></div>
           </section>
 
           <section class="card subject-task-card">
             <div class="card-head">
               <div>
-                <p class="section-label">Datenaufgabe</p>
+                <p id="data-science-task-meta" class="section-label">Geführte Übung</p>
                 <h2 id="data-science-question-title"></h2>
               </div>
               <button id="new-data-science-question" class="secondary-btn" type="button">Neue Aufgabe</button>
@@ -449,9 +505,73 @@ queue: [A, C, D]</pre>
             <p id="data-science-question" class="subject-question"></p>
             <form id="data-science-options" class="choices"></form>
             <div class="actions quiz-actions">
+              <button id="hint-data-science-question" class="secondary-btn" type="button">Hinweis anzeigen</button>
               <button id="check-data-science-question" class="primary-btn" type="button">Antwort prüfen</button>
+              <button id="solution-data-science-question" class="secondary-btn" type="button">Musterlösung</button>
             </div>
+            <div id="data-science-hint" class="feedback hint-feedback is-hidden"></div>
             <div id="data-science-feedback" class="feedback" aria-live="polite"></div>
+            <div id="data-science-solution" class="master-solution is-hidden"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="information-management-view" class="app-view is-hidden">
+        <header class="module-hero">
+          <button class="secondary-btn back-btn" type="button" data-back-home>Zurück zur Startseite</button>
+          <div>
+            <p class="eyebrow">Fachbereich</p>
+            <h1 class="module-title">Informationsmanagement</h1>
+            <p class="hero-copy">Verstehe Informationsbedarf, ERP-Prozesse, Projektlogik und Process Mining anhand klausurnaher Fälle.</p>
+          </div>
+        </header>
+
+        <nav id="information-management-topic-nav" class="topic-nav learning-topic-nav" aria-label="Informationsmanagement-Themen auswählen"></nav>
+        <nav id="information-management-mode-nav" class="section-tabs subject-mode-tabs" aria-label="Informationsmanagement-Lernmodus auswählen"></nav>
+
+        <div class="module-grid subject-learning-grid">
+          <section class="card subject-overview-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Orientierung</p>
+                <h2 id="information-management-topic-title"></h2>
+              </div>
+            </div>
+            <p id="information-management-topic-copy" class="section-copy"></p>
+            <ul id="information-management-learning-goals" class="learning-goals"></ul>
+            <div id="information-management-explanation" class="subject-explanation"></div>
+            <div id="information-management-concepts" class="concept-grid"></div>
+          </section>
+
+          <section class="card subject-visual-card">
+            <div class="card-head">
+              <div>
+                <p class="section-label">Visualisierung</p>
+                <h2 id="information-management-visual-title"></h2>
+              </div>
+            </div>
+            <div id="information-management-visual" class="subject-visual"></div>
+          </section>
+
+          <section class="card subject-task-card">
+            <div class="card-head">
+              <div>
+                <p id="information-management-task-meta" class="section-label">Geführte Übung</p>
+                <h2 id="information-management-question-title"></h2>
+              </div>
+              <button id="new-information-management-question" class="secondary-btn" type="button">Neue Aufgabe</button>
+            </div>
+            <div id="information-management-snippet" class="snippet-wrap subject-snippet is-hidden"><pre><code></code></pre></div>
+            <p id="information-management-question" class="subject-question"></p>
+            <form id="information-management-options" class="choices"></form>
+            <div class="actions quiz-actions">
+              <button id="hint-information-management-question" class="secondary-btn" type="button">Hinweis anzeigen</button>
+              <button id="check-information-management-question" class="primary-btn" type="button">Antwort prüfen</button>
+              <button id="solution-information-management-question" class="secondary-btn" type="button">Musterlösung</button>
+            </div>
+            <div id="information-management-hint" class="feedback hint-feedback is-hidden"></div>
+            <div id="information-management-feedback" class="feedback" aria-live="polite"></div>
+            <div id="information-management-solution" class="master-solution is-hidden"></div>
           </section>
         </div>
       </section>
