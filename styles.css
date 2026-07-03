@@ -2467,30 +2467,77 @@ button:disabled {
   }
 
   .algorithm-wallpaper > * {
-    opacity: 0.06;
+    opacity: 0.075;
+    font-size: clamp(0.62rem, 2.5vw, 0.82rem);
   }
 
   .wallpaper-code,
   .wallpaper-stack,
   .wallpaper-hash,
   .wallpaper-topology {
-    display: none;
+    display: block;
   }
 
   .wallpaper-heap,
   .wallpaper-array,
   .wallpaper-search {
-    opacity: 0.045;
+    opacity: 0.06;
+  }
+
+  .wallpaper-code {
+    top: 4%;
+    right: -35%;
+  }
+
+  .wallpaper-array {
+    top: 17%;
+    left: -8%;
   }
 
   .wallpaper-tree {
-    top: 24%;
-    left: -14%;
+    top: 28%;
+    left: -20%;
+  }
+
+  .wallpaper-runtime {
+    top: 22%;
+    right: 2%;
+  }
+
+  .wallpaper-heap {
+    top: 43%;
+    left: 50%;
   }
 
   .wallpaper-graph {
-    top: 60%;
-    right: -18%;
+    top: 55%;
+    right: -24%;
+  }
+
+  .wallpaper-stack {
+    bottom: 29%;
+    left: -5%;
+  }
+
+  .wallpaper-search {
+    top: 70%;
+    left: 12%;
+  }
+
+  .wallpaper-topology {
+    top: 79%;
+    right: -10%;
+  }
+
+  .wallpaper-hash {
+    right: -12%;
+    bottom: 5%;
+  }
+
+  .wallpaper-complexity {
+    bottom: 12%;
+    left: 2%;
+    font-size: clamp(1.15rem, 8vw, 2.2rem);
   }
 
   .search-array {
