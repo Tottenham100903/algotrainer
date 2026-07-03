@@ -485,15 +485,27 @@ queue: [A, C, D]</pre>
             <div id="master-workflow" class="master-workflow"></div>
 
             <div class="custom-recurrence-box">
-              <p class="tree-label">Eigenes Beispiel lösen</p>
+              <div class="custom-solver-head">
+                <div>
+                  <p class="tree-label">Eigenes Beispiel lösen</p>
+                  <h3>Rekurrenz eingeben und Schritte prüfen</h3>
+                </div>
+                <span class="custom-solver-badge">Beta</span>
+              </div>
+              <div class="syntax-guide">
+                <p><strong>Potenzen:</strong> n^2, n^3, 2^n</p>
+                <p><strong>Brüche:</strong> n/2, n/4, n/b</p>
+                <p><strong>Form:</strong> T(n)=...</p>
+              </div>
+              <div id="custom-recurrence-examples" class="custom-example-chips" aria-label="Beispiele für die Eingabe"></div>
               <div class="custom-solver-row">
                 <label class="custom-recurrence-input">
                   Rekurrenz
                   <input id="custom-recurrence-input" type="text" spellcheck="false" placeholder="z. B. T(n)=2T(n/2)+n">
                 </label>
-                <button id="solve-custom-recurrence" class="secondary-btn" type="button">Schrittweise lösen</button>
+                <button id="solve-custom-recurrence" class="primary-btn" type="button">Schrittweise lösen</button>
               </div>
-              <p id="custom-recurrence-hint" class="master-rule-hint">Nutze die Syntax passend zum gewählten Übungsbereich, zum Beispiel T(n)=2T(n/2)+n, T(n)=T(n-1)+n oder T(n)=T(n/2)+T(n/4)+n.</p>
+              <p id="custom-recurrence-hint" class="master-rule-hint">Wähle oben ein Beispiel oder schreibe eine eigene Rekurrenz mit ^ für Hochzahlen und / für Brüche.</p>
               <div id="custom-recurrence-solution" class="master-solution is-hidden" aria-live="polite"></div>
             </div>
 

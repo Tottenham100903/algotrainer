@@ -2963,9 +2963,6 @@ h2 {
 }
 
 .master-step-actions {
-  position: sticky;
-  top: 0.75rem;
-  z-index: 4;
   margin-top: 1rem;
   border: 1px solid rgba(13, 107, 95, 0.16);
   border-radius: 16px;
@@ -2975,45 +2972,109 @@ h2 {
   backdrop-filter: blur(12px);
 }
 
-.master-example-row + .master-example-row {
-  margin-top: 0.85rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line);
+.master-example-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.65rem;
 }
 
-.master-learn-step {
+.master-example-option {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.85rem;
-  align-items: start;
+  gap: 0.28rem;
+  min-height: 118px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 0.9rem;
-  opacity: 0.48;
-  transition: opacity 180ms ease, border-color 180ms ease, background 180ms ease;
+  padding: 0.85rem;
+  background: rgba(255, 253, 248, 0.82);
+  color: var(--text);
+  text-align: left;
+  box-shadow: 0 10px 24px rgba(78, 63, 34, 0.07);
 }
 
-.master-learn-step.is-visible {
-  opacity: 1;
+.master-example-option span,
+.master-example-option strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
 }
 
-.master-learn-step.is-current {
-  border-color: rgba(13, 107, 95, 0.38);
-  background: rgba(13, 107, 95, 0.06);
+.master-example-option span {
+  color: var(--secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-.master-learn-step > strong {
+.master-example-option strong {
+  color: var(--primary-strong);
+  line-height: 1.35;
+}
+
+.master-example-option small {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.master-example-option.is-active {
+  border-color: rgba(217, 95, 67, 0.55);
+  background:
+    radial-gradient(circle at top right, rgba(217, 95, 67, 0.12), transparent 38%),
+    var(--surface-strong);
+  box-shadow: 0 18px 38px rgba(217, 95, 67, 0.13);
+}
+
+.master-focus-step {
   display: grid;
+  gap: 1rem;
+  border: 1px solid rgba(13, 107, 95, 0.18);
+  border-radius: 20px;
+  padding: 1.05rem;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(13, 107, 95, 0.09), transparent 36%),
+    rgba(255, 253, 248, 0.86);
+  box-shadow: 0 16px 36px rgba(78, 63, 34, 0.08);
+}
+
+.master-step-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.master-step-dot {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  min-height: 0;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  border: 1px solid rgba(13, 107, 95, 0.18);
   border-radius: 50%;
+  padding: 0;
+  background: rgba(13, 107, 95, 0.07);
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+}
+
+.master-step-dot.is-active {
   background: var(--primary);
   color: white;
+  box-shadow: 0 10px 22px rgba(13, 107, 95, 0.18);
 }
 
-.master-learn-step h3,
-.master-learn-step p {
+.master-step-dot.is-done {
+  border-color: rgba(33, 110, 57, 0.3);
+  background: rgba(33, 110, 57, 0.1);
+}
+
+.master-focus-content {
+  border-top: 1px solid var(--line);
+  padding-top: 0.9rem;
+}
+
+.master-focus-content h3,
+.master-focus-content p {
   margin: 0;
 }
 
@@ -3025,16 +3086,18 @@ h2 {
   line-height: 1.35;
 }
 
-.master-learn-step h3 {
+.master-focus-content h3 {
   margin-top: 0.18rem;
-  font-size: 1.02rem;
+  color: var(--text);
+  font-size: clamp(1.35rem, 3vw, 2rem);
   line-height: 1.25;
 }
 
-.master-learn-step p {
-  margin-top: 0.25rem;
+.master-focus-content > p:last-child {
+  margin-top: 0.65rem;
   color: var(--muted);
-  line-height: 1.55;
+  font-size: 1.04rem;
+  line-height: 1.65;
 }
 
 .master-step-actions .step-count {
@@ -3045,12 +3108,94 @@ h2 {
 
 .custom-recurrence-box {
   margin-top: 1rem;
-  border: 1px solid rgba(13, 107, 95, 0.18);
-  border-radius: 18px;
-  padding: 1rem;
+  border: 1px solid rgba(217, 95, 67, 0.28);
+  border-radius: 22px;
+  padding: 1.15rem;
   background:
-    radial-gradient(circle at top right, rgba(13, 107, 95, 0.08), transparent 46%),
-    rgba(255, 253, 248, 0.8);
+    radial-gradient(circle at top right, rgba(217, 95, 67, 0.16), transparent 42%),
+    radial-gradient(circle at 10% 100%, rgba(13, 107, 95, 0.1), transparent 36%),
+    rgba(255, 253, 248, 0.92);
+  box-shadow: 0 22px 46px rgba(110, 87, 41, 0.13);
+}
+
+.custom-solver-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.custom-solver-head h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.custom-solver-badge {
+  border-radius: 999px;
+  padding: 0.35rem 0.6rem;
+  color: var(--secondary);
+  background: rgba(217, 95, 67, 0.12);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.syntax-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.syntax-guide p,
+.custom-example-chips button {
+  border: 1px solid rgba(13, 107, 95, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 253, 248, 0.74);
+}
+
+.syntax-guide p {
+  margin: 0;
+  padding: 0.72rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.syntax-guide strong {
+  color: var(--primary-strong);
+}
+
+.custom-example-chips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.custom-example-chips button {
+  display: grid;
+  gap: 0.2rem;
+  min-height: 70px;
+  padding: 0.68rem 0.75rem;
+  color: var(--text);
+  text-align: left;
+}
+
+.custom-example-chips span {
+  color: var(--secondary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.custom-example-chips strong {
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.82rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .custom-solver-row {
@@ -4392,7 +4537,6 @@ button:disabled {
   }
 
   .master-step-actions {
-    top: 0.5rem;
     justify-content: center;
     padding: 0.55rem;
   }
@@ -4401,19 +4545,38 @@ button:disabled {
     flex: 1 1 130px;
   }
 
-  .master-work-step,
-  .master-learn-step {
+  .master-work-step {
     grid-template-columns: 1.8rem minmax(0, 1fr);
     gap: 0.7rem;
     padding: 0.8rem;
     border-radius: 14px;
   }
 
-  .master-work-step > span,
-  .master-learn-step > strong {
+  .master-work-step > span {
     width: 1.8rem;
     height: 1.8rem;
     font-size: 0.88rem;
+  }
+
+  .master-example-options,
+  .syntax-guide,
+  .custom-example-chips {
+    grid-template-columns: 1fr;
+  }
+
+  .master-example-option {
+    min-height: 0;
+  }
+
+  .master-focus-step,
+  .custom-recurrence-box {
+    padding: 0.85rem;
+    border-radius: 16px;
+  }
+
+  .master-step-dot {
+    width: 2rem;
+    height: 2rem;
   }
 
   .master-parameter-grid {
@@ -4429,7 +4592,7 @@ button:disabled {
   }
 
   .master-parameter-grid span,
-  .master-learn-step p,
+  .master-focus-content > p:last-child,
   .master-rule-hint,
   .help-card p,
   .master-solution ol {
@@ -4437,7 +4600,7 @@ button:disabled {
     line-height: 1.48;
   }
 
-  .master-learn-step h3,
+  .master-focus-content h3,
   .help-card h3 {
     font-size: 0.98rem;
   }

@@ -1523,6 +1523,7 @@ const state = {
   masterQuestion: null,
   showMasterHelp: false,
   masterSection: "learn",
+  masterLearnLesson: 0,
   masterLearnStep: 0,
   masterTrainingTopic: "Divide and Conquer / Master-Theorem",
   sortValues: [],
@@ -1629,6 +1630,7 @@ const el = {
   masterLearnNext: document.getElementById("master-learn-next"),
   masterWorkflow: document.getElementById("master-workflow"),
   customRecurrenceInput: document.getElementById("custom-recurrence-input"),
+  customRecurrenceExamples: document.getElementById("custom-recurrence-examples"),
   customRecurrenceHint: document.getElementById("custom-recurrence-hint"),
   customRecurrenceSolution: document.getElementById("custom-recurrence-solution"),
   solveCustomRecurrence: document.getElementById("solve-custom-recurrence"),
@@ -1777,6 +1779,14 @@ document.getElementById("check-runtime").addEventListener("click", checkRuntimeQ
 document.getElementById("new-master").addEventListener("click", createMasterQuestion);
 document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
 el.solveCustomRecurrence.addEventListener("click", solveCustomRecurrence);
+el.customRecurrenceExamples.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-custom-recurrence]");
+  if (!button) {
+    return;
+  }
+  el.customRecurrenceInput.value = button.dataset.customRecurrence;
+  solveCustomRecurrence();
+});
 el.customRecurrenceInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     solveCustomRecurrence();
@@ -1793,6 +1803,7 @@ document.querySelector("[data-master-learn-options]").addEventListener("click", 
   }
 
   setMasterChoice(el.masterLearnCase, "[data-master-learn-case]", button.dataset.masterLearnCase);
+  state.masterLearnLesson = 0;
   state.masterLearnStep = 0;
   renderMasterLearning();
 });
@@ -2899,6 +2910,7 @@ function syncMasterTrainingTopic() {
   el.masterTrainingHeading.textContent = config.heading;
   el.masterTrainingCopy.innerHTML = config.copy;
   el.masterTrainingTopic.value = state.masterTrainingTopic;
+  renderCustomRecurrenceExamples();
   if (el.customRecurrenceHint) {
     el.customRecurrenceHint.innerHTML = formatInlineMathLabel(customSolverSyntaxHint(state.masterTrainingTopic));
   }
@@ -2930,12 +2942,13 @@ function setMasterSection(section) {
 
 function changeMasterLearningStep(direction) {
   const topic = masterLearnTopics[el.masterLearnCase.value];
-  const steps = topic.lessons.flatMap((lesson) => lesson.steps);
+  const lesson = topic.lessons[state.masterLearnLesson] || topic.lessons[0];
+  const steps = lesson.steps;
   state.masterLearnStep = Math.max(
     0,
     Math.min(steps.length - 1, state.masterLearnStep + direction),
   );
-  renderMasterLearning({ scrollCurrent: true });
+  renderMasterLearning();
 }
 
 function renderMasterLearning(options = {}) {
@@ -2943,6 +2956,10 @@ function renderMasterLearning(options = {}) {
   if (!topic) {
     return;
   }
+  state.masterLearnLesson = Math.max(0, Math.min(topic.lessons.length - 1, state.masterLearnLesson));
+  const lesson = topic.lessons[state.masterLearnLesson];
+  state.masterLearnStep = Math.max(0, Math.min(lesson.steps.length - 1, state.masterLearnStep));
+  const [stepTitle, stepText] = lesson.steps[state.masterLearnStep];
 
   el.masterLearnOverview.innerHTML = `
     <p class="tree-label">Grundidee</p>
@@ -2953,45 +2970,90 @@ function renderMasterLearning(options = {}) {
     <p class="section-copy">${formatInlineMathLabel(topic.summary)}</p>
   `;
   el.masterLearnExample.innerHTML = `
-    <p class="tree-label">Fälle und Beispiele</p>
-    ${topic.lessons.map((lesson) => `
-      <div class="master-example-row">
-        <p class="recurrence-line">${formatInlineMathLabel(lesson.formula)}</p>
-        <p class="operation-subline">${formatInlineMathLabel(lesson.parameters)} · Ergebnis: ${formatInlineMathLabel(lesson.result)}</p>
-      </div>
-    `).join("")}
+    <p class="tree-label">Beispiel auswählen</p>
+    <div class="master-example-options">
+      ${topic.lessons.map((lessonItem, index) => `
+        <button class="master-example-option${index === state.masterLearnLesson ? " is-active" : ""}" type="button" data-master-lesson="${index}" aria-pressed="${index === state.masterLearnLesson}">
+          <span>Beispiel ${index + 1}</span>
+          <strong>${formatInlineMathLabel(lessonItem.formula)}</strong>
+          <small>${formatInlineMathLabel(lessonItem.parameters)} · Ergebnis: ${formatInlineMathLabel(lessonItem.result)}</small>
+        </button>
+      `).join("")}
+    </div>
+    <p class="master-rule-hint">Jedes Beispiel wird einzeln erklärt. Wechsel oben das Beispiel, wenn du eine andere Rekurrenz sehen willst.</p>
   `;
-  const steps = topic.lessons.flatMap((lesson, lessonIndex) => lesson.steps.map(([title, text]) => ({
-    title,
-    text,
-    lessonIndex,
-    lessonFormula: lesson.formula,
-  })));
-  el.masterLearnSteps.innerHTML = steps
-    .map((step, index) => `
-      <article class="master-learn-step${index <= state.masterLearnStep ? " is-visible" : ""}${index === state.masterLearnStep ? " is-current" : ""}">
-        <strong>${index + 1}</strong>
-        <div>
-          <p class="step-example-label">Beispiel ${step.lessonIndex + 1}: ${formatInlineMathLabel(step.lessonFormula)}</p>
-          <h3>${step.title}</h3>
-          <p>${formatInlineMathLabel(step.text)}</p>
-        </div>
-      </article>
-    `)
-    .join("");
-  el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${steps.length}`;
+  el.masterLearnSteps.innerHTML = `
+    <article class="master-focus-step">
+      <div class="master-step-progress">
+        ${lesson.steps.map((_, index) => `
+          <button class="master-step-dot${index === state.masterLearnStep ? " is-active" : ""}${index < state.masterLearnStep ? " is-done" : ""}" type="button" data-master-step="${index}" aria-label="Schritt ${index + 1}" aria-pressed="${index === state.masterLearnStep}">${index + 1}</button>
+        `).join("")}
+      </div>
+      <div class="master-focus-content">
+        <p class="step-example-label">Beispiel ${state.masterLearnLesson + 1}: ${formatInlineMathLabel(lesson.formula)}</p>
+        <h3>${stepTitle}</h3>
+        <p>${formatInlineMathLabel(stepText)}</p>
+      </div>
+    </article>
+  `;
+  el.masterLearnCount.textContent = `Schritt ${state.masterLearnStep + 1} / ${lesson.steps.length}`;
   el.masterLearnPrev.disabled = state.masterLearnStep === 0;
-  el.masterLearnNext.disabled = state.masterLearnStep === steps.length - 1;
+  el.masterLearnNext.disabled = state.masterLearnStep === lesson.steps.length - 1;
+}
 
-  if (options.scrollCurrent) {
-    window.requestAnimationFrame(() => {
-      const currentStep = el.masterLearnSteps.querySelector(".master-learn-step.is-current");
-      currentStep?.scrollIntoView({
-        behavior: prefersReducedMotion() ? "auto" : "smooth",
-        block: "center",
-      });
-    });
+el.masterLearnExample.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-master-lesson]");
+  if (!button) {
+    return;
   }
+  state.masterLearnLesson = Number(button.dataset.masterLesson);
+  state.masterLearnStep = 0;
+  renderMasterLearning();
+});
+
+el.masterLearnSteps.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-master-step]");
+  if (!button) {
+    return;
+  }
+  state.masterLearnStep = Number(button.dataset.masterStep);
+  renderMasterLearning();
+});
+
+function renderCustomRecurrenceExamples() {
+  if (!el.customRecurrenceExamples) {
+    return;
+  }
+  const examples = getCustomSolverExamples(state.masterTrainingTopic);
+  el.customRecurrenceExamples.innerHTML = examples
+    .map((example) => `
+      <button type="button" data-custom-recurrence="${example.value}">
+        <span>${example.label}</span>
+        <strong>${formatInlineMathLabel(example.value)}</strong>
+      </button>
+    `).join("");
+}
+
+function getCustomSolverExamples(topic) {
+  if (topic === "Divide and Conquer / Master-Theorem") {
+    return [
+      { label: "Master 1", value: "T(n)=2T(n/2)+n" },
+      { label: "Master 2", value: "T(n)=3T(n/2)+n" },
+      { label: "Quadratisch", value: "T(n)=2T(n/2)+n^2" },
+    ];
+  }
+  if (topic === "Subtract and Conquer") {
+    return [
+      { label: "Linear senken", value: "T(n)=T(n-1)+n" },
+      { label: "Halbieren", value: "T(n)=T(n/2)+1" },
+      { label: "Geometrisch", value: "T(n)=T(n/2)+n" },
+    ];
+  }
+  return [
+    { label: "Lineare Schranke", value: "T(n)=T(n/2)+T(n/4)+n" },
+    { label: "Andere Teilung", value: "T(n)=T(n/2)+T(n/5)+n" },
+    { label: "Exponentiell", value: "T(n)=T(n-1)+T(n-2)+1" },
+  ];
 }
 
 function resetSortValues() {
