@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-guided-basics">
+  <link rel="stylesheet" href="styles.css?v=20260703-basics-reader">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -249,6 +249,30 @@ queue: [A, C, D]</pre>
               <p id="checkpoint-feedback" class="checkpoint-feedback" aria-live="polite"></p>
             </section>
           </div>
+
+          <section id="basics-story" class="basics-story is-hidden" aria-labelledby="basics-story-title">
+            <div class="basics-story-krugo" aria-hidden="true">
+              <span class="story-krugo-cap"></span>
+              <span class="story-krugo-face"><i></i><i></i></span>
+              <span class="story-krugo-body">IT</span>
+            </div>
+            <article class="basics-story-card">
+              <header>
+                <div>
+                  <p id="basics-story-progress" class="section-label">Station 1 von 10</p>
+                  <h1 id="basics-story-title">Was ist Informatik?</h1>
+                </div>
+                <button id="basics-story-close" class="checkpoint-task-close" type="button" aria-label="Lektion schließen">×</button>
+              </header>
+              <div id="basics-story-content" class="basics-story-content">
+                <p>Krugo bereitet deine erste Lektion vor …</p>
+              </div>
+              <footer>
+                <button id="basics-story-prev" class="secondary-btn" type="button">← Vorherige Station</button>
+                <button id="basics-story-next" class="primary-btn" type="button">Nächste Station →</button>
+              </footer>
+            </article>
+          </section>
         </div>
       </section>
 
@@ -1143,6 +1167,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-basics-wording"></script>
+  <script type="module" src="app.js?v=20260703-basics-reader"></script>
 </body>
 </html>

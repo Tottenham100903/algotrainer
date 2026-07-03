@@ -1832,6 +1832,8 @@ const state = {
   learningTopic: "Algorithmik",
   learningPoints: 0,
   learningUnlocked: 1,
+  basicsLessons: null,
+  basicsLessonIndex: 0,
 };
 
 const el = {
@@ -1863,6 +1865,13 @@ const el = {
   learningPointsPanel: document.getElementById("learning-points-panel"),
   learningPointsValue: document.getElementById("learning-points-value"),
   learningUnlockedValue: document.getElementById("learning-unlocked-value"),
+  basicsStory: document.getElementById("basics-story"),
+  basicsStoryTitle: document.getElementById("basics-story-title"),
+  basicsStoryProgress: document.getElementById("basics-story-progress"),
+  basicsStoryContent: document.getElementById("basics-story-content"),
+  basicsStoryPrev: document.getElementById("basics-story-prev"),
+  basicsStoryNext: document.getElementById("basics-story-next"),
+  basicsStoryClose: document.getElementById("basics-story-close"),
   checkpointTask: document.getElementById("checkpoint-task"),
   checkpointTaskClose: document.getElementById("checkpoint-task-close"),
   checkpointFeedback: document.getElementById("checkpoint-feedback"),
@@ -2046,6 +2055,9 @@ el.languageButtons.forEach((button) => {
 el.krugoStart.addEventListener("click", beginKrugoJourney);
 el.krugoLater.addEventListener("click", () => dismissKrugoWelcome(true));
 el.boardInfoTrain.addEventListener("click", boardInfoTrain);
+el.basicsStoryPrev.addEventListener("click", () => changeBasicsStory(-1));
+el.basicsStoryNext.addEventListener("click", () => changeBasicsStory(1));
+el.basicsStoryClose.addEventListener("click", closeBasicsStory);
 window.addEventListener("infotrain:languagechange", (event) => {
   updateLanguageMenu(event.detail.language);
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
@@ -2390,7 +2402,89 @@ function boardInfoTrain() {
       ? Math.max(0, state.learningUnlocked - 1)
       : 0;
     window.requestAnimationFrame(() => movePathAvatar(state.pathDemoIndex, true));
+    if (state.learningTopic === "Informatik-Grundlagen") {
+      openBasicsStory();
+    }
   }, 1600);
+}
+
+async function openBasicsStory() {
+  el.basicsStory.classList.remove("is-hidden");
+  if (!state.basicsLessons) {
+    try {
+      const response = await fetch("content/grundlagen-lernreise.md?v=20260703");
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      state.basicsLessons = parseBasicsJourney(await response.text());
+    } catch {
+      el.basicsStoryContent.textContent = "Die Grundlagen-Lektionen konnten nicht geladen werden.";
+      return;
+    }
+  }
+  state.basicsLessonIndex ??= 0;
+  renderBasicsStory();
+}
+
+function parseBasicsJourney(markdown) {
+  return markdown
+    .split(/\n---\n/)
+    .filter((block) => block.includes("## Station"))
+    .map((block) => {
+      const title = block.match(/^##\s+(.+)$/m)?.[1] || "Grundlagen";
+      const sections = {};
+      const sectionPattern = /\*\*(Krugo|InfoTrain-Beispiel|Übergang|Abschluss):\*\*\s*\n([\s\S]*?)(?=\n\*\*|\s*$)/g;
+      for (const match of block.matchAll(sectionPattern)) {
+        sections[match[1]] = match[2].trim().split(/\n\s*\n/).map((paragraph) => paragraph.replace(/\n/g, " "));
+      }
+      return { title, sections };
+    });
+}
+
+function renderBasicsStory() {
+  const lesson = state.basicsLessons?.[state.basicsLessonIndex];
+  if (!lesson) {
+    return;
+  }
+  el.basicsStoryProgress.textContent = `Station ${state.basicsLessonIndex + 1} von ${state.basicsLessons.length}`;
+  el.basicsStoryTitle.textContent = lesson.title.replace(/^Station \d+:\s*/, "");
+  el.basicsStoryContent.replaceChildren();
+
+  appendStorySection("Krugo", lesson.sections.Krugo);
+  appendStorySection("InfoTrain-Beispiel", lesson.sections["InfoTrain-Beispiel"]);
+  appendStorySection("Weiterfahrt", lesson.sections.Übergang || lesson.sections.Abschluss);
+
+  el.basicsStoryPrev.disabled = state.basicsLessonIndex === 0;
+  el.basicsStoryNext.disabled = state.basicsLessonIndex === state.basicsLessons.length - 1;
+  el.basicsStoryContent.scrollTop = 0;
+}
+
+function appendStorySection(label, paragraphs) {
+  if (!paragraphs?.length) {
+    return;
+  }
+  const section = document.createElement("section");
+  const heading = document.createElement("h2");
+  heading.textContent = label;
+  section.append(heading);
+  paragraphs.forEach((text) => {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = text;
+    section.append(paragraph);
+  });
+  el.basicsStoryContent.append(section);
+}
+
+function changeBasicsStory(direction) {
+  state.basicsLessonIndex = Math.min(
+    state.basicsLessons.length - 1,
+    Math.max(0, state.basicsLessonIndex + direction),
+  );
+  renderBasicsStory();
+}
+
+function closeBasicsStory() {
+  el.basicsStory.classList.add("is-hidden");
 }
 
 function initializeLearningProgress() {
@@ -2423,6 +2517,7 @@ function resetLearningDesk() {
   el.learningPointsPanel.classList.add("is-hidden");
   el.learningPointsToggle.setAttribute("aria-expanded", "false");
   closeCheckpointTask();
+  closeBasicsStory();
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
   el.learningDesk.classList.add("is-boarding");
   el.learningDesk.classList.remove("world-has-arrived");
@@ -2501,6 +2596,11 @@ function translatedLearningTopic(topic) {
 }
 
 function openCheckpoint(number) {
+  if (state.learningTopic === "Informatik-Grundlagen") {
+    state.basicsLessonIndex = Math.max(0, number - 1);
+    openBasicsStory();
+    return;
+  }
   if (state.learningTopic !== "Algorithmik") {
     return;
   }
