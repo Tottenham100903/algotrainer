@@ -135,6 +135,49 @@ body {
   transform: rotate(3deg);
 }
 
+.wallpaper-heap {
+  top: 42%;
+  left: 42%;
+  font-size: clamp(0.72rem, 1.35vw, 1rem);
+  transform: rotate(3deg);
+}
+
+.wallpaper-hash {
+  bottom: 11%;
+  right: 5%;
+  font-size: clamp(0.7rem, 1.25vw, 0.95rem);
+  transform: rotate(-3deg);
+}
+
+.wallpaper-array {
+  top: 17%;
+  left: 5%;
+  font-size: clamp(0.8rem, 1.7vw, 1.2rem);
+  transform: rotate(-2deg);
+}
+
+.wallpaper-search {
+  top: 70%;
+  left: 34%;
+  font-size: clamp(0.75rem, 1.5vw, 1.05rem);
+  transform: rotate(2deg);
+}
+
+.wallpaper-topology {
+  top: 80%;
+  right: 29%;
+  font-size: clamp(0.68rem, 1.2vw, 0.9rem);
+  transform: rotate(-4deg);
+}
+
+.wallpaper-heap,
+.wallpaper-hash,
+.wallpaper-array,
+.wallpaper-search,
+.wallpaper-topology {
+  opacity: 0.065;
+}
+
 .app-view-active {
   animation: fade-in 220ms ease;
 }
@@ -2403,8 +2446,16 @@ button:disabled {
   }
 
   .wallpaper-code,
-  .wallpaper-stack {
+  .wallpaper-stack,
+  .wallpaper-hash,
+  .wallpaper-topology {
     display: none;
+  }
+
+  .wallpaper-heap,
+  .wallpaper-array,
+  .wallpaper-search {
+    opacity: 0.045;
   }
 
   .wallpaper-tree {
