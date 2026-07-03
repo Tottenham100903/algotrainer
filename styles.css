@@ -1902,12 +1902,23 @@ button {
   padding: 0.78rem 1.15rem;
   min-height: var(--control-height);
   cursor: pointer;
-  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+  transition:
+    transform 180ms ease,
+    opacity 160ms ease,
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-button:hover {
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  button:not(.module-tile):not(:disabled):hover {
+    transform: translateY(-3px) scale(1.015);
+    box-shadow: 0 10px 22px rgba(31, 42, 48, 0.14);
+    filter: brightness(1.04) saturate(1.08);
+  }
 }
 
 button:disabled {
@@ -1928,6 +1939,10 @@ button:disabled {
 .secondary-btn {
   background: rgba(217, 95, 67, 0.12);
   color: var(--secondary);
+}
+
+.secondary-btn:not(:disabled):hover {
+  background: rgba(217, 95, 67, 0.2);
 }
 
 .sandbox-controls {

@@ -1664,7 +1664,7 @@ const el = {
   sandboxTree: document.getElementById("sandbox-tree"),
   sandboxRotationNotice: document.getElementById("sandbox-rotation-notice"),
   sandboxInsert: document.getElementById("sandbox-insert"),
-  sandboxDelete: document.getElementById("sandbox-delete"),
+  sandboxClear: document.getElementById("sandbox-clear"),
   sandboxReset: document.getElementById("reset-sandbox"),
   sandboxUndo: document.getElementById("sandbox-undo"),
   sandboxRedo: document.getElementById("sandbox-redo"),
@@ -1758,7 +1758,7 @@ document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
 el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
 el.avlOptions.addEventListener("change", () => previewAVLRotation(true));
 document.getElementById("sandbox-insert").addEventListener("click", () => mutateSandbox("insert"));
-document.getElementById("sandbox-delete").addEventListener("click", () => mutateSandbox("delete"));
+el.sandboxClear.addEventListener("click", clearSandbox);
 document.getElementById("reset-sandbox").addEventListener("click", () => resetSandbox(false));
 el.sandboxUndo.addEventListener("click", undoSandbox);
 el.sandboxRedo.addEventListener("click", redoSandbox);
@@ -3630,6 +3630,17 @@ function resetSandbox(isInitial) {
   updateUndoRedoButtons();
 }
 
+function clearSandbox() {
+  clearTimeout(state.sandboxAnimationTimer);
+  setSandboxAnimating(false);
+  hideSandboxRotationNotice();
+  pushSandboxHistory();
+  state.sandboxFuture = [];
+  state.sandboxTree = new AVLTree();
+  renderSandbox({ motionHint: "Der Baum wurde geleert." });
+  updateUndoRedoButtons();
+}
+
 function undoSandbox() {
   if (!state.sandboxHistory.length) {
     return;
@@ -4215,7 +4226,7 @@ function setSandboxAnimating(isAnimating) {
   state.sandboxAnimating = isAnimating;
   el.sandboxValue.disabled = isAnimating;
   el.sandboxInsert.disabled = isAnimating;
-  el.sandboxDelete.disabled = isAnimating;
+  el.sandboxClear.disabled = isAnimating;
   el.sandboxReset.disabled = isAnimating;
 }
 
