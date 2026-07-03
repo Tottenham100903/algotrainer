@@ -975,6 +975,117 @@ h2 {
   }
 }
 
+.learning-path-stage {
+  width: min(1100px, calc(100% - 2rem));
+  max-width: none;
+  aspect-ratio: 1718 / 916;
+  overflow: hidden;
+  border: 5px solid rgba(255, 253, 248, 0.9);
+  border-radius: 34px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.02), rgba(31, 42, 48, 0.05)),
+    url("assets/learning-path-desk.png") center / cover no-repeat;
+  box-shadow:
+    0 35px 80px rgba(78, 55, 25, 0.28),
+    inset 0 0 0 1px rgba(31, 42, 48, 0.08);
+  perspective: 1200px;
+}
+
+.learning-path {
+  position: absolute;
+  inset: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
+  transform: none;
+}
+
+.learning-path::before {
+  display: none;
+}
+
+.learning-path-step {
+  position: absolute;
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  transform: translate(-50%, -50%);
+}
+
+.learning-path-step:nth-child(1) {
+  top: 72%;
+  left: 18%;
+}
+
+.learning-path-step:nth-child(2) {
+  top: 52%;
+  left: 38%;
+}
+
+.learning-path-step:nth-child(3) {
+  top: 68%;
+  left: 46.5%;
+}
+
+.learning-path-step:nth-child(4) {
+  top: 54%;
+  left: 62%;
+}
+
+.learning-path-step:nth-child(5) {
+  top: 35%;
+  left: 60%;
+}
+
+.learning-path-step:nth-child(6) {
+  top: 37%;
+  left: 81%;
+}
+
+.learning-path-step:nth-child(even) .path-card,
+.learning-path-step:nth-child(odd) .path-card {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 50%;
+  width: max-content;
+  min-width: 7.5rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 14px;
+  text-align: center;
+  transform: translateX(-50%) translateZ(45px);
+}
+
+.path-card h2 {
+  margin: 0.12rem 0 0;
+  font-size: 0.88rem;
+}
+
+.path-status {
+  font-size: 0.58rem;
+}
+
+.path-node {
+  width: 4rem;
+  height: 4rem;
+  border-width: 4px;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow:
+    0 10px 22px rgba(78, 55, 25, 0.24),
+    inset 0 2px 0 rgba(255, 255, 255, 0.9);
+}
+
+.learning-path-step.is-current .path-node {
+  animation: checkpoint-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes checkpoint-pulse {
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(13, 107, 95, 0.18),
+      0 14px 28px rgba(78, 55, 25, 0.28);
+  }
+}
+
 .module-hero {
   display: grid;
   gap: 1rem;
@@ -2897,36 +3008,47 @@ button:disabled {
   }
 
   .learning-path-stage {
+    width: calc(100% - 0.2rem);
     perspective: 700px;
+    border-width: 3px;
+    border-radius: 20px;
   }
 
   .learning-path {
-    padding-inline: 0.1rem;
-    transform: rotateX(2deg);
+    padding: 0;
+    transform: none;
   }
 
   .learning-path::before {
-    left: 1.75rem;
+    display: none;
   }
 
   .learning-path-step {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    gap: 0.6rem;
+    width: 2.7rem;
+    height: 2.7rem;
   }
 
   .path-node {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 2.7rem;
+    height: 2.7rem;
+    border-width: 2px;
+    font-size: 0.85rem;
   }
 
   .path-card {
-    padding: 1rem;
-    border-radius: 18px;
+    display: none;
   }
 
   .learning-path-step:nth-child(even) .path-card,
   .learning-path-step:nth-child(odd) .path-card {
-    transform: translateZ(16px);
+    transform: translateX(-50%) translateZ(16px);
+  }
+
+  .path-avatar {
+    width: 2.6rem;
+    height: 3.6rem;
+    transform: translate3d(var(--avatar-x), var(--avatar-y), 90px) scale(0.72);
+    transform-origin: bottom center;
   }
 
   .subject-tile {
