@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-darkmode">
+  <link rel="stylesheet" href="styles.css?v=20260703-checkpoints">
 </head>
 <body>
   <div class="page-shell">
@@ -117,7 +117,6 @@ queue: [A, C, D]</pre>
             <div class="monitor-shell">
               <span class="monitor-camera"></span>
               <div class="monitor-screen">
-                <span class="monitor-logo">InfoTrain</span>
                 <span class="monitor-code">&lt;/&gt;</span>
                 <i></i><i></i><i></i>
               </div>
@@ -133,25 +132,25 @@ queue: [A, C, D]</pre>
           <div class="desk-books" aria-label="Oberthema auswählen">
             <button class="desk-book book-algorithmics" type="button" data-learning-book="Algorithmik">
               <span class="book-spine">Algorithmik</span>
-              <span class="book-cover"><small>InfoTrain</small>Algorithmik</span>
+              <span class="book-cover">Algorithmik</span>
               <span class="book-pages"></span>
               <span class="book-open-spread"><i></i><i></i></span>
             </button>
             <button class="desk-book book-basics" type="button" data-learning-book="Informatik-Grundlagen">
               <span class="book-spine">Grundlagen</span>
-              <span class="book-cover"><small>InfoTrain</small>Grundlagen</span>
+              <span class="book-cover">Grundlagen</span>
               <span class="book-pages"></span>
               <span class="book-open-spread"><i></i><i></i></span>
             </button>
             <button class="desk-book book-programming" type="button" data-learning-book="Programmieren">
               <span class="book-spine">Programmieren</span>
-              <span class="book-cover"><small>InfoTrain</small>Programmieren</span>
+              <span class="book-cover">Programmieren</span>
               <span class="book-pages"></span>
               <span class="book-open-spread"><i></i><i></i></span>
             </button>
             <button class="desk-book book-data" type="button" data-learning-book="Data Science">
               <span class="book-spine">Data Science</span>
-              <span class="book-cover"><small>InfoTrain</small>Data Science</span>
+              <span class="book-cover">Data Science</span>
               <span class="book-pages"></span>
               <span class="book-open-spread"><i></i><i></i></span>
             </button>
@@ -167,9 +166,9 @@ queue: [A, C, D]</pre>
           </div>
 
           <div id="learning-points-panel" class="points-panel is-hidden">
-            <p><span>Punkte</span><strong>0</strong></p>
-            <p><span>Freigeschaltet</span><strong>1 / 6</strong></p>
-            <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button">Bewegung testen</button>
+            <p><span>Punkte</span><strong id="learning-points-value">0</strong></p>
+            <p><span>Freigeschaltet</span><strong id="learning-unlocked-value">1 / 6</strong></p>
+            <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button" disabled>Bewegung testen</button>
           </div>
 
           <div class="learning-path-stage">
@@ -180,13 +179,26 @@ queue: [A, C, D]</pre>
               <span class="avatar-shadow"></span>
             </div>
             <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen">
-              <li class="learning-path-step is-current" data-path-step="1"><span class="path-node">1</span><div class="path-card"><span class="path-status">Start</span><h2>Lektion 1</h2></div></li>
-              <li class="learning-path-step is-locked" data-path-step="2"><span class="path-node">2</span><div class="path-card"><span class="path-status">20 Punkte</span><h2>Lektion 2</h2></div></li>
-              <li class="learning-path-step is-locked" data-path-step="3"><span class="path-node">3</span><div class="path-card"><span class="path-status">45 Punkte</span><h2>Lektion 3</h2></div></li>
-              <li class="learning-path-step is-locked" data-path-step="4"><span class="path-node">4</span><div class="path-card"><span class="path-status">75 Punkte</span><h2>Lektion 4</h2></div></li>
-              <li class="learning-path-step is-locked" data-path-step="5"><span class="path-node">5</span><div class="path-card"><span class="path-status">110 Punkte</span><h2>Lektion 5</h2></div></li>
-              <li class="learning-path-step is-locked" data-path-step="6"><span class="path-node">6</span><div class="path-card"><span class="path-status">150 Punkte</span><h2>Abschluss</h2></div></li>
+              <li class="learning-path-step is-current" data-path-step="1"><button class="path-node" type="button" data-checkpoint="1">1</button><div class="path-card"><span class="path-status">Frei</span><h2>Binäre Suche</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="2"><button class="path-node" type="button" data-checkpoint="2" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 2</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="3"><button class="path-node" type="button" data-checkpoint="3" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 3</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="4"><button class="path-node" type="button" data-checkpoint="4" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 4</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="5"><button class="path-node" type="button" data-checkpoint="5" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 5</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="6"><button class="path-node" type="button" data-checkpoint="6" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Abschluss</h2></div></li>
             </ol>
+
+            <section id="checkpoint-task" class="checkpoint-task is-hidden" aria-labelledby="checkpoint-task-title">
+              <button id="checkpoint-task-close" class="checkpoint-task-close" type="button" aria-label="Aufgabe schließen">×</button>
+              <p class="section-label">Checkpoint 1</p>
+              <h2 id="checkpoint-task-title">Binäre Suche</h2>
+              <p>Welche asymptotische Laufzeit hat die binäre Suche in einer sortierten Liste?</p>
+              <div class="checkpoint-answers">
+                <button type="button" data-checkpoint-answer="O(n)">O(n)</button>
+                <button type="button" data-checkpoint-answer="O(log n)">O(log n)</button>
+                <button type="button" data-checkpoint-answer="O(n²)">O(n²)</button>
+              </div>
+              <p id="checkpoint-feedback" class="checkpoint-feedback" aria-live="polite"></p>
+            </section>
           </div>
         </div>
       </section>
@@ -978,6 +990,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script src="app.js?v=20260703-darkmode"></script>
+  <script src="app.js?v=20260703-checkpoints"></script>
 </body>
 </html>

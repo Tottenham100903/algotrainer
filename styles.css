@@ -323,7 +323,8 @@ body.theme-dark .learning-path-stage {
 }
 
 body.theme-dark .route-topic,
-body.theme-dark .points-panel {
+body.theme-dark .points-panel,
+body.theme-dark .checkpoint-task {
   border-color: var(--line);
   color: var(--text);
   background: rgba(28, 44, 49, 0.9);
@@ -1360,13 +1361,6 @@ h2 {
     0 0 18px rgba(20, 184, 166, 0.2);
 }
 
-.monitor-logo {
-  font-size: clamp(2rem, 4vw, 4rem);
-  font-weight: 700;
-  letter-spacing: -0.055em;
-  text-shadow: 0 5px 20px rgba(4, 43, 39, 0.38);
-}
-
 .monitor-code {
   position: absolute;
   right: 8%;
@@ -1500,6 +1494,40 @@ h2 {
     filter 420ms ease;
 }
 
+.desk-book::before,
+.desk-book::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.desk-book::before {
+  top: calc(100% - 3px);
+  left: 11px;
+  width: calc(100% - 15px);
+  height: 20px;
+  border-radius: 0 0 7px 7px;
+  background:
+    repeating-linear-gradient(90deg, #f4e8cb 0 7px, #d7c29a 8px),
+    #ead8b4;
+  box-shadow: 0 9px 14px rgba(60, 31, 16, 0.24);
+  transform: rotateX(-78deg);
+  transform-origin: top;
+}
+
+.desk-book::after {
+  top: 8px;
+  left: calc(100% - 4px);
+  width: 18px;
+  height: calc(100% - 12px);
+  border-radius: 0 6px 6px 0;
+  background:
+    repeating-linear-gradient(0deg, #fff8e8 0 5px, #d7c29a 6px),
+    #ead8b4;
+  transform: rotateY(76deg);
+  transform-origin: left;
+}
+
 .desk-book:nth-child(1) {
   top: 49%;
   left: 8%;
@@ -1560,7 +1588,8 @@ h2 {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   padding: 1.2rem 1rem;
   border: 3px solid color-mix(in srgb, var(--book-color), #17292d 25%);
   background:
@@ -1571,22 +1600,30 @@ h2 {
     inset 7px 0 12px rgba(255, 255, 255, 0.08),
     inset -5px 0 12px rgba(0, 0, 0, 0.1),
     8px 12px 0 color-mix(in srgb, var(--book-color), #17292d 35%);
-  font-size: 1.35rem;
+  font-size: clamp(1.05rem, 1.45vw, 1.45rem);
   font-weight: 700;
   line-height: 0.95;
-  text-align: left;
+  text-align: center;
   transform-origin: left center;
   transition: transform 620ms cubic-bezier(0.2, 0.75, 0.2, 1);
   backface-visibility: hidden;
 }
 
-.book-cover small {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  opacity: 0.72;
-  text-transform: uppercase;
+.book-cover::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 7px 13px 13px 7px;
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.book-cover::after {
+  content: "◆";
+  position: absolute;
+  top: 22%;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
 }
 
 .book-spine {
@@ -1671,6 +1708,30 @@ h2 {
 .desk-book.is-opening .book-open-spread {
   opacity: 1;
   transform: translateX(-50%) scaleX(1) rotateX(8deg) translateZ(5px);
+}
+
+.desk-book.is-opening .book-open-spread i:last-child::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: 2;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 16px, rgba(89, 115, 121, 0.12) 17px 18px),
+    linear-gradient(90deg, #fffdf7, #ead9b5);
+  transform-origin: left center;
+  animation: turn-book-page 720ms cubic-bezier(0.2, 0.7, 0.2, 1) 720ms both;
+}
+
+@keyframes turn-book-page {
+  0% {
+    transform: rotateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotateY(-165deg);
+  }
 }
 
 .desk-book.is-opening .book-spine {
@@ -1795,13 +1856,99 @@ h2 {
   border: 0;
   border-radius: 0;
   background:
+    linear-gradient(rgba(13, 107, 95, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 107, 95, 0.035) 1px, transparent 1px),
     radial-gradient(circle at 18% 76%, rgba(13, 107, 95, 0.14), transparent 16%),
     radial-gradient(circle at 81% 30%, rgba(217, 95, 67, 0.13), transparent 18%),
     linear-gradient(145deg, #fffaf0, #eaf5ef);
+  background-size: 42px 42px, 42px 42px, auto, auto, auto;
   box-shadow:
     0 35px 80px rgba(78, 55, 25, 0.28),
     inset 0 0 0 1px rgba(31, 42, 48, 0.08);
   perspective: 1200px;
+}
+
+.learning-path-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.55;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 600'%3E%3Cpath d='M180 440 C260 420 285 330 380 312 S430 420 515 405 S555 315 650 325 S690 230 805 220' fill='none' stroke='%230d6b5f' stroke-width='13' stroke-linecap='round' stroke-dasharray='2 24'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+.learning-path,
+.path-avatar {
+  z-index: 2;
+}
+
+.checkpoint-task {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 20;
+  width: min(440px, calc(100% - 2rem));
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 24px;
+  padding: 1.4rem;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: 0 30px 80px rgba(31, 42, 48, 0.24);
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(18px);
+  animation: checkpoint-open 320ms cubic-bezier(0.22, 0.8, 0.2, 1);
+}
+
+.checkpoint-task h2,
+.checkpoint-task p {
+  margin-top: 0;
+}
+
+.checkpoint-task-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 40px;
+  height: 40px;
+  min-height: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: rgba(31, 42, 48, 0.07);
+  font-size: 1.5rem;
+}
+
+.checkpoint-answers {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.checkpoint-answers button {
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: var(--surface-strong);
+}
+
+.checkpoint-feedback {
+  min-height: 1.4rem;
+  margin: 0.9rem 0 0;
+  font-weight: 700;
+}
+
+.checkpoint-feedback.is-correct {
+  color: var(--correct);
+}
+
+.checkpoint-feedback.is-wrong {
+  color: var(--wrong);
+}
+
+@keyframes checkpoint-open {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%) scale(0.88);
+  }
 }
 
 .learning-path {
@@ -1889,6 +2036,10 @@ h2 {
 
 .learning-path-step.is-current .path-node {
   animation: checkpoint-pulse 1.8s ease-in-out infinite;
+}
+
+.learning-path-step:not(.is-locked) .path-node {
+  cursor: pointer;
 }
 
 @keyframes checkpoint-pulse {
@@ -3933,6 +4084,16 @@ button:disabled {
     transform-origin: bottom center;
   }
 
+  .checkpoint-task {
+    width: calc(100% - 1rem);
+    border-radius: 18px;
+    padding: 1rem;
+  }
+
+  .checkpoint-task > p:not(.section-label) {
+    padding-right: 2.5rem;
+  }
+
   .learning-desk {
     width: 100%;
     height: 100dvh;
@@ -3951,10 +4112,6 @@ button:disabled {
     border-width: 7px;
     border-bottom-width: 12px;
     border-radius: 13px 13px 9px 9px;
-  }
-
-  .monitor-logo {
-    font-size: 1.25rem;
   }
 
   .monitor-camera {

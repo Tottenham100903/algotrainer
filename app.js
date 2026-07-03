@@ -1561,6 +1561,9 @@ const state = {
   pathDemoTimer: null,
   pathDemoIndex: 0,
   learningBookTimer: null,
+  learningTopic: "Algorithmik",
+  learningPoints: 0,
+  learningUnlocked: 1,
 };
 
 const el = {
@@ -1583,6 +1586,13 @@ const el = {
   backToLearningDesk: document.getElementById("back-to-learning-desk"),
   learningPointsToggle: document.getElementById("learning-points-toggle"),
   learningPointsPanel: document.getElementById("learning-points-panel"),
+  learningPointsValue: document.getElementById("learning-points-value"),
+  learningUnlockedValue: document.getElementById("learning-unlocked-value"),
+  checkpointTask: document.getElementById("checkpoint-task"),
+  checkpointTaskClose: document.getElementById("checkpoint-task-close"),
+  checkpointFeedback: document.getElementById("checkpoint-feedback"),
+  checkpointAnswers: [...document.querySelectorAll("[data-checkpoint-answer]")],
+  checkpointButtons: [...document.querySelectorAll("[data-checkpoint]")],
   homeView: document.getElementById("home-view"),
   learningPathView: document.getElementById("learning-path-view"),
   algorithmicsView: document.getElementById("algorithmics-view"),
@@ -1699,6 +1709,7 @@ const el = {
 };
 
 initializeTheme();
+initializeLearningProgress();
 el.menuToggle.addEventListener("click", () => {
   const isOpen = el.menuToggle.getAttribute("aria-expanded") === "true";
   isOpen ? closeSettingsMenu() : openSettingsMenu();
@@ -1745,6 +1756,13 @@ window.addEventListener("resize", () => {
   }
 });
 el.pathPreview.addEventListener("click", previewLearningPath);
+el.checkpointTaskClose.addEventListener("click", closeCheckpointTask);
+el.checkpointAnswers.forEach((button) => {
+  button.addEventListener("click", () => answerCheckpointTask(button.dataset.checkpointAnswer));
+});
+el.checkpointButtons.forEach((button) => {
+  button.addEventListener("click", () => openCheckpoint(Number(button.dataset.checkpoint)));
+});
 el.learningBooks.forEach((book) => {
   book.addEventListener("click", () => openLearningBook(book));
 });
@@ -1962,6 +1980,29 @@ function setTheme(darkMode, persist = true) {
   }
 }
 
+function initializeLearningProgress() {
+  try {
+    const saved = JSON.parse(window.localStorage.getItem("infotrain-learning-progress"));
+    if (saved) {
+      state.learningPoints = Number(saved.points) || 0;
+      state.learningUnlocked = Math.min(el.pathSteps.length, Math.max(1, Number(saved.unlocked) || 1));
+    }
+  } catch {
+    // Progress starts at checkpoint one when storage is unavailable.
+  }
+}
+
+function saveLearningProgress() {
+  try {
+    window.localStorage.setItem("infotrain-learning-progress", JSON.stringify({
+      points: state.learningPoints,
+      unlocked: state.learningUnlocked,
+    }));
+  } catch {
+    // Progress remains available for the current session.
+  }
+}
+
 function openLearningBook(book) {
   window.clearTimeout(state.learningBookTimer);
   const deskRect = el.learningDesk.getBoundingClientRect();
@@ -1973,7 +2014,8 @@ function openLearningBook(book) {
   book.style.setProperty("--book-dx", `${offsetX}px`);
   book.style.setProperty("--book-dy", `${offsetY}px`);
   book.classList.add("is-focusing");
-  el.learningRouteTitle.textContent = book.dataset.learningBook;
+  state.learningTopic = book.dataset.learningBook;
+  el.learningRouteTitle.textContent = state.learningTopic;
 
   state.learningBookTimer = window.setTimeout(() => {
     book.classList.add("is-opening");
@@ -1984,8 +2026,11 @@ function openLearningBook(book) {
         el.learningRoute.classList.remove("is-hidden");
         el.learningPointsPanel.classList.add("is-hidden");
         el.learningPointsToggle.setAttribute("aria-expanded", "false");
-        state.pathDemoIndex = 0;
-        window.requestAnimationFrame(() => movePathAvatar(0, true));
+        renderLearningPathState();
+        state.pathDemoIndex = state.learningTopic === "Algorithmik"
+          ? Math.max(0, state.learningUnlocked - 1)
+          : 0;
+        window.requestAnimationFrame(() => movePathAvatar(state.pathDemoIndex, true));
         state.learningBookTimer = null;
       }, 650);
     }, 1050);
@@ -1998,6 +2043,7 @@ function resetLearningDesk() {
   el.learningRoute.classList.add("is-hidden");
   el.learningPointsPanel.classList.add("is-hidden");
   el.learningPointsToggle.setAttribute("aria-expanded", "false");
+  closeCheckpointTask();
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
   el.learningBooks.forEach((book) => {
     book.classList.remove("is-focusing", "is-opening");
@@ -2031,6 +2077,68 @@ function movePathAvatar(stepIndex, instant = false) {
   }
 }
 
+function renderLearningPathState() {
+  const algorithmicsActive = state.learningTopic === "Algorithmik";
+  const unlocked = algorithmicsActive ? state.learningUnlocked : 0;
+  const points = algorithmicsActive ? state.learningPoints : 0;
+
+  el.learningPointsValue.textContent = String(points);
+  el.learningUnlockedValue.textContent = `${unlocked} / ${el.pathSteps.length}`;
+  el.learningPointsToggle.textContent = `★ ${points} Punkte`;
+  el.pathPreview.disabled = unlocked < 2;
+
+  el.pathSteps.forEach((step, index) => {
+    const number = index + 1;
+    const button = step.querySelector(".path-node");
+    const status = step.querySelector(".path-status");
+    const isUnlocked = number <= unlocked;
+    const isCurrent = number === unlocked && unlocked > 0;
+
+    step.classList.toggle("is-locked", !isUnlocked);
+    step.classList.toggle("is-current", isCurrent);
+    button.disabled = !isUnlocked;
+    button.textContent = isUnlocked ? String(number) : "🔒";
+    button.setAttribute("aria-label", isUnlocked ? `Checkpoint ${number}` : `Checkpoint ${number} gesperrt`);
+    status.textContent = isUnlocked ? (number === 1 && unlocked === 1 ? "Frei" : "Freigeschaltet") : "Gesperrt";
+  });
+}
+
+function openCheckpoint(number) {
+  if (state.learningTopic !== "Algorithmik") {
+    return;
+  }
+  if (number !== 1) {
+    return;
+  }
+  el.checkpointFeedback.textContent = "";
+  el.checkpointFeedback.className = "checkpoint-feedback";
+  el.checkpointTask.classList.remove("is-hidden");
+}
+
+function closeCheckpointTask() {
+  el.checkpointTask.classList.add("is-hidden");
+}
+
+function answerCheckpointTask(answer) {
+  if (answer !== "O(log n)") {
+    el.checkpointFeedback.textContent = "Noch nicht richtig. Denk daran: Der Suchbereich wird in jedem Schritt halbiert.";
+    el.checkpointFeedback.className = "checkpoint-feedback is-wrong";
+    return;
+  }
+
+  state.learningPoints = Math.max(state.learningPoints, 20);
+  state.learningUnlocked = Math.max(state.learningUnlocked, 2);
+  saveLearningProgress();
+  el.checkpointFeedback.textContent = "Richtig! Checkpoint 2 wurde freigeschaltet.";
+  el.checkpointFeedback.className = "checkpoint-feedback is-correct";
+  renderLearningPathState();
+  window.setTimeout(() => {
+    closeCheckpointTask();
+    state.pathDemoIndex = 1;
+    movePathAvatar(1);
+  }, 850);
+}
+
 function previewLearningPath() {
   stopLearningPathPreview();
   state.pathDemoIndex = 0;
@@ -2041,7 +2149,7 @@ function previewLearningPath() {
     state.pathDemoIndex += 1;
     movePathAvatar(state.pathDemoIndex);
 
-    if (state.pathDemoIndex < el.pathSteps.length - 1) {
+    if (state.pathDemoIndex < state.learningUnlocked - 1) {
       state.pathDemoTimer = window.setTimeout(advance, 1050);
       return;
     }
