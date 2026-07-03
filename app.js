@@ -25,7 +25,7 @@ import {
   initializeLanguage,
   languageNames,
   t,
-} from "./js/i18n.js?v=20260703-i18n";
+} from "./js/i18n.js?v=20260703-basics-wording";
 
 function asCode(lines) {
   return lines.join("\n");
