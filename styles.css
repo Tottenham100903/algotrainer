@@ -2206,14 +2206,16 @@ h2 {
 .module-title {
   max-width: 100%;
   font-size: clamp(2rem, 7vw, 3.3rem);
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .card h2 {
   max-width: 100%;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .hero-copy,
@@ -2293,6 +2295,9 @@ h2 {
   color: var(--muted);
   text-align: center;
   white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .topic-nav-btn.is-active,
@@ -2369,13 +2374,16 @@ h2 {
   font-size: clamp(2.7rem, 5vw, 4.8rem);
   line-height: 0.82;
   letter-spacing: -0.06em;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .module-tile strong span {
   display: block;
   max-width: 100%;
+  white-space: nowrap;
 }
 
 .module-tile,
@@ -2390,16 +2398,25 @@ h2 {
 }
 
 .module-copy,
+.concept-card p,
+.subject-question,
+.section-copy,
+.operation-subline,
+.feedback,
+.log-box {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 .module-cta,
 .rule-main,
 .rule-detail,
 .rule-formula,
 .topic-nav-btn,
-.section-tab-btn,
-.concept-card p,
-.subject-question {
-  overflow-wrap: anywhere;
-  hyphens: auto;
+.section-tab-btn {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 .module-tile-avl strong {
@@ -3908,11 +3925,14 @@ body.theme-dark .language-options button.is-active {
 }
 
 .recurrence-line {
+  max-width: 100%;
+  overflow-x: auto;
   margin: 0;
   font-family: "IBM Plex Mono", monospace;
   font-size: clamp(1.25rem, 2.6vw, 1.9rem);
   font-weight: 500;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
   line-height: 1.25;
 }
 
@@ -3940,18 +3960,21 @@ body.theme-dark .language-options button.is-active {
 }
 
 .math-token {
-  display: inline-grid;
-  min-width: 1.25em;
-  place-items: center;
-  border-radius: 0.42em;
-  padding: 0.03em 0.22em;
+  display: inline;
+  border-radius: 0.3em;
+  padding: 0 0.12em;
   color: var(--token-color);
-  background: color-mix(in srgb, var(--token-color) 13%, transparent);
+  background:
+    linear-gradient(
+      to top,
+      color-mix(in srgb, var(--token-color) 24%, transparent) 0 46%,
+      transparent 46% 100%
+    );
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   font-family: "IBM Plex Mono", monospace;
   font-weight: 800;
-  line-height: 1.08;
+  line-height: inherit;
 }
 
 .math-token-a {
@@ -3991,8 +4014,17 @@ body.theme-dark .language-options button.is-active {
 }
 
 .formula-legend .math-token {
+  display: inline-flex;
+  min-width: 1.35em;
+  min-height: 1.35em;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 0.22em;
+  background: color-mix(in srgb, var(--token-color) 16%, transparent);
   font-style: normal;
   font-size: 0.9em;
+  line-height: 1;
 }
 
 .help-box {
@@ -4697,9 +4729,13 @@ body.theme-dark .language-options button.is-active {
 }
 
 .rule-formula {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
   color: var(--primary-strong);
   font-size: 0.78rem;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .master-general-form {
@@ -4711,13 +4747,16 @@ body.theme-dark .language-options button.is-active {
 }
 
 .master-main-formula {
+  max-width: 100%;
+  overflow-x: auto;
   margin: 0.4rem 0 1rem;
   color: var(--primary-strong);
   font-family: "IBM Plex Mono", monospace;
   font-size: clamp(1.22rem, 3.5vw, 2rem);
   font-weight: 700;
   line-height: 1.2;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .master-parameter-grid {
@@ -4741,6 +4780,19 @@ body.theme-dark .language-options button.is-active {
   font-size: 1.15rem;
 }
 
+.master-parameter-grid strong .math-token,
+.master-parameter-inputs label > .math-token {
+  display: inline-flex;
+  min-width: 1.45em;
+  min-height: 1.45em;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 0.24em;
+  background: color-mix(in srgb, var(--token-color) 15%, transparent);
+  line-height: 1;
+}
+
 .master-parameter-grid span {
   color: var(--muted);
   font-size: 0.92rem;
@@ -4757,6 +4809,11 @@ body.theme-dark .language-options button.is-active {
   position: sticky;
   top: 0.75rem;
   z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: nowrap;
   margin-top: 1rem;
   border: 1px solid rgba(13, 107, 95, 0.16);
   border-radius: 16px;
@@ -4800,6 +4857,8 @@ body.theme-dark .language-options button.is-active {
 }
 
 .master-example-option strong {
+  max-width: 100%;
+  overflow-x: auto;
   color: var(--primary-strong);
   line-height: 1.35;
 }
@@ -4832,14 +4891,18 @@ body.theme-dark .language-options button.is-active {
 
 .master-step-progress {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.05rem;
+  scrollbar-width: thin;
 }
 
 .master-step-dot {
   display: grid;
-  width: 2.25rem;
-  height: 2.25rem;
+  flex: 0 0 2.15rem;
+  width: 2.15rem;
+  height: 2.15rem;
   min-height: 0;
   place-items: center;
   border: 1px solid rgba(13, 107, 95, 0.18);
@@ -4873,6 +4936,8 @@ body.theme-dark .language-options button.is-active {
 }
 
 .step-example-label {
+  max-width: 100%;
+  overflow-x: auto;
   color: var(--primary-strong);
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.78rem;
@@ -5031,7 +5096,7 @@ body.theme-dark .language-options button.is-active {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.82rem;
   line-height: 1.3;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .custom-solver-row {
@@ -5405,7 +5470,7 @@ code,
 pre {
   margin: 0;
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .choices {
@@ -5426,7 +5491,7 @@ pre {
 
 .choices label > span {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   line-height: 1.45;
 }
 
@@ -5458,6 +5523,7 @@ button {
   padding: 0.78rem 1.15rem;
   min-height: var(--control-height);
   cursor: pointer;
+  touch-action: manipulation;
   transition:
     transform 180ms ease,
     opacity 160ms ease,
@@ -5466,6 +5532,16 @@ button {
     border-color 180ms ease,
     box-shadow 180ms ease,
     filter 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.choices label,
+.master-rule-option,
+.master-example-option,
+.master-step-dot,
+.topic-nav-btn,
+.section-tab-btn {
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -5929,11 +6005,12 @@ button:disabled {
   }
 
   .master-step-actions {
-    align-items: stretch;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
   }
 
   .master-step-actions .step-count {
-    order: -1;
     text-align: center;
   }
 
@@ -6363,11 +6440,11 @@ button:disabled {
 
   .module-tile strong {
     margin-bottom: 1.25rem;
-    font-size: clamp(2.65rem, 13vw, 3.8rem);
+    font-size: clamp(2.05rem, 10.5vw, 3.35rem);
   }
 
   .module-tile-avl strong {
-    font-size: clamp(2.35rem, 11vw, 3.6rem);
+    font-size: clamp(1.85rem, 9vw, 3rem);
   }
 
   .master-calculation-input {
@@ -6398,12 +6475,19 @@ button:disabled {
   }
 
   .master-step-actions {
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.45rem;
+    overflow-x: auto;
     padding: 0.55rem;
   }
 
   .master-step-actions button {
-    flex: 1 1 130px;
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: 0.55rem 0.75rem;
+    white-space: nowrap;
   }
 
   .master-work-step {
@@ -6436,8 +6520,10 @@ button:disabled {
   }
 
   .master-step-dot {
+    flex-basis: 2rem;
     width: 2rem;
     height: 2rem;
+    font-size: 0.86rem;
   }
 
   .master-parameter-grid {

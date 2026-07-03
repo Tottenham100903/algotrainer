@@ -1260,6 +1260,10 @@ const masterPatterns = [
 
 const masterLearnCases = {
   case1: {
+    a: 8,
+    b: 2,
+    c: 3,
+    d: 2,
     formula: 'T(n) = 8T(<span class="frac"><span>n</span><span>2</span></span>) + 3n<sup>2</sup>',
     parameters: "a = 8, b = 2, c = 3, d = 2",
     result: "O(n<sup>3</sup>)",
@@ -1271,6 +1275,10 @@ const masterLearnCases = {
     ],
   },
   case2: {
+    a: 2,
+    b: 2,
+    c: 5,
+    d: 1,
     formula: 'T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + 5n',
     parameters: "a = 2, b = 2, c = 5, d = 1",
     result: "O(n log n)",
@@ -1282,6 +1290,10 @@ const masterLearnCases = {
     ],
   },
   case3: {
+    a: 2,
+    b: 2,
+    c: 4,
+    d: 2,
     formula: 'T(n) = 2T(<span class="frac"><span>n</span><span>2</span></span>) + 4n<sup>2</sup>',
     parameters: "a = 2, b = 2, c = 4, d = 2",
     result: "O(n<sup>2</sup>)",
@@ -3566,6 +3578,7 @@ function renderMasterLearning(options = {}) {
   const lesson = topic.lessons[state.masterLearnLesson];
   state.masterLearnStep = Math.max(0, Math.min(lesson.steps.length - 1, state.masterLearnStep));
   const [stepTitle, stepText] = lesson.steps[state.masterLearnStep];
+  const activeTopicName = el.masterLearnCase.value;
 
   el.masterLearnOverview.innerHTML = `
     <p class="tree-label">Grundidee</p>
@@ -3582,7 +3595,7 @@ function renderMasterLearning(options = {}) {
       ${topic.lessons.map((lessonItem, index) => `
         <button class="master-example-option${index === state.masterLearnLesson ? " is-active" : ""}" type="button" data-master-lesson="${index}" aria-pressed="${index === state.masterLearnLesson}">
           <span>Beispiel ${index + 1}</span>
-          <strong>${formatInlineMathLabel(lessonItem.formula)}</strong>
+          <strong>${formatInlineMathLabel(renderLearningRecurrence(lessonItem, activeTopicName))}</strong>
           <small>${formatInlineMathLabel(lessonItem.parameters)} · Ergebnis: ${formatInlineMathLabel(lessonItem.result)}</small>
         </button>
       `).join("")}
@@ -3597,7 +3610,7 @@ function renderMasterLearning(options = {}) {
         `).join("")}
       </div>
       <div class="master-focus-content">
-        <p class="step-example-label">Beispiel ${state.masterLearnLesson + 1}: ${formatInlineMathLabel(lesson.formula)}</p>
+        <p class="step-example-label">Beispiel ${state.masterLearnLesson + 1}: ${formatInlineMathLabel(renderLearningRecurrence(lesson, activeTopicName))}</p>
         <h3>${stepTitle}</h3>
         <p>${formatInlineMathLabel(stepText)}</p>
       </div>
@@ -3626,6 +3639,13 @@ function masterToken(type, content) {
 
 function formatMasterParameterTitle(title) {
   return /^[abcd]$/.test(title) ? masterToken(title, title) : title;
+}
+
+function renderLearningRecurrence(lesson, topic) {
+  if (topic === "Divide and Conquer / Master-Theorem" && Number.isFinite(lesson.a)) {
+    return renderAnnotatedRecurrence(lesson, topic);
+  }
+  return lesson.formula;
 }
 
 function renderAnnotatedRecurrence(pattern, topic) {
@@ -3671,14 +3691,35 @@ function compactStepMemory(text) {
   return String(text).split(". ")[0].replace(/\.$/, "");
 }
 
+function activateMasterLesson(button) {
+  state.masterLearnLesson = Number(button.dataset.masterLesson);
+  state.masterLearnStep = 0;
+  renderMasterLearning();
+}
+
+function activateMasterStep(button) {
+  state.masterLearnStep = Number(button.dataset.masterStep);
+  renderMasterLearning();
+}
+
 el.masterLearnExample.addEventListener("click", (event) => {
   const button = event.target.closest("[data-master-lesson]");
   if (!button) {
     return;
   }
-  state.masterLearnLesson = Number(button.dataset.masterLesson);
-  state.masterLearnStep = 0;
-  renderMasterLearning();
+  activateMasterLesson(button);
+});
+
+el.masterLearnExample.addEventListener("pointerup", (event) => {
+  if (event.pointerType === "mouse") {
+    return;
+  }
+  const button = event.target.closest("[data-master-lesson]");
+  if (!button) {
+    return;
+  }
+  event.preventDefault();
+  activateMasterLesson(button);
 });
 
 el.masterLearnSteps.addEventListener("click", (event) => {
@@ -3686,8 +3727,19 @@ el.masterLearnSteps.addEventListener("click", (event) => {
   if (!button) {
     return;
   }
-  state.masterLearnStep = Number(button.dataset.masterStep);
-  renderMasterLearning();
+  activateMasterStep(button);
+});
+
+el.masterLearnSteps.addEventListener("pointerup", (event) => {
+  if (event.pointerType === "mouse") {
+    return;
+  }
+  const button = event.target.closest("[data-master-step]");
+  if (!button) {
+    return;
+  }
+  event.preventDefault();
+  activateMasterStep(button);
 });
 
 function renderCustomRecurrenceExamples() {
