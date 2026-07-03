@@ -2285,9 +2285,9 @@ button:disabled {
   }
 
   .hero-home .hero-copy {
-    width: auto;
-    max-width: 32ch;
-    white-space: normal;
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
   }
 
   .home-grid,
@@ -2411,6 +2411,12 @@ button:disabled {
 }
 
 @media (max-width: 640px) {
+  .hero-home .hero-copy {
+    width: auto;
+    max-width: 32ch;
+    white-space: normal;
+  }
+
   h1 {
     font-size: clamp(2.2rem, 12vw, 3.3rem);
   }
