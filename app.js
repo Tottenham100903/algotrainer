@@ -20,6 +20,12 @@ import {
   sample,
   shuffle,
 } from "./js/utils.js?v=20260703-modules";
+import {
+  applyLanguage,
+  initializeLanguage,
+  languageNames,
+  t,
+} from "./js/i18n.js?v=20260703-i18n";
 
 function asCode(lines) {
   return lines.join("\n");
@@ -1830,11 +1836,14 @@ const state = {
 
 const el = {
   menuToggle: document.getElementById("menu-toggle"),
-  menuClose: document.getElementById("menu-close"),
   menuOverlay: document.getElementById("menu-overlay"),
   settingsMenu: document.getElementById("settings-menu"),
   themeToggle: document.getElementById("theme-toggle"),
   darkmodeSetting: document.getElementById("darkmode-setting"),
+  languageSetting: document.getElementById("language-setting"),
+  languageOptions: document.getElementById("language-options"),
+  currentLanguageLabel: document.getElementById("current-language-label"),
+  languageButtons: [...document.querySelectorAll("[data-language]")],
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -1999,11 +2008,11 @@ const el = {
 
 initializeTheme();
 initializeLearningProgress();
+updateLanguageMenu(initializeLanguage());
 el.menuToggle.addEventListener("click", () => {
   const isOpen = el.menuToggle.getAttribute("aria-expanded") === "true";
   isOpen ? closeSettingsMenu() : openSettingsMenu();
 });
-el.menuClose.addEventListener("click", closeSettingsMenu);
 el.menuOverlay.addEventListener("click", closeSettingsMenu);
 el.themeToggle.addEventListener("change", () => setTheme(el.themeToggle.checked));
 el.darkmodeSetting.addEventListener("click", (event) => {
@@ -2017,6 +2026,22 @@ el.darkmodeSetting.addEventListener("keydown", (event) => {
     event.preventDefault();
     setTheme(!el.themeToggle.checked);
   }
+});
+el.languageSetting.addEventListener("click", () => {
+  const isOpen = el.languageSetting.getAttribute("aria-expanded") === "true";
+  el.languageSetting.setAttribute("aria-expanded", String(!isOpen));
+  el.languageOptions.classList.toggle("is-hidden", isOpen);
+});
+el.languageButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const language = applyLanguage(button.dataset.language);
+    updateLanguageMenu(language);
+  });
+});
+window.addEventListener("infotrain:languagechange", (event) => {
+  updateLanguageMenu(event.detail.language);
+  el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
+  renderLearningPathState();
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
@@ -2245,7 +2270,7 @@ function openSettingsMenu() {
   el.settingsMenu.setAttribute("aria-hidden", "false");
   el.menuOverlay.classList.remove("is-hidden");
   document.body.classList.add("menu-open");
-  el.menuClose.focus();
+  el.settingsMenu.querySelector(".settings-item")?.focus();
 }
 
 function closeSettingsMenu() {
@@ -2254,6 +2279,8 @@ function closeSettingsMenu() {
   el.settingsMenu.classList.remove("is-open");
   el.settingsMenu.setAttribute("aria-hidden", "true");
   el.menuOverlay.classList.add("is-hidden");
+  el.languageSetting.setAttribute("aria-expanded", "false");
+  el.languageOptions.classList.add("is-hidden");
   document.body.classList.remove("menu-open");
 }
 
@@ -2282,6 +2309,15 @@ function setTheme(darkMode, persist = true) {
   } catch {
     // The visual switch still works when storage is unavailable.
   }
+}
+
+function updateLanguageMenu(language) {
+  el.currentLanguageLabel.textContent = languageNames[language];
+  el.languageButtons.forEach((button) => {
+    const isActive = button.dataset.language === language;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 }
 
 function initializeLearningProgress() {
@@ -2319,7 +2355,7 @@ function openLearningBook(book) {
   book.style.setProperty("--book-dy", `${offsetY}px`);
   book.classList.add("is-focusing");
   state.learningTopic = book.dataset.learningBook;
-  el.learningRouteTitle.textContent = state.learningTopic;
+  el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
 
   state.learningBookTimer = window.setTimeout(() => {
     book.classList.add("is-opening");
@@ -2388,7 +2424,7 @@ function renderLearningPathState() {
 
   el.learningPointsValue.textContent = String(points);
   el.learningUnlockedValue.textContent = `${unlocked} / ${el.pathSteps.length}`;
-  el.learningPointsToggle.textContent = `★ ${points} Punkte`;
+  el.learningPointsToggle.textContent = t("learning.pointsButton", { points });
   el.pathPreview.disabled = unlocked < 2;
 
   el.pathSteps.forEach((step, index) => {
@@ -2402,9 +2438,27 @@ function renderLearningPathState() {
     step.classList.toggle("is-current", isCurrent);
     button.disabled = !isUnlocked;
     button.textContent = isUnlocked ? String(number) : "🔒";
-    button.setAttribute("aria-label", isUnlocked ? `Checkpoint ${number}` : `Checkpoint ${number} gesperrt`);
-    status.textContent = isUnlocked ? (number === 1 && unlocked === 1 ? "Frei" : "Freigeschaltet") : "Gesperrt";
+    button.setAttribute("aria-label", isUnlocked
+      ? t("learning.checkpoint", { number })
+      : t("learning.checkpointLocked", { number }));
+    status.textContent = isUnlocked
+      ? (number === 1 && unlocked === 1 ? t("learning.free") : t("learning.unlocked"))
+      : t("learning.locked");
+    const title = step.querySelector("h2");
+    if (number > 1 && number < el.pathSteps.length) {
+      title.textContent = t("learning.lesson", { number });
+    }
   });
+}
+
+function translatedLearningTopic(topic) {
+  const keys = {
+    Algorithmik: "topics.algorithmics",
+    "Informatik-Grundlagen": "topics.basics",
+    Programmieren: "topics.programming",
+    "Data Science": "topics.dataScience",
+  };
+  return t(keys[topic] || "topics.algorithmics");
 }
 
 function openCheckpoint(number) {
@@ -2425,7 +2479,7 @@ function closeCheckpointTask() {
 
 function answerCheckpointTask(answer) {
   if (answer !== "O(log n)") {
-    el.checkpointFeedback.textContent = "Noch nicht richtig. Denk daran: Der Suchbereich wird in jedem Schritt halbiert.";
+    el.checkpointFeedback.textContent = t("learning.wrong");
     el.checkpointFeedback.className = "checkpoint-feedback is-wrong";
     return;
   }
@@ -2433,7 +2487,7 @@ function answerCheckpointTask(answer) {
   state.learningPoints = Math.max(state.learningPoints, 20);
   state.learningUnlocked = Math.max(state.learningUnlocked, 2);
   saveLearningProgress();
-  el.checkpointFeedback.textContent = "Richtig! Checkpoint 2 wurde freigeschaltet.";
+  el.checkpointFeedback.textContent = t("learning.correct");
   el.checkpointFeedback.className = "checkpoint-feedback is-correct";
   renderLearningPathState();
   window.setTimeout(() => {

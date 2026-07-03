@@ -153,17 +153,6 @@ body.menu-open {
   margin: 0;
 }
 
-.menu-close {
-  width: 44px;
-  height: 44px;
-  min-height: 0;
-  border-radius: 50%;
-  padding: 0;
-  color: var(--text);
-  background: rgba(31, 42, 48, 0.07);
-  font-size: 1.8rem;
-}
-
 .settings-list {
   display: grid;
   gap: 0.75rem;
@@ -466,10 +455,10 @@ body.theme-dark .math-token-d {
 }
 
 .learning-path-entry {
-  position: absolute;
-  top: 1.5rem;
-  right: 5.5rem;
-  z-index: 3;
+  position: fixed;
+  top: 4.8rem;
+  right: 1rem;
+  z-index: 399;
   display: flex;
   gap: 0.75rem;
   align-items: center;
@@ -2028,6 +2017,38 @@ h2 {
 
 .points-panel button {
   width: 100%;
+}
+
+.language-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  padding: 0.15rem 0 0.65rem;
+}
+
+.language-options button {
+  border: 1px solid rgba(13, 107, 95, 0.16);
+  border-radius: 12px;
+  padding: 0.65rem 0.5rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.58);
+  font-weight: 700;
+}
+
+.language-options button.is-active {
+  border-color: var(--primary);
+  color: white;
+  background: var(--primary);
+}
+
+body.theme-dark .language-options button {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+body.theme-dark .language-options button.is-active {
+  color: white;
+  background: var(--primary);
 }
 
 @keyframes route-from-book {
@@ -4492,8 +4513,8 @@ button:disabled {
   }
 
   .learning-path-entry {
-    top: 0.5rem;
-    right: 4.2rem;
+    top: 4.5rem;
+    right: 0.65rem;
   }
 
   .learning-path-summary {

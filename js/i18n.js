@@ -1,0 +1,253 @@
+const translations = {
+  de: {
+    "common.new": "Neu",
+    "common.interactive": "Interaktiv",
+    "common.viewSection": "Bereich ansehen",
+    "common.openSection": "Bereich öffnen",
+    "common.comingSoon": "Demnächst verfügbar",
+    "home.subtitle": "Deine Lernplattform für Informatik.",
+    "subjects.computerScience": "Informatik",
+    "subjects.basics": "Grundlagen",
+    "subjects.basicsCopy": "Daten, Modellierung, Automaten und Datenbanken als Landkarte der Informatik verstehen.",
+    "subjects.program": "Program",
+    "subjects.ming": "mieren",
+    "subjects.programmingCopy": "Python, Java, C++, HTML und Web-Grundlagen über Codeverständnis trainieren.",
+    "subjects.algorith": "Algorith",
+    "subjects.mics": "mik",
+    "subjects.algorithmicsCopy": "Algorithmen analysieren, visualisieren und mit abwechslungsreichen Aufgaben trainieren.",
+    "subjects.dataCopy": "MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.",
+    "menu.title": "Menü",
+    "menu.profile": "Profil",
+    "menu.settings": "Einstellungen",
+    "menu.language": "Sprache",
+    "menu.darkMode": "Darkmode",
+    "menu.switchAppearance": "Darstellung wechseln",
+    "learning.progress": "Dein Fortschritt",
+    "learning.path": "Lernpfad",
+    "learning.home": "Startseite",
+    "learning.chooseBook": "Wähle ein Buch und öffne deinen Lernpfad.",
+    "learning.backToDesk": "Zurück zum Schreibtisch",
+    "learning.points": "Punkte",
+    "learning.unlockedCount": "Freigeschaltet",
+    "learning.preview": "Bewegung testen",
+    "learning.pathLabel": "Lernpfad mit sechs Stationen",
+    "learning.free": "Frei",
+    "learning.unlocked": "Freigeschaltet",
+    "learning.locked": "Gesperrt",
+    "learning.lesson": "Lektion {number}",
+    "learning.finish": "Abschluss",
+    "learning.binarySearch": "Binäre Suche",
+    "learning.closeTask": "Aufgabe schließen",
+    "learning.question": "Welche asymptotische Laufzeit hat die binäre Suche in einer sortierten Liste?",
+    "learning.pointsButton": "★ {points} Punkte",
+    "learning.checkpoint": "Checkpoint {number}",
+    "learning.checkpointLocked": "Checkpoint {number} gesperrt",
+    "learning.wrong": "Noch nicht richtig. Denk daran: Der Suchbereich wird in jedem Schritt halbiert.",
+    "learning.correct": "Richtig! Checkpoint 2 wurde freigeschaltet.",
+    "topics.algorithmics": "Algorithmik",
+    "topics.basics": "Grundlagen",
+    "topics.programming": "Programmieren",
+    "topics.dataScience": "Data Science",
+  },
+  en: {
+    "common.new": "New",
+    "common.interactive": "Interactive",
+    "common.viewSection": "View section",
+    "common.openSection": "Open section",
+    "common.comingSoon": "Coming soon",
+    "home.subtitle": "Your learning platform for computer science.",
+    "subjects.computerScience": "Computer",
+    "subjects.basics": "Science Basics",
+    "subjects.basicsCopy": "Understand data, modelling, automata and databases as a map of computer science.",
+    "subjects.program": "Program",
+    "subjects.ming": "ming",
+    "subjects.programmingCopy": "Practise Python, Java, C++, HTML and web fundamentals through code comprehension.",
+    "subjects.algorith": "Algorith",
+    "subjects.mics": "mics",
+    "subjects.algorithmicsCopy": "Analyse and visualise algorithms, then practise them with varied exercises.",
+    "subjects.dataCopy": "Use MySQL, PySpark and data analysis as a toolkit for practical data scenarios.",
+    "menu.title": "Menu",
+    "menu.profile": "Profile",
+    "menu.settings": "Settings",
+    "menu.language": "Language",
+    "menu.darkMode": "Dark mode",
+    "menu.switchAppearance": "Change appearance",
+    "learning.progress": "Your progress",
+    "learning.path": "Learning path",
+    "learning.home": "Home",
+    "learning.chooseBook": "Choose a book to open your learning path.",
+    "learning.backToDesk": "Back to desk",
+    "learning.points": "Points",
+    "learning.unlockedCount": "Unlocked",
+    "learning.preview": "Test movement",
+    "learning.pathLabel": "Learning path with six checkpoints",
+    "learning.free": "Open",
+    "learning.unlocked": "Unlocked",
+    "learning.locked": "Locked",
+    "learning.lesson": "Lesson {number}",
+    "learning.finish": "Finish",
+    "learning.binarySearch": "Binary search",
+    "learning.closeTask": "Close task",
+    "learning.question": "What is the asymptotic runtime of binary search in a sorted list?",
+    "learning.pointsButton": "★ {points} points",
+    "learning.checkpoint": "Checkpoint {number}",
+    "learning.checkpointLocked": "Checkpoint {number} locked",
+    "learning.wrong": "Not quite. Remember: the search range is halved at every step.",
+    "learning.correct": "Correct! Checkpoint 2 has been unlocked.",
+    "topics.algorithmics": "Algorithms",
+    "topics.basics": "Computer Science Basics",
+    "topics.programming": "Programming",
+    "topics.dataScience": "Data Science",
+  },
+  fr: {
+    "common.new": "Nouveau",
+    "common.interactive": "Interactif",
+    "common.viewSection": "Voir la section",
+    "common.openSection": "Ouvrir la section",
+    "common.comingSoon": "Bientôt disponible",
+    "home.subtitle": "Ta plateforme d’apprentissage de l’informatique.",
+    "subjects.computerScience": "Bases de",
+    "subjects.basics": "l’informatique",
+    "subjects.basicsCopy": "Comprends les données, la modélisation, les automates et les bases de données.",
+    "subjects.program": "Program",
+    "subjects.ming": "mation",
+    "subjects.programmingCopy": "Entraîne-toi avec Python, Java, C++, HTML et les bases du Web.",
+    "subjects.algorith": "Algorith",
+    "subjects.mics": "mique",
+    "subjects.algorithmicsCopy": "Analyse et visualise les algorithmes grâce à des exercices variés.",
+    "subjects.dataCopy": "Utilise MySQL, PySpark et l’analyse de données dans des scénarios pratiques.",
+    "menu.title": "Menu",
+    "menu.profile": "Profil",
+    "menu.settings": "Paramètres",
+    "menu.language": "Langue",
+    "menu.darkMode": "Mode sombre",
+    "menu.switchAppearance": "Changer l’apparence",
+    "learning.progress": "Ta progression",
+    "learning.path": "Parcours",
+    "learning.home": "Accueil",
+    "learning.chooseBook": "Choisis un livre pour ouvrir ton parcours.",
+    "learning.backToDesk": "Retour au bureau",
+    "learning.points": "Points",
+    "learning.unlockedCount": "Débloqués",
+    "learning.preview": "Tester le déplacement",
+    "learning.pathLabel": "Parcours avec six étapes",
+    "learning.free": "Libre",
+    "learning.unlocked": "Débloqué",
+    "learning.locked": "Verrouillé",
+    "learning.lesson": "Leçon {number}",
+    "learning.finish": "Arrivée",
+    "learning.binarySearch": "Recherche binaire",
+    "learning.closeTask": "Fermer l’exercice",
+    "learning.question": "Quelle est la complexité asymptotique de la recherche binaire dans une liste triée ?",
+    "learning.pointsButton": "★ {points} points",
+    "learning.checkpoint": "Étape {number}",
+    "learning.checkpointLocked": "Étape {number} verrouillée",
+    "learning.wrong": "Pas encore. Rappelle-toi : la zone de recherche est divisée par deux à chaque étape.",
+    "learning.correct": "Correct ! L’étape 2 est maintenant débloquée.",
+    "topics.algorithmics": "Algorithmique",
+    "topics.basics": "Bases de l’informatique",
+    "topics.programming": "Programmation",
+    "topics.dataScience": "Data Science",
+  },
+  es: {
+    "common.new": "Nuevo",
+    "common.interactive": "Interactivo",
+    "common.viewSection": "Ver sección",
+    "common.openSection": "Abrir sección",
+    "common.comingSoon": "Próximamente",
+    "home.subtitle": "Tu plataforma de aprendizaje de informática.",
+    "subjects.computerScience": "Fundamentos de",
+    "subjects.basics": "informática",
+    "subjects.basicsCopy": "Comprende datos, modelado, autómatas y bases de datos como mapa de la informática.",
+    "subjects.program": "Progra",
+    "subjects.ming": "mación",
+    "subjects.programmingCopy": "Practica Python, Java, C++, HTML y fundamentos web comprendiendo el código.",
+    "subjects.algorith": "Algorít",
+    "subjects.mics": "mica",
+    "subjects.algorithmicsCopy": "Analiza y visualiza algoritmos con ejercicios variados.",
+    "subjects.dataCopy": "Utiliza MySQL, PySpark y análisis de datos en situaciones prácticas.",
+    "menu.title": "Menú",
+    "menu.profile": "Perfil",
+    "menu.settings": "Ajustes",
+    "menu.language": "Idioma",
+    "menu.darkMode": "Modo oscuro",
+    "menu.switchAppearance": "Cambiar apariencia",
+    "learning.progress": "Tu progreso",
+    "learning.path": "Ruta de aprendizaje",
+    "learning.home": "Inicio",
+    "learning.chooseBook": "Elige un libro para abrir tu ruta de aprendizaje.",
+    "learning.backToDesk": "Volver al escritorio",
+    "learning.points": "Puntos",
+    "learning.unlockedCount": "Desbloqueados",
+    "learning.preview": "Probar movimiento",
+    "learning.pathLabel": "Ruta de aprendizaje con seis etapas",
+    "learning.free": "Libre",
+    "learning.unlocked": "Desbloqueado",
+    "learning.locked": "Bloqueado",
+    "learning.lesson": "Lección {number}",
+    "learning.finish": "Final",
+    "learning.binarySearch": "Búsqueda binaria",
+    "learning.closeTask": "Cerrar ejercicio",
+    "learning.question": "¿Cuál es la complejidad asintótica de la búsqueda binaria en una lista ordenada?",
+    "learning.pointsButton": "★ {points} puntos",
+    "learning.checkpoint": "Etapa {number}",
+    "learning.checkpointLocked": "Etapa {number} bloqueada",
+    "learning.wrong": "Todavía no. Recuerda: el área de búsqueda se reduce a la mitad en cada paso.",
+    "learning.correct": "¡Correcto! La etapa 2 está desbloqueada.",
+    "topics.algorithmics": "Algorítmica",
+    "topics.basics": "Fundamentos de informática",
+    "topics.programming": "Programación",
+    "topics.dataScience": "Data Science",
+  },
+};
+
+export const languageNames = {
+  de: "Deutsch",
+  en: "English",
+  fr: "Français",
+  es: "Español",
+};
+
+let activeLanguage = "de";
+
+export function t(key, variables = {}) {
+  const value = translations[activeLanguage]?.[key] ?? translations.de[key] ?? key;
+  return Object.entries(variables).reduce(
+    (text, [name, replacement]) => text.replaceAll(`{${name}}`, String(replacement)),
+    value,
+  );
+}
+
+export function applyLanguage(language, persist = true) {
+  activeLanguage = translations[language] ? language : "de";
+  document.documentElement.lang = activeLanguage;
+  document.querySelectorAll("[data-i18n]").forEach((node) => {
+    node.textContent = t(node.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+    node.setAttribute("aria-label", t(node.dataset.i18nAriaLabel));
+  });
+
+  if (persist) {
+    try {
+      window.localStorage.setItem("infotrain-language", activeLanguage);
+    } catch {
+      // The selected language still works for the current session.
+    }
+  }
+
+  window.dispatchEvent(new CustomEvent("infotrain:languagechange", {
+    detail: { language: activeLanguage },
+  }));
+  return activeLanguage;
+}
+
+export function initializeLanguage() {
+  let language = "de";
+  try {
+    language = window.localStorage.getItem("infotrain-language") || "de";
+  } catch {
+    // German remains the default when storage is unavailable.
+  }
+  return applyLanguage(language, false);
+}

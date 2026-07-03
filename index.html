@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-checkpoints">
+  <link rel="stylesheet" href="styles.css?v=20260703-i18n">
 </head>
 <body>
   <div class="page-shell">
@@ -52,8 +52,8 @@ queue: [A, C, D]</pre>
         <button class="learning-path-entry" type="button" data-open-view="learning-path">
           <span class="learning-path-entry-icon" aria-hidden="true">↗</span>
           <span>
-            <small>Dein Fortschritt</small>
-            Lernpfad
+            <small data-i18n="learning.progress">Dein Fortschritt</small>
+            <span data-i18n="learning.path">Lernpfad</span>
           </span>
         </button>
 
@@ -63,56 +63,56 @@ queue: [A, C, D]</pre>
             <span class="logo-train">Train.</span>
           </h1>
           <p class="hero-copy">
-            Deine Lernplattform für Informatik.
+            <span data-i18n="home.subtitle">Deine Lernplattform für Informatik.</span>
           </p>
         </header>
 
         <section class="home-grid subject-grid" aria-label="Fachbereiche auswählen">
-          <button class="module-tile subject-tile subject-tile-algorithmics" type="button" data-open-view="algorithmics">
-            <span class="subject-tag">Interaktiv</span>
-            <strong>
-              <span>Algorith</span>
-              <span>mik</span>
-            </strong>
-            <span class="module-copy">Algorithmen analysieren, visualisieren und mit abwechslungsreichen Aufgaben trainieren.</span>
-            <span class="module-cta">Bereich öffnen <span aria-hidden="true">→</span></span>
-          </button>
-
           <button class="module-tile subject-tile subject-tile-basics" type="button" data-open-view="basics">
-            <span class="subject-tag">Neu</span>
+            <span class="subject-tag" data-i18n="common.new">Neu</span>
             <strong>
-              <span>Informatik</span>
-              <span>Grundlagen</span>
+              <span data-i18n="subjects.computerScience">Informatik</span>
+              <span data-i18n="subjects.basics">Grundlagen</span>
             </strong>
-            <span class="module-copy">Daten, Modellierung, Automaten und Datenbanken als Landkarte der Informatik verstehen.</span>
-            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+            <span class="module-copy" data-i18n="subjects.basicsCopy">Daten, Modellierung, Automaten und Datenbanken als Landkarte der Informatik verstehen.</span>
+            <span class="module-cta"><span data-i18n="common.viewSection">Bereich ansehen</span> <span aria-hidden="true">→</span></span>
           </button>
 
           <button class="module-tile subject-tile subject-tile-programming" type="button" data-open-view="programming">
-            <span class="subject-tag">Neu</span>
+            <span class="subject-tag" data-i18n="common.new">Neu</span>
             <strong>
-              <span>Program</span>
-              <span>mieren</span>
+              <span data-i18n="subjects.program">Program</span>
+              <span data-i18n="subjects.ming">mieren</span>
             </strong>
-            <span class="module-copy">Python, Java, C++, HTML und Web-Grundlagen über Codeverständnis trainieren.</span>
-            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+            <span class="module-copy" data-i18n="subjects.programmingCopy">Python, Java, C++, HTML und Web-Grundlagen über Codeverständnis trainieren.</span>
+            <span class="module-cta"><span data-i18n="common.viewSection">Bereich ansehen</span> <span aria-hidden="true">→</span></span>
+          </button>
+
+          <button class="module-tile subject-tile subject-tile-algorithmics" type="button" data-open-view="algorithmics">
+            <span class="subject-tag" data-i18n="common.interactive">Interaktiv</span>
+            <strong>
+              <span data-i18n="subjects.algorith">Algorith</span>
+              <span data-i18n="subjects.mics">mik</span>
+            </strong>
+            <span class="module-copy" data-i18n="subjects.algorithmicsCopy">Algorithmen analysieren, visualisieren und mit abwechslungsreichen Aufgaben trainieren.</span>
+            <span class="module-cta"><span data-i18n="common.openSection">Bereich öffnen</span> <span aria-hidden="true">→</span></span>
           </button>
 
           <button class="module-tile subject-tile subject-tile-data-science" type="button" data-open-view="data-science">
-            <span class="subject-tag">Neu</span>
+            <span class="subject-tag" data-i18n="common.new">Neu</span>
             <strong>
               <span>Data</span>
               <span>Science</span>
             </strong>
-            <span class="module-copy">MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.</span>
-            <span class="module-cta">Bereich ansehen <span aria-hidden="true">→</span></span>
+            <span class="module-copy" data-i18n="subjects.dataCopy">MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.</span>
+            <span class="module-cta"><span data-i18n="common.viewSection">Bereich ansehen</span> <span aria-hidden="true">→</span></span>
           </button>
         </section>
       </section>
 
       <section id="learning-path-view" class="app-view immersive-learning-view is-hidden">
         <div id="learning-desk" class="learning-desk">
-          <button class="immersive-exit" type="button" data-back-home>← Startseite</button>
+          <button class="immersive-exit" type="button" data-back-home>← <span data-i18n="learning.home">Startseite</span></button>
           <div class="desk-monitor" aria-hidden="true">
             <div class="monitor-shell">
               <span class="monitor-camera"></span>
@@ -155,20 +155,20 @@ queue: [A, C, D]</pre>
               <span class="book-open-spread"><i></i><i></i></span>
             </button>
           </div>
-          <p class="desk-hint">Wähle ein Buch und öffne deinen Lernpfad.</p>
+          <p class="desk-hint" data-i18n="learning.chooseBook">Wähle ein Buch und öffne deinen Lernpfad.</p>
         </div>
 
         <div id="learning-route" class="learning-route is-hidden">
           <div class="route-toolbar">
-            <button id="back-to-learning-desk" class="secondary-btn" type="button">Zurück zum Schreibtisch</button>
+            <button id="back-to-learning-desk" class="secondary-btn" type="button" data-i18n="learning.backToDesk">Zurück zum Schreibtisch</button>
             <span id="learning-route-title" class="route-topic">Algorithmik</span>
             <button id="learning-points-toggle" class="points-toggle" type="button" aria-expanded="false">★ 0 Punkte</button>
           </div>
 
           <div id="learning-points-panel" class="points-panel is-hidden">
-            <p><span>Punkte</span><strong id="learning-points-value">0</strong></p>
-            <p><span>Freigeschaltet</span><strong id="learning-unlocked-value">1 / 6</strong></p>
-            <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button" disabled>Bewegung testen</button>
+            <p><span data-i18n="learning.points">Punkte</span><strong id="learning-points-value">0</strong></p>
+            <p><span data-i18n="learning.unlockedCount">Freigeschaltet</span><strong id="learning-unlocked-value">1 / 6</strong></p>
+            <button id="preview-learning-path" class="secondary-btn path-preview-btn" type="button" disabled data-i18n="learning.preview">Bewegung testen</button>
           </div>
 
           <div class="learning-path-stage">
@@ -178,20 +178,20 @@ queue: [A, C, D]</pre>
               <span class="avatar-body">IT</span>
               <span class="avatar-shadow"></span>
             </div>
-            <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen">
-              <li class="learning-path-step is-current" data-path-step="1"><button class="path-node" type="button" data-checkpoint="1">1</button><div class="path-card"><span class="path-status">Frei</span><h2>Binäre Suche</h2></div></li>
+            <ol class="learning-path" aria-label="Lernpfad mit sechs Stationen" data-i18n-aria-label="learning.pathLabel">
+              <li class="learning-path-step is-current" data-path-step="1"><button class="path-node" type="button" data-checkpoint="1">1</button><div class="path-card"><span class="path-status">Frei</span><h2 data-i18n="learning.binarySearch">Binäre Suche</h2></div></li>
               <li class="learning-path-step is-locked" data-path-step="2"><button class="path-node" type="button" data-checkpoint="2" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 2</h2></div></li>
               <li class="learning-path-step is-locked" data-path-step="3"><button class="path-node" type="button" data-checkpoint="3" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 3</h2></div></li>
               <li class="learning-path-step is-locked" data-path-step="4"><button class="path-node" type="button" data-checkpoint="4" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 4</h2></div></li>
               <li class="learning-path-step is-locked" data-path-step="5"><button class="path-node" type="button" data-checkpoint="5" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Lektion 5</h2></div></li>
-              <li class="learning-path-step is-locked" data-path-step="6"><button class="path-node" type="button" data-checkpoint="6" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2>Abschluss</h2></div></li>
+              <li class="learning-path-step is-locked" data-path-step="6"><button class="path-node" type="button" data-checkpoint="6" disabled><span aria-hidden="true">🔒</span><span class="sr-only">Gesperrt</span></button><div class="path-card"><span class="path-status">Gesperrt</span><h2 data-i18n="learning.finish">Abschluss</h2></div></li>
             </ol>
 
             <section id="checkpoint-task" class="checkpoint-task is-hidden" aria-labelledby="checkpoint-task-title">
-              <button id="checkpoint-task-close" class="checkpoint-task-close" type="button" aria-label="Aufgabe schließen">×</button>
+              <button id="checkpoint-task-close" class="checkpoint-task-close" type="button" aria-label="Aufgabe schließen" data-i18n-aria-label="learning.closeTask">×</button>
               <p class="section-label">Checkpoint 1</p>
-              <h2 id="checkpoint-task-title">Binäre Suche</h2>
-              <p>Welche asymptotische Laufzeit hat die binäre Suche in einer sortierten Liste?</p>
+              <h2 id="checkpoint-task-title" data-i18n="learning.binarySearch">Binäre Suche</h2>
+              <p data-i18n="learning.question">Welche asymptotische Laufzeit hat die binäre Suche in einer sortierten Liste?</p>
               <div class="checkpoint-answers">
                 <button type="button" data-checkpoint-answer="O(n)">O(n)</button>
                 <button type="button" data-checkpoint-answer="O(log n)">O(log n)</button>
@@ -1052,33 +1052,39 @@ queue: [A, C, D]</pre>
     <div class="settings-menu-head">
       <div>
         <p class="section-label">InfoTrain</p>
-        <h2>Menü</h2>
+        <h2 data-i18n="menu.title">Menü</h2>
       </div>
-      <button id="menu-close" class="menu-close" type="button" aria-label="Menü schließen">×</button>
     </div>
 
     <div class="settings-list">
       <button class="settings-item" type="button">
         <span class="settings-icon" aria-hidden="true">○</span>
-        <span><strong>Profil</strong><small>Demnächst verfügbar</small></span>
+        <span><strong data-i18n="menu.profile">Profil</strong><small data-i18n="common.comingSoon">Demnächst verfügbar</small></span>
         <span aria-hidden="true">→</span>
       </button>
 
       <button class="settings-item" type="button">
         <span class="settings-icon" aria-hidden="true">⚙</span>
-        <span><strong>Einstellungen</strong><small>Demnächst verfügbar</small></span>
+        <span><strong data-i18n="menu.settings">Einstellungen</strong><small data-i18n="common.comingSoon">Demnächst verfügbar</small></span>
         <span aria-hidden="true">→</span>
       </button>
 
-      <button class="settings-item" type="button">
+      <button id="language-setting" class="settings-item" type="button" aria-expanded="false">
         <span class="settings-icon" aria-hidden="true">文</span>
-        <span><strong>Sprache</strong><small>Demnächst verfügbar</small></span>
+        <span><strong data-i18n="menu.language">Sprache</strong><small id="current-language-label">Deutsch</small></span>
         <span aria-hidden="true">→</span>
       </button>
+
+      <div id="language-options" class="language-options is-hidden">
+        <button type="button" data-language="de">Deutsch</button>
+        <button type="button" data-language="en">English</button>
+        <button type="button" data-language="fr">Français</button>
+        <button type="button" data-language="es">Español</button>
+      </div>
 
       <div id="darkmode-setting" class="settings-item settings-switch-row" role="switch" tabindex="0" aria-checked="false">
         <span class="settings-icon" aria-hidden="true">◐</span>
-        <span><strong>Darkmode</strong><small>Darstellung wechseln</small></span>
+        <span><strong data-i18n="menu.darkMode">Darkmode</strong><small data-i18n="menu.switchAppearance">Darstellung wechseln</small></span>
         <label class="theme-switch">
           <input id="theme-toggle" type="checkbox">
           <span aria-hidden="true"></span>
@@ -1088,6 +1094,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-modules"></script>
+  <script type="module" src="app.js?v=20260703-i18n"></script>
 </body>
 </html>
