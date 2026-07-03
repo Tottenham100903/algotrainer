@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-real3d">
+  <link rel="stylesheet" href="styles.css?v=20260703-menu">
 </head>
 <body>
   <div class="page-shell">
@@ -917,6 +917,48 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
-  <script src="app.js?v=20260703-real3d"></script>
+  <button id="menu-toggle" class="menu-toggle" type="button" aria-controls="settings-menu" aria-expanded="false">
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span class="sr-only">Menü öffnen</span>
+  </button>
+
+  <div id="menu-overlay" class="menu-overlay is-hidden"></div>
+  <aside id="settings-menu" class="settings-menu" aria-hidden="true" aria-label="Einstellungen">
+    <div class="settings-menu-head">
+      <div>
+        <p class="section-label">InfoTrain</p>
+        <h2>Menü</h2>
+      </div>
+      <button id="menu-close" class="menu-close" type="button" aria-label="Menü schließen">×</button>
+    </div>
+
+    <div class="settings-list">
+      <button class="settings-item" type="button">
+        <span class="settings-icon" aria-hidden="true">文</span>
+        <span><strong>Sprache</strong><small>Demnächst verfügbar</small></span>
+        <span aria-hidden="true">→</span>
+      </button>
+
+      <div class="settings-item settings-switch-row">
+        <span class="settings-icon" aria-hidden="true">◐</span>
+        <span><strong>Darkmode</strong><small>Darstellung wechseln</small></span>
+        <label class="theme-switch">
+          <input id="theme-toggle" type="checkbox">
+          <span aria-hidden="true"></span>
+          <span class="sr-only">Darkmode umschalten</span>
+        </label>
+      </div>
+
+      <button class="settings-item" type="button">
+        <span class="settings-icon" aria-hidden="true">○</span>
+        <span><strong>Profil</strong><small>Demnächst verfügbar</small></span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </aside>
+
+  <script src="app.js?v=20260703-menu"></script>
 </body>
 </html>

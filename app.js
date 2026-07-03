@@ -1564,6 +1564,11 @@ const state = {
 };
 
 const el = {
+  menuToggle: document.getElementById("menu-toggle"),
+  menuClose: document.getElementById("menu-close"),
+  menuOverlay: document.getElementById("menu-overlay"),
+  settingsMenu: document.getElementById("settings-menu"),
+  themeToggle: document.getElementById("theme-toggle"),
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -1687,6 +1692,20 @@ const el = {
   sandboxUndo: document.getElementById("sandbox-undo"),
   sandboxRedo: document.getElementById("sandbox-redo"),
 };
+
+initializeTheme();
+el.menuToggle.addEventListener("click", () => {
+  const isOpen = el.menuToggle.getAttribute("aria-expanded") === "true";
+  isOpen ? closeSettingsMenu() : openSettingsMenu();
+});
+el.menuClose.addEventListener("click", closeSettingsMenu);
+el.menuOverlay.addEventListener("click", closeSettingsMenu);
+el.themeToggle.addEventListener("change", () => setTheme(el.themeToggle.checked));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeSettingsMenu();
+  }
+});
 
 document.querySelectorAll("[data-open-view]").forEach((button) => {
   button.addEventListener("click", () => setActiveView(button.dataset.openView));
@@ -1824,6 +1843,7 @@ syncAVLPreviewVisibility();
 setActiveView("home");
 
 function setActiveView(viewName) {
+  closeSettingsMenu();
   if (viewName !== "sorting") {
     stopSortPlayback();
   }
@@ -1871,6 +1891,51 @@ function setActiveView(viewName) {
   queueScrollTileMotion();
   playLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openSettingsMenu() {
+  el.menuToggle.classList.add("is-open");
+  el.menuToggle.setAttribute("aria-expanded", "true");
+  el.settingsMenu.classList.add("is-open");
+  el.settingsMenu.setAttribute("aria-hidden", "false");
+  el.menuOverlay.classList.remove("is-hidden");
+  document.body.classList.add("menu-open");
+  el.menuClose.focus();
+}
+
+function closeSettingsMenu() {
+  el.menuToggle.classList.remove("is-open");
+  el.menuToggle.setAttribute("aria-expanded", "false");
+  el.settingsMenu.classList.remove("is-open");
+  el.settingsMenu.setAttribute("aria-hidden", "true");
+  el.menuOverlay.classList.add("is-hidden");
+  document.body.classList.remove("menu-open");
+}
+
+function initializeTheme() {
+  let darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  try {
+    const storedTheme = window.localStorage.getItem("infotrain-theme");
+    if (storedTheme) {
+      darkMode = storedTheme === "dark";
+    }
+  } catch {
+    // Theme still follows the device when storage is unavailable.
+  }
+  setTheme(darkMode, false);
+}
+
+function setTheme(darkMode, persist = true) {
+  document.body.classList.toggle("theme-dark", darkMode);
+  el.themeToggle.checked = darkMode;
+  if (!persist) {
+    return;
+  }
+  try {
+    window.localStorage.setItem("infotrain-theme", darkMode ? "dark" : "light");
+  } catch {
+    // The visual switch still works when storage is unavailable.
+  }
 }
 
 function openLearningBook(book) {
