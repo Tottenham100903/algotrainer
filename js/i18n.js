@@ -59,6 +59,10 @@ const translations = {
     "krugo.message": "Ich bin hier, um dir die Welt der Informatik zu zeigen. Komm, steig mit mir in den InfoTrain!",
     "krugo.start": "Los geht’s!",
     "krugo.later": "Später",
+    "boarding.platform": "Gleis 01",
+    "boarding.title": "Lass uns mit den Grundlagen starten.",
+    "boarding.copy": "Unser erster Halt zeigt dir, wie Informatik funktioniert. Steig ein!",
+    "boarding.button": "In den InfoTrain einsteigen",
   },
   en: {
     "common.new": "New",
@@ -120,6 +124,10 @@ const translations = {
     "krugo.message": "I’m here to show you the world of computer science. Come aboard the InfoTrain with me!",
     "krugo.start": "Let’s go!",
     "krugo.later": "Later",
+    "boarding.platform": "Platform 01",
+    "boarding.title": "Let’s start with the basics.",
+    "boarding.copy": "Our first stop will show you how computer science works. Hop aboard!",
+    "boarding.button": "Board the InfoTrain",
   },
   fr: {
     "common.new": "Nouveau",
@@ -181,6 +189,10 @@ const translations = {
     "krugo.message": "Je suis là pour te faire découvrir le monde de l’informatique. Monte avec moi dans l’InfoTrain !",
     "krugo.start": "C’est parti !",
     "krugo.later": "Plus tard",
+    "boarding.platform": "Voie 01",
+    "boarding.title": "Commençons par les bases.",
+    "boarding.copy": "Notre premier arrêt te montrera comment fonctionne l’informatique. Monte à bord !",
+    "boarding.button": "Monter dans l’InfoTrain",
   },
   es: {
     "common.new": "Nuevo",
@@ -242,6 +254,10 @@ const translations = {
     "krugo.message": "Estoy aquí para enseñarte el mundo de la informática. ¡Sube conmigo al InfoTrain!",
     "krugo.start": "¡Vamos!",
     "krugo.later": "Más tarde",
+    "boarding.platform": "Andén 01",
+    "boarding.title": "Empecemos por los fundamentos.",
+    "boarding.copy": "Nuestra primera parada te mostrará cómo funciona la informática. ¡Sube!",
+    "boarding.button": "Subir al InfoTrain",
   },
 };
 

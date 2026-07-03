@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-learning-world">
+  <link rel="stylesheet" href="styles.css?v=20260703-boarding">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -150,6 +150,45 @@ queue: [A, C, D]</pre>
       <section id="learning-path-view" class="app-view immersive-learning-view is-hidden">
         <div id="learning-desk" class="learning-desk">
           <button class="immersive-exit" type="button" data-back-home>← <span data-i18n="learning.home">Startseite</span></button>
+
+          <section id="world-boarding" class="world-boarding is-hidden" aria-labelledby="boarding-title">
+            <div class="boarding-skyline" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div class="boarding-clock" aria-hidden="true"><i></i><i></i></div>
+            <div class="boarding-sign"><span>InfoTrain</span><small data-i18n="boarding.platform">Gleis 01</small></div>
+            <div class="boarding-message">
+              <span class="boarding-krugo" aria-hidden="true">
+                <i class="boarding-cap"></i>
+                <i class="boarding-face"><b></b><b></b></i>
+              </span>
+              <div>
+                <p class="section-label">Krugo</p>
+                <h2 id="boarding-title" data-i18n="boarding.title">Lass uns mit den Grundlagen starten.</h2>
+                <p data-i18n="boarding.copy">Unser erster Halt zeigt dir, wie Informatik funktioniert. Steig ein!</p>
+                <button id="board-infotrain" class="primary-btn" type="button" data-i18n="boarding.button">In den InfoTrain einsteigen</button>
+              </div>
+            </div>
+            <div class="boarding-train" aria-hidden="true">
+              <span class="train-car boarding-car">
+                <i class="car-window"></i><i class="car-window"></i><i class="car-window"></i>
+                <b class="car-stripe"></b>
+              </span>
+              <span class="train-coupler"></span>
+              <span class="train-smoke"></span>
+              <span class="train-engine">
+                <i class="train-glow"></i>
+                <i class="train-window"><b></b><b></b></i>
+                <i class="train-badge">IT</i>
+                <i class="train-chimney"></i>
+                <i class="train-front"></i>
+              </span>
+              <span class="train-wheel car-wheel-one"></span>
+              <span class="train-wheel car-wheel-two"></span>
+              <span class="train-wheel wheel-one"></span>
+              <span class="train-wheel wheel-two"></span>
+            </div>
+            <div class="boarding-platform" aria-hidden="true"></div>
+          </section>
+
           <div class="world-sky" aria-hidden="true">
             <span class="world-sun"></span>
             <span class="world-cloud cloud-one"></span>
@@ -191,12 +230,21 @@ queue: [A, C, D]</pre>
             </button>
 
             <div id="world-train" class="world-train" aria-hidden="true">
+              <span class="train-car">
+                <i class="car-window"></i><i class="car-window"></i><i class="car-window"></i>
+                <b class="car-stripe"></b>
+              </span>
+              <span class="train-coupler"></span>
               <span class="train-smoke"></span>
               <span class="train-engine">
+                <i class="train-glow"></i>
                 <i class="train-window"><b></b><b></b></i>
                 <i class="train-badge">IT</i>
                 <i class="train-chimney"></i>
+                <i class="train-front"></i>
               </span>
+              <span class="train-wheel car-wheel-one"></span>
+              <span class="train-wheel car-wheel-two"></span>
               <span class="train-wheel wheel-one"></span>
               <span class="train-wheel wheel-two"></span>
             </div>
@@ -1144,6 +1192,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-learning-world"></script>
+  <script type="module" src="app.js?v=20260703-boarding"></script>
 </body>
 </html>

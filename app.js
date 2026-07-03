@@ -1847,6 +1847,8 @@ const el = {
   krugoWelcome: document.getElementById("krugo-welcome"),
   krugoStart: document.getElementById("krugo-start"),
   krugoLater: document.getElementById("krugo-later"),
+  worldBoarding: document.getElementById("world-boarding"),
+  boardInfoTrain: document.getElementById("board-infotrain"),
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
@@ -2043,8 +2045,9 @@ el.languageButtons.forEach((button) => {
     updateLanguageMenu(language);
   });
 });
-el.krugoStart.addEventListener("click", () => dismissKrugoWelcome(true));
+el.krugoStart.addEventListener("click", beginKrugoJourney);
 el.krugoLater.addEventListener("click", () => dismissKrugoWelcome(true));
+el.boardInfoTrain.addEventListener("click", boardInfoTrain);
 window.addEventListener("infotrain:languagechange", (event) => {
   updateLanguageMenu(event.detail.language);
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
@@ -2334,7 +2337,7 @@ function updateLanguageMenu(language) {
 function initializeKrugoWelcome() {
   let hasMetKrugo = false;
   try {
-    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo-v2") === "true";
+    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo-v3") === "true";
   } catch {
     // Krugo can still introduce himself when storage is unavailable.
   }
@@ -2354,7 +2357,7 @@ function dismissKrugoWelcome(remember = false) {
   document.body.classList.remove("krugo-is-speaking");
   if (remember) {
     try {
-      window.localStorage.setItem("infotrain-met-krugo-v2", "true");
+      window.localStorage.setItem("infotrain-met-krugo-v3", "true");
     } catch {
       // Dismissing the welcome still works without persistent storage.
     }
@@ -2363,6 +2366,28 @@ function dismissKrugoWelcome(remember = false) {
     el.krugoWelcome.classList.add("is-hidden");
     el.krugoWelcome.classList.remove("is-leaving");
   }, 420);
+}
+
+function beginKrugoJourney() {
+  dismissKrugoWelcome(true);
+  window.setTimeout(() => {
+    setActiveView("learning-path");
+    el.learningDesk.classList.add("is-boarding");
+    el.worldBoarding.classList.remove("is-hidden", "is-departing");
+    window.setTimeout(() => el.boardInfoTrain.focus(), 450);
+  }, 430);
+}
+
+function boardInfoTrain() {
+  el.worldBoarding.classList.add("is-departing");
+  el.boardInfoTrain.disabled = true;
+  window.setTimeout(() => {
+    el.learningDesk.classList.remove("is-boarding");
+    el.learningDesk.classList.add("world-has-arrived");
+    el.worldBoarding.classList.add("is-hidden");
+    el.worldBoarding.classList.remove("is-departing");
+    el.boardInfoTrain.disabled = false;
+  }, 1600);
 }
 
 function initializeLearningProgress() {
@@ -2432,6 +2457,10 @@ function resetLearningDesk() {
   el.learningPointsToggle.setAttribute("aria-expanded", "false");
   closeCheckpointTask();
   el.learningDesk.classList.remove("is-hidden", "is-zooming");
+  el.learningDesk.classList.remove("is-boarding", "world-has-arrived");
+  el.worldBoarding.classList.add("is-hidden");
+  el.worldBoarding.classList.remove("is-departing");
+  el.boardInfoTrain.disabled = false;
   el.learningBooks.forEach((book) => {
     book.classList.remove("is-selected");
   });

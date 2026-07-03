@@ -6311,3 +6311,558 @@ button:disabled {
     width: 100%;
   }
 }
+
+/* Krugo's station and upgraded InfoTrain */
+.world-boarding {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  overflow: hidden;
+  color: #193a3d;
+  background:
+    linear-gradient(180deg, rgba(109, 188, 217, 0.96) 0 54%, rgba(219, 230, 218, 0.98) 54% 69%, #86755e 69%);
+  animation: station-arrives 650ms ease both;
+}
+
+.world-boarding::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 31%;
+  opacity: 0.35;
+  background:
+    linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,0.5) 50%, transparent 50.5%) 0 0 / 9rem 100%,
+    linear-gradient(rgba(255,255,255,0.45), transparent 18%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 94% 83%, 87% 100%, 80% 82%, 73% 100%, 66% 84%, 59% 100%, 52% 82%, 45% 100%, 38% 83%, 31% 100%, 24% 82%, 17% 100%, 10% 84%, 0 100%);
+}
+
+.boarding-skyline {
+  position: absolute;
+  inset: auto 0 31% 0;
+  height: 26%;
+  opacity: 0.46;
+}
+
+.boarding-skyline i {
+  position: absolute;
+  bottom: 0;
+  width: 16%;
+  border-radius: 0.4rem 0.4rem 0 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 1rem, rgba(214, 242, 241, 0.7) 1rem 1.35rem),
+    #39747a;
+}
+
+.boarding-skyline i:nth-child(1) { left: 4%; height: 54%; }
+.boarding-skyline i:nth-child(2) { left: 24%; height: 82%; }
+.boarding-skyline i:nth-child(3) { right: 24%; height: 65%; }
+.boarding-skyline i:nth-child(4) { right: 3%; height: 92%; }
+
+.boarding-platform {
+  position: absolute;
+  right: -5%;
+  bottom: -8%;
+  left: -5%;
+  height: 39%;
+  border-top: 1rem solid #e4c76f;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0 0.15rem, transparent 0.15rem 4rem),
+    linear-gradient(#786a58, #3e3b36);
+  box-shadow: inset 0 0.6rem #544d44;
+  transform: perspective(550px) rotateX(56deg);
+  transform-origin: top;
+}
+
+.boarding-platform::after {
+  content: "";
+  position: absolute;
+  top: 3.5rem;
+  right: 0;
+  left: 0;
+  height: 1.25rem;
+  border-block: 0.28rem solid #252d2e;
+  background: repeating-linear-gradient(90deg, #453526 0 0.7rem, transparent 0.7rem 2.5rem);
+}
+
+.boarding-sign {
+  position: absolute;
+  top: 7%;
+  right: 7%;
+  z-index: 3;
+  display: grid;
+  min-width: 10rem;
+  border: 0.3rem solid #e9efeb;
+  border-radius: 0.7rem;
+  padding: 0.55rem 1rem;
+  color: white;
+  background: #0b625a;
+  box-shadow: 0 1.2rem 2.5rem rgba(23, 63, 65, 0.22);
+  text-align: center;
+}
+
+.boarding-sign span {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.boarding-sign small {
+  color: #9ce8d5;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.boarding-clock {
+  position: absolute;
+  top: 7%;
+  left: 7%;
+  width: 5rem;
+  height: 5rem;
+  border: 0.35rem solid #f3f1e9;
+  border-radius: 50%;
+  background: #173f45;
+  box-shadow: 0 1rem 2rem rgba(24, 63, 67, 0.22);
+}
+
+.boarding-clock::after {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  border: 0.1rem solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+}
+
+.boarding-clock i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 1.4rem;
+  height: 0.16rem;
+  border-radius: 99px;
+  background: #ffd477;
+  transform-origin: left;
+}
+
+.boarding-clock i:first-child { rotate: -88deg; }
+.boarding-clock i:last-child { width: 1.7rem; rotate: 18deg; }
+
+.boarding-message {
+  position: absolute;
+  top: 20%;
+  left: clamp(1rem, 7vw, 7rem);
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 6.5rem minmax(17rem, 31rem);
+  gap: 1.2rem;
+  align-items: end;
+}
+
+.boarding-message > div {
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 1.7rem 1.7rem 1.7rem 0.35rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: rgba(255, 253, 248, 0.95);
+  box-shadow: 0 1.8rem 4rem rgba(27, 68, 69, 0.2);
+  backdrop-filter: blur(15px);
+}
+
+.boarding-message h2 {
+  margin: 0.25rem 0 0.45rem;
+  font-size: clamp(1.5rem, 4vw, 2.7rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.boarding-message p:not(.section-label) {
+  margin: 0 0 1.1rem;
+  color: #586a6c;
+}
+
+.boarding-krugo {
+  position: relative;
+  display: block;
+  width: 6.2rem;
+  height: 7.2rem;
+  filter: drop-shadow(0 1rem 0.8rem rgba(22, 64, 66, 0.24));
+  animation: boarding-krugo-hop 2.2s ease-in-out infinite;
+}
+
+.boarding-face {
+  position: absolute;
+  inset: 1.5rem 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  border: 0.35rem solid #e4eeeb;
+  border-radius: 45% 45% 40% 40%;
+  background: linear-gradient(145deg, #143e46, #071e25);
+  box-shadow: inset 0 0 1rem rgba(72, 229, 200, 0.18);
+}
+
+.boarding-face b {
+  width: 0.55rem;
+  height: 0.9rem;
+  margin-top: 2rem;
+  border-radius: 99px;
+  background: #68f1cf;
+  box-shadow: 0 0 0.6rem #3bdab7;
+}
+
+.boarding-cap {
+  position: absolute;
+  top: 0.55rem;
+  left: 0.6rem;
+  z-index: 2;
+  width: 5rem;
+  height: 1.8rem;
+  border-radius: 3rem 3rem 0.4rem 0.4rem;
+  background: #087065;
+}
+
+.boarding-cap::after {
+  content: "";
+  position: absolute;
+  right: -0.45rem;
+  bottom: -0.25rem;
+  width: 3.2rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #064d47;
+}
+
+.boarding-train {
+  position: absolute;
+  right: -3rem;
+  bottom: 14%;
+  z-index: 8;
+  width: 36rem;
+  height: 13rem;
+  filter: drop-shadow(0 2rem 1.2rem rgba(23, 41, 38, 0.38));
+  animation: boarding-train-in 1.4s 250ms cubic-bezier(0.15, 0.8, 0.2, 1) both;
+}
+
+.world-boarding.is-departing .boarding-train {
+  animation: boarding-train-out 1.55s cubic-bezier(0.55, 0.05, 0.75, 0.35) both;
+}
+
+.world-boarding.is-departing .boarding-message {
+  animation: station-message-out 350ms ease both;
+}
+
+.boarding-train .train-engine {
+  right: 0;
+  bottom: 2.2rem;
+  width: 15rem;
+  height: 7.6rem;
+  border-width: 0.38rem;
+  border-radius: 1.1rem 3rem 0.7rem 0.7rem;
+}
+
+.train-car {
+  position: absolute;
+  right: 7.8rem;
+  bottom: 1.05rem;
+  width: 8.8rem;
+  height: 3.65rem;
+  border: 0.2rem solid #7d361f;
+  border-radius: 0.65rem 0.65rem 0.35rem 0.35rem;
+  background:
+    linear-gradient(105deg, rgba(255,255,255,0.2), transparent 35%),
+    linear-gradient(#e7815d, #b94931);
+  box-shadow: inset 0 0.28rem rgba(255,255,255,0.16);
+}
+
+.boarding-car {
+  right: 14.4rem;
+  bottom: 2.4rem;
+  width: 19rem;
+  height: 7.1rem;
+  border-width: 0.35rem;
+  border-radius: 1rem 1rem 0.6rem 0.6rem;
+}
+
+.car-window {
+  display: inline-block;
+  width: 1.55rem;
+  height: 1.45rem;
+  margin: 0.55rem 0 0 0.65rem;
+  border: 0.16rem solid #f0e4c8;
+  border-radius: 0.25rem;
+  background: linear-gradient(145deg, #d9f5f3, #75b7c5);
+  box-shadow: inset 0.25rem 0.25rem rgba(255,255,255,0.45);
+}
+
+.boarding-car .car-window {
+  width: 3.5rem;
+  height: 2.7rem;
+  margin: 1rem 0 0 1.1rem;
+  border-width: 0.25rem;
+  border-radius: 0.45rem;
+}
+
+.car-stripe {
+  position: absolute;
+  right: 0;
+  bottom: 0.65rem;
+  left: 0;
+  height: 0.35rem;
+  background: #ffd477;
+}
+
+.boarding-car .car-stripe {
+  bottom: 1rem;
+  height: 0.55rem;
+}
+
+.train-coupler {
+  position: absolute;
+  right: 7.15rem;
+  bottom: 1.85rem;
+  width: 1.3rem;
+  height: 0.35rem;
+  background: #263c3d;
+}
+
+.boarding-train .train-coupler {
+  right: 13.5rem;
+  bottom: 3.6rem;
+  width: 1.8rem;
+  height: 0.55rem;
+}
+
+.train-glow {
+  position: absolute;
+  top: 1.3rem;
+  right: -0.35rem;
+  width: 0.8rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: #fff0a8;
+  box-shadow: 0 0 1.2rem #ffd477;
+}
+
+.train-front {
+  position: absolute;
+  right: -0.65rem;
+  bottom: -0.15rem;
+  width: 1.6rem;
+  height: 1.2rem;
+  border-radius: 0 0.8rem 0.25rem 0;
+  background: #123f3e;
+  transform: skewX(18deg);
+}
+
+.boarding-train .train-window {
+  top: 1rem;
+  left: 1.3rem;
+  gap: 0.6rem;
+}
+
+.boarding-train .train-window b {
+  width: 2.35rem;
+  height: 2.5rem;
+  border-radius: 0.45rem;
+}
+
+.boarding-train .train-window b:first-child::after {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+.boarding-train .train-badge {
+  right: 1.7rem;
+  bottom: 1.4rem;
+  width: 3.2rem;
+  height: 3.2rem;
+  font-size: 1rem;
+}
+
+.boarding-train .train-chimney {
+  top: -2.6rem;
+  right: 2.2rem;
+  width: 1.8rem;
+  height: 3rem;
+}
+
+.boarding-train .train-chimney::before {
+  left: -0.4rem;
+  width: 2.6rem;
+  height: 0.7rem;
+}
+
+.boarding-train .train-wheel {
+  bottom: 0.25rem;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-width: 0.55rem;
+}
+
+.boarding-train .wheel-one { left: auto; right: 8.5rem; }
+.boarding-train .wheel-two { right: 1.1rem; }
+.car-wheel-one { left: 0.65rem; }
+.car-wheel-two { left: 5.65rem; }
+.boarding-train .car-wheel-one { left: 4rem; }
+.boarding-train .car-wheel-two { left: 12rem; }
+
+.boarding-train .train-smoke {
+  top: 0;
+  right: 1rem;
+  width: 2.3rem;
+  height: 2.3rem;
+  animation: train-smoke 1s ease-out infinite;
+}
+
+.world-train {
+  width: 17rem;
+}
+
+.world-train .train-engine {
+  right: 0;
+}
+
+.world-train .car-wheel-one { left: 1.1rem; }
+.world-train .car-wheel-two { left: 5.9rem; }
+.world-train .wheel-one { left: auto; right: 4.8rem; }
+
+.world-train.is-travelling .train-car {
+  animation: train-car-sway 450ms ease-in-out infinite alternate;
+}
+
+.learning-desk.is-boarding > .world-sky,
+.learning-desk.is-boarding > .world-heading,
+.learning-desk.is-boarding > .learning-world,
+.learning-desk.is-boarding > .desk-hint {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.learning-desk.world-has-arrived > .world-sky,
+.learning-desk.world-has-arrived > .world-heading,
+.learning-desk.world-has-arrived > .learning-world,
+.learning-desk.world-has-arrived > .desk-hint {
+  animation: world-after-train 900ms ease both;
+}
+
+@keyframes station-arrives {
+  from { opacity: 0; }
+}
+
+@keyframes boarding-train-in {
+  from { transform: translateX(115%); }
+}
+
+@keyframes boarding-train-out {
+  to { transform: translateX(-170%); }
+}
+
+@keyframes station-message-out {
+  to { opacity: 0; transform: translateY(-1rem); }
+}
+
+@keyframes boarding-krugo-hop {
+  50% { transform: translateY(-0.4rem) rotate(2deg); }
+}
+
+@keyframes train-car-sway {
+  to { translate: 0 -0.12rem; }
+}
+
+@keyframes world-after-train {
+  from { opacity: 0; transform: scale(1.08); filter: blur(8px); }
+}
+
+@media (max-width: 760px) {
+  .boarding-clock {
+    top: 5%;
+    left: 1rem;
+    scale: 0.7;
+    transform-origin: left top;
+  }
+
+  .boarding-sign {
+    top: 5%;
+    right: 1rem;
+    min-width: 8rem;
+    scale: 0.82;
+    transform-origin: right top;
+  }
+
+  .boarding-message {
+    top: 16%;
+    left: 1rem;
+    grid-template-columns: 4.2rem minmax(0, 1fr);
+    gap: 0.6rem;
+    width: calc(100% - 2rem);
+  }
+
+  .boarding-message > div {
+    border-radius: 1.25rem 1.25rem 1.25rem 0.3rem;
+    padding: 1rem;
+  }
+
+  .boarding-message h2 {
+    font-size: clamp(1.25rem, 6vw, 1.8rem);
+  }
+
+  .boarding-message p:not(.section-label) {
+    font-size: 0.8rem;
+  }
+
+  .boarding-message button {
+    width: 100%;
+    font-size: 0.78rem;
+  }
+
+  .boarding-krugo {
+    width: 4.2rem;
+    height: 5.2rem;
+  }
+
+  .boarding-face {
+    inset-block-start: 1.2rem;
+  }
+
+  .boarding-face b {
+    width: 0.4rem;
+    height: 0.65rem;
+    margin-top: 1.35rem;
+  }
+
+  .boarding-cap {
+    left: 0.35rem;
+    width: 3.5rem;
+    height: 1.3rem;
+  }
+
+  .boarding-train {
+    right: -14rem;
+    bottom: 13%;
+    scale: 0.63;
+    transform-origin: center bottom;
+  }
+
+  .world-boarding.is-departing .boarding-train {
+    animation-name: boarding-train-out-mobile;
+  }
+
+  .world-train {
+    width: 17rem;
+    scale: 0.55;
+  }
+}
+
+@keyframes boarding-train-out-mobile {
+  to { transform: translateX(-210%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boarding-train,
+  .boarding-krugo,
+  .world-boarding,
+  .learning-desk.world-has-arrived > .world-sky,
+  .learning-desk.world-has-arrived > .world-heading,
+  .learning-desk.world-has-arrived > .learning-world,
+  .learning-desk.world-has-arrived > .desk-hint {
+    animation-duration: 1ms;
+  }
+}
