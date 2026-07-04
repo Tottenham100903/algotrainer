@@ -7011,6 +7011,91 @@ button:disabled {
   }
 }
 
+/* Full 3D Krugo inside the lesson reader. */
+.basics-story .story-krugo-3d {
+  width: 13rem;
+  height: 19rem;
+  margin: 0 -2rem 0 -2rem;
+  scale: 0.76;
+  transform-origin: center bottom;
+  transform-style: preserve-3d;
+  perspective: 700px;
+  filter:
+    drop-shadow(0 1.8rem 1.2rem rgba(8, 35, 36, 0.34))
+    saturate(1.06);
+  animation: lesson-krugo-3d 4.8s ease-in-out infinite;
+}
+
+.basics-story .story-krugo-3d .krugo-head {
+  transform: translateZ(1.2rem);
+  box-shadow:
+    inset 0.7rem 0.75rem 0.9rem rgba(255, 255, 255, 0.86),
+    inset -0.75rem -0.8rem 1rem rgba(38, 74, 78, 0.27),
+    0 0.8rem 1.2rem rgba(16, 55, 56, 0.22);
+}
+
+.basics-story .story-krugo-3d .krugo-face {
+  transform: translateZ(0.45rem);
+}
+
+.basics-story .story-krugo-3d .krugo-body {
+  transform: translateZ(0.55rem);
+  background:
+    linear-gradient(105deg, rgba(255,255,255,0.75), transparent 27%),
+    linear-gradient(145deg, #f7faf9, #9db5b0 68%, #718b87);
+}
+
+.basics-story .story-krugo-3d .krugo-cap {
+  transform: translateZ(1.5rem) rotate(-2deg);
+}
+
+.basics-story .story-krugo-3d .krugo-arm-right {
+  animation: lesson-krugo-wave 2.8s ease-in-out infinite;
+}
+
+.basics-story .story-krugo-3d .krugo-shadow {
+  scale: 1.12;
+  opacity: 0.75;
+}
+
+@keyframes lesson-krugo-3d {
+  0%, 100% {
+    translate: 0 0;
+    rotate: y -5deg;
+  }
+
+  50% {
+    translate: 0 -0.55rem;
+    rotate: y 7deg;
+  }
+}
+
+@keyframes lesson-krugo-wave {
+  0%, 55%, 100% { transform: rotate(-42deg); }
+  68% { transform: rotate(-112deg); }
+  82% { transform: rotate(-72deg); }
+}
+
+@media (max-width: 700px) {
+  .basics-story .story-krugo-3d {
+    position: absolute;
+    right: -3.8rem;
+    bottom: 2.8rem;
+    z-index: 4;
+    display: block;
+    margin: 0;
+    scale: 0.34;
+    opacity: 0.92;
+    transform-origin: center bottom;
+    pointer-events: none;
+  }
+
+  .basics-story-card {
+    position: relative;
+    z-index: 5;
+  }
+}
+
 /* Krugo's station and upgraded InfoTrain */
 .world-boarding {
   position: absolute;
@@ -7850,5 +7935,60 @@ button:disabled {
     min-width: 0;
     padding-inline: 0.55rem;
     font-size: 0.72rem;
+  }
+}
+
+/* Keep complete words intact in every prominent box heading. */
+.module-tile strong,
+.module-tile strong span,
+.module-title,
+.card h2,
+.basics-story-card h1 {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.module-tile strong {
+  font-size: clamp(2.15rem, 4.25vw, 4rem);
+  line-height: 0.9;
+}
+
+.module-tile strong span {
+  width: max-content;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.subject-tile strong,
+.subject-tile-basics strong {
+  font-size: clamp(2.1rem, 3.8vw, 3.65rem);
+}
+
+.basics-story-content p {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+@media (max-width: 640px) {
+  .module-tile strong,
+  .module-tile-avl strong,
+  .subject-tile strong,
+  .subject-tile-basics strong {
+    font-size: clamp(1.75rem, 8.3vw, 2.65rem);
+  }
+
+  .module-tile strong span {
+    max-width: none;
+  }
+
+  .module-tile-sorting strong,
+  .module-tile-avl strong {
+    font-size: clamp(1.55rem, 7vw, 2.15rem);
+  }
+
+  .module-tile-search strong {
+    font-size: clamp(1.7rem, 7.6vw, 2.35rem);
   }
 }

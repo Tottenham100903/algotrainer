@@ -2660,6 +2660,7 @@ const state = {
   learningUnlocked: 1,
   basicsLessons: null,
   basicsLessonIndex: 0,
+  krugoWelcomeShown: false,
 };
 
 const el = {
@@ -3215,15 +3216,10 @@ function updateLanguageMenu(language) {
 }
 
 function initializeKrugoWelcome() {
-  let hasMetKrugo = false;
-  try {
-    hasMetKrugo = window.localStorage.getItem("infotrain-met-krugo-v4") === "true";
-  } catch {
-    // Krugo can still introduce himself when storage is unavailable.
-  }
-  if (hasMetKrugo) {
+  if (state.krugoWelcomeShown) {
     return;
   }
+  state.krugoWelcomeShown = true;
 
   window.setTimeout(() => {
     el.krugoWelcome.classList.remove("is-hidden");
@@ -3232,16 +3228,9 @@ function initializeKrugoWelcome() {
   }, 650);
 }
 
-function dismissKrugoWelcome(remember = false) {
+function dismissKrugoWelcome() {
   el.krugoWelcome.classList.add("is-leaving");
   document.body.classList.remove("krugo-is-speaking");
-  if (remember) {
-    try {
-      window.localStorage.setItem("infotrain-met-krugo-v4", "true");
-    } catch {
-      // Dismissing the welcome still works without persistent storage.
-    }
-  }
   window.setTimeout(() => {
     el.krugoWelcome.classList.add("is-hidden");
     el.krugoWelcome.classList.remove("is-leaving");

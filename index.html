@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260703-basics-reader">
+  <link rel="stylesheet" href="styles.css?v=20260704-krugo-3d">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -118,7 +118,7 @@ queue: [A, C, D]</pre>
           <button class="module-tile subject-tile subject-tile-programming" type="button" data-open-view="programming">
             <span class="subject-tag" data-i18n="common.new">Neu</span>
             <strong>
-              <span>Programmieren</span>
+              <span data-i18n="topics.programming">Programmieren</span>
             </strong>
             <span class="module-copy" data-i18n="subjects.programmingCopy">Python, Java, C++, HTML und Web-Grundlagen über Codeverständnis trainieren.</span>
             <span class="module-cta"><span data-i18n="common.viewSection">Bereich ansehen</span> <span aria-hidden="true">→</span></span>
@@ -127,7 +127,7 @@ queue: [A, C, D]</pre>
           <button class="module-tile subject-tile subject-tile-algorithmics" type="button" data-open-view="algorithmics">
             <span class="subject-tag" data-i18n="common.interactive">Interaktiv</span>
             <strong>
-              <span>Algorithmik</span>
+              <span data-i18n="topics.algorithmics">Algorithmik</span>
             </strong>
             <span class="module-copy" data-i18n="subjects.algorithmicsCopy">Algorithmen analysieren, visualisieren und mit abwechslungsreichen Aufgaben trainieren.</span>
             <span class="module-cta"><span data-i18n="common.openSection">Bereich öffnen</span> <span aria-hidden="true">→</span></span>
@@ -258,10 +258,26 @@ queue: [A, C, D]</pre>
           </div>
 
           <section id="basics-story" class="basics-story is-hidden" aria-labelledby="basics-story-title">
-            <div class="basics-story-krugo" aria-hidden="true">
-              <span class="story-krugo-cap"></span>
-              <span class="story-krugo-face"><i></i><i></i></span>
-              <span class="story-krugo-body">IT</span>
+            <div class="basics-story-krugo story-krugo-3d krugo-character" aria-hidden="true">
+              <span class="krugo-shadow"></span>
+              <span class="krugo-antenna"><i></i></span>
+              <span class="krugo-cap"><i></i></span>
+              <span class="krugo-ear krugo-ear-left"></span>
+              <span class="krugo-ear krugo-ear-right"></span>
+              <span class="krugo-head">
+                <span class="krugo-face">
+                  <i class="krugo-eye"></i>
+                  <i class="krugo-eye"></i>
+                  <i class="krugo-smile"></i>
+                </span>
+              </span>
+              <span class="krugo-neck"></span>
+              <span class="krugo-body">
+                <i class="krugo-badge">IT</i>
+                <i class="krugo-light"></i>
+              </span>
+              <span class="krugo-arm krugo-arm-left"><i></i></span>
+              <span class="krugo-arm krugo-arm-right"><i></i></span>
             </div>
             <article class="basics-story-card">
               <header>
@@ -1281,6 +1297,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260703-basics-reader"></script>
+  <script type="module" src="app.js?v=20260704-krugo-refresh"></script>
 </body>
 </html>
