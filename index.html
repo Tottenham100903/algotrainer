@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260704-krugo-3d">
+  <link rel="stylesheet" href="styles.css?v=20260704-global-search">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -28,7 +28,7 @@
         </span>
         <span class="krugo-neck"></span>
         <span class="krugo-body">
-          <i class="krugo-badge">IT</i>
+          <i class="krugo-badge" aria-hidden="true"></i>
           <i class="krugo-light"></i>
         </span>
         <span class="krugo-arm krugo-arm-left"><i></i></span>
@@ -136,8 +136,7 @@ queue: [A, C, D]</pre>
           <button class="module-tile subject-tile subject-tile-data-science" type="button" data-open-view="data-science">
             <span class="subject-tag" data-i18n="common.new">Neu</span>
             <strong>
-              <span>Data</span>
-              <span>Science</span>
+              <span>Data Science</span>
             </strong>
             <span class="module-copy" data-i18n="subjects.dataCopy">MySQL, PySpark und Datenanalyse als Werkzeugkasten für praktische Datenszenarien.</span>
             <span class="module-cta"><span data-i18n="common.viewSection">Bereich ansehen</span> <span aria-hidden="true">→</span></span>
@@ -175,7 +174,7 @@ queue: [A, C, D]</pre>
                   </span>
                 </span>
                 <span class="krugo-neck"></span>
-                <span class="krugo-body"><i class="krugo-badge">IT</i><i class="krugo-light"></i></span>
+                <span class="krugo-body"><i class="krugo-badge" aria-hidden="true"></i><i class="krugo-light"></i></span>
                 <span class="krugo-arm krugo-arm-left"><i></i></span>
                 <span class="krugo-arm krugo-arm-right"><i></i></span>
               </span>
@@ -273,7 +272,7 @@ queue: [A, C, D]</pre>
               </span>
               <span class="krugo-neck"></span>
               <span class="krugo-body">
-                <i class="krugo-badge">IT</i>
+                <i class="krugo-badge" aria-hidden="true"></i>
                 <i class="krugo-light"></i>
               </span>
               <span class="krugo-arm krugo-arm-left"><i></i></span>
@@ -1243,6 +1242,21 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
+  <div id="global-search" class="global-search">
+    <button id="global-search-toggle" class="global-search-toggle" type="button" aria-controls="global-search-panel" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span class="sr-only">Inhalte durchsuchen</span>
+    </button>
+    <div id="global-search-panel" class="global-search-panel is-hidden">
+      <label class="global-search-field">
+        <span aria-hidden="true"></span>
+        <input id="global-search-input" type="search" placeholder="InfoTrain durchsuchen" autocomplete="off">
+      </label>
+      <p class="global-search-caption">Vorschläge</p>
+      <div id="global-search-results" class="global-search-results" role="listbox"></div>
+    </div>
+  </div>
+
   <button id="menu-toggle" class="menu-toggle" type="button" aria-controls="settings-menu" aria-expanded="false">
     <span aria-hidden="true"></span>
     <span aria-hidden="true"></span>
@@ -1297,6 +1311,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260704-krugo-refresh"></script>
+  <script type="module" src="app.js?v=20260704-global-search"></script>
 </body>
 </html>

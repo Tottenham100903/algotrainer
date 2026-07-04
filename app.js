@@ -2598,6 +2598,30 @@ const graphAlgorithmInfo = {
   },
 };
 
+const globalSearchCatalog = [
+  { title: "Startseite", path: ["InfoTrain"], view: "home", icon: "⌂", keywords: "home übersicht" },
+  { title: "Lernpfad", path: ["InfoTrain"], view: "learning-path", icon: "↗", keywords: "fortschritt krugo zug" },
+  { title: "Informatik-Grundlagen", path: ["Fachbereiche"], view: "basics", icon: "01", keywords: "eva daten information bits binär hardware software netzwerk sicherheit" },
+  { title: "Programmieren", path: ["Fachbereiche"], view: "programming", icon: "02", keywords: "python java c++ html code" },
+  { title: "Algorithmik", path: ["Fachbereiche"], view: "algorithmics", icon: "03", keywords: "algorithmen training" },
+  { title: "Data Science", path: ["Fachbereiche"], view: "data-science", icon: "04", keywords: "mysql pyspark daten analyse" },
+  { title: "Informationsmanagement", path: ["Fachbereiche"], view: "information-management", icon: "05", keywords: "erp geschäftsprozesse process mining" },
+  { title: "Laufzeiten", path: ["Algorithmik"], view: "runtime", icon: "O", keywords: "komplexität asymptotisch big o rekursion" },
+  { title: "Master-Theorem", path: ["Algorithmik"], view: "master", icon: "M", keywords: "rekurrenz divide conquer substitution" },
+  { title: "Sortierverfahren", path: ["Algorithmik"], view: "sorting", icon: "↕", keywords: "mergesort heapsort selectionsort topologisch" },
+  { title: "Suchverfahren", path: ["Algorithmik"], view: "search", icon: "⌕", keywords: "linear binär interpolation hash" },
+  { title: "Datenstrukturen", path: ["Algorithmik"], view: "avl", icon: "◇", keywords: "listen bäume graphen hashmaps stacks queues heaps" },
+  { title: "AVL-Bäume", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "AVL-Bäume", icon: "A", keywords: "rotation balance baum" },
+  { title: "Binärbäume", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Binärbäume", icon: "B", keywords: "baum traversal" },
+  { title: "Splaybäume", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Splaybäume", icon: "S", keywords: "baum rotation" },
+  { title: "Listen", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Listen", icon: "L", keywords: "verkettet linked list" },
+  { title: "Wörterbücher", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Wörterbücher", icon: "W", keywords: "dictionary schlüssel wert" },
+  { title: "Hashmaps", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Hashmaps", icon: "#", keywords: "hashing hash suche" },
+  { title: "Graphen", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Graphen", icon: "G", keywords: "breitensuche tiefensuche dijkstra floyd backtracking" },
+  { title: "Heaps", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Heaps", icon: "H", keywords: "min heap max heap priorität" },
+  { title: "Stacks & Queues", path: ["Algorithmik", "Datenstrukturen"], view: "avl", topic: "Stacks & Queues", icon: "⇅", keywords: "stapel warteschlange lifo fifo" },
+];
+
 const state = {
   currentView: "home",
   runtimeQuestion: null,
@@ -2664,6 +2688,11 @@ const state = {
 };
 
 const el = {
+  globalSearch: document.getElementById("global-search"),
+  globalSearchToggle: document.getElementById("global-search-toggle"),
+  globalSearchPanel: document.getElementById("global-search-panel"),
+  globalSearchInput: document.getElementById("global-search-input"),
+  globalSearchResults: document.getElementById("global-search-results"),
   menuToggle: document.getElementById("menu-toggle"),
   menuOverlay: document.getElementById("menu-overlay"),
   settingsMenu: document.getElementById("settings-menu"),
@@ -2892,8 +2921,21 @@ initializeTheme();
 initializeLearningProgress();
 updateLanguageMenu(initializeLanguage());
 initializeKrugoWelcome();
+renderGlobalSearchResults("");
+el.globalSearchToggle.addEventListener("click", () => {
+  const isOpen = el.globalSearchToggle.getAttribute("aria-expanded") === "true";
+  isOpen ? closeGlobalSearch() : openGlobalSearch();
+});
+el.globalSearchInput.addEventListener("input", () => renderGlobalSearchResults(el.globalSearchInput.value));
+el.globalSearchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    el.globalSearchResults.querySelector("button")?.click();
+  }
+});
 el.menuToggle.addEventListener("click", () => {
   const isOpen = el.menuToggle.getAttribute("aria-expanded") === "true";
+  closeGlobalSearch();
   isOpen ? closeSettingsMenu() : openSettingsMenu();
 });
 el.menuOverlay.addEventListener("click", closeSettingsMenu);
@@ -2939,7 +2981,17 @@ document.addEventListener("keydown", (event) => {
       dismissKrugoWelcome();
       return;
     }
+    if (el.globalSearchToggle.getAttribute("aria-expanded") === "true") {
+      closeGlobalSearch();
+      el.globalSearchToggle.focus();
+      return;
+    }
     closeSettingsMenu();
+  }
+});
+document.addEventListener("pointerdown", (event) => {
+  if (!el.globalSearch.contains(event.target)) {
+    closeGlobalSearch();
   }
 });
 
@@ -3092,6 +3144,93 @@ syncMasterHelpVisibility();
 syncAVLPreviewVisibility();
 syncLocalizedContent();
 setActiveView("home");
+
+function normalizeSearchText(value) {
+  return value
+    .toLocaleLowerCase("de")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
+
+function openGlobalSearch() {
+  closeSettingsMenu();
+  el.globalSearchToggle.setAttribute("aria-expanded", "true");
+  el.globalSearch.classList.add("is-open");
+  el.globalSearchPanel.classList.remove("is-hidden");
+  renderGlobalSearchResults(el.globalSearchInput.value);
+  window.requestAnimationFrame(() => el.globalSearchInput.focus());
+}
+
+function closeGlobalSearch() {
+  el.globalSearchToggle.setAttribute("aria-expanded", "false");
+  el.globalSearch.classList.remove("is-open");
+  el.globalSearchPanel.classList.add("is-hidden");
+}
+
+function renderGlobalSearchResults(query) {
+  const normalizedQuery = normalizeSearchText(query.trim());
+  const terms = normalizedQuery.split(/\s+/).filter(Boolean);
+  const matches = globalSearchCatalog
+    .filter((item) => {
+      if (!terms.length) {
+        return ["home", "learning-path", "basics", "programming", "algorithmics", "data-science"].includes(item.view);
+      }
+      const haystack = normalizeSearchText([
+        item.title,
+        item.path.join(" "),
+        item.keywords,
+      ].join(" "));
+      return terms.every((term) => haystack.includes(term));
+    })
+    .slice(0, 8);
+
+  el.globalSearchResults.replaceChildren();
+  if (!matches.length) {
+    const empty = document.createElement("p");
+    empty.className = "global-search-empty";
+    empty.textContent = "Keine passenden Inhalte gefunden.";
+    el.globalSearchResults.append(empty);
+    return;
+  }
+
+  matches.forEach((item) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("role", "option");
+    button.className = "global-search-result";
+
+    const icon = document.createElement("span");
+    icon.className = "global-search-result-icon";
+    icon.textContent = item.icon;
+
+    const text = document.createElement("span");
+    text.className = "global-search-result-text";
+    const title = document.createElement("strong");
+    title.textContent = item.title;
+    const chain = document.createElement("small");
+    chain.textContent = [...item.path, item.title].join(" › ");
+    text.append(title, chain);
+
+    const arrow = document.createElement("span");
+    arrow.className = "global-search-result-arrow";
+    arrow.textContent = "›";
+    arrow.setAttribute("aria-hidden", "true");
+
+    button.append(icon, text, arrow);
+    button.addEventListener("click", () => navigateToSearchResult(item));
+    el.globalSearchResults.append(button);
+  });
+}
+
+function navigateToSearchResult(item) {
+  closeGlobalSearch();
+  el.globalSearchInput.value = "";
+  setActiveView(item.view);
+  if (item.topic) {
+    setDataStructureSection("structures");
+    setDataStructureTopic(item.topic);
+  }
+}
 
 function setActiveView(viewName) {
   closeSettingsMenu();
