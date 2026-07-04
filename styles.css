@@ -2692,6 +2692,7 @@ h2 {
 }
 
 .subject-learning-grid {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   align-items: start;
 }
 
@@ -2700,6 +2701,18 @@ h2 {
 .subject-visual-card {
   display: grid;
   gap: 1rem;
+}
+
+.subject-overview-card {
+  grid-column: 1 / -1;
+}
+
+.subject-task-card.is-exam-focus {
+  grid-column: 1 / -1;
+}
+
+.subject-task-card.is-exam-focus .subject-question {
+  max-width: 78ch;
 }
 
 .learning-topic-nav {
@@ -2763,6 +2776,7 @@ h2 {
 }
 
 .subject-mode-tabs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-bottom: 1.25rem;
 }
 
@@ -2812,6 +2826,18 @@ h2 {
   color: var(--primary-strong);
 }
 
+.subject-overview-card .card-head,
+.subject-task-card .card-head,
+.subject-visual-card .card-head {
+  align-items: start;
+}
+
+.subject-overview-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 250, 238, 0.78)),
+    var(--surface);
+}
+
 .concept-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2854,7 +2880,10 @@ h2 {
 }
 
 .subject-visual {
-  min-height: 160px;
+  display: grid;
+  align-content: start;
+  min-height: 220px;
+  gap: 0.85rem;
 }
 
 .subject-pipeline,

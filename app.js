@@ -3133,6 +3133,15 @@ function setActiveView(viewName) {
     renderSortStep();
     renderSortInfo();
   }
+  const subjectViewMap = {
+    basics: "basics",
+    programming: "programming",
+    "data-science": "dataScience",
+    "information-management": "informationManagement",
+  };
+  if (subjectViewMap[viewName]) {
+    renderSubjectLearningArea(subjectViewMap[viewName]);
+  }
   if (viewName === "master") {
     setMasterSection(state.masterSection);
     syncMasterTrainingTopic();
@@ -3855,19 +3864,12 @@ function checkRuntimeQuestion() {
 
 function setupSubjectLearningArea(areaKey) {
   const refs = getSubjectRefs(areaKey);
-  refs.nav.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-subject-topic]");
-    if (!button) {
-      return;
-    }
+  bindDelegatedPress(refs.nav, "[data-subject-topic]", (button) => {
     state[`${areaKey}Topic`] = button.dataset.subjectTopic;
+    state[`${areaKey}Mode`] = state[`${areaKey}Mode`] || "learn";
     renderSubjectLearningArea(areaKey);
   });
-  refs.modeNav.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-subject-mode]");
-    if (!button) {
-      return;
-    }
+  bindDelegatedPress(refs.modeNav, "[data-subject-mode]", (button) => {
     state[`${areaKey}Mode`] = button.dataset.subjectMode;
     renderSubjectLearningArea(areaKey);
   });
@@ -4308,9 +4310,11 @@ function syncSubjectModeVisibility(refs, mode) {
   const visualCard = refs.visual.closest(".subject-visual-card");
   const taskCard = refs.question.closest(".subject-task-card");
 
-  overviewCard?.classList.toggle("is-hidden", mode !== "learn");
+  overviewCard?.classList.toggle("is-hidden", mode === "exam");
   visualCard?.classList.toggle("is-hidden", mode === "exam");
-  taskCard?.classList.toggle("is-hidden", mode === "learn");
+  taskCard?.classList.toggle("is-hidden", false);
+  taskCard?.classList.toggle("is-exam-focus", mode === "exam");
+  taskCard?.classList.toggle("is-guided-focus", mode === "guided");
 }
 
 function createSubjectQuestion(areaKey) {
@@ -4321,7 +4325,17 @@ function createSubjectQuestion(areaKey) {
   const pool = mode === "exam"
     ? (topic.examTasks || topic.questions || topic.guidedTasks)
     : (topic.guidedTasks || topic.questions || topic.examTasks);
-  const question = sample(pool);
+  const questions = Array.isArray(pool) && pool.length ? pool : [{
+    type: "text",
+    level: 1,
+    title: topic.title,
+    question: topic.copy || topic.explanation || uiText("defaultSolution"),
+    answer: [topic.title],
+    hint: topic.explanation || topic.copy,
+    explanation: topic.explanation || topic.copy,
+    solution: topic.explanation || topic.copy,
+  }];
+  const question = sample(questions);
   state[`${areaKey}Question`] = question;
 
   refs.taskMeta.textContent = `${mode === "exam" ? uiText("examTask") : uiText("guidedPractice")} · Level ${question.level || 1} · ${subjectTaskTypeLabel(question.type)}`;
