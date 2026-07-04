@@ -3003,27 +3003,14 @@ el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
 document.querySelectorAll("[data-master-section]").forEach((button) => {
   button.addEventListener("click", () => setMasterSection(button.dataset.masterSection));
 });
-document.querySelector("[data-master-learn-options]").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-master-learn-case]");
-  if (!button) {
-    return;
-  }
-
+bindDelegatedPress(document.querySelector("[data-master-learn-options]"), "[data-master-learn-case]", (button) => {
   setMasterChoice(el.masterLearnCase, "[data-master-learn-case]", button.dataset.masterLearnCase);
   state.masterLearnLesson = 0;
   state.masterLearnStep = 0;
   renderMasterLearning();
 });
-document.querySelector("[data-master-training-options]").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-master-training-topic]");
-  if (!button) {
-    return;
-  }
-
-  state.masterTrainingTopic = button.dataset.masterTrainingTopic;
-  el.masterTrainingTopic.value = state.masterTrainingTopic;
-  syncMasterTrainingTopic();
-  createMasterQuestion();
+bindDelegatedPress(document.querySelector("[data-master-training-options]"), "[data-master-training-topic]", (button) => {
+  setMasterTrainingTopic(button.dataset.masterTrainingTopic);
 });
 el.masterLearnPrev.addEventListener("click", () => changeMasterLearningStep(-1));
 el.masterLearnNext.addEventListener("click", () => changeMasterLearningStep(1));
@@ -3146,8 +3133,15 @@ function setActiveView(viewName) {
     renderSortStep();
     renderSortInfo();
   }
+  if (viewName === "master") {
+    setMasterSection(state.masterSection);
+    syncMasterTrainingTopic();
+    if (!state.masterQuestion) {
+      createMasterQuestion();
+    }
+  }
   if (viewName === "avl") {
-    createDataStructureQuestion();
+    setDataStructureSection(state.dataStructureSection);
   }
   if (viewName === "learning-path") {
     resetLearningDesk();
@@ -5333,7 +5327,7 @@ function getCustomSolverExamples(topic) {
 
 function resetSortValues() {
   stopSortPlayback();
-  state.sortValues = shuffle([18, 42, 27, 64, 35, 12, 56, 73, 49, 30]);
+  state.sortValues = generateUniqueNumbers(10, 0, 100);
   rebuildSortSteps();
 }
 
@@ -6866,6 +6860,31 @@ function getSelectedValue(name) {
   return selected ? selected.value : "";
 }
 
+function bindDelegatedPress(container, selector, handler) {
+  if (!container) {
+    return;
+  }
+
+  let lastPointerPress = 0;
+
+  function run(event, isPointerPress = false) {
+    const button = event.target.closest(selector);
+    if (!button || !container.contains(button)) {
+      return;
+    }
+    if (isPointerPress) {
+      lastPointerPress = Date.now();
+      event.preventDefault();
+    } else if (Date.now() - lastPointerPress < 450) {
+      return;
+    }
+    handler(button, event);
+  }
+
+  container.addEventListener("pointerup", (event) => run(event, true));
+  container.addEventListener("click", (event) => run(event));
+}
+
 function setMasterChoice(input, buttonSelector, value) {
   input.value = value;
   document.querySelectorAll(buttonSelector).forEach((button) => {
@@ -6873,6 +6892,13 @@ function setMasterChoice(input, buttonSelector, value) {
     button.classList.toggle("is-active", selected);
     button.setAttribute("aria-pressed", String(selected));
   });
+}
+
+function setMasterTrainingTopic(topic) {
+  state.masterTrainingTopic = topic;
+  el.masterTrainingTopic.value = state.masterTrainingTopic;
+  syncMasterTrainingTopic();
+  createMasterQuestion();
 }
 
 function showPreviewPlaceholder() {
