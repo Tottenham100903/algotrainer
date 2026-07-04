@@ -2715,7 +2715,8 @@ h2 {
   max-width: 78ch;
 }
 
-.learning-topic-nav {
+.learning-topic-nav,
+#data-structure-topic-nav {
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   align-items: stretch;
   gap: 0.8rem;
@@ -2723,13 +2724,14 @@ h2 {
   background: rgba(255, 251, 244, 0.62);
 }
 
-.learning-topic-nav .topic-nav-btn {
+.learning-topic-nav .topic-nav-btn,
+#data-structure-topic-nav .topic-nav-btn {
   display: grid;
-  min-height: 132px;
+  min-height: 116px;
   align-content: space-between;
   gap: 0.75rem;
   border: 1px solid rgba(13, 107, 95, 0.12);
-  border-radius: 18px;
+  border-radius: 14px;
   padding: 1rem;
   text-align: left;
   white-space: normal;
@@ -2737,6 +2739,13 @@ h2 {
     radial-gradient(circle at top right, rgba(13, 107, 95, 0.08), transparent 38%),
     rgba(255, 253, 248, 0.78);
   box-shadow: 0 10px 24px rgba(78, 63, 34, 0.07);
+}
+
+#data-structure-topic-nav .topic-nav-btn {
+  align-content: center;
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 800;
 }
 
 .learning-topic-nav .topic-nav-btn strong,
@@ -2760,8 +2769,10 @@ h2 {
   line-height: 1.45;
 }
 
-.learning-topic-nav .topic-nav-btn.is-active {
+.learning-topic-nav .topic-nav-btn.is-active,
+#data-structure-topic-nav .topic-nav-btn.is-active {
   border-color: rgba(217, 95, 67, 0.42);
+  color: var(--primary-strong);
   background:
     radial-gradient(circle at top right, rgba(217, 95, 67, 0.16), transparent 40%),
     var(--surface-strong);
@@ -3050,6 +3061,13 @@ h2 {
   background: var(--surface-strong);
   font: inherit;
   line-height: 1.5;
+}
+
+.code-answer-label textarea {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.92rem;
+  white-space: pre-wrap;
+  tab-size: 2;
 }
 
 .hint-feedback {
@@ -6451,7 +6469,8 @@ button:disabled {
   }
 
   .concept-grid,
-  .learning-topic-nav {
+  .learning-topic-nav,
+  #data-structure-topic-nav {
     grid-template-columns: 1fr;
   }
 

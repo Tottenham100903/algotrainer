@@ -1764,6 +1764,309 @@ function mergeSubjectAreaEnhancements() {
 }
 
 mergeSubjectAreaEnhancements();
+normalizeProgrammingArea(subjectLearningAreas.programming, "de");
+normalizeProgrammingArea(englishSubjectLearningAreas.programming, "en");
+addAppliedSubjectTasks(subjectLearningAreas, "de");
+addAppliedSubjectTasks(englishSubjectLearningAreas, "en");
+
+function normalizeProgrammingArea(area, language) {
+  if (!area?.topics) {
+    return;
+  }
+
+  const isEn = language === "en";
+  area.defaultTopic = "java";
+  area.topics.java = isEn ? {
+    nav: "Java",
+    title: "Java: classes, references and UML to code",
+    copy: "One Java module is enough: constructors, object state, inheritance, interfaces, references and UML translation belong together.",
+    learningGoals: ["Write simple Java classes", "Explain references and aliasing", "Translate UML fragments into code"],
+    explanation: "Java is strongly typed and object-oriented. A class defines fields and methods, a constructor initializes object state, and object variables store references. With a = b, Java copies the reference, not the object.",
+    concepts: [
+      ["Class", "Blueprint with fields, constructors and methods."],
+      ["Constructor", "Has no return type and initializes a new object."],
+      ["Reference", "Several variables can point to the same object."],
+      ["Inheritance", "A subclass can reuse and override behavior."],
+    ],
+    visualization: {
+      title: "Reference effect and class structure",
+      type: "reference",
+      before: ["Book b1 -> Book(\"Algo\")", "Book b2 -> Book(\"DB\")"],
+      after: ["b1 = b2", "b1 -> Book(\"DB\")", "b2 -> Book(\"DB\")"],
+    },
+    guidedTasks: [
+      {
+        type: "multi",
+        level: 2,
+        title: "Understand constructors",
+        snippet: asCode(["class Account {", "  private int balance;", "  Account(int start) {", "    balance = start;", "  }", "}"]),
+        question: "Which statements are correct?",
+        choices: ["Account(int start) is a constructor.", "The constructor has no return type.", "balance is local to the constructor.", "start initializes object state."],
+        answer: ["Account(int start) is a constructor.", "The constructor has no return type.", "start initializes object state."],
+        hint: "Look at the class name, missing return type and field access.",
+        explanation: "balance is a field of the class. The constructor assigns the parameter start to that field.",
+        solution: "Statements 1, 2 and 4 are correct.",
+      },
+      {
+        type: "code",
+        level: 3,
+        title: "Complete a Java class",
+        snippet: asCode(["class Book {", "  private String title;", "", "  // add constructor and getter", "}"]),
+        question: "Write the missing constructor Book(String title) and a getTitle() method.",
+        answer: ["book", "string", "title", "return"],
+        hint: "The constructor stores the parameter in the field; the getter returns that field.",
+        explanation: "A correct solution initializes the field in the constructor and returns it in the getter.",
+        solution: asCode(["Book(String title) {", "  this.title = title;", "}", "String getTitle() {", "  return title;", "}"]),
+      },
+      {
+        type: "single",
+        level: 2,
+        title: "Reference assignment",
+        question: "What happens with a = b when a and b are object variables?",
+        choices: ["a then refers to the same object as b.", "The object of b is fully copied.", "b then points to a.", "Both objects are deleted."],
+        answer: "a then refers to the same object as b.",
+        hint: "Object variables store references.",
+        explanation: "The reference is copied, not the object. Afterwards both variables point to the same object.",
+        solution: "After a = b, a and b refer to the same object.",
+      },
+    ],
+    examTasks: [
+      {
+        type: "code",
+        level: 4,
+        title: "Translate UML to Java",
+        question: "A UML class Book has title:String and getTitle():String. Write the core Java structure.",
+        answer: ["class", "book", "string", "return"],
+        hint: "Name class, field and method. Visibility can be simplified.",
+        explanation: "The central building blocks are class declaration, String field and getter method.",
+        solution: "class Book { private String title; String getTitle() { return title; } }",
+      },
+      {
+        type: "text",
+        level: 4,
+        title: "Explain aliasing",
+        snippet: asCode(["Box a = new Box(1);", "Box b = new Box(2);", "a = b;", "a.value = 7;", "System.out.println(b.value);"]),
+        question: "Explain why the output is 7.",
+        answer: ["same object", "reference", "a = b"],
+        hint: "After a = b both variables refer to the same Box.",
+        explanation: "a.value changes the object also referenced by b. Therefore b.value reads 7.",
+        solution: "a = b copies the reference. Both variables point to the same object, so changing a.value changes what b.value reads.",
+      },
+    ],
+  } : {
+    nav: "Java",
+    title: "Java: Klassen, Referenzen und UML in Code",
+    copy: "Ein Java-Modul reicht: Konstruktoren, Objektzustand, Vererbung, Interfaces, Referenzen und UML-Übersetzung gehören zusammen.",
+    learningGoals: ["Einfache Java-Klassen schreiben", "Referenzen und Alias-Effekte erklären", "UML-Fragmente in Code übersetzen"],
+    explanation: "Java ist stark typisiert und objektorientiert. Eine Klasse beschreibt Felder und Methoden, ein Konstruktor initialisiert Objektzustand, und Objektvariablen speichern Referenzen. Bei a = b wird die Referenz kopiert, nicht das Objekt.",
+    concepts: [
+      ["Klasse", "Bauplan mit Feldern, Konstruktoren und Methoden."],
+      ["Konstruktor", "Hat keinen Rückgabetyp und initialisiert ein neues Objekt."],
+      ["Referenz", "Mehrere Variablen können auf dasselbe Objekt zeigen."],
+      ["Vererbung", "Eine Unterklasse kann Verhalten übernehmen und überschreiben."],
+    ],
+    visualization: {
+      title: "Referenzeffekt und Klassenstruktur",
+      type: "reference",
+      before: ["Buch b1 -> Buch(\"Algo\")", "Buch b2 -> Buch(\"DB\")"],
+      after: ["b1 = b2", "b1 -> Buch(\"DB\")", "b2 -> Buch(\"DB\")"],
+    },
+    guidedTasks: [
+      {
+        type: "multi",
+        level: 2,
+        title: "Konstruktoren verstehen",
+        snippet: asCode(["class Konto {", "  private int saldo;", "  Konto(int start) {", "    saldo = start;", "  }", "}"]),
+        question: "Welche Aussagen sind korrekt?",
+        choices: ["Konto(int start) ist ein Konstruktor.", "Der Konstruktor hat keinen Rückgabetyp.", "saldo ist lokal im Konstruktor.", "start initialisiert den Objektzustand."],
+        answer: ["Konto(int start) ist ein Konstruktor.", "Der Konstruktor hat keinen Rückgabetyp.", "start initialisiert den Objektzustand."],
+        hint: "Achte auf Klassennamen, fehlenden Rückgabetyp und Feldzugriff.",
+        explanation: "saldo ist ein Feld der Klasse. Der Konstruktor weist dem Feld den Parameter start zu.",
+        solution: "Korrekt sind 1, 2 und 4.",
+      },
+      {
+        type: "code",
+        level: 3,
+        title: "Java-Klasse vervollständigen",
+        snippet: asCode(["class Buch {", "  private String titel;", "", "  // Konstruktor und Getter ergänzen", "}"]),
+        question: "Schreibe den fehlenden Konstruktor Buch(String titel) und eine getTitel()-Methode.",
+        answer: ["buch", "string", "titel", "return"],
+        hint: "Der Konstruktor speichert den Parameter im Feld; der Getter gibt das Feld zurück.",
+        explanation: "Eine passende Lösung initialisiert das Feld im Konstruktor und gibt es im Getter zurück.",
+        solution: asCode(["Buch(String titel) {", "  this.titel = titel;", "}", "String getTitel() {", "  return titel;", "}"]),
+      },
+      {
+        type: "single",
+        level: 2,
+        title: "Referenzzuweisung",
+        question: "Was passiert bei a = b, wenn a und b Objektvariablen sind?",
+        choices: ["a zeigt danach auf dasselbe Objekt wie b.", "Das Objekt von b wird vollständig kopiert.", "b zeigt danach auf a.", "Beide Objekte werden gelöscht."],
+        answer: "a zeigt danach auf dasselbe Objekt wie b.",
+        hint: "Objektvariablen speichern Referenzen.",
+        explanation: "Die Referenz wird kopiert, nicht das Objekt. Danach zeigen beide Variablen auf dasselbe Objekt.",
+        solution: "Nach a = b zeigen a und b auf dasselbe Objekt.",
+      },
+    ],
+    examTasks: [
+      {
+        type: "code",
+        level: 4,
+        title: "UML in Java übersetzen",
+        question: "Eine UML-Klasse Buch hat titel:String und getTitel():String. Schreibe die zentrale Java-Struktur.",
+        answer: ["class", "buch", "string", "return"],
+        hint: "Nenne Klasse, Feld und Methode. Sichtbarkeit darf vereinfacht werden.",
+        explanation: "Die zentralen Bausteine sind Klassendeklaration, String-Feld und Getter-Methode.",
+        solution: "class Buch { private String titel; String getTitel() { return titel; } }",
+      },
+      {
+        type: "text",
+        level: 4,
+        title: "Alias-Effekt erklären",
+        snippet: asCode(["Box a = new Box(1);", "Box b = new Box(2);", "a = b;", "a.value = 7;", "System.out.println(b.value);"]),
+        question: "Erkläre, warum die Ausgabe 7 ist.",
+        answer: ["dasselbe objekt", "referenz", "a = b"],
+        hint: "Nach a = b zeigen beide Variablen auf dieselbe Box.",
+        explanation: "a.value verändert das Objekt, auf das auch b zeigt. Deshalb liest b.value den Wert 7.",
+        solution: "a = b kopiert die Referenz. Beide Variablen zeigen auf dasselbe Objekt, daher verändert a.value auch den Wert, den b.value liest.",
+      },
+    ],
+  };
+
+  delete area.topics.javaOop;
+  delete area.topics.javaReferences;
+}
+
+function addAppliedSubjectTasks(areaSet, language) {
+  const isEn = language === "en";
+  const programming = areaSet.programming?.topics || {};
+  if (programming.python) {
+    programming.python.guidedTasks = [
+      ...(programming.python.guidedTasks || programming.python.questions || []),
+      isEn ? {
+        type: "code",
+        level: 3,
+        title: "Write a small function",
+        question: "Write a Python function count_even(xs) that counts the even numbers in a list.",
+        answer: ["def count_even", "for", "% 2", "return"],
+        hint: "Loop over xs, test x % 2 == 0 and count matches.",
+        explanation: "The task checks whether you can apply loops, conditions and a return value yourself.",
+        solution: asCode(["def count_even(xs):", "    count = 0", "    for x in xs:", "        if x % 2 == 0:", "            count += 1", "    return count"]),
+      } : {
+        type: "code",
+        level: 3,
+        title: "Kleine Funktion schreiben",
+        question: "Schreibe eine Python-Funktion count_even(xs), die die geraden Zahlen einer Liste zählt.",
+        answer: ["def count_even", "for", "% 2", "return"],
+        hint: "Gehe über xs, prüfe x % 2 == 0 und zähle Treffer.",
+        explanation: "Die Aufgabe prüft, ob du Schleifen, Bedingungen und Rückgabewert selbst anwenden kannst.",
+        solution: asCode(["def count_even(xs):", "    count = 0", "    for x in xs:", "        if x % 2 == 0:", "            count += 1", "    return count"]),
+      },
+    ];
+  }
+
+  const dataScience = areaSet.dataScience?.topics || {};
+  if (dataScience.sql) {
+    dataScience.sql.guidedTasks = [
+      ...(dataScience.sql.guidedTasks || []),
+      isEn ? {
+        type: "code",
+        level: 3,
+        title: "Write a SQL query",
+        question: "Write the core SQL query that returns customer_id and the number of orders per customer, but only for customers with more than two orders.",
+        answer: ["SELECT customer_id", "COUNT", "GROUP BY customer_id", "HAVING"],
+        hint: "Aggregate first with GROUP BY, then filter groups with HAVING.",
+        explanation: "Conditions on aggregate values belong in HAVING because WHERE runs before grouping.",
+        solution: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) > 2;",
+      } : {
+        type: "code",
+        level: 3,
+        title: "SQL-Abfrage schreiben",
+        question: "Schreibe den Kern einer SQL-Abfrage, die pro Kunde customer_id und Anzahl der Bestellungen liefert, aber nur Kunden mit mehr als zwei Bestellungen zeigt.",
+        answer: ["SELECT customer_id", "COUNT", "GROUP BY customer_id", "HAVING"],
+        hint: "Aggregiere mit GROUP BY und filtere Gruppen danach mit HAVING.",
+        explanation: "Bedingungen auf Aggregatwerte gehören in HAVING, weil WHERE vor der Gruppierung läuft.",
+        solution: "SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) > 2;",
+      },
+    ];
+  }
+
+  if (dataScience.normalformen) {
+    dataScience.normalformen.guidedTasks = [
+      ...(dataScience.normalformen.guidedTasks || []),
+      isEn ? {
+        type: "text",
+        level: 3,
+        title: "Decompose a relation",
+        question: "Relation Order(orderId, customerId, customerName) has orderId -> customerId and customerId -> customerName. Propose a 3NF decomposition.",
+        answer: ["order", "customer", "customerId"],
+        hint: "Move the transitive customer data into a separate customer relation.",
+        explanation: "customerName depends on customerId, not directly on the order as a fact about the order.",
+        solution: "Order(orderId, customerId) and Customer(customerId, customerName).",
+      } : {
+        type: "text",
+        level: 3,
+        title: "Relation zerlegen",
+        question: "Relation Bestellung(bestellId, kundenId, kundenName) hat bestellId -> kundenId und kundenId -> kundenName. Schlage eine 3NF-Zerlegung vor.",
+        answer: ["bestellung", "kunde", "kundenId"],
+        hint: "Lagere die transitiven Kundendaten in eine eigene Kundenrelation aus.",
+        explanation: "kundenName hängt von kundenId ab und nicht als direkte Eigenschaft von der Bestellung.",
+        solution: "Bestellung(bestellId, kundenId) und Kunde(kundenId, kundenName).",
+      },
+    ];
+  }
+
+  const basics = areaSet.basics?.topics || {};
+  if (basics.boolean) {
+    basics.boolean.guidedTasks = [
+      ...(basics.boolean.guidedTasks || []),
+      isEn ? {
+        type: "text",
+        level: 3,
+        title: "Build a truth-table row",
+        question: "Evaluate (A AND NOT B) for A=true and B=false and justify the result.",
+        answer: ["true", "not b", "and"],
+        hint: "First evaluate NOT B, then combine with A.",
+        explanation: "B=false makes NOT B=true. true AND true is true.",
+        solution: "NOT B = true, so A AND NOT B = true AND true = true.",
+      } : {
+        type: "text",
+        level: 3,
+        title: "Wahrheitstabellen-Zeile bilden",
+        question: "Werte (A UND NICHT B) für A=wahr und B=falsch aus und begründe das Ergebnis.",
+        answer: ["wahr", "nicht b", "und"],
+        hint: "Werte zuerst NICHT B aus und verknüpfe dann mit A.",
+        explanation: "B=falsch macht NICHT B=wahr. wahr UND wahr ergibt wahr.",
+        solution: "NICHT B = wahr, also A UND NICHT B = wahr UND wahr = wahr.",
+      },
+    ];
+  }
+
+  const information = areaSet.informationManagement?.topics || {};
+  if (information.processMining) {
+    information.processMining.guidedTasks = [
+      ...(information.processMining.guidedTasks || []),
+      isEn ? {
+        type: "text",
+        level: 3,
+        title: "Flatten an event log",
+        question: "Flatten an object-centric log by order. Which events should belong to order B1 if payment and shipment reference B1?",
+        answer: ["payment", "shipment", "B1"],
+        hint: "Keep all events connected to the selected order case.",
+        explanation: "Flattening by order uses the order as case and attaches related events to that case.",
+        solution: "The B1 case contains the order events plus payment and shipment events that reference B1.",
+      } : {
+        type: "text",
+        level: 3,
+        title: "Ereignislog flatten",
+        question: "Flattene ein objektzentriertes Log nach Bestellung. Welche Ereignisse gehören zum Case B1, wenn Zahlung und Versand auf B1 verweisen?",
+        answer: ["zahlung", "versand", "B1"],
+        hint: "Behalte alle Ereignisse, die mit dem ausgewählten Bestell-Case verbunden sind.",
+        explanation: "Flattening nach Bestellung nutzt die Bestellung als Case und hängt die verbundenen Ereignisse an diesen Case.",
+        solution: "Zum Case B1 gehören die Bestellereignisse sowie Zahlungs- und Versandereignisse, die auf B1 verweisen.",
+      },
+    ];
+  }
+}
 
 const masterTrainingConfigs = {
   "Divide and Conquer / Master-Theorem": {
@@ -4511,11 +4814,11 @@ function checkSubjectQuestion(areaKey) {
 
 function renderSubjectTaskInput(container, name, question) {
   container.innerHTML = "";
-  if (question.type === "text") {
+  if (question.type === "text" || question.type === "code") {
     container.innerHTML = `
-      <label class="text-answer-label">
-        <span>${uiText("shortAnswer")}</span>
-        <textarea name="${name}-text" rows="4" placeholder="${uiText("shortAnswerPlaceholder")}"></textarea>
+      <label class="text-answer-label${question.type === "code" ? " code-answer-label" : ""}">
+        <span>${question.type === "code" ? (isEnglish() ? "Code / solution sketch" : "Code / Lösungsskizze") : uiText("shortAnswer")}</span>
+        <textarea name="${name}-text" rows="${question.type === "code" ? "7" : "4"}" placeholder="${question.type === "code" ? (isEnglish() ? "Write the relevant code fragment here." : "Schreibe hier den relevanten Codeausschnitt.") : uiText("shortAnswerPlaceholder")}"></textarea>
       </label>
     `;
     return;
@@ -4530,7 +4833,7 @@ function renderSubjectTaskInput(container, name, question) {
 }
 
 function getSubjectAnswer(name, question) {
-  if (question.type === "text") {
+  if (question.type === "text" || question.type === "code") {
     return document.querySelector(`[name="${name}-text"]`)?.value.trim() || "";
   }
   const selected = [...document.querySelectorAll(`input[name="${name}-choice"]:checked`)].map((input) => input.value);
@@ -4547,7 +4850,7 @@ function evaluateSubjectAnswer(answer, question) {
     const actual = [...answer].sort();
     return { correct: expected.length === actual.length && expected.every((item, index) => item === actual[index]) };
   }
-  if (question.type === "text") {
+  if (question.type === "text" || question.type === "code") {
     const normalized = normalizeFreeText(answer);
     const terms = Array.isArray(question.answer) ? question.answer : [question.answer];
     const hits = terms.filter((term) => normalized.includes(normalizeFreeText(term)));
@@ -4572,8 +4875,12 @@ function subjectMistakeFeedback(answer, question) {
       uiText("multiAdvice"),
     ].filter(Boolean).join(" ");
   }
-  if (question.type === "text") {
-    return uiText("textAdvice");
+  if (question.type === "text" || question.type === "code") {
+    return question.type === "code"
+      ? (isEnglish()
+        ? "Your code sketch does not yet contain enough expected building blocks. Compare it with the model solution and check syntax, state changes and return value."
+        : "Deine Code-Skizze enthält noch nicht genug erwartete Bausteine. Vergleiche sie mit der Musterlösung und prüfe Syntax, Zustandsänderung und Rückgabewert.")
+      : uiText("textAdvice");
   }
   return question.commonMistakes?.[answer] || `${uiText("correctWouldBe")}: ${question.answer}. ${uiText("ruleAdvice")}`;
 }
@@ -4601,6 +4908,7 @@ function subjectTaskTypeLabel(type) {
     multi: "Multiple Choice",
     truefalse: isEnglish() ? "True/False" : "Wahr/Falsch",
     text: isEnglish() ? "Short answer" : "Kurzantwort",
+    code: isEnglish() ? "Code task" : "Code-Aufgabe",
   }[type] || (isEnglish() ? "Task" : "Aufgabe");
 }
 
@@ -6238,6 +6546,9 @@ function setDataStructureTopic(topic) {
     el.dataStructureSectionTitle.textContent =
       topic === "Training" ? algorithmText("Datenstruktur-Training") : `${algorithmText(topic)}-${algorithmText("Training")}`;
     createDataStructureQuestion();
+  } else if (showAVL) {
+    createAVLQuestion();
+    resetSandbox(true);
   } else if (showStackQueue) {
     renderStackQueue();
   } else if (showGraph) {
