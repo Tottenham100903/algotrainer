@@ -27,7 +27,7 @@ import {
   initializeLanguage,
   languageNames,
   t,
-} from "./js/i18n.js?v=20260703-basics-wording";
+} from "./js/i18n.js?v=20260704-full-en-v2";
 
 function asCode(lines) {
   return lines.join("\n");
@@ -2901,6 +2901,55 @@ const graphAlgorithmInfo = {
   },
 };
 
+const graphAlgorithmInfoEnglish = {
+  bfs: {
+    title: "Breadth-first search",
+    text: "Goal: traverse a graph level by level and find shortest paths by edge count in unweighted graphs. Core idea: a queue processes nearby vertices first.",
+  },
+  dfs: {
+    title: "Depth-first search",
+    text: "Goal: follow paths completely, check connectivity or detect cycles. Core idea: use a stack or recursion to go as deep as possible and then return.",
+  },
+  dijkstra: {
+    title: "Dijkstra",
+    text: "Goal: determine shortest paths from a start vertex with nonnegative edge weights. Core idea: always settle the open vertex with the smallest known distance.",
+  },
+  backtracking: {
+    title: "Backtracking",
+    text: "Goal: find a valid path or solution through systematic trial. Core idea: make a decision, backtrack at a dead end and test the next branch.",
+  },
+  floyd: {
+    title: "Floyd-Warshall",
+    text: "Goal: calculate shortest paths between every pair of vertices. Core idea: gradually allow each vertex as an intermediate vertex and improve the distance matrix.",
+  },
+};
+
+const graphAlgorithmNotesEnglish = new Map([
+  ["Start bei A. Eine Queue speichert die als Nächstes zu besuchenden Knoten.", "Start at A. A queue stores the vertices to visit next."],
+  ["A ist besucht. B und C werden in die Queue gelegt.", "A has been visited. B and C are added to the queue."],
+  ["B ist besucht. D und E kommen hinter C in die Queue.", "B has been visited. D and E are added to the queue after C."],
+  ["C ist besucht. Bereits vorgemerkte Knoten werden nicht doppelt eingereiht.", "C has been visited. Vertices already scheduled are not added twice."],
+  ["BFS ist fertig: A, B, C, D, E, F.", "BFS is complete: A, B, C, D, E, F."],
+  ["Start bei A. DFS folgt einem Pfad so tief wie möglich.", "Start at A. DFS follows one path as deeply as possible."],
+  ["Von A geht es zuerst zu B.", "From A, the search first moves to B."],
+  ["Von B folgt DFS dem unbesuchten Nachbarn D.", "From B, DFS follows the unvisited neighbor D."],
+  ["F ist erreicht. Danach geht DFS zurück zum letzten Knoten mit offenem Nachbarn.", "F has been reached. DFS then returns to the last vertex with an unvisited neighbor."],
+  ["DFS ist fertig: A, B, D, F, E, C.", "DFS is complete: A, B, D, F, E, C."],
+  ["Start: Distanz A = 0, alle anderen Distanzen sind unendlich.", "Start: distance A = 0; all other distances are infinite."],
+  ["Nach A: B = 4 und C = 2. C hat die kleinste vorläufige Distanz.", "After A: B = 4 and C = 2. C has the smallest tentative distance."],
+  ["Über C verbessert sich E auf 3. E wird als Nächstes fest gewählt.", "Via C, E improves to 3. E is settled next."],
+  ["Über E ergeben sich weitere Kandidaten; B bleibt mit Distanz 4 der nächste Knoten.", "E provides more candidates; B remains the next vertex with distance 4."],
+  ["Alle kürzesten Distanzen ab A sind bestimmt.", "All shortest distances from A have been determined."],
+  ["Gesucht ist ein Weg von A nach F. Wir probieren den ersten möglichen Zweig.", "We are looking for a path from A to F and try the first possible branch."],
+  ["A → B wird gewählt.", "A → B is selected."],
+  ["B → D wird ausprobiert.", "B → D is tried."],
+  ["D → F erreicht das Ziel. Der gefundene Weg lautet A → B → D → F.", "D → F reaches the goal. The path found is A → B → D → F."],
+  ["Der Matrixausschnitt A bis D startet mit direkten Kantengewichten.", "The matrix section from A to D starts with the direct edge weights."],
+  ["A wird als Zwischenknoten zugelassen. Prüfe für jedes Paar den Weg über A.", "A is allowed as an intermediate vertex. Check the path via A for every pair."],
+  ["B verbessert unter anderem den Weg von A nach D.", "Among other paths, B improves the path from A to D."],
+  ["Nach allen Zwischenknoten enthält die Matrix die kürzesten Distanzen aller Paare.", "After all intermediate vertices, the matrix contains the shortest distances for every pair."],
+]);
+
 const globalSearchCatalog = [
   { title: "Startseite", path: ["InfoTrain"], view: "home", icon: "⌂", keywords: "home übersicht" },
   { title: "Lernpfad", path: ["InfoTrain"], view: "learning-path", icon: "↗", keywords: "fortschritt krugo zug" },
@@ -2986,6 +3035,7 @@ const state = {
   learningPoints: 0,
   learningUnlocked: 1,
   basicsLessons: null,
+  basicsLessonsLanguage: null,
   basicsLessonIndex: 0,
   krugoWelcomeShown: false,
 };
@@ -3220,6 +3270,7 @@ const el = {
   sandboxRedo: document.getElementById("sandbox-redo"),
 };
 
+function initializeApp() {
 initializeTheme();
 initializeLearningProgress();
 updateLanguageMenu(initializeLanguage());
@@ -3277,6 +3328,11 @@ window.addEventListener("infotrain:languagechange", (event) => {
   el.learningRouteTitle.textContent = translatedLearningTopic(state.learningTopic);
   renderLearningPathState();
   syncLocalizedContent();
+  renderGlobalSearchResults(el.globalSearchInput.value);
+  if (!el.basicsStory.classList.contains("is-hidden")) {
+    state.basicsLessons = null;
+    openBasicsStory();
+  }
 });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
@@ -3446,7 +3502,14 @@ resetSandbox(true);
 syncMasterHelpVisibility();
 syncAVLPreviewVisibility();
 syncLocalizedContent();
-setActiveView("home");
+const requestedView = new URLSearchParams(window.location.search).get("view");
+const initialView = [
+  "home", "learning-path", "algorithmics", "basics", "programming",
+  "data-science", "information-management", "runtime", "master",
+  "sorting", "search", "avl",
+].includes(requestedView) ? requestedView : "home";
+setActiveView(initialView);
+}
 
 function normalizeSearchText(value) {
   return value
@@ -3480,7 +3543,9 @@ function renderGlobalSearchResults(query) {
       }
       const haystack = normalizeSearchText([
         item.title,
+        localizedStaticText(item.title),
         item.path.join(" "),
+        item.path.map(localizedStaticText).join(" "),
         item.keywords,
       ].join(" "));
       return terms.every((term) => haystack.includes(term));
@@ -3491,7 +3556,7 @@ function renderGlobalSearchResults(query) {
   if (!matches.length) {
     const empty = document.createElement("p");
     empty.className = "global-search-empty";
-    empty.textContent = "Keine passenden Inhalte gefunden.";
+    empty.textContent = localizedStaticText("Keine passenden Inhalte gefunden.");
     el.globalSearchResults.append(empty);
     return;
   }
@@ -3509,9 +3574,9 @@ function renderGlobalSearchResults(query) {
     const text = document.createElement("span");
     text.className = "global-search-result-text";
     const title = document.createElement("strong");
-    title.textContent = item.title;
+    title.textContent = localizedStaticText(item.title);
     const chain = document.createElement("small");
-    chain.textContent = [...item.path, item.title].join(" › ");
+    chain.textContent = [...item.path, item.title].map(localizedStaticText).join(" › ");
     text.append(title, chain);
 
     const arrow = document.createElement("span");
@@ -3533,6 +3598,13 @@ function navigateToSearchResult(item) {
     setDataStructureSection("structures");
     setDataStructureTopic(item.topic);
   }
+}
+
+function localizedStaticText(text) {
+  if (!isEnglish()) {
+    return text;
+  }
+  return staticEnglishText.get(text) || algorithmEnglishText.get(text) || text;
 }
 
 function setActiveView(viewName) {
@@ -3717,15 +3789,22 @@ function boardInfoTrain() {
 
 async function openBasicsStory() {
   el.basicsStory.classList.remove("is-hidden");
-  if (!state.basicsLessons) {
+  const lessonLanguage = isEnglish() ? "en" : "de";
+  if (!state.basicsLessons || state.basicsLessonsLanguage !== lessonLanguage) {
     try {
-      const response = await fetch("content/grundlagen-lernreise.md?v=20260703");
+      const lessonFile = isEnglish()
+        ? "content/grundlagen-lernreise-en.md?v=20260704"
+        : "content/grundlagen-lernreise.md?v=20260703";
+      const response = await fetch(lessonFile);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
       state.basicsLessons = parseBasicsJourney(await response.text());
+      state.basicsLessonsLanguage = lessonLanguage;
     } catch {
-      el.basicsStoryContent.textContent = "Die Grundlagen-Lektionen konnten nicht geladen werden.";
+      el.basicsStoryContent.textContent = isEnglish()
+        ? "The basics lessons could not be loaded."
+        : "Die Grundlagen-Lektionen konnten nicht geladen werden.";
       return;
     }
   }
@@ -3753,13 +3832,15 @@ function renderBasicsStory() {
   if (!lesson) {
     return;
   }
-  el.basicsStoryProgress.textContent = `Station ${state.basicsLessonIndex + 1} von ${state.basicsLessons.length}`;
+  el.basicsStoryProgress.textContent = isEnglish()
+    ? `Station ${state.basicsLessonIndex + 1} of ${state.basicsLessons.length}`
+    : `Station ${state.basicsLessonIndex + 1} von ${state.basicsLessons.length}`;
   el.basicsStoryTitle.textContent = lesson.title.replace(/^Station \d+:\s*/, "");
   el.basicsStoryContent.replaceChildren();
 
   appendStorySection("Krugo", lesson.sections.Krugo);
-  appendStorySection("InfoTrain-Beispiel", lesson.sections["InfoTrain-Beispiel"]);
-  appendStorySection("Weiterfahrt", lesson.sections.Übergang || lesson.sections.Abschluss);
+  appendStorySection(isEnglish() ? "InfoTrain example" : "InfoTrain-Beispiel", lesson.sections["InfoTrain-Beispiel"]);
+  appendStorySection(isEnglish() ? "Next stop" : "Weiterfahrt", lesson.sections.Übergang || lesson.sections.Abschluss);
 
   el.basicsStoryPrev.disabled = state.basicsLessonIndex === 0;
   el.basicsStoryNext.disabled = state.basicsLessonIndex === state.basicsLessons.length - 1;
@@ -3924,6 +4005,7 @@ function closeCheckpointTask() {
 }
 
 const staticEnglishText = new Map([
+  ["Deutsch", "German"],
   ["Zurück zur Startseite", "Back to home"],
   ["Zurück zu Algorithmik", "Back to Algorithms"],
   ["Fachbereich", "Subject area"],
@@ -4031,7 +4113,120 @@ const staticEnglishText = new Map([
   ["Wörterbücher", "Dictionaries"],
   ["Graphen", "Graphs"],
   ["Stacks & Queues", "Stacks & Queues"],
+  ["Neu", "New"],
+  ["Startseite", "Home"],
+  ["Lernpfad", "Learning path"],
+  ["Fachbereiche", "Subject areas"],
+  ["Frei", "Open"],
+  ["Gesperrt", "Locked"],
+  ["Lektion 2", "Lesson 2"],
+  ["Lektion 3", "Lesson 3"],
+  ["Lektion 4", "Lesson 4"],
+  ["Lektion 5", "Lesson 5"],
+  ["Checkpoint 1", "Checkpoint 1"],
+  ["Station 1 von 10", "Station 1 of 10"],
+  ["Was ist Informatik?", "What is computer science?"],
+  ["Krugo bereitet deine erste Lektion vor …", "Krugo is preparing your first lesson…"],
+  ["← Vorherige Station", "← Previous station"],
+  ["Nächste Station →", "Next station →"],
+  ["Fokussiere dich nur auf Rekursion und asymptotische Komplexität.", "Focus only on recursion and asymptotic complexity."],
+  ["Trainiere Rekurrenzen, unterscheide passende Verfahren und prüfe Fälle gezielt mit Hilfestellung.", "Practice recurrences, distinguish suitable methods and check cases with targeted guidance."],
+  ["Erklärung", "Explanation"],
+  ["Rekurrenzen systematisch lösen", "Solve recurrences systematically"],
+  ["gleich große Teilprobleme", "equal-sized subproblems"],
+  ["ein Teilproblem entfalten", "expand one subproblem"],
+  ["Schranke beweisen", "prove a bound"],
+  ["Subtract", "Subtract"],
+  ["Entfalte die Ebenen als Summe", "Expand the levels as a sum"],
+  ["Setze eine vermutete Schranke ein", "Substitute a conjectured bound"],
+  ["Ziel", "Goal"],
+  ["Begründete O-Laufzeit ableiten", "Derive a justified Big-O runtime"],
+  ["Wähle das Verfahren nach der Struktur der Rekurrenz: gleich große Teilprobleme sprechen für das Master-Theorem, ein einzelnes kleineres Teilproblem für Subtract and Conquer, schwer passende oder zu beweisende Schranken für Substitution.", "Choose the method based on the recurrence structure: equal-sized subproblems suggest the Master Theorem, one smaller subproblem suggests Subtract and Conquer, and awkward or proof-oriented bounds suggest substitution."],
+  ["Übungsbereich", "Practice area"],
+  ["3 Dominanzfälle", "3 dominance cases"],
+  ["Summen und Ebenen", "Sums and levels"],
+  ["Schranke einsetzen", "Substitute the bound"],
+  ["Induktionsidee", "Induction idea"],
+  ["Master-Theorem passt zu mehreren gleich großen Teilproblemen. Subtract and Conquer passt zu einem Teilproblem. Substitution nutzt du, wenn du eine Schranke gezielt beweisen willst.", "The Master Theorem fits several equal-sized subproblems. Subtract and Conquer fits one subproblem. Use substitution when you want to prove a bound directly."],
+  ["Bringe Divide-and-Conquer-Rekurrenzen in die Form:", "Write divide-and-conquer recurrences in the form:"],
+  ["Rate eine passende Schranke, setze sie für kleinere Eingaben ein und wähle die Konstante so, dass die Ungleichung aufgeht.", "Guess a suitable bound, substitute it for smaller inputs and choose the constant so the inequality holds."],
+  ["Eigenes Beispiel lösen", "Solve your own example"],
+  ["Potenzen:", "Powers:"],
+  ["Brüche:", "Fractions:"],
+  ["Form:", "Form:"],
+  ["Schrittweise lösen", "Solve step by step"],
+  ["Wähle oben ein Beispiel oder schreibe eine eigene Rekurrenz mit ^ für Hochzahlen und / für Brüche.", "Choose an example above or enter your own recurrence using ^ for powers and / for fractions."],
+  ["Beobachte typische Sortieralgorithmen Schritt für Schritt und trainiere ihre Laufzeiten.", "Observe common sorting algorithms step by step and practice their runtimes."],
+  ["Topologisches Sortieren", "Topological sorting"],
+  ["Best Case", "Best case"],
+  ["Average Case", "Average case"],
+  ["Worst Case", "Worst case"],
+  ["Vergleiche Suchstrategien, Voraussetzungen und Laufzeiten Schritt für Schritt.", "Compare search strategies, requirements and runtimes step by step."],
+  ["Lineare Suche", "Linear search"],
+  ["Binäre Suche", "Binary search"],
+  ["Interpolationssuche", "Interpolation search"],
+  ["Hash-basierte Suche", "Hash-based search"],
+  ["Wähle einen Bereich und trainiere Listen, Hashmaps, Graphen, Binär-, Splay- und AVL-Bäume gezielt.", "Choose an area and practice lists, hash maps, graphs, binary, splay and AVL trees."],
+  ["Übe typische Eigenschaften und Operationen bei Listen, Wörterbüchern, Hashmaps, Heaps, Stacks und Queues.", "Practice common properties and operations of lists, dictionaries, hash maps, heaps, stacks and queues."],
+  ["Binärbaum", "Binary tree"],
+  ["Inorder", "Inorder"],
+  ["Preorder", "Preorder"],
+  ["Postorder", "Postorder"],
+  ["LIFO und FIFO", "LIFO and FIFO"],
+  ["Stacks & Queues visualisieren", "Visualize stacks & queues"],
+  ["Stack", "Stack"],
+  ["Queue", "Queue"],
+  ["Push", "Push"],
+  ["Pop", "Pop"],
+  ["Breitensuche (BFS)", "Breadth-first search (BFS)"],
+  ["Tiefensuche (DFS)", "Depth-first search (DFS)"],
+  ["Beim Einfügen steigt ein Wert nach oben, beim Entfernen der Wurzel sinkt der Ersatzwert nach unten.", "When inserting, a value rises upward; when removing the root, the replacement value sinks downward."],
+  ["Verfolge die Operation. Welche Rotation wird benötigt, damit der Baum wieder AVL-gültig ist?", "Follow the operation. Which rotation is required to make the tree AVL-valid again?"],
+  ["Inhalte durchsuchen", "Search content"],
+  ["Vorschläge", "Suggestions"],
+  ["Menü öffnen", "Open menu"],
+  ["Darkmode umschalten", "Toggle dark mode"],
+  ["Keine passenden Inhalte gefunden.", "No matching content found."],
+  ["Rekurrenz eingeben und Schritte prüfen", "Enter a recurrence and check the steps"],
+  ["T(n) ≤ vermutete Schranke", "T(n) ≤ conjectured bound"],
+  ["d mit log", "Compare d with log"],
+  ["Wert", "Value"],
+  ["T(n - k) oder T(", "T(n - k) or T("],
+  ["Entfalte ein einzelnes Teilproblem: T(n - 1) führt meist zu Summen, T(", "Expand one subproblem: T(n - 1) usually leads to sums, while T("],
+  [") zu logarithmisch vielen Ebenen oder geometrischen Summen.", ") leads to logarithmically many levels or geometric sums."],
+  ["Rekurrenz eingeben und Schritte prüfen", "Enter a recurrence and check the steps"],
+  ["Tippe auf Hilfe, um die Vorschau mit Höhe und Balancefaktor einzublenden.", "Tap Help to show the preview with height and balance factor."],
 ]);
+
+const staticEnglishAttributes = new Map([
+  ["Fachbereiche auswählen", "Choose subject areas"],
+  ["Algorithmik-Module auswählen", "Choose algorithm modules"],
+  ["Grundlagen-Themen auswählen", "Choose basics topics"],
+  ["Grundlagen-Lernmodus auswählen", "Choose basics learning mode"],
+  ["Programmier-Themen auswählen", "Choose programming topics"],
+  ["Programmier-Lernmodus auswählen", "Choose programming learning mode"],
+  ["Data-Science-Themen auswählen", "Choose data science topics"],
+  ["Data-Science-Lernmodus auswählen", "Choose data science learning mode"],
+  ["Informationsmanagement-Themen auswählen", "Choose information management topics"],
+  ["Informationsmanagement-Lernmodus auswählen", "Choose information management learning mode"],
+  ["Bereiche des Master-Theorems", "Master Theorem sections"],
+  ["Beispiele für die Eingabe", "Input examples"],
+  ["Bereiche der Sortierverfahren", "Sorting algorithm sections"],
+  ["Sortiervisualisierung", "Sorting visualization"],
+  ["Suchvisualisierung", "Search visualization"],
+  ["Datenstruktur-Modus", "Data structure mode"],
+  ["Datenstruktur auswählen", "Choose a data structure"],
+  ["Beispielgraph mit sechs Knoten", "Example graph with six vertices"],
+  ["InfoTrain durchsuchen", "Search InfoTrain"],
+  ["Einstellungen", "Settings"],
+  ["Lektion schließen", "Close lesson"],
+  ["z. B. 45", "e.g. 45"],
+  ["z. B. A", "e.g. A"],
+  ["z. B. 17", "e.g. 17"],
+  ["z. B. 42", "e.g. 42"],
+]);
+
+const staticOriginalTextNodes = new WeakMap();
 
 function syncLocalizedContent() {
   ["basics", "programming", "dataScience", "informationManagement"].forEach(renderSubjectLearningArea);
@@ -4049,10 +4244,10 @@ function syncAlgorithmLocalizedContent() {
     }
   }
   if (state.sortSteps?.length) {
-    renderSortStep();
+    rebuildSortSteps();
   }
   if (state.searchSteps?.length) {
-    renderSearchStep();
+    rebuildSearchSteps();
   }
   if (el.avlView && !el.avlView.classList.contains("is-hidden")) {
     setDataStructureTopic(state.dataStructureTopic);
@@ -4060,21 +4255,35 @@ function syncAlgorithmLocalizedContent() {
 }
 
 function applyStaticTextLanguage() {
-  document.querySelectorAll("button, h1, h2, p, label, option, summary, span, strong, small").forEach((node) => {
-    if (node.children.length > 0) {
+  document.querySelectorAll("button, h1, h2, h3, p, label, option, summary, span, strong, small, .tree-preview-note").forEach((node) => {
+    if (node.hasAttribute("data-i18n")) {
       return;
     }
-    if (!isEnglish()) {
-      node.dataset.deText = node.textContent;
-      return;
-    }
-    if (!node.dataset.deText) {
-      node.dataset.deText = node.textContent;
-    }
-    const original = node.dataset.deText.trim();
-    if (isEnglish() && staticEnglishText.has(original)) {
-      node.textContent = preserveOuterWhitespace(node.dataset.deText, staticEnglishText.get(original));
-    }
+    [...node.childNodes]
+      .filter((child) => child.nodeType === Node.TEXT_NODE && child.textContent.trim())
+      .forEach((textNode) => {
+        if (!staticOriginalTextNodes.has(textNode)) {
+          staticOriginalTextNodes.set(textNode, textNode.textContent);
+        }
+        const storedText = staticOriginalTextNodes.get(textNode);
+        const original = storedText.trim();
+        const replacement = isEnglish() ? (staticEnglishText.get(original) || original) : original;
+        textNode.textContent = preserveOuterWhitespace(storedText, replacement);
+      });
+  });
+
+  document.querySelectorAll("[placeholder], [aria-label], [title]").forEach((node) => {
+    ["placeholder", "aria-label", "title"].forEach((attribute) => {
+      if (!node.hasAttribute(attribute)) {
+        return;
+      }
+      const dataKey = `de${attribute.replace(/(^|-)([a-z])/g, (_, __, letter) => letter.toUpperCase())}`;
+      if (!node.dataset[dataKey]) {
+        node.dataset[dataKey] = node.getAttribute(attribute);
+      }
+      const original = node.dataset[dataKey];
+      node.setAttribute(attribute, isEnglish() ? (staticEnglishAttributes.get(original) || original) : original);
+    });
   });
 }
 
@@ -4420,11 +4629,30 @@ function uiText(key) {
 }
 
 const algorithmEnglishText = new Map([
+  ['T(n) = T(n - k) + g(n) oder T(n) = T(n / b) + g(n)', 'T(n) = T(n - k) + g(n) or T(n) = T(n / b) + g(n)'],
+  ['Nutze das Master-Theorem, wenn die Rekurrenz aus a gleich großen Teilproblemen der Größe n/b und einer polynomialen Zusatzarbeit c · n<sup>d</sup> besteht.', 'Use the Master Theorem when the recurrence consists of a equal-sized subproblems of size n/b and polynomial additional work c · n<sup>d</sup>.'],
+  ['Jedes Beispiel wird einzeln erklärt. Wechsel oben das Beispiel, wenn du eine andere Rekurrenz sehen willst.', 'Each example is explained separately. Switch the example above to view a different recurrence.'],
+  ['Aus aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup> lesen wir a = 8, b = 2, c = 3 und d = 2 ab.', 'From aT(<span class="frac"><span>n</span><span>b</span></span>) + c · n<sup>d</sup>, we read a = 8, b = 2, c = 3 and d = 2.'],
+  ['Entfalte ein einzelnes Teilproblem: T(n - 1) führt meist zu Summen, T(<span class="frac"><span>n</span><span>b</span></span>) zu logarithmisch vielen Ebenen oder geometrischen Summen.', 'Expand a single subproblem: T(n - 1) usually leads to sums, while T(<span class="frac"><span>n</span><span>b</span></span>) leads to logarithmically many levels or geometric sums.'],
+  ['Start: links entsteht nach und nach der sortierte Bereich.', 'Start: the sorted section gradually grows on the left.'],
+  ['Links stehen kleinere, rechts größere Werte. Suchen, Einfügen und Löschen kosten im Mittel O(log n), bei starker Schieflage jedoch O(n).', 'Smaller values are on the left and larger values on the right. Search, insertion and deletion take O(log n) on average, but O(n) when the tree is heavily skewed.'],
+  ['Ziel: Einen Graphen Ebene für Ebene durchsuchen und in ungewichteten Graphen kürzeste Wege nach Anzahl der Kanten finden. Grundidee: Eine Queue verarbeitet zuerst alle nahen Knoten.', 'Goal: traverse a graph level by level and find shortest paths by edge count in unweighted graphs. Core idea: a queue processes nearby vertices first.'],
+  ['Start bei A. Eine Queue speichert die als Nächstes zu besuchenden Knoten.', 'Start at A. A queue stores the vertices to visit next.'],
+  ['Die Queue arbeitet nach FIFO. Darum werden erst alle direkt erreichbaren Nachbarn verarbeitet, bevor die Suche eine Ebene tiefer geht. In ungewichteten Graphen findet BFS so Wege mit möglichst wenigen Kanten.', 'The queue works by FIFO, so all directly reachable neighbors are processed before the search moves one level deeper. In unweighted graphs, BFS therefore finds paths with the fewest edges.'],
+  ['Noch kein Knoten ist abgeschlossen; dies ist der Ausgangszustand.', 'No vertex has been completed yet; this is the initial state.'],
+  ['A ist aktiv.', 'A is active.'],
+  ['Tippe auf Hilfe, um die Vorschau mit Höhe und Balancefaktor einzublenden.', 'Tap Help to show the preview with height and balance factor.'],
+  ["Leite zuerst die Laufzeit ab. Ohne Laufzeitentscheidung kann die Herleitung noch nicht vollständig geprüft werden.", "Derive the runtime first. Without a runtime decision, the derivation cannot yet be checked completely."],
+  ["Fülle zuerst alle Parameter und den Vergleichsexponenten aus. Diese Werte bestimmen, welcher Master-Fall gilt.", "Fill in all parameters and the comparison exponent first. These values determine which Master case applies."],
+  ["Bestimme zuerst Reduktion, Tiefe und entstehende Summe. Beim Entfalten hängt die Laufzeit genau von diesen drei Beobachtungen ab.", "Determine the reduction, depth and resulting sum first. During expansion, the runtime depends on exactly these three observations."],
+  ["Fülle zuerst Vermutung, Einsetzen und Bedingung aus. Bei Substitution ist die Schranke erst bewiesen, wenn die eingesetzte Ungleichung stabil bleibt.", "Fill in the conjecture, substitution and condition first. With substitution, the bound is proved only when the resulting inequality remains stable."],
   ["Code-Schnipsel analysieren", "Analyze code snippet"],
   ["Klausuraufgabe", "Exam task"],
   ["Musterlösung", "Model solution"],
   ["Grundidee", "Core idea"],
   ["Beispiel auswählen", "Choose example"],
+  ["Beispiel", "Example"],
+  ["Ergebnis", "Result"],
   ["Hilfestellung ausblenden", "Hide help"],
   ["Hilfestellung anzeigen", "Show help"],
   ["Schrittweise Lösung", "Step-by-step solution"],
@@ -4913,7 +5141,7 @@ function subjectTaskTypeLabel(type) {
 }
 
 function renderSubjectVisualization(refs, visualization = {}) {
-  refs.visualTitle.textContent = visualization.title || "Denkmodell";
+  refs.visualTitle.textContent = visualization.title || (isEnglish() ? "Mental model" : "Denkmodell");
   refs.visual.innerHTML = subjectVisualizationHtml(visualization);
 }
 
@@ -4938,8 +5166,8 @@ function subjectVisualizationHtml(visualization = {}) {
   if (visualization.type === "reference") {
     return `
       <div class="reference-visual">
-        <div><strong>Vorher</strong>${visualization.before.map((item) => `<span>${item}</span>`).join("")}</div>
-        <div><strong>Nachher</strong>${visualization.after.map((item) => `<span>${item}</span>`).join("")}</div>
+        <div><strong>${isEnglish() ? "Before" : "Vorher"}</strong>${visualization.before.map((item) => `<span>${item}</span>`).join("")}</div>
+        <div><strong>${isEnglish() ? "After" : "Nachher"}</strong>${visualization.after.map((item) => `<span>${item}</span>`).join("")}</div>
       </div>
     `;
   }
@@ -4967,7 +5195,9 @@ function subjectVisualizationHtml(visualization = {}) {
   if (visualization.type === "closure") {
     return `<ol class="subject-step-list">${visualization.steps.map((step) => `<li><span>${formatInlineMathLabel(step)}</span></li>`).join("")}</ol>`;
   }
-  return `<p class="section-copy">Nutze die Erklärung und die Aufgabe als gedankliche Visualisierung. Eine spezifische Grafik wird für dieses Thema später ergänzt.</p>`;
+  return `<p class="section-copy">${isEnglish()
+    ? "Use the explanation and task as a mental visualization. A dedicated graphic will be added for this topic later."
+    : "Nutze die Erklärung und die Aufgabe als gedankliche Visualisierung. Eine spezifische Grafik wird für dieses Thema später ergänzt."}</p>`;
 }
 
 function createMasterQuestion() {
@@ -5094,7 +5324,7 @@ function renderCustomRecurrenceResult(title, steps, isError) {
   el.customRecurrenceSolution.innerHTML = `
     <p class="tree-label">${algorithmText(title)}</p>
     <ol>
-      ${steps.map((step) => `<li>${formatInlineMathLabel(step)}</li>`).join("")}
+      ${steps.map((step) => `<li>${formatInlineMathLabel(algorithmHtml(step))}</li>`).join("")}
     </ol>
   `;
   el.customRecurrenceSolution.classList.remove("is-hidden");
@@ -5142,13 +5372,19 @@ function solveMasterRecurrence(input) {
       : "Die Zusatzarbeit dominiert, weil c · n^d stärker wächst als die rekursive Verzweigung.";
 
   return {
-    title: "Schrittweise Lösung",
+    title: localizedAlgorithmText("Schrittweise Lösung", "Step-by-step solution"),
     steps: [
-      `Form erkennen: T(n)=aT(n/b)+c*n^d mit a=${a}, b=${b}, c=${work.c}, d=${work.d}.`,
-      `Vergleichsexponent berechnen: log_${b}(${a}) = ${prettyP}.`,
-      `Vergleichen: ${comparison}.`,
-      `${reason}`,
-      `Ergebnis: T(n) = ${result}.`,
+      localizedAlgorithmText(
+        `Form erkennen: T(n)=aT(n/b)+c*n^d mit a=${a}, b=${b}, c=${work.c}, d=${work.d}.`,
+        `Identify the form: T(n)=aT(n/b)+c*n^d with a=${a}, b=${b}, c=${work.c}, d=${work.d}.`,
+      ),
+      localizedAlgorithmText(
+        `Vergleichsexponent berechnen: log_${b}(${a}) = ${prettyP}.`,
+        `Calculate the comparison exponent: log_${b}(${a}) = ${prettyP}.`,
+      ),
+      localizedAlgorithmText(`Vergleichen: ${comparison}.`, `Compare: ${comparison}.`),
+      algorithmText(reason),
+      localizedAlgorithmText(`Ergebnis: T(n) = ${result}.`, `Result: T(n) = ${result}.`),
     ],
   };
 }
@@ -5183,15 +5419,30 @@ function solveSubtractRecurrence(input) {
       ? "1 + 1 + ... + 1"
       : `1^${work.power} + 2^${work.power} + ... + n^${work.power}`;
     return {
-      title: "Schrittweise Lösung",
+      title: localizedAlgorithmText("Schrittweise Lösung", "Step-by-step solution"),
       steps: [
-        `Reduktion erkennen: n wird pro Schritt um ${k} kleiner.`,
-        `Rekursionstiefe: etwa n/${k}, also O(n) Ebenen.`,
-        `Entfalten: Es entsteht die Summe ${sum}.`,
+        localizedAlgorithmText(
+          `Reduktion erkennen: n wird pro Schritt um ${k} kleiner.`,
+          `Identify the reduction: n decreases by ${k} per step.`,
+        ),
+        localizedAlgorithmText(
+          `Rekursionstiefe: etwa n/${k}, also O(n) Ebenen.`,
+          `Recursion depth: approximately n/${k}, hence O(n) levels.`,
+        ),
+        localizedAlgorithmText(
+          `Entfalten: Es entsteht die Summe ${sum}.`,
+          `Expand the recurrence: this produces the sum ${sum}.`,
+        ),
         work.kind === "constant"
-          ? "Konstante Arbeit pro Ebene über linear viele Ebenen ergibt O(n)."
-          : `Die Potenzsumme bis n hat Ordnung O(n^${work.power + 1}).`,
-        `Ergebnis: T(n) = ${result}.`,
+          ? localizedAlgorithmText(
+            "Konstante Arbeit pro Ebene über linear viele Ebenen ergibt O(n).",
+            "Constant work per level over linearly many levels gives O(n).",
+          )
+          : localizedAlgorithmText(
+            `Die Potenzsumme bis n hat Ordnung O(n^${work.power + 1}).`,
+            `The power sum up to n has order O(n^${work.power + 1}).`,
+          ),
+        localizedAlgorithmText(`Ergebnis: T(n) = ${result}.`, `Result: T(n) = ${result}.`),
       ],
     };
   }
@@ -5205,17 +5456,35 @@ function solveSubtractRecurrence(input) {
     }
     const result = work.kind === "constant" ? "O(log n)" : orderForPower(work.power);
     return {
-      title: "Schrittweise Lösung",
+      title: localizedAlgorithmText("Schrittweise Lösung", "Step-by-step solution"),
       steps: [
-        `Reduktion erkennen: n wird pro Schritt durch ${b} geteilt.`,
-        "Rekursionstiefe: Nach O(log n) Ebenen ist die Eingabe konstant klein.",
+        localizedAlgorithmText(
+          `Reduktion erkennen: n wird pro Schritt durch ${b} geteilt.`,
+          `Identify the reduction: n is divided by ${b} per step.`,
+        ),
+        localizedAlgorithmText(
+          "Rekursionstiefe: Nach O(log n) Ebenen ist die Eingabe konstant klein.",
+          "Recursion depth: after O(log n) levels, the input has constant size.",
+        ),
         work.kind === "constant"
-          ? "Auf jeder Ebene fällt konstante Arbeit an."
-          : `Beim Entfalten entsteht eine geometrische Summe wie n^${work.power} + (n/${b})^${work.power} + ... .`,
+          ? localizedAlgorithmText(
+            "Auf jeder Ebene fällt konstante Arbeit an.",
+            "Each level performs constant work.",
+          )
+          : localizedAlgorithmText(
+            `Beim Entfalten entsteht eine geometrische Summe wie n^${work.power} + (n/${b})^${work.power} + ... .`,
+            `Expanding produces a geometric sum such as n^${work.power} + (n/${b})^${work.power} + ... .`,
+          ),
         work.kind === "constant"
-          ? "Konstante Arbeit über logarithmisch viele Ebenen ergibt O(log n)."
-          : "Eine fallende geometrische Summe wird durch ihren ersten Term dominiert.",
-        `Ergebnis: T(n) = ${result}.`,
+          ? localizedAlgorithmText(
+            "Konstante Arbeit über logarithmisch viele Ebenen ergibt O(log n).",
+            "Constant work over logarithmically many levels gives O(log n).",
+          )
+          : localizedAlgorithmText(
+            "Eine fallende geometrische Summe wird durch ihren ersten Term dominiert.",
+            "A decreasing geometric sum is dominated by its first term.",
+          ),
+        localizedAlgorithmText(`Ergebnis: T(n) = ${result}.`, `Result: T(n) = ${result}.`),
       ],
     };
   }
@@ -5242,26 +5511,44 @@ function solveSubstitutionRecurrence(input) {
     }
     const cBound = Math.ceil(1 / (1 - fractionSum));
     return {
-      title: "Schrittweise Lösung",
+      title: localizedAlgorithmText("Schrittweise Lösung", "Step-by-step solution"),
       steps: [
-        "Vermutung: T(n) ≤ c · n.",
-        `Einsetzen: T(n) ≤ c(n/${first}) + c(n/${second}) + n.`,
-        `Zusammenfassen: T(n) ≤ ${prettyNumber(fractionSum)}c · n + n.`,
-        `Damit T(n) ≤ c · n gilt, reicht c ≥ ${cBound}.`,
-        "Ergebnis: T(n) = O(n).",
+        localizedAlgorithmText("Vermutung: T(n) ≤ c · n.", "Conjecture: T(n) ≤ c · n."),
+        localizedAlgorithmText(
+          `Einsetzen: T(n) ≤ c(n/${first}) + c(n/${second}) + n.`,
+          `Substitute: T(n) ≤ c(n/${first}) + c(n/${second}) + n.`,
+        ),
+        localizedAlgorithmText(
+          `Zusammenfassen: T(n) ≤ ${prettyNumber(fractionSum)}c · n + n.`,
+          `Combine terms: T(n) ≤ ${prettyNumber(fractionSum)}c · n + n.`,
+        ),
+        localizedAlgorithmText(
+          `Damit T(n) ≤ c · n gilt, reicht c ≥ ${cBound}.`,
+          `For T(n) ≤ c · n to hold, c ≥ ${cBound} is sufficient.`,
+        ),
+        localizedAlgorithmText("Ergebnis: T(n) = O(n).", "Result: T(n) = O(n)."),
       ],
     };
   }
 
   if (input === "t(n-1)+t(n-2)+1") {
     return {
-      title: "Schrittweise Lösung",
+      title: localizedAlgorithmText("Schrittweise Lösung", "Step-by-step solution"),
       steps: [
-        "Vermutung: T(n) ≤ c · 2^n.",
-        "Einsetzen: T(n) ≤ c2^(n-1) + c2^(n-2) + 1.",
-        "Zusammenfassen: c2^(n-1) + c2^(n-2) = 3c · 2^(n-2), also kleiner als c · 2^n.",
-        "Für eine ausreichend große Konstante c wird auch das +1 abgefangen.",
-        "Ergebnis: T(n) = O(2^n).",
+        localizedAlgorithmText("Vermutung: T(n) ≤ c · 2^n.", "Conjecture: T(n) ≤ c · 2^n."),
+        localizedAlgorithmText(
+          "Einsetzen: T(n) ≤ c2^(n-1) + c2^(n-2) + 1.",
+          "Substitute: T(n) ≤ c2^(n-1) + c2^(n-2) + 1.",
+        ),
+        localizedAlgorithmText(
+          "Zusammenfassen: c2^(n-1) + c2^(n-2) = 3c · 2^(n-2), also kleiner als c · 2^n.",
+          "Combine terms: c2^(n-1) + c2^(n-2) = 3c · 2^(n-2), which is less than c · 2^n.",
+        ),
+        localizedAlgorithmText(
+          "Für eine ausreichend große Konstante c wird auch das +1 abgefangen.",
+          "A sufficiently large constant c also absorbs the +1.",
+        ),
+        localizedAlgorithmText("Ergebnis: T(n) = O(2^n).", "Result: T(n) = O(2^n)."),
       ],
     };
   }
@@ -5426,14 +5713,14 @@ function renderMasterWorkflow(runtimeChoices) {
 
 function buildMasterApplicationChecks(selectedRuntime) {
   if (!selectedRuntime) {
-    setFeedback(el.masterFeedback, "Leite zuerst die Laufzeit ab. Ohne Laufzeitentscheidung kann die Herleitung noch nicht vollständig geprüft werden.", "wrong");
+    setFeedback(el.masterFeedback, algorithmText("Leite zuerst die Laufzeit ab. Ohne Laufzeitentscheidung kann die Herleitung noch nicht vollständig geprüft werden."), "wrong");
     return null;
   }
 
   if (state.masterTrainingTopic === "Divide and Conquer / Master-Theorem") {
     const inputs = ["a", "b", "c", "d", "p"].map((key) => document.getElementById(`master-input-${key}`));
     if (inputs.some((input) => !input || input.value.trim() === "")) {
-      setFeedback(el.masterFeedback, "Fülle zuerst alle Parameter und den Vergleichsexponenten aus. Diese Werte bestimmen, welcher Master-Fall gilt.", "wrong");
+      setFeedback(el.masterFeedback, algorithmText("Fülle zuerst alle Parameter und den Vergleichsexponenten aus. Diese Werte bestimmen, welcher Master-Fall gilt."), "wrong");
       return null;
     }
 
@@ -5460,7 +5747,7 @@ function buildMasterApplicationChecks(selectedRuntime) {
     const expansion = getSelectedValue("subtract-expansion-choice");
 
     if (!reduction.trim() || !depth.trim() || !expansion) {
-      setFeedback(el.masterFeedback, "Bestimme zuerst Reduktion, Tiefe und entstehende Summe. Beim Entfalten hängt die Laufzeit genau von diesen drei Beobachtungen ab.", "wrong");
+      setFeedback(el.masterFeedback, algorithmText("Bestimme zuerst Reduktion, Tiefe und entstehende Summe. Beim Entfalten hängt die Laufzeit genau von diesen drei Beobachtungen ab."), "wrong");
       return null;
     }
 
@@ -5477,7 +5764,7 @@ function buildMasterApplicationChecks(selectedRuntime) {
   const condition = document.getElementById("substitution-condition").value;
 
   if (!guess.trim() || !inserted || !condition.trim()) {
-    setFeedback(el.masterFeedback, "Fülle zuerst Vermutung, Einsetzen und Bedingung aus. Bei Substitution ist die Schranke erst bewiesen, wenn die eingesetzte Ungleichung stabil bleibt.", "wrong");
+    setFeedback(el.masterFeedback, algorithmText("Fülle zuerst Vermutung, Einsetzen und Bedingung aus. Bei Substitution ist die Schranke erst bewiesen, wenn die eingesetzte Ungleichung stabil bleibt."), "wrong");
     return null;
   }
 
@@ -5844,6 +6131,10 @@ function pushSortStep(steps, array, note, active = [], sorted = []) {
   });
 }
 
+function localizedAlgorithmText(german, english) {
+  return isEnglish() ? english : german;
+}
+
 function buildTopologicalSortSteps() {
   const nodes = ["A", "B", "C", "D", "E", "F"];
   const edges = [["A", "C"], ["B", "C"], ["B", "D"], ["C", "E"], ["D", "F"], ["E", "F"]];
@@ -5858,7 +6149,10 @@ function buildTopologicalSortSteps() {
     active: null,
     available: [...queue],
     order: [],
-    note: "A und B haben Eingangsgrad 0 und besitzen keine offenen Voraussetzungen.",
+    note: localizedAlgorithmText(
+      "A und B haben Eingangsgrad 0 und besitzen keine offenen Voraussetzungen.",
+      "A and B have in-degree 0 and no unmet prerequisites.",
+    ),
   }];
 
   while (queue.length) {
@@ -5873,73 +6167,124 @@ function buildTopologicalSortSteps() {
       active,
       available: [...queue],
       order: [...order],
-      note: `${active} wird ausgegeben. Danach verfügbar: ${queue.length ? queue.join(", ") : "kein weiterer Knoten"}.`,
+      note: localizedAlgorithmText(
+        `${active} wird ausgegeben. Danach verfügbar: ${queue.length ? queue.join(", ") : "kein weiterer Knoten"}.`,
+        `${active} is output. Available afterwards: ${queue.length ? queue.join(", ") : "no other vertex"}.`,
+      ),
     });
   }
-  steps[steps.length - 1].note = `Fertig: ${order.join(" → ")} ist eine gültige topologische Reihenfolge.`;
+  steps[steps.length - 1].note = localizedAlgorithmText(
+    `Fertig: ${order.join(" → ")} ist eine gültige topologische Reihenfolge.`,
+    `Done: ${order.join(" → ")} is a valid topological order.`,
+  );
   return steps;
 }
 
 function buildSelectionSortSteps(values) {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, "Start: links entsteht nach und nach der sortierte Bereich.");
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Start: links entsteht nach und nach der sortierte Bereich.",
+    "Start: the sorted section gradually grows on the left.",
+  ));
   for (let i = 0; i < arr.length - 1; i += 1) {
     let min = i;
     for (let j = i + 1; j < arr.length; j += 1) {
-      pushSortStep(steps, arr, `Vergleiche aktuelles Minimum ${arr[min]} mit ${arr[j]}.`, [min, j], range(0, i));
+      pushSortStep(steps, arr, localizedAlgorithmText(
+        `Vergleiche aktuelles Minimum ${arr[min]} mit ${arr[j]}.`,
+        `Compare the current minimum ${arr[min]} with ${arr[j]}.`,
+      ), [min, j], range(0, i));
       if (arr[j] < arr[min]) {
         min = j;
-        pushSortStep(steps, arr, `${arr[min]} ist das neue Minimum.`, [min], range(0, i));
+        pushSortStep(steps, arr, localizedAlgorithmText(
+          `${arr[min]} ist das neue Minimum.`,
+          `${arr[min]} is the new minimum.`,
+        ), [min], range(0, i));
       }
     }
     [arr[i], arr[min]] = [arr[min], arr[i]];
-    pushSortStep(steps, arr, `Tausche das Minimum an Position ${i + 1}.`, [i, min], range(0, i + 1));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      `Tausche das Minimum an Position ${i + 1}.`,
+      `Move the minimum into position ${i + 1}.`,
+    ), [i, min], range(0, i + 1));
   }
-  pushSortStep(steps, arr, "Fertig: alle Elemente sind sortiert.", [], range(0, arr.length));
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Fertig: alle Elemente sind sortiert.",
+    "Done: all elements are sorted.",
+  ), [], range(0, arr.length));
   return steps;
 }
 
 function buildInsertionSortSteps(values) {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, "Start: der linke Bereich gilt als sortiert.", [], [0]);
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Start: der linke Bereich gilt als sortiert.",
+    "Start: the left section is considered sorted.",
+  ), [], [0]);
   for (let i = 1; i < arr.length; i += 1) {
     const key = arr[i];
     let j = i - 1;
-    pushSortStep(steps, arr, `Füge ${key} in den sortierten linken Bereich ein.`, [i], range(0, i));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      `Füge ${key} in den sortierten linken Bereich ein.`,
+      `Insert ${key} into the sorted section on the left.`,
+    ), [i], range(0, i));
     while (j >= 0 && arr[j] > key) {
       arr[j + 1] = arr[j];
-      pushSortStep(steps, arr, `${arr[j]} ist größer als ${key}; verschiebe nach rechts.`, [j, j + 1], range(0, i + 1));
+      pushSortStep(steps, arr, localizedAlgorithmText(
+        `${arr[j]} ist größer als ${key}; verschiebe nach rechts.`,
+        `${arr[j]} is greater than ${key}; shift it to the right.`,
+      ), [j, j + 1], range(0, i + 1));
       j -= 1;
     }
     arr[j + 1] = key;
-    pushSortStep(steps, arr, `${key} sitzt an der passenden Stelle.`, [j + 1], range(0, i + 1));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      `${key} sitzt an der passenden Stelle.`,
+      `${key} is now in the correct position.`,
+    ), [j + 1], range(0, i + 1));
   }
-  pushSortStep(steps, arr, "Fertig: der sortierte Bereich umfasst das ganze Array.", [], range(0, arr.length));
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Fertig: der sortierte Bereich umfasst das ganze Array.",
+    "Done: the sorted section now covers the entire array.",
+  ), [], range(0, arr.length));
   return steps;
 }
 
 function buildBubbleSortSteps(values) {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, "Start: große Elemente wandern durch Nachbarvergleiche nach rechts.");
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Start: große Elemente wandern durch Nachbarvergleiche nach rechts.",
+    "Start: adjacent comparisons move large elements to the right.",
+  ));
   for (let end = arr.length - 1; end > 0; end -= 1) {
     let swapped = false;
     for (let i = 0; i < end; i += 1) {
-      pushSortStep(steps, arr, `Vergleiche Nachbarn ${arr[i]} und ${arr[i + 1]}.`, [i, i + 1], range(end + 1, arr.length));
+      pushSortStep(steps, arr, localizedAlgorithmText(
+        `Vergleiche Nachbarn ${arr[i]} und ${arr[i + 1]}.`,
+        `Compare the adjacent values ${arr[i]} and ${arr[i + 1]}.`,
+      ), [i, i + 1], range(end + 1, arr.length));
       if (arr[i] > arr[i + 1]) {
         [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
         swapped = true;
-        pushSortStep(steps, arr, "Tausche, weil die Reihenfolge falsch ist.", [i, i + 1], range(end + 1, arr.length));
+        pushSortStep(steps, arr, localizedAlgorithmText(
+          "Tausche, weil die Reihenfolge falsch ist.",
+          "Swap them because they are in the wrong order.",
+        ), [i, i + 1], range(end + 1, arr.length));
       }
     }
-    pushSortStep(steps, arr, "Das größte verbleibende Element ist rechts fixiert.", [end], range(end, arr.length));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      "Das größte verbleibende Element ist rechts fixiert.",
+      "The largest remaining element is now fixed on the right.",
+    ), [end], range(end, arr.length));
     if (!swapped) {
       break;
     }
   }
-  pushSortStep(steps, arr, "Fertig: keine Vertauschungen mehr nötig.", [], range(0, arr.length));
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Fertig: keine Vertauschungen mehr nötig.",
+    "Done: no more swaps are needed.",
+  ), [], range(0, arr.length));
   return steps;
 }
 
@@ -5947,14 +6292,20 @@ function buildMergeSortSteps(values) {
   const arr = [...values];
   const steps = [];
   const work = [...arr];
-  pushSortStep(steps, arr, "Start: teile rekursiv und führe sortierte Bereiche zusammen.");
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Start: teile rekursiv und führe sortierte Bereiche zusammen.",
+    "Start: split recursively and merge sorted sections.",
+  ));
 
   function sort(left, right) {
     if (right - left <= 1) {
       return;
     }
     const mid = Math.floor((left + right) / 2);
-    pushSortStep(steps, arr, `Teile Bereich ${left + 1}-${right} in zwei Hälften.`, range(left, right));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      `Teile Bereich ${left + 1}-${right} in zwei Hälften.`,
+      `Split section ${left + 1}-${right} into two halves.`,
+    ), range(left, right));
     sort(left, mid);
     sort(mid, right);
     let i = left;
@@ -5982,19 +6333,28 @@ function buildMergeSortSteps(values) {
     }
     for (let index = left; index < right; index += 1) {
       arr[index] = work[index];
-      pushSortStep(steps, arr, "Führe die Teilbereiche sortiert zusammen.", range(left, right), right - left === values.length ? range(left, index + 1) : []);
+      pushSortStep(steps, arr, localizedAlgorithmText(
+        "Führe die Teilbereiche sortiert zusammen.",
+        "Merge the subsections in sorted order.",
+      ), range(left, right), right - left === values.length ? range(left, index + 1) : []);
     }
   }
 
   sort(0, arr.length);
-  pushSortStep(steps, arr, "Fertig: alle Teilbereiche wurden zusammengeführt.", [], range(0, arr.length));
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Fertig: alle Teilbereiche wurden zusammengeführt.",
+    "Done: all subsections have been merged.",
+  ), [], range(0, arr.length));
   return steps;
 }
 
 function buildHeapSortSteps(values) {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, "Start: baue zuerst einen Max-Heap.");
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Start: baue zuerst einen Max-Heap.",
+    "Start: build a max-heap first.",
+  ));
 
   function heapify(size, root) {
     let largest = root;
@@ -6006,10 +6366,16 @@ function buildHeapSortSteps(values) {
     if (right < size && arr[right] > arr[largest]) {
       largest = right;
     }
-    pushSortStep(steps, arr, `Prüfe Heap-Eigenschaft bei Position ${root + 1}.`, [root, left, right].filter((item) => item < size), range(size, arr.length));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      `Prüfe Heap-Eigenschaft bei Position ${root + 1}.`,
+      `Check the heap property at position ${root + 1}.`,
+    ), [root, left, right].filter((item) => item < size), range(size, arr.length));
     if (largest !== root) {
       [arr[root], arr[largest]] = [arr[largest], arr[root]];
-      pushSortStep(steps, arr, "Tausche größeres Kind nach oben.", [root, largest], range(size, arr.length));
+      pushSortStep(steps, arr, localizedAlgorithmText(
+        "Tausche größeres Kind nach oben.",
+        "Swap the larger child upwards.",
+      ), [root, largest], range(size, arr.length));
       heapify(size, largest);
     }
   }
@@ -6017,43 +6383,70 @@ function buildHeapSortSteps(values) {
   for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i -= 1) {
     heapify(arr.length, i);
   }
-  pushSortStep(steps, arr, "Max-Heap steht: das Maximum liegt an der Wurzel.", [0]);
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Max-Heap steht: das Maximum liegt an der Wurzel.",
+    "The max-heap is ready: the maximum is at the root.",
+  ), [0]);
 
   for (let end = arr.length - 1; end > 0; end -= 1) {
     [arr[0], arr[end]] = [arr[end], arr[0]];
-    pushSortStep(steps, arr, "Lege das aktuelle Maximum ans Ende.", [0, end], range(end, arr.length));
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      "Lege das aktuelle Maximum ans Ende.",
+      "Move the current maximum to the end.",
+    ), [0, end], range(end, arr.length));
     heapify(end, 0);
   }
-  pushSortStep(steps, arr, "Fertig: der sortierte Bereich ist komplett.", [], range(0, arr.length));
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Fertig: der sortierte Bereich ist komplett.",
+    "Done: the sorted section is complete.",
+  ), [], range(0, arr.length));
   return steps;
 }
 
 function buildQuickSortSteps(values) {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, "Start: partitioniere Bereiche um ein Pivot.");
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Start: partitioniere Bereiche um ein Pivot.",
+    "Start: partition sections around a pivot.",
+  ));
 
   function partition(low, high) {
     const pivot = arr[high];
     let i = low;
-    pushSortStep(steps, arr, `Pivot ist ${pivot}. Kleinere Werte wandern nach links.`, [high], []);
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      `Pivot ist ${pivot}. Kleinere Werte wandern nach links.`,
+      `The pivot is ${pivot}. Smaller values move to the left.`,
+    ), [high], []);
     for (let j = low; j < high; j += 1) {
-      pushSortStep(steps, arr, `Vergleiche ${arr[j]} mit Pivot ${pivot}.`, [j, high], []);
+      pushSortStep(steps, arr, localizedAlgorithmText(
+        `Vergleiche ${arr[j]} mit Pivot ${pivot}.`,
+        `Compare ${arr[j]} with pivot ${pivot}.`,
+      ), [j, high], []);
       if (arr[j] <= pivot) {
         [arr[i], arr[j]] = [arr[j], arr[i]];
-        pushSortStep(steps, arr, "Element gehört auf die linke Pivot-Seite.", [i, j, high], []);
+        pushSortStep(steps, arr, localizedAlgorithmText(
+          "Element gehört auf die linke Pivot-Seite.",
+          "This element belongs on the left side of the pivot.",
+        ), [i, j, high], []);
         i += 1;
       }
     }
     [arr[i], arr[high]] = [arr[high], arr[i]];
-    pushSortStep(steps, arr, "Pivot sitzt jetzt an seiner endgültigen Position.", [i], [i]);
+    pushSortStep(steps, arr, localizedAlgorithmText(
+      "Pivot sitzt jetzt an seiner endgültigen Position.",
+      "The pivot is now in its final position.",
+    ), [i], [i]);
     return i;
   }
 
   function quickSort(low, high) {
     if (low >= high) {
       if (low === high) {
-        pushSortStep(steps, arr, "Ein einzelnes Element ist bereits sortiert.", [low], [low]);
+        pushSortStep(steps, arr, localizedAlgorithmText(
+          "Ein einzelnes Element ist bereits sortiert.",
+          "A single element is already sorted.",
+        ), [low], [low]);
       }
       return;
     }
@@ -6063,7 +6456,10 @@ function buildQuickSortSteps(values) {
   }
 
   quickSort(0, arr.length - 1);
-  pushSortStep(steps, arr, "Fertig: alle Partitionen sind sortiert.", [], range(0, arr.length));
+  pushSortStep(steps, arr, localizedAlgorithmText(
+    "Fertig: alle Partitionen sind sortiert.",
+    "Done: all partitions are sorted.",
+  ), [], range(0, arr.length));
   return steps;
 }
 
@@ -6224,7 +6620,13 @@ function rebuildSearchSteps() {
 }
 
 function buildLinearSearchSteps(values, target) {
-  const steps = [{ probe: null, low: 0, high: values.length - 1, found: false, note: "Start links beim ersten Element." }];
+  const steps = [{
+    probe: null,
+    low: 0,
+    high: values.length - 1,
+    found: false,
+    note: localizedAlgorithmText("Start links beim ersten Element.", "Start on the left at the first element."),
+  }];
   for (let index = 0; index < values.length; index += 1) {
     const found = values[index] === target;
     steps.push({
@@ -6232,16 +6634,39 @@ function buildLinearSearchSteps(values, target) {
       low: index,
       high: values.length - 1,
       found,
-      note: found ? `${target} wurde an Index ${index} gefunden.` : `${values[index]} ist nicht ${target}; gehe ein Feld weiter.`,
+      note: found
+        ? localizedAlgorithmText(
+          `${target} wurde an Index ${index} gefunden.`,
+          `${target} was found at index ${index}.`,
+        )
+        : localizedAlgorithmText(
+          `${values[index]} ist nicht ${target}; gehe ein Feld weiter.`,
+          `${values[index]} is not ${target}; move one position forward.`,
+        ),
     });
     if (found) return steps;
   }
-  steps.push({ probe: null, low: values.length, high: values.length - 1, found: false, note: `${target} ist nicht enthalten.` });
+  steps.push({
+    probe: null,
+    low: values.length,
+    high: values.length - 1,
+    found: false,
+    note: localizedAlgorithmText(`${target} ist nicht enthalten.`, `${target} is not included.`),
+  });
   return steps;
 }
 
 function buildBinarySearchSteps(values, target) {
-  const steps = [{ probe: null, low: 0, high: values.length - 1, found: false, note: "Das gesamte sortierte Array ist der Suchbereich." }];
+  const steps = [{
+    probe: null,
+    low: 0,
+    high: values.length - 1,
+    found: false,
+    note: localizedAlgorithmText(
+      "Das gesamte sortierte Array ist der Suchbereich.",
+      "The whole sorted array is the search interval.",
+    ),
+  }];
   let low = 0;
   let high = values.length - 1;
   while (low <= high) {
@@ -6253,19 +6678,43 @@ function buildBinarySearchSteps(values, target) {
       high,
       found,
       note: found
-        ? `${target} wurde in der Mitte an Index ${middle} gefunden.`
-        : `${values[middle]} wird geprüft. ${target < values[middle] ? "Die rechte Hälfte entfällt." : "Die linke Hälfte entfällt."}`,
+        ? localizedAlgorithmText(
+          `${target} wurde in der Mitte an Index ${middle} gefunden.`,
+          `${target} was found in the middle at index ${middle}.`,
+        )
+        : localizedAlgorithmText(
+          `${values[middle]} wird geprüft. ${target < values[middle] ? "Die rechte Hälfte entfällt." : "Die linke Hälfte entfällt."}`,
+          `${values[middle]} is checked. ${target < values[middle] ? "The right half is discarded." : "The left half is discarded."}`,
+        ),
     });
     if (found) return steps;
     if (target < values[middle]) high = middle - 1;
     else low = middle + 1;
   }
-  steps.push({ probe: null, low, high, found: false, note: `Der Suchbereich ist leer; ${target} ist nicht enthalten.` });
+  steps.push({
+    probe: null,
+    low,
+    high,
+    found: false,
+    note: localizedAlgorithmText(
+      `Der Suchbereich ist leer; ${target} ist nicht enthalten.`,
+      `The search interval is empty; ${target} is not included.`,
+    ),
+  });
   return steps;
 }
 
 function buildInterpolationSearchSteps(values, target) {
-  const steps = [{ probe: null, low: 0, high: values.length - 1, found: false, note: "Schätze die Position aus Zielwert und Wertebereich." }];
+  const steps = [{
+    probe: null,
+    low: 0,
+    high: values.length - 1,
+    found: false,
+    note: localizedAlgorithmText(
+      "Schätze die Position aus Zielwert und Wertebereich.",
+      "Estimate the position from the target value and value range.",
+    ),
+  }];
   let low = 0;
   let high = values.length - 1;
   while (low <= high && target >= values[low] && target <= values[high]) {
@@ -6279,14 +6728,29 @@ function buildInterpolationSearchSteps(values, target) {
       high,
       found,
       note: found
-        ? `Die Schätzung trifft Index ${probe}; ${target} wurde gefunden.`
-        : `Die Formel schätzt Index ${probe} mit Wert ${values[probe]}. Der Bereich wird angepasst.`,
+        ? localizedAlgorithmText(
+          `Die Schätzung trifft Index ${probe}; ${target} wurde gefunden.`,
+          `The estimate hits index ${probe}; ${target} was found.`,
+        )
+        : localizedAlgorithmText(
+          `Die Formel schätzt Index ${probe} mit Wert ${values[probe]}. Der Bereich wird angepasst.`,
+          `The formula estimates index ${probe} with value ${values[probe]}. The interval is adjusted.`,
+        ),
     });
     if (found) return steps;
     if (values[probe] < target) low = probe + 1;
     else high = probe - 1;
   }
-  steps.push({ probe: null, low, high, found: false, note: `${target} liegt außerhalb des verbleibenden Wertebereichs.` });
+  steps.push({
+    probe: null,
+    low,
+    high,
+    found: false,
+    note: localizedAlgorithmText(
+      `${target} liegt außerhalb des verbleibenden Wertebereichs.`,
+      `${target} lies outside the remaining value range.`,
+    ),
+  });
   return steps;
 }
 
@@ -6301,7 +6765,10 @@ function buildHashSearchSteps(values, target) {
     bucket: null,
     probeEntry: null,
     found: false,
-    note: `Berechne zuerst h(${target}) = ${target} mod ${bucketCount}.`,
+    note: localizedAlgorithmText(
+      `Berechne zuerst h(${target}) = ${target} mod ${bucketCount}.`,
+      `First calculate h(${target}) = ${target} mod ${bucketCount}.`,
+    ),
   }];
   steps.push({
     hash: true,
@@ -6309,7 +6776,10 @@ function buildHashSearchSteps(values, target) {
     bucket,
     probeEntry: null,
     found: false,
-    note: `Der Hashwert ist ${bucket}. Untersuche nur Bucket ${bucket}.`,
+    note: localizedAlgorithmText(
+      `Der Hashwert ist ${bucket}. Untersuche nur Bucket ${bucket}.`,
+      `The hash value is ${bucket}. Inspect only bucket ${bucket}.`,
+    ),
   });
   for (const value of buckets[bucket]) {
     const found = value === target;
@@ -6319,7 +6789,15 @@ function buildHashSearchSteps(values, target) {
       bucket,
       probeEntry: value,
       found,
-      note: found ? `${target} wurde im Bucket ${bucket} gefunden.` : `${value} kollidiert im selben Bucket, ist aber nicht ${target}.`,
+      note: found
+        ? localizedAlgorithmText(
+          `${target} wurde im Bucket ${bucket} gefunden.`,
+          `${target} was found in bucket ${bucket}.`,
+        )
+        : localizedAlgorithmText(
+          `${value} kollidiert im selben Bucket, ist aber nicht ${target}.`,
+          `${value} collides in the same bucket but is not ${target}.`,
+        ),
     });
     if (found) return steps;
   }
@@ -6329,7 +6807,10 @@ function buildHashSearchSteps(values, target) {
     bucket,
     probeEntry: null,
     found: false,
-    note: `Bucket ${bucket} enthält ${target} nicht.`,
+    note: localizedAlgorithmText(
+      `Bucket ${bucket} enthält ${target} nicht.`,
+      `Bucket ${bucket} does not contain ${target}.`,
+    ),
   });
   return steps;
 }
@@ -6377,7 +6858,7 @@ function renderHashSearchStep(step) {
 }
 
 function renderSearchInfo() {
-  const info = isEnglish() ? {
+  const info = (isEnglish() ? {
     linear: ["Linear search", "Checks all elements one after another.", "Small or unsorted data.", "No sorting required.", "Best O(1), Average/Worst O(n)."],
     binary: ["Binary search", "Halves the search interval after every comparison.", "Many searches in sorted data.", "Sorting and direct index access are required.", "Best O(1), Average/Worst O(log n)."],
     interpolation: ["Interpolation search", "Estimates the position from the value distribution.", "Uniformly distributed, sorted numbers.", "Sorted numeric data that is as uniformly distributed as possible.", "Best O(1), Average O(log log n), Worst O(n)."],
@@ -6387,7 +6868,7 @@ function renderSearchInfo() {
     binary: ["Binäre Suche", "Halbiert den Suchbereich nach jedem Vergleich.", "Viele Suchen in sortierten Daten.", "Sortierung und direkter Indexzugriff erforderlich.", "Best O(1), Average/Worst O(log n)."],
     interpolation: ["Interpolationssuche", "Schätzt die Position anhand der Werteverteilung.", "Gleichmäßig verteilte, sortierte Zahlen.", "Sortierte numerische und möglichst gleichmäßig verteilte Daten.", "Best O(1), Average O(log log n), Worst O(n)."],
     hash: ["Hash-basierte Suche", "Berechnet aus dem Schlüssel direkt einen Bucket und prüft nur dessen Einträge.", "Wörterbücher, Mengen, Caches und schnelle Schlüsselabfragen.", "Eine geeignete Hashfunktion und Kollisionsbehandlung sind erforderlich.", "Best/Average O(1), Worst O(n) bei vielen Kollisionen."],
-  }[el.searchAlgorithm.value];
+  })[el.searchAlgorithm.value];
   el.searchInfo.innerHTML = algorithmHtml(`
     <div><strong>${info[0]}: Idee</strong><span>${info[1]}</span></div>
     <div><strong>Anwendungsfall</strong><span>${info[2]}</span></div>
@@ -6417,7 +6898,7 @@ function toggleSearchPlayback() {
     state.searchStepIndex = 0;
     renderSearchStep();
   }
-  el.searchPlay.textContent = "Pause";
+  el.searchPlay.textContent = algorithmText("Pause");
   state.searchTimer = window.setInterval(nextSearchStep, 1100);
 }
 
@@ -6426,7 +6907,7 @@ function stopSearchPlayback() {
     window.clearInterval(state.searchTimer);
     state.searchTimer = null;
   }
-  if (el.searchPlay) el.searchPlay.textContent = "Abspielen";
+  if (el.searchPlay) el.searchPlay.textContent = algorithmText("Abspielen");
 }
 
 function createSortQuestion() {
@@ -6447,7 +6928,7 @@ function checkSortQuestion() {
   const selectedAverage = getSelectedValue("sort-average-choice");
   const selectedWorst = getSelectedValue("sort-worst-choice");
   if (!selectedBest || !selectedAverage || !selectedWorst) {
-    setFeedback(el.sortFeedback, "Wähle Best, Average und Worst Case aus.", "wrong");
+    setFeedback(el.sortFeedback, algorithmText("Wähle Best, Average und Worst Case aus."), "wrong");
     return;
   }
 
@@ -6564,7 +7045,7 @@ function setDataStructureTopic(topic) {
 function resetTreeFamily() {
   state.treeFamilyRoot = null;
   [40, 20, 60, 10, 30, 50, 70].forEach((value) => {
-    state.treeFamilyRoot = bstInsertOnly(state.treeFamilyRoot, value);
+    state.treeFamilyRoot = applyBSTOnly(state.treeFamilyRoot, value, "insert");
   });
   refreshHeights(state.treeFamilyRoot);
   el.treeFamilyValue.value = "";
@@ -6578,7 +7059,7 @@ function insertTreeFamilyValue() {
     el.treeFamilyNote.textContent = algorithmText("Gib bitte eine ganze Zahl ein.");
     return;
   }
-  state.treeFamilyRoot = bstInsertOnly(state.treeFamilyRoot, value);
+  state.treeFamilyRoot = applyBSTOnly(state.treeFamilyRoot, value, "insert");
   refreshHeights(state.treeFamilyRoot);
   if (state.treeFamilyMode === "splay") {
     state.treeFamilyRoot = splayNode(state.treeFamilyRoot, value);
@@ -6757,16 +7238,23 @@ function renderGraphStep() {
   const algorithm = el.graphAlgorithm.value;
   const steps = graphAlgorithmSteps[algorithm];
   const step = steps[state.graphStepIndex];
-  const info = graphAlgorithmInfo[algorithm];
+  const info = isEnglish() ? graphAlgorithmInfoEnglish[algorithm] : graphAlgorithmInfo[algorithm];
+  const stepNote = isEnglish() ? graphAlgorithmNotesEnglish.get(step.note) || step.note : step.note;
 
   document.querySelectorAll("[data-graph-node]").forEach((node) => {
     const name = node.dataset.graphNode;
     node.classList.toggle("is-visited", step.visited.includes(name));
     node.classList.toggle("is-active", step.active === name);
   });
-  el.graphNote.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.graphStepIndex + 1} ${isEnglish() ? "of" : "von"} ${steps.length}: ${algorithmText(step.note)}`;
-  el.graphIdea.innerHTML = algorithmHtml(`<strong>${info.title}</strong><span>${info.text}</span>`);
-  const graphDetails = {
+  el.graphNote.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.graphStepIndex + 1} ${isEnglish() ? "of" : "von"} ${steps.length}: ${stepNote}`;
+  el.graphIdea.innerHTML = `<strong>${info.title}</strong><span>${info.text}</span>`;
+  const graphDetails = isEnglish() ? {
+    bfs: "The queue works by FIFO, so all directly reachable neighbors are processed before the search moves one level deeper. In unweighted graphs, BFS therefore finds paths with the fewest edges.",
+    dfs: "A stack remembers the current path. Only when there is no unvisited neighbor does DFS return and try the next path at the last branching point.",
+    dijkstra: "The active vertex has the smallest tentative distance of all open vertices. With nonnegative edge weights, a later detour cannot improve this value.",
+    backtracking: "A decision is tentatively added to the current path. If it leads to a dead end, it is undone and the next possibility is tested.",
+    floyd: "For every pair of vertices, the algorithm checks whether the path through the current intermediate vertex is shorter: dist(i,j) = min(dist(i,j), dist(i,k) + dist(k,j)).",
+  } : {
     bfs: "Die Queue arbeitet nach FIFO. Darum werden erst alle direkt erreichbaren Nachbarn verarbeitet, bevor die Suche eine Ebene tiefer geht. In ungewichteten Graphen findet BFS so Wege mit möglichst wenigen Kanten.",
     dfs: "Ein Stack merkt sich den aktuellen Pfad. Erst wenn kein unbesuchter Nachbar mehr existiert, springt DFS zurück und probiert am letzten Verzweigungspunkt den nächsten Weg.",
     dijkstra: "Der aktive Knoten hat unter allen offenen Knoten die kleinste vorläufige Distanz. Bei nichtnegativen Kantengewichten kann ein späterer Umweg diesen Wert nicht mehr verbessern.",
@@ -6774,13 +7262,23 @@ function renderGraphStep() {
     floyd: "Für jedes Knotenpaar wird geprüft, ob der Weg über den aktuellen Zwischenknoten kürzer ist: dist(i,j) = min(dist(i,j), dist(i,k) + dist(k,j)).",
   };
   const visitedText = step.visited.length
-    ? `Bereits abgeschlossen oder fest berücksichtigt: ${step.visited.join(", ")}.`
-    : "Noch kein Knoten ist abgeschlossen; dies ist der Ausgangszustand.";
-  el.graphStepDetail.innerHTML = algorithmHtml(`
-    <p><strong>Was passiert?</strong> ${step.note}</p>
+    ? localizedAlgorithmText(
+      `Bereits abgeschlossen oder fest berücksichtigt: ${step.visited.join(", ")}.`,
+      `Already completed or permanently considered: ${step.visited.join(", ")}.`,
+    )
+    : localizedAlgorithmText(
+      "Noch kein Knoten ist abgeschlossen; dies ist der Ausgangszustand.",
+      "No vertex has been completed yet; this is the initial state.",
+    );
+  el.graphStepDetail.innerHTML = isEnglish() ? `
+    <p><strong>What happens?</strong> ${stepNote}</p>
+    <p><strong>Current state:</strong> ${step.active} is active. ${visitedText}</p>
+    <p><strong>Why this step?</strong> ${graphDetails[algorithm]}</p>
+  ` : `
+    <p><strong>Was passiert?</strong> ${stepNote}</p>
     <p><strong>Aktueller Zustand:</strong> ${step.active} ist aktiv. ${visitedText}</p>
     <p><strong>Warum dieser Schritt?</strong> ${graphDetails[algorithm]}</p>
-  `);
+  `;
   el.graphMatrix.classList.toggle("is-hidden", algorithm !== "floyd");
   el.graphMatrix.textContent = step.matrix || "";
   document.getElementById("graph-next").disabled = state.graphStepIndex >= steps.length - 1;
@@ -6894,7 +7392,7 @@ function renderHeap(resetNote = true) {
 function checkDataStructureQuestion() {
   const selected = getSelectedValue("ds-choice");
   if (!selected) {
-    setFeedback(el.dataStructureFeedback, "Wähle erst eine Antwort aus.", "wrong");
+    setFeedback(el.dataStructureFeedback, algorithmText("Wähle erst eine Antwort aus."), "wrong");
     return;
   }
 
@@ -6989,7 +7487,7 @@ function previewAVLRotation(forceReplay) {
 function applyAVLAnswer() {
   const selected = getSelectedValue("avl-choice");
   if (!selected) {
-    setFeedback(el.avlFeedback, "Wähle erst eine Rotation aus.", "wrong");
+    setFeedback(el.avlFeedback, algorithmText("Wähle erst eine Rotation aus."), "wrong");
     return;
   }
 
@@ -7397,7 +7895,7 @@ function renderTree(container, root, options = {}) {
   if (!root) {
     const empty = document.createElement("div");
     empty.className = "tree-empty";
-    empty.textContent = "(leer)";
+    empty.textContent = isEnglish() ? "(empty)" : "(leer)";
     container.appendChild(empty);
     state.renderCache.set(container.id, { nodes: new Map(), edges: new Map() });
     return;
@@ -7443,7 +7941,10 @@ function renderTree(container, root, options = {}) {
       group.setAttribute("class", "tree-node-interactive");
       group.setAttribute("role", "button");
       group.setAttribute("tabindex", "0");
-      group.setAttribute("aria-label", `Knoten ${node.label} zum Löschen auswählen`);
+      group.setAttribute(
+        "aria-label",
+        isEnglish() ? `Select node ${node.label} for deletion` : `Knoten ${node.label} zum Löschen auswählen`,
+      );
       group.addEventListener("click", () => options.onNodeClick(Number(node.label)));
       group.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -7772,12 +8273,14 @@ function offerSandboxDelete(value) {
 
   el.sandboxRotationNotice.replaceChildren();
   const text = document.createElement("span");
-  text.textContent = `Knoten ${value} löschen?`;
+  text.textContent = isEnglish() ? `Delete node ${value}?` : `Knoten ${value} löschen?`;
   const button = document.createElement("button");
   button.type = "button";
   button.className = "delete-node-btn";
-  button.textContent = "Knoten löschen";
+  button.textContent = isEnglish() ? "Delete node" : "Knoten löschen";
   button.addEventListener("click", () => mutateSandbox("delete", value));
   el.sandboxRotationNotice.append(text, button);
   el.sandboxRotationNotice.classList.remove("is-hidden");
 }
+
+initializeApp();

@@ -316,8 +316,9 @@ export function applyLanguage(language, persist = true) {
 
 export function initializeLanguage() {
   let language = "de";
+  const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
   try {
-    language = window.localStorage.getItem("infotrain-language") || "de";
+    language = requestedLanguage || window.localStorage.getItem("infotrain-language") || "de";
   } catch {
     // German remains the default when storage is unavailable.
   }
