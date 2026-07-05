@@ -27,7 +27,7 @@ import {
   initializeLanguage,
   languageNames,
   t,
-} from "./js/i18n.js?v=20260704-full-en-v2";
+} from "./js/i18n.js?v=20260705-exam-simulation";
 
 function asCode(lines) {
   return lines.join("\n");
@@ -3001,6 +3001,7 @@ const state = {
   sortTimer: null,
   sortSection: "visual",
   sortQuestion: null,
+  heapSortMode: "max",
   searchValues: [],
   searchSteps: [],
   searchStepIndex: 0,
@@ -3038,6 +3039,11 @@ const state = {
   basicsLessonsLanguage: null,
   basicsLessonIndex: 0,
   krugoWelcomeShown: false,
+  examDurationMinutes: 30,
+  examSecondsRemaining: 0,
+  examTimer: null,
+  examRunning: false,
+  examExpired: false,
 };
 
 const el = {
@@ -3063,6 +3069,16 @@ const el = {
   homeTitle: document.querySelector(".home-title"),
   logoTrain: document.querySelector(".logo-train"),
   moduleTiles: [...document.querySelectorAll(".module-tile")],
+  examSimulationEntry: document.getElementById("exam-simulation-entry"),
+  examSimulation: document.getElementById("exam-simulation"),
+  examSimulationSetup: document.getElementById("exam-simulation-setup"),
+  examSimulationSession: document.getElementById("exam-simulation-session"),
+  examDurationOptions: [...document.querySelectorAll("[data-exam-duration]")],
+  examSimulationStart: document.getElementById("exam-simulation-start"),
+  examSimulationEnd: document.getElementById("exam-simulation-end"),
+  examSimulationTimer: document.getElementById("exam-simulation-timer"),
+  examSimulationStatus: document.getElementById("exam-simulation-status"),
+  examSimulationCloseButtons: [...document.querySelectorAll("[data-exam-close]")],
   pathAvatar: document.getElementById("path-avatar"),
   pathSteps: [...document.querySelectorAll("[data-path-step]")],
   pathPreview: document.getElementById("preview-learning-path"),
@@ -3203,6 +3219,14 @@ const el = {
   sortNext: document.getElementById("sort-next"),
   sortInfo: document.getElementById("sort-info"),
   sortStepDetail: document.getElementById("sort-step-detail"),
+  heapSortSandbox: document.getElementById("heap-sort-sandbox"),
+  heapSortMode: document.getElementById("heap-sort-mode"),
+  heapSortList: document.getElementById("heap-sort-list"),
+  heapSortApply: document.getElementById("heap-sort-apply"),
+  heapSortExample: document.getElementById("heap-sort-example"),
+  heapSortFeedback: document.getElementById("heap-sort-feedback"),
+  heapSortArray: document.getElementById("heap-sort-array"),
+  heapSortTree: document.getElementById("heap-sort-tree"),
   sortQuestionTitle: document.getElementById("sort-question-title"),
   sortBestOptions: document.getElementById("sort-best-options"),
   sortAverageOptions: document.getElementById("sort-average-options"),
@@ -3319,6 +3343,15 @@ el.languageButtons.forEach((button) => {
 });
 el.krugoStart.addEventListener("click", beginKrugoJourney);
 el.krugoLater.addEventListener("click", () => dismissKrugoWelcome(true));
+el.examSimulationEntry.addEventListener("click", openExamSimulation);
+el.examDurationOptions.forEach((button) => {
+  button.addEventListener("click", () => selectExamDuration(Number(button.dataset.examDuration)));
+});
+el.examSimulationStart.addEventListener("click", startExamSimulation);
+el.examSimulationEnd.addEventListener("click", closeExamSimulation);
+el.examSimulationCloseButtons.forEach((button) => {
+  button.addEventListener("click", closeExamSimulation);
+});
 el.boardInfoTrain.addEventListener("click", boardInfoTrain);
 el.basicsStoryPrev.addEventListener("click", () => changeBasicsStory(-1));
 el.basicsStoryNext.addEventListener("click", () => changeBasicsStory(1));
@@ -3329,6 +3362,7 @@ window.addEventListener("infotrain:languagechange", (event) => {
   renderLearningPathState();
   syncLocalizedContent();
   renderGlobalSearchResults(el.globalSearchInput.value);
+  el.examSimulationStatus.textContent = t(state.examExpired ? "exam.expired" : "exam.running");
   if (!el.basicsStory.classList.contains("is-hidden")) {
     state.basicsLessons = null;
     openBasicsStory();
@@ -3338,6 +3372,11 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     if (!el.krugoWelcome.classList.contains("is-hidden")) {
       dismissKrugoWelcome();
+      return;
+    }
+    if (!el.examSimulation.classList.contains("is-hidden")) {
+      closeExamSimulation();
+      el.examSimulationEntry.focus();
       return;
     }
     if (el.globalSearchToggle.getAttribute("aria-expanded") === "true") {
@@ -3427,6 +3466,17 @@ el.masterLearnPrev.addEventListener("click", () => changeMasterLearningStep(-1))
 el.masterLearnNext.addEventListener("click", () => changeMasterLearningStep(1));
 el.sortAlgorithm.addEventListener("change", rebuildSortSteps);
 document.getElementById("shuffle-sort").addEventListener("click", resetSortValues);
+el.heapSortMode.addEventListener("change", () => {
+  state.heapSortMode = el.heapSortMode.value;
+  rebuildSortSteps();
+});
+el.heapSortApply.addEventListener("click", applyHeapSortList);
+el.heapSortExample.addEventListener("click", loadHeapSortExample);
+el.heapSortList.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    applyHeapSortList();
+  }
+});
 el.sortPrev.addEventListener("click", previousSortStep);
 el.sortNext.addEventListener("click", nextSortStep);
 el.sortPlay.addEventListener("click", toggleSortPlayback);
@@ -3694,6 +3744,81 @@ function closeSettingsMenu() {
   el.languageSetting.setAttribute("aria-expanded", "false");
   el.languageOptions.classList.add("is-hidden");
   document.body.classList.remove("menu-open");
+}
+
+function openExamSimulation() {
+  stopExamTimer();
+  state.examRunning = false;
+  state.examExpired = false;
+  state.examSecondsRemaining = state.examDurationMinutes * 60;
+  el.examSimulationSetup.classList.remove("is-hidden");
+  el.examSimulationSession.classList.add("is-hidden");
+  el.examSimulationSession.classList.remove("is-expired");
+  el.examSimulationStatus.textContent = t("exam.running");
+  updateExamTimerDisplay();
+  el.examSimulation.classList.remove("is-hidden");
+  document.body.classList.add("exam-simulation-open");
+  el.examDurationOptions.find((button) => button.classList.contains("is-active"))?.focus();
+}
+
+function closeExamSimulation() {
+  stopExamTimer();
+  state.examRunning = false;
+  state.examExpired = false;
+  el.examSimulation.classList.add("is-hidden");
+  document.body.classList.remove("exam-simulation-open");
+}
+
+function selectExamDuration(minutes) {
+  if (state.examRunning || ![30, 60, 90].includes(minutes)) {
+    return;
+  }
+  state.examDurationMinutes = minutes;
+  state.examSecondsRemaining = minutes * 60;
+  el.examDurationOptions.forEach((button) => {
+    const active = Number(button.dataset.examDuration) === minutes;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  updateExamTimerDisplay();
+}
+
+function startExamSimulation() {
+  stopExamTimer();
+  state.examSecondsRemaining = state.examDurationMinutes * 60;
+  state.examRunning = true;
+  state.examExpired = false;
+  el.examSimulationSetup.classList.add("is-hidden");
+  el.examSimulationSession.classList.remove("is-hidden", "is-expired");
+  el.examSimulationStatus.textContent = t("exam.running");
+  updateExamTimerDisplay();
+  state.examTimer = window.setInterval(() => {
+    state.examSecondsRemaining = Math.max(0, state.examSecondsRemaining - 1);
+    updateExamTimerDisplay();
+    if (state.examSecondsRemaining === 0) {
+      stopExamTimer();
+      state.examRunning = false;
+      state.examExpired = true;
+      el.examSimulationSession.classList.add("is-expired");
+      el.examSimulationStatus.textContent = t("exam.expired");
+    }
+  }, 1000);
+  el.examSimulationEnd.focus();
+}
+
+function stopExamTimer() {
+  if (state.examTimer) {
+    window.clearInterval(state.examTimer);
+    state.examTimer = null;
+  }
+}
+
+function updateExamTimerDisplay() {
+  const minutes = Math.floor(state.examSecondsRemaining / 60);
+  const seconds = state.examSecondsRemaining % 60;
+  const value = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  el.examSimulationTimer.textContent = value;
+  el.examSimulationTimer.setAttribute("aria-label", `${t("exam.remaining")}: ${value}`);
 }
 
 function initializeTheme() {
@@ -6079,12 +6204,61 @@ function resetSortValues() {
   rebuildSortSteps();
 }
 
+function parseHeapSortList(value) {
+  const tokens = value
+    .trim()
+    .split(/[\s,;]+/)
+    .filter(Boolean);
+  if (tokens.length < 2 || tokens.length > 15) {
+    return null;
+  }
+  const values = tokens.map(Number);
+  if (values.some((item) => !Number.isInteger(item) || Math.abs(item) > 9999)) {
+    return null;
+  }
+  return values;
+}
+
+function applyHeapSortList() {
+  const values = parseHeapSortList(el.heapSortList.value);
+  if (!values) {
+    el.heapSortFeedback.textContent = isEnglish()
+      ? "Enter between 2 and 15 integers, separated by commas or spaces."
+      : "Gib 2 bis 15 ganze Zahlen ein, getrennt durch Kommas oder Leerzeichen.";
+    el.heapSortFeedback.className = "heap-sort-feedback is-error";
+    return;
+  }
+  state.sortValues = values;
+  rebuildSortSteps();
+  el.heapSortFeedback.textContent = isEnglish()
+    ? `${values.length} values loaded. Use the step buttons to build and empty the heap.`
+    : `${values.length} Werte geladen. Baue und leere den Heap jetzt mit den Schritt-Buttons.`;
+  el.heapSortFeedback.className = "heap-sort-feedback is-success";
+}
+
+function loadHeapSortExample() {
+  state.sortValues = [42, 18, 35, 7, 12, 20, 30, 4, 9];
+  rebuildSortSteps();
+  el.heapSortFeedback.textContent = isEnglish()
+    ? "Example loaded. Start with the first heap step."
+    : "Beispiel geladen. Starte mit dem ersten Heap-Schritt.";
+  el.heapSortFeedback.className = "heap-sort-feedback is-success";
+}
+
 function rebuildSortSteps() {
   stopSortPlayback();
   const algorithm = el.sortAlgorithm.value;
   state.sortSteps = buildSortSteps(algorithm, state.sortValues);
   state.sortStepIndex = 0;
   document.getElementById("shuffle-sort").disabled = algorithm === "topological";
+  el.heapSortSandbox.classList.toggle("is-hidden", algorithm !== "heap");
+  el.sortBars.classList.toggle("is-hidden", algorithm === "heap");
+  el.heapSortFeedback.textContent = "";
+  el.heapSortFeedback.className = "heap-sort-feedback";
+  if (algorithm === "heap") {
+    el.heapSortMode.value = state.heapSortMode;
+    el.heapSortList.value = state.sortValues.join(", ");
+  }
   renderSortStep();
   renderSortInfo();
 }
@@ -6119,7 +6293,9 @@ function buildSortSteps(algorithm, values) {
     quick: buildQuickSortSteps,
     topological: buildTopologicalSortSteps,
   };
-  return builders[algorithm](values);
+  return algorithm === "heap"
+    ? buildHeapSortSteps(values, state.heapSortMode)
+    : builders[algorithm](values);
 }
 
 function pushSortStep(steps, array, note, active = [], sorted = []) {
@@ -6348,58 +6524,79 @@ function buildMergeSortSteps(values) {
   return steps;
 }
 
-function buildHeapSortSteps(values) {
+function buildHeapSortSteps(values, mode = "max") {
   const arr = [...values];
   const steps = [];
-  pushSortStep(steps, arr, localizedAlgorithmText(
-    "Start: baue zuerst einen Max-Heap.",
-    "Start: build a max-heap first.",
+  const isMaxHeap = mode === "max";
+  const heapLabel = isMaxHeap ? "Max-Heap" : "Min-Heap";
+  const englishHeapLabel = isMaxHeap ? "max-heap" : "min-heap";
+  const preferred = (first, second) => isMaxHeap ? first > second : first < second;
+
+  function pushHeapStep(note, active = [], sorted = [], heapSize = arr.length, phase = "build") {
+    steps.push({
+      array: [...arr],
+      note,
+      active: new Set(active),
+      sorted: new Set(sorted),
+      heapSort: true,
+      heapMode: mode,
+      heapSize,
+      phase,
+    });
+  }
+
+  pushHeapStep(localizedAlgorithmText(
+    `Start: Die Liste wird als vollständiger Binärbaum gelesen und anschließend zum ${heapLabel} umgebaut.`,
+    `Start: read the list as a complete binary tree, then transform it into a ${englishHeapLabel}.`,
   ));
 
   function heapify(size, root) {
-    let largest = root;
+    let best = root;
     const left = 2 * root + 1;
     const right = 2 * root + 2;
-    if (left < size && arr[left] > arr[largest]) {
-      largest = left;
+    if (left < size && preferred(arr[left], arr[best])) {
+      best = left;
     }
-    if (right < size && arr[right] > arr[largest]) {
-      largest = right;
+    if (right < size && preferred(arr[right], arr[best])) {
+      best = right;
     }
-    pushSortStep(steps, arr, localizedAlgorithmText(
-      `Prüfe Heap-Eigenschaft bei Position ${root + 1}.`,
-      `Check the heap property at position ${root + 1}.`,
-    ), [root, left, right].filter((item) => item < size), range(size, arr.length));
-    if (largest !== root) {
-      [arr[root], arr[largest]] = [arr[largest], arr[root]];
-      pushSortStep(steps, arr, localizedAlgorithmText(
-        "Tausche größeres Kind nach oben.",
-        "Swap the larger child upwards.",
-      ), [root, largest], range(size, arr.length));
-      heapify(size, largest);
+    pushHeapStep(localizedAlgorithmText(
+      `Vergleiche Knoten ${arr[root]} mit seinen vorhandenen Kindern.`,
+      `Compare vertex ${arr[root]} with its existing children.`,
+    ), [root, left, right].filter((item) => item < size), range(size, arr.length), size, "compare");
+    if (best !== root) {
+      const parentValue = arr[root];
+      const childValue = arr[best];
+      [arr[root], arr[best]] = [arr[best], arr[root]];
+      pushHeapStep(localizedAlgorithmText(
+        `${childValue} hat im ${heapLabel} Vorrang vor ${parentValue} und wird nach oben getauscht.`,
+        `${childValue} has priority over ${parentValue} in the ${englishHeapLabel} and is swapped upwards.`,
+      ), [root, best], range(size, arr.length), size, "swap");
+      heapify(size, best);
     }
   }
 
   for (let i = Math.floor(arr.length / 2) - 1; i >= 0; i -= 1) {
     heapify(arr.length, i);
   }
-  pushSortStep(steps, arr, localizedAlgorithmText(
-    "Max-Heap steht: das Maximum liegt an der Wurzel.",
-    "The max-heap is ready: the maximum is at the root.",
-  ), [0]);
+  pushHeapStep(localizedAlgorithmText(
+    `${heapLabel} fertig: ${arr[0]} liegt als nächstes zu entnehmendes Element an der Wurzel.`,
+    `${englishHeapLabel} complete: ${arr[0]} is at the root and will be extracted next.`,
+  ), [0], [], arr.length, "ready");
 
   for (let end = arr.length - 1; end > 0; end -= 1) {
+    const rootValue = arr[0];
     [arr[0], arr[end]] = [arr[end], arr[0]];
-    pushSortStep(steps, arr, localizedAlgorithmText(
-      "Lege das aktuelle Maximum ans Ende.",
-      "Move the current maximum to the end.",
-    ), [0, end], range(end, arr.length));
+    pushHeapStep(localizedAlgorithmText(
+      `Entnimm ${rootValue} aus der Wurzel und lege den Wert an Position ${end}.`,
+      `Extract ${rootValue} from the root and place it at position ${end}.`,
+    ), [0, end], range(end, arr.length), end, "extract");
     heapify(end, 0);
   }
-  pushSortStep(steps, arr, localizedAlgorithmText(
-    "Fertig: der sortierte Bereich ist komplett.",
-    "Done: the sorted section is complete.",
-  ), [], range(0, arr.length));
+  pushHeapStep(localizedAlgorithmText(
+    `Fertig: Der ${heapLabel} wurde vollständig geleert und die Liste ist ${isMaxHeap ? "aufsteigend" : "absteigend"} sortiert.`,
+    `Done: the ${englishHeapLabel} has been emptied and the list is sorted in ${isMaxHeap ? "ascending" : "descending"} order.`,
+  ), [], range(0, arr.length), 0, "done");
   return steps;
 }
 
@@ -6469,6 +6666,11 @@ function renderSortStep() {
     return;
   }
 
+  if (step.heapSort) {
+    renderHeapSortStep(step);
+    return;
+  }
+
   if (step.topological) {
     renderTopologicalSortStep(step);
     return;
@@ -6515,6 +6717,101 @@ function renderSortStep() {
   el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
 }
 
+function renderHeapSortStep(step) {
+  renderHeapSortArray(step);
+  renderHeapSortTree(step);
+
+  el.sortNote.textContent = step.note;
+  el.sortStepCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
+  const activeValues = [...step.active].map((index) => step.array[index]);
+  const colorText = isEnglish()
+    ? `${activeValues.length ? `Orange marks the values currently involved: ${activeValues.join(", ")}. ` : ""}Green values have already left the heap and are in their final position.`
+    : `${activeValues.length ? `Orange markiert die gerade beteiligten Werte: ${activeValues.join(", ")}. ` : ""}Grüne Werte haben den Heap bereits verlassen und stehen an ihrer endgültigen Position.`;
+  const whyText = step.heapMode === "max"
+    ? (isEnglish()
+      ? "In a max-heap, every parent is at least as large as its children. The largest remaining value is therefore always available at the root."
+      : "Im Max-Heap ist jeder Elternwert mindestens so groß wie seine Kinder. Dadurch steht der größte verbleibende Wert immer an der Wurzel bereit.")
+    : (isEnglish()
+      ? "In a min-heap, every parent is at most as large as its children. The smallest remaining value is therefore always available at the root."
+      : "Im Min-Heap ist jeder Elternwert höchstens so groß wie seine Kinder. Dadurch steht der kleinste verbleibende Wert immer an der Wurzel bereit.");
+  el.sortStepDetail.innerHTML = `
+    <p><strong>${isEnglish() ? "What happens?" : "Was passiert?"}</strong> ${step.note}</p>
+    <p><strong>${isEnglish() ? "What do the colors show?" : "Was zeigen die Farben?"}</strong> ${colorText}</p>
+    <p><strong>${isEnglish() ? "Why is this correct?" : "Warum ist das korrekt?"}</strong> ${whyText}</p>
+  `;
+  el.sortPrev.disabled = state.sortStepIndex === 0;
+  el.sortNext.disabled = state.sortStepIndex >= state.sortSteps.length - 1;
+}
+
+function renderHeapSortArray(step) {
+  el.heapSortArray.innerHTML = step.array.map((value, index) => {
+    const classes = [
+      "heap-sort-array-item",
+      step.active.has(index) ? "is-active" : "",
+      step.sorted.has(index) ? "is-sorted" : "",
+      index >= step.heapSize && !step.sorted.has(index) ? "is-outside" : "",
+    ].filter(Boolean).join(" ");
+    return `
+      <div class="${classes}">
+        <strong>${value}</strong>
+        <small>Index ${index}</small>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderHeapSortTree(step) {
+  if (step.heapSize === 0) {
+    el.heapSortTree.innerHTML = `
+      <p class="heap-sort-complete">
+        <strong>${isEnglish() ? "Heap empty" : "Heap geleert"}</strong>
+        <span>${isEnglish() ? "All values are now in the sorted array." : "Alle Werte stehen jetzt im sortierten Array."}</span>
+      </p>
+    `;
+    return;
+  }
+
+  const width = 820;
+  const levels = Math.floor(Math.log2(step.heapSize)) + 1;
+  const height = Math.max(220, 70 + (levels - 1) * 105);
+  const positions = Array.from({ length: step.heapSize }, (_, index) => {
+    const level = Math.floor(Math.log2(index + 1));
+    const firstIndex = (2 ** level) - 1;
+    const positionInLevel = index - firstIndex;
+    const countInLevel = 2 ** level;
+    return {
+      x: ((positionInLevel + 1) * width) / (countInLevel + 1),
+      y: 48 + level * 100,
+    };
+  });
+  const edges = positions.slice(1).map((position, index) => {
+    const nodeIndex = index + 1;
+    const parent = positions[Math.floor((nodeIndex - 1) / 2)];
+    return `<line x1="${parent.x}" y1="${parent.y + 28}" x2="${position.x}" y2="${position.y - 28}"></line>`;
+  }).join("");
+  const nodes = positions.map((position, index) => {
+    const classes = [
+      "heap-sort-tree-node",
+      index === 0 ? "is-root" : "",
+      step.active.has(index) ? "is-active" : "",
+    ].filter(Boolean).join(" ");
+    return `
+      <g class="${classes}" transform="translate(${position.x} ${position.y})">
+        <circle r="30"></circle>
+        <text class="heap-sort-node-value" y="-2">${step.array[index]}</text>
+        <text class="heap-sort-node-index" y="15">i:${index}</text>
+      </g>
+    `;
+  }).join("");
+
+  el.heapSortTree.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${isEnglish() ? "Current heap tree" : "Aktueller Heap-Baum"}">
+      <g class="heap-sort-tree-edges">${edges}</g>
+      <g>${nodes}</g>
+    </svg>
+  `;
+}
+
 function renderTopologicalSortStep(step) {
   const nodes = ["A", "B", "C", "D", "E", "F"];
   const edges = ["A → C", "B → C", "B → D", "C → E", "D → F", "E → F"];
@@ -6549,6 +6846,19 @@ function renderTopologicalSortStep(step) {
 
 function renderSortInfo() {
   const algorithm = sortAlgorithms[el.sortAlgorithm.value];
+  if (el.sortAlgorithm.value === "heap") {
+    const isMaxHeap = state.heapSortMode === "max";
+    const idea = isEnglish()
+      ? `Build a ${isMaxHeap ? "max-heap and repeatedly move the largest" : "min-heap and repeatedly move the smallest"} remaining value from the root to the sorted end of the array.`
+      : `Baue einen ${isMaxHeap ? "Max-Heap und verschiebe wiederholt den größten" : "Min-Heap und verschiebe wiederholt den kleinsten"} verbleibenden Wert von der Wurzel an das sortierte Ende des Arrays.`;
+    el.sortInfo.innerHTML = `
+      <div><strong>${isEnglish() ? "Idea" : "Idee"}</strong><span>${idea}</span></div>
+      <div><strong>${isEnglish() ? "Stable" : "Stabil"}</strong><span>${isEnglish() ? "No" : "Nein"}</span></div>
+      <div><strong>In-place</strong><span>${isEnglish() ? "Yes" : "Ja"}</span></div>
+      <div><strong>${isEnglish() ? "Runtime" : "Laufzeit"}</strong><span>Best O(n log n), Average O(n log n), Worst O(n log n)</span></div>
+    `;
+    return;
+  }
   el.sortInfo.innerHTML = algorithmHtml(`
     <div><strong>Idee</strong><span>${algorithm.idea}</span></div>
     <div><strong>Stabil</strong><span>${algorithm.stable}</span></div>

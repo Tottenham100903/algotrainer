@@ -8549,3 +8549,613 @@ body.theme-dark .global-search-field {
     font-size: clamp(1.65rem, 8vw, 2.35rem);
   }
 }
+
+/* Heapsort sandbox: one state shared by the array and tree views. */
+.heap-sort-sandbox {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  border: 1px solid rgba(13, 107, 95, 0.18);
+  border-radius: 22px;
+  padding: clamp(1rem, 2.5vw, 1.4rem);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(217, 95, 67, 0.12), transparent 32%),
+    linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(241, 248, 245, 0.88));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.heap-sort-sandbox.is-hidden {
+  display: none;
+}
+
+.heap-sort-sandbox-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.heap-sort-sandbox-head h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+}
+
+.heap-sort-controls {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.45fr) minmax(260px, 1.4fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.heap-sort-controls label {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.heap-sort-controls input,
+.heap-sort-controls select {
+  width: 100%;
+  min-height: var(--control-height);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.72rem 0.85rem;
+  color: var(--text);
+  background: var(--surface-strong);
+  font: inherit;
+}
+
+.heap-sort-controls input:focus,
+.heap-sort-controls select:focus {
+  border-color: rgba(13, 107, 95, 0.48);
+  outline: 3px solid rgba(13, 107, 95, 0.1);
+}
+
+.heap-sort-feedback {
+  min-height: 1.4rem;
+  margin: -0.2rem 0 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.heap-sort-feedback.is-error {
+  color: var(--wrong);
+}
+
+.heap-sort-feedback.is-success {
+  color: var(--correct);
+}
+
+.heap-sort-stage {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.heap-sort-stage > section {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(255, 253, 248, 0.78);
+}
+
+.heap-sort-array {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-content: start;
+  margin-top: 0.7rem;
+}
+
+.heap-sort-array-item {
+  display: grid;
+  flex: 1 0 64px;
+  max-width: 92px;
+  min-height: 68px;
+  place-items: center;
+  gap: 0.1rem;
+  border: 2px solid rgba(13, 107, 95, 0.22);
+  border-radius: 13px;
+  padding: 0.5rem;
+  color: var(--text);
+  background: var(--surface-strong);
+  box-shadow: 0 8px 18px rgba(31, 42, 48, 0.07);
+  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, opacity 220ms ease;
+}
+
+.heap-sort-array-item strong {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.02rem;
+}
+
+.heap-sort-array-item small {
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.62rem;
+}
+
+.heap-sort-array-item.is-sorted {
+  border-color: var(--correct);
+  background: rgba(33, 110, 57, 0.13);
+}
+
+.heap-sort-array-item.is-active {
+  border-color: var(--secondary);
+  background: rgba(217, 95, 67, 0.13);
+  transform: translateY(-4px);
+}
+
+.heap-sort-array-item.is-outside {
+  opacity: 0.42;
+}
+
+.heap-sort-tree {
+  display: grid;
+  min-height: 300px;
+  align-items: center;
+  margin-top: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.heap-sort-tree svg {
+  display: block;
+  width: max(100%, 620px);
+  min-height: 260px;
+}
+
+.heap-sort-tree-edges line {
+  stroke: rgba(13, 107, 95, 0.28);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.heap-sort-tree-node circle {
+  fill: var(--surface-strong);
+  stroke: rgba(13, 107, 95, 0.45);
+  stroke-width: 3;
+  filter: drop-shadow(0 8px 8px rgba(31, 42, 48, 0.1));
+  transition: fill 220ms ease, stroke 220ms ease;
+}
+
+.heap-sort-tree-node.is-root circle {
+  stroke: var(--primary);
+  stroke-width: 4;
+}
+
+.heap-sort-tree-node.is-active circle {
+  fill: rgba(217, 95, 67, 0.18);
+  stroke: var(--secondary);
+  stroke-width: 5;
+}
+
+.heap-sort-tree-node text {
+  fill: var(--text);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.heap-sort-node-value {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.heap-sort-node-index {
+  fill: var(--muted) !important;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+}
+
+.heap-sort-complete {
+  display: grid;
+  gap: 0.35rem;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.heap-sort-complete strong {
+  color: var(--correct);
+  font-size: 1.2rem;
+}
+
+body.theme-dark .heap-sort-sandbox {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(217, 95, 67, 0.14), transparent 32%),
+    rgba(24, 37, 41, 0.9);
+}
+
+body.theme-dark .heap-sort-stage > section,
+body.theme-dark .heap-sort-array-item {
+  background: rgba(28, 44, 49, 0.92);
+}
+
+@media (max-width: 900px) {
+  .heap-sort-controls,
+  .heap-sort-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .heap-sort-controls button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .heap-sort-sandbox-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .heap-sort-sandbox-head button {
+    width: 100%;
+  }
+
+  .heap-sort-stage > section {
+    padding: 0.8rem;
+  }
+
+  .heap-sort-array-item {
+    flex-basis: 58px;
+    min-height: 62px;
+  }
+}
+
+/* Empty exam simulation shell below the learning-path entry. */
+.exam-simulation-entry {
+  position: fixed;
+  top: 9.55rem;
+  right: 1rem;
+  z-index: 399;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  border: 1px solid rgba(217, 95, 67, 0.22);
+  padding: 0.7rem 1rem;
+  color: #a74330;
+  background: rgba(255, 248, 239, 0.88);
+  box-shadow: 0 14px 32px rgba(78, 63, 34, 0.12);
+  text-align: left;
+  backdrop-filter: blur(12px);
+}
+
+.exam-simulation-entry > span:last-child {
+  display: grid;
+  min-width: 0;
+  line-height: 1.05;
+  font-weight: 700;
+}
+
+.exam-simulation-entry small {
+  margin-bottom: 0.24rem;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.exam-simulation-entry-icon {
+  display: grid;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(145deg, var(--secondary), #ad3d28);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+}
+
+body.exam-simulation-open {
+  overflow: hidden;
+}
+
+.exam-simulation {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.exam-simulation.is-hidden {
+  display: none;
+}
+
+.exam-simulation-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+  padding: 0;
+  background: rgba(11, 29, 32, 0.46);
+  backdrop-filter: blur(8px);
+  cursor: default;
+  animation: fade-in 180ms ease both;
+}
+
+.exam-simulation-dialog {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(760px, 100%);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 28px;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 92% 7%, rgba(217, 95, 67, 0.13), transparent 30%),
+    var(--surface-strong);
+  box-shadow: 0 2.2rem 6rem rgba(10, 26, 29, 0.34);
+  animation: exam-dialog-in 260ms cubic-bezier(0.2, 0.85, 0.25, 1.1) both;
+}
+
+.exam-simulation-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding: 1.25rem 1.35rem 1rem;
+}
+
+.exam-simulation-head h2 {
+  margin: 0;
+  font-size: clamp(1.55rem, 4vw, 2.35rem);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.exam-simulation-close {
+  display: grid;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  min-height: 0;
+  place-items: center;
+  border-radius: 50%;
+  padding: 0;
+  color: var(--muted);
+  background: rgba(31, 42, 48, 0.07);
+  font-size: 1.5rem;
+}
+
+.exam-simulation-setup,
+.exam-simulation-session {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.exam-simulation-setup.is-hidden,
+.exam-simulation-session.is-hidden {
+  display: none;
+}
+
+.exam-simulation-setup h3,
+.exam-empty-state h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.exam-simulation-setup p,
+.exam-empty-state p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.exam-duration-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.exam-duration-option {
+  display: grid;
+  min-width: 0;
+  min-height: 118px;
+  place-items: center;
+  align-content: center;
+  gap: 0.18rem;
+  border: 2px solid rgba(13, 107, 95, 0.12);
+  border-radius: 18px;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(13, 107, 95, 0.07), transparent 58%),
+    rgba(255, 253, 248, 0.78);
+}
+
+.exam-duration-option strong {
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1;
+}
+
+.exam-duration-option span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.exam-duration-option.is-active {
+  border-color: var(--secondary);
+  background:
+    radial-gradient(circle at top, rgba(217, 95, 67, 0.16), transparent 62%),
+    rgba(255, 249, 239, 0.94);
+  box-shadow: 0 14px 30px rgba(217, 95, 67, 0.12);
+  transform: translateY(-2px);
+}
+
+.exam-simulation-start,
+.exam-simulation-end {
+  width: 100%;
+}
+
+.exam-session-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(13, 107, 95, 0.14);
+  border-radius: 18px;
+  padding: 0.9rem 1rem;
+  background: rgba(13, 107, 95, 0.055);
+}
+
+.exam-session-toolbar > div {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.exam-session-toolbar small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+#exam-simulation-timer {
+  color: var(--primary-strong);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  line-height: 1;
+}
+
+#exam-simulation-status {
+  border-radius: 999px;
+  padding: 0.5rem 0.75rem;
+  color: var(--primary-strong);
+  background: rgba(13, 107, 95, 0.1);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.exam-simulation-session.is-expired #exam-simulation-timer,
+.exam-simulation-session.is-expired #exam-simulation-status {
+  color: var(--wrong);
+}
+
+.exam-simulation-session.is-expired #exam-simulation-status {
+  background: rgba(163, 50, 11, 0.1);
+}
+
+.exam-empty-state {
+  display: grid;
+  min-height: 280px;
+  place-items: center;
+  align-content: center;
+  border: 2px dashed rgba(13, 107, 95, 0.18);
+  border-radius: 22px;
+  padding: 2rem;
+  text-align: center;
+  background:
+    radial-gradient(circle at center, rgba(13, 107, 95, 0.07), transparent 58%);
+}
+
+.exam-empty-state > span {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  margin-bottom: 0.8rem;
+  border-radius: 50%;
+  color: var(--secondary);
+  background: rgba(217, 95, 67, 0.1);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 2rem;
+}
+
+body.theme-dark .exam-simulation-entry {
+  border-color: rgba(217, 95, 67, 0.28);
+  background: rgba(37, 43, 43, 0.9);
+}
+
+body.theme-dark .exam-duration-option {
+  background: rgba(28, 44, 49, 0.9);
+}
+
+@keyframes exam-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.2rem) scale(0.97);
+  }
+}
+
+@media (max-width: 640px) {
+  .exam-simulation-entry {
+    top: 8.55rem;
+    right: 0.65rem;
+    max-width: calc(100vw - 1.3rem);
+  }
+
+  .exam-simulation {
+    align-items: end;
+    padding: 0.55rem;
+  }
+
+  .exam-simulation-dialog {
+    max-height: calc(100dvh - 1.1rem);
+    border-radius: 22px;
+  }
+
+  .exam-duration-options {
+    gap: 0.5rem;
+  }
+
+  .exam-duration-option {
+    min-height: 100px;
+    padding-inline: 0.4rem;
+  }
+
+  .exam-session-toolbar {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .exam-empty-state {
+    min-height: 230px;
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .exam-simulation-entry {
+    top: 8.35rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .exam-simulation-entry-icon {
+    flex-basis: 1.8rem;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .exam-duration-option strong {
+    font-size: 1.8rem;
+  }
+
+  .exam-duration-option span {
+    font-size: 0.7rem;
+  }
+}

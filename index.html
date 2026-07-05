@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260705-text-flow">
+  <link rel="stylesheet" href="styles.css?v=20260705-exam-simulation">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -91,6 +91,14 @@ queue: [A, C, D]</pre>
           <span>
             <small data-i18n="learning.progress">Dein Fortschritt</small>
             <span data-i18n="learning.path">Lernpfad</span>
+          </span>
+        </button>
+
+        <button id="exam-simulation-entry" class="exam-simulation-entry" type="button">
+          <span class="exam-simulation-entry-icon" aria-hidden="true">◷</span>
+          <span>
+            <small data-i18n="exam.practice">Prüfungsmodus</small>
+            <span data-i18n="exam.title">Prüfungssimulation</span>
           </span>
         </button>
 
@@ -855,6 +863,44 @@ queue: [A, C, D]</pre>
               <button id="sort-next" class="secondary-btn" type="button">Ein Schritt weiter</button>
             </div>
 
+            <section id="heap-sort-sandbox" class="heap-sort-sandbox is-hidden" aria-labelledby="heap-sort-sandbox-title">
+              <div class="heap-sort-sandbox-head">
+                <div>
+                  <p class="section-label" data-i18n="heapSandbox.label">Heap-Sandbox</p>
+                  <h3 id="heap-sort-sandbox-title" data-i18n="heapSandbox.title">Eigene Liste als Heap untersuchen</h3>
+                </div>
+                <button id="heap-sort-example" class="secondary-btn" type="button" data-i18n="heapSandbox.example">Beispiel laden</button>
+              </div>
+
+              <div class="heap-sort-controls">
+                <label>
+                  <span data-i18n="heapSandbox.type">Heap-Typ</span>
+                  <select id="heap-sort-mode">
+                    <option value="max" data-i18n="heapSandbox.max">Max-Heap</option>
+                    <option value="min" data-i18n="heapSandbox.min">Min-Heap</option>
+                  </select>
+                </label>
+                <label class="heap-sort-list-field">
+                  <span data-i18n="heapSandbox.list">Zahlenliste</span>
+                  <input id="heap-sort-list" type="text" inputmode="numeric" autocomplete="off" placeholder="42, 18, 35, 7, 12">
+                </label>
+                <button id="heap-sort-apply" class="primary-btn" type="button" data-i18n="heapSandbox.build">Heap erstellen</button>
+              </div>
+
+              <p id="heap-sort-feedback" class="heap-sort-feedback" aria-live="polite"></p>
+
+              <div class="heap-sort-stage">
+                <section>
+                  <p class="tree-label" data-i18n="heapSandbox.array">Liste / Array</p>
+                  <div id="heap-sort-array" class="heap-sort-array" aria-live="polite"></div>
+                </section>
+                <section>
+                  <p class="tree-label" data-i18n="heapSandbox.tree">Heap-Baum</p>
+                  <div id="heap-sort-tree" class="heap-sort-tree" aria-live="polite"></div>
+                </section>
+              </div>
+            </section>
+
             <div id="sort-bars" class="sort-bars" aria-label="Sortiervisualisierung"></div>
             <div class="sort-step-row">
               <span id="sort-step-count"></span>
@@ -1242,6 +1288,50 @@ queue: [A, C, D]</pre>
     </main>
   </div>
 
+  <section id="exam-simulation" class="exam-simulation is-hidden" role="dialog" aria-modal="true" aria-labelledby="exam-simulation-title">
+    <button class="exam-simulation-backdrop" type="button" data-exam-close aria-label="Prüfungssimulation schließen" data-i18n-aria-label="exam.close"></button>
+    <article class="exam-simulation-dialog">
+      <header class="exam-simulation-head">
+        <div>
+          <p class="section-label" data-i18n="exam.practice">Prüfungsmodus</p>
+          <h2 id="exam-simulation-title" data-i18n="exam.title">Prüfungssimulation</h2>
+        </div>
+        <button id="exam-simulation-close" class="exam-simulation-close" type="button" data-exam-close aria-label="Prüfungssimulation schließen" data-i18n-aria-label="exam.close">×</button>
+      </header>
+
+      <div id="exam-simulation-setup" class="exam-simulation-setup">
+        <div>
+          <h3 data-i18n="exam.chooseDuration">Wie lange soll deine Prüfung dauern?</h3>
+          <p data-i18n="exam.chooseDurationCopy">Nach dem Start läuft die gewählte Zeit ohne Unterbrechung herunter.</p>
+        </div>
+        <div class="exam-duration-options" role="group" aria-label="Prüfungsdauer auswählen" data-i18n-aria-label="exam.durationLabel">
+          <button class="exam-duration-option is-active" type="button" data-exam-duration="30" aria-pressed="true"><strong>30</strong><span data-i18n="exam.minutes">Minuten</span></button>
+          <button class="exam-duration-option" type="button" data-exam-duration="60" aria-pressed="false"><strong>60</strong><span data-i18n="exam.minutes">Minuten</span></button>
+          <button class="exam-duration-option" type="button" data-exam-duration="90" aria-pressed="false"><strong>90</strong><span data-i18n="exam.minutes">Minuten</span></button>
+        </div>
+        <button id="exam-simulation-start" class="primary-btn exam-simulation-start" type="button" data-i18n="exam.start">Prüfung starten</button>
+      </div>
+
+      <div id="exam-simulation-session" class="exam-simulation-session is-hidden">
+        <div class="exam-session-toolbar">
+          <div>
+            <small data-i18n="exam.remaining">Verbleibende Zeit</small>
+            <strong id="exam-simulation-timer">30:00</strong>
+          </div>
+          <span id="exam-simulation-status" data-i18n="exam.running">Prüfung läuft</span>
+        </div>
+
+        <div class="exam-empty-state">
+          <span aria-hidden="true">∅</span>
+          <h3 data-i18n="exam.emptyTitle">Noch keine Prüfungsaufgaben</h3>
+          <p data-i18n="exam.emptyCopy">Hier werden später die Aufgaben der Prüfungssimulation angezeigt.</p>
+        </div>
+
+        <button id="exam-simulation-end" class="secondary-btn exam-simulation-end" type="button" data-i18n="exam.end">Prüfung beenden</button>
+      </div>
+    </article>
+  </section>
+
   <div id="global-search" class="global-search">
     <button id="global-search-toggle" class="global-search-toggle" type="button" aria-controls="global-search-panel" aria-expanded="false">
       <span aria-hidden="true"></span>
@@ -1311,6 +1401,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260704-full-en-v2"></script>
+  <script type="module" src="app.js?v=20260705-exam-simulation"></script>
 </body>
 </html>
