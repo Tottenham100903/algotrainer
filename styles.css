@@ -8359,3 +8359,193 @@ body.theme-dark .global-search-field {
     font-size: clamp(1.7rem, 7.6vw, 2.35rem);
   }
 }
+
+/* Keep translated and long content visible across every layout. */
+.krugo-scene,
+.krugo-speech,
+.krugo-speech > *,
+.boarding-message,
+.boarding-message > *,
+.card-head > *,
+.settings-item > *,
+.module-tile > *,
+.module-cta > *,
+.sort-step-row > * {
+  min-width: 0;
+}
+
+.krugo-speech,
+.boarding-message > div {
+  max-width: 100%;
+}
+
+.krugo-speech h2,
+.krugo-speech > p,
+.boarding-message h2,
+.boarding-message p,
+.module-title,
+.card h2,
+.card h3,
+.module-tile strong,
+.module-tile strong span,
+.topic-nav-btn,
+.section-tab-btn,
+.settings-item strong,
+.settings-item small,
+.feedback,
+.global-search-result-text strong,
+.global-search-result-text small {
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.krugo-speech h2,
+.boarding-message h2,
+.module-title,
+.card h2,
+.card h3,
+.module-tile strong {
+  text-wrap: balance;
+}
+
+.krugo-speech h2,
+.boarding-message h2,
+.module-title,
+.card h2,
+.card h3,
+.module-tile strong,
+.basics-story-card h1 {
+  line-height: 1.08;
+  padding-block: 0.04em;
+}
+
+.krugo-speech > p,
+.boarding-message p,
+.module-copy,
+.section-copy,
+.feedback {
+  text-wrap: pretty;
+}
+
+.module-tile strong span {
+  width: auto;
+  max-width: 100%;
+  white-space: normal;
+}
+
+.module-copy {
+  max-width: 100%;
+}
+
+.module-cta {
+  gap: 0.75rem;
+  line-height: 1.35;
+}
+
+.module-cta > span {
+  font-size: inherit;
+}
+
+.module-cta > span[aria-hidden] {
+  flex: 0 0 auto;
+  font-size: 1.4rem;
+}
+
+.topic-nav-btn,
+.section-tab-btn {
+  height: auto;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.settings-menu {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.global-search-result {
+  min-height: 3.65rem;
+  height: auto;
+}
+
+.global-search-result-text {
+  gap: 0.12rem;
+}
+
+.global-search-result-text strong,
+.global-search-result-text small {
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.35;
+}
+
+.sort-step-row {
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 680px) {
+  .krugo-scene {
+    max-width: calc(100vw - 1.4rem);
+  }
+
+  .krugo-speech {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .krugo-actions {
+    width: 100%;
+  }
+
+  .krugo-actions button {
+    min-width: 0;
+    padding-inline: 0.75rem;
+    white-space: normal;
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 430px) {
+  .krugo-speech {
+    padding: 1.1rem;
+  }
+
+  .krugo-speech h2 {
+    font-size: clamp(1.55rem, 7.5vw, 2rem);
+    line-height: 1.08;
+  }
+
+  .krugo-speech > p:not(.section-label) {
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
+  .krugo-actions,
+  .basics-story-card > footer {
+    grid-template-columns: 1fr;
+  }
+
+  .basics-story-card > footer button {
+    width: 100%;
+    font-size: 0.78rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  .module-tile {
+    min-height: 0;
+    padding: 1.35rem;
+  }
+
+  .module-tile strong,
+  .module-tile-avl strong,
+  .subject-tile strong,
+  .subject-tile-basics strong,
+  .module-tile-sorting strong,
+  .module-tile-search strong {
+    font-size: clamp(1.65rem, 8vw, 2.35rem);
+  }
+}
