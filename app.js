@@ -27,7 +27,7 @@ import {
   initializeLanguage,
   languageNames,
   t,
-} from "./js/i18n.js?v=20260705-exam-simulation";
+} from "./js/i18n.js?v=20260705-exam-difficulty";
 
 function asCode(lines) {
   return lines.join("\n");
@@ -3040,6 +3040,7 @@ const state = {
   basicsLessonIndex: 0,
   krugoWelcomeShown: false,
   examDurationMinutes: 30,
+  examDifficulty: "medium",
   examSecondsRemaining: 0,
   examTimer: null,
   examRunning: false,
@@ -3074,9 +3075,11 @@ const el = {
   examSimulationSetup: document.getElementById("exam-simulation-setup"),
   examSimulationSession: document.getElementById("exam-simulation-session"),
   examDurationOptions: [...document.querySelectorAll("[data-exam-duration]")],
+  examDifficultyOptions: [...document.querySelectorAll("[data-exam-difficulty]")],
   examSimulationStart: document.getElementById("exam-simulation-start"),
   examSimulationEnd: document.getElementById("exam-simulation-end"),
   examSimulationTimer: document.getElementById("exam-simulation-timer"),
+  examSimulationDifficulty: document.getElementById("exam-simulation-difficulty"),
   examSimulationStatus: document.getElementById("exam-simulation-status"),
   examSimulationCloseButtons: [...document.querySelectorAll("[data-exam-close]")],
   pathAvatar: document.getElementById("path-avatar"),
@@ -3347,6 +3350,9 @@ el.examSimulationEntry.addEventListener("click", openExamSimulation);
 el.examDurationOptions.forEach((button) => {
   button.addEventListener("click", () => selectExamDuration(Number(button.dataset.examDuration)));
 });
+el.examDifficultyOptions.forEach((button) => {
+  button.addEventListener("click", () => selectExamDifficulty(button.dataset.examDifficulty));
+});
 el.examSimulationStart.addEventListener("click", startExamSimulation);
 el.examSimulationEnd.addEventListener("click", closeExamSimulation);
 el.examSimulationCloseButtons.forEach((button) => {
@@ -3363,6 +3369,7 @@ window.addEventListener("infotrain:languagechange", (event) => {
   syncLocalizedContent();
   renderGlobalSearchResults(el.globalSearchInput.value);
   el.examSimulationStatus.textContent = t(state.examExpired ? "exam.expired" : "exam.running");
+  updateExamDifficultyDisplay();
   if (!el.basicsStory.classList.contains("is-hidden")) {
     state.basicsLessons = null;
     openBasicsStory();
@@ -3755,6 +3762,7 @@ function openExamSimulation() {
   el.examSimulationSession.classList.add("is-hidden");
   el.examSimulationSession.classList.remove("is-expired");
   el.examSimulationStatus.textContent = t("exam.running");
+  updateExamDifficultyDisplay();
   updateExamTimerDisplay();
   el.examSimulation.classList.remove("is-hidden");
   document.body.classList.add("exam-simulation-open");
@@ -3783,6 +3791,19 @@ function selectExamDuration(minutes) {
   updateExamTimerDisplay();
 }
 
+function selectExamDifficulty(difficulty) {
+  if (state.examRunning || !["easy", "medium", "hard"].includes(difficulty)) {
+    return;
+  }
+  state.examDifficulty = difficulty;
+  el.examDifficultyOptions.forEach((button) => {
+    const active = button.dataset.examDifficulty === difficulty;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  updateExamDifficultyDisplay();
+}
+
 function startExamSimulation() {
   stopExamTimer();
   state.examSecondsRemaining = state.examDurationMinutes * 60;
@@ -3791,6 +3812,7 @@ function startExamSimulation() {
   el.examSimulationSetup.classList.add("is-hidden");
   el.examSimulationSession.classList.remove("is-hidden", "is-expired");
   el.examSimulationStatus.textContent = t("exam.running");
+  updateExamDifficultyDisplay();
   updateExamTimerDisplay();
   state.examTimer = window.setInterval(() => {
     state.examSecondsRemaining = Math.max(0, state.examSecondsRemaining - 1);
@@ -3819,6 +3841,11 @@ function updateExamTimerDisplay() {
   const value = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   el.examSimulationTimer.textContent = value;
   el.examSimulationTimer.setAttribute("aria-label", `${t("exam.remaining")}: ${value}`);
+}
+
+function updateExamDifficultyDisplay() {
+  el.examSimulationDifficulty.textContent = t(`exam.${state.examDifficulty}`);
+  el.examSimulationDifficulty.dataset.difficulty = state.examDifficulty;
 }
 
 function initializeTheme() {

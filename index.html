@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260705-exam-simulation">
+  <link rel="stylesheet" href="styles.css?v=20260705-exam-difficulty">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -1309,6 +1309,25 @@ queue: [A, C, D]</pre>
           <button class="exam-duration-option" type="button" data-exam-duration="60" aria-pressed="false"><strong>60</strong><span data-i18n="exam.minutes">Minuten</span></button>
           <button class="exam-duration-option" type="button" data-exam-duration="90" aria-pressed="false"><strong>90</strong><span data-i18n="exam.minutes">Minuten</span></button>
         </div>
+
+        <div class="exam-difficulty-copy">
+          <h3 data-i18n="exam.chooseDifficulty">Wie schwierig soll deine Prüfung sein?</h3>
+          <p data-i18n="exam.chooseDifficultyCopy">Die Schwierigkeit bestimmt später Auswahl und Anspruch der Aufgaben.</p>
+        </div>
+        <div class="exam-difficulty-options" role="group" aria-label="Prüfungsschwierigkeit auswählen" data-i18n-aria-label="exam.difficultyLabel">
+          <button class="exam-difficulty-option" type="button" data-exam-difficulty="easy" aria-pressed="false">
+            <strong aria-hidden="true">●</strong>
+            <span data-i18n="exam.easy">Leicht</span>
+          </button>
+          <button class="exam-difficulty-option is-active" type="button" data-exam-difficulty="medium" aria-pressed="true">
+            <strong aria-hidden="true">●●</strong>
+            <span data-i18n="exam.medium">Mittel</span>
+          </button>
+          <button class="exam-difficulty-option" type="button" data-exam-difficulty="hard" aria-pressed="false">
+            <strong aria-hidden="true">●●●</strong>
+            <span data-i18n="exam.hard">Schwer</span>
+          </button>
+        </div>
         <button id="exam-simulation-start" class="primary-btn exam-simulation-start" type="button" data-i18n="exam.start">Prüfung starten</button>
       </div>
 
@@ -1318,7 +1337,10 @@ queue: [A, C, D]</pre>
             <small data-i18n="exam.remaining">Verbleibende Zeit</small>
             <strong id="exam-simulation-timer">30:00</strong>
           </div>
-          <span id="exam-simulation-status" data-i18n="exam.running">Prüfung läuft</span>
+          <div class="exam-session-badges">
+            <span id="exam-simulation-difficulty" data-i18n="exam.medium">Mittel</span>
+            <span id="exam-simulation-status" data-i18n="exam.running">Prüfung läuft</span>
+          </div>
         </div>
 
         <div class="exam-empty-state">
@@ -1401,6 +1423,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260705-exam-simulation"></script>
+  <script type="module" src="app.js?v=20260705-exam-difficulty"></script>
 </body>
 </html>
