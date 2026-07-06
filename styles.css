@@ -2724,6 +2724,62 @@ h2 {
   background: rgba(255, 251, 244, 0.62);
 }
 
+.learning-topic-nav.subject-module-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.subject-detail-nav {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.subject-mode-tabs.subject-detail-nav {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.subject-module-tile {
+  min-height: 330px;
+}
+
+.subject-module-tile strong {
+  margin-top: auto;
+  font-size: clamp(2.15rem, 4.2vw, 4.1rem);
+}
+
+.subject-module-tile .module-cta {
+  width: 100%;
+}
+
+.subject-module-tile-basics {
+  background:
+    radial-gradient(circle at top right, rgba(28, 105, 154, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(232, 244, 249, 0.94));
+}
+
+.subject-module-tile-programming {
+  background:
+    radial-gradient(circle at top right, rgba(102, 93, 166, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(241, 238, 250, 0.94));
+}
+
+.subject-module-tile-data-science {
+  background:
+    radial-gradient(circle at top right, rgba(13, 107, 95, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(239, 246, 241, 0.94));
+}
+
+.subject-module-tile-information-management {
+  background:
+    radial-gradient(circle at top right, rgba(217, 95, 67, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(255, 252, 246, 0.96), rgba(250, 241, 235, 0.94));
+}
+
 .learning-topic-nav .topic-nav-btn,
 #data-structure-topic-nav .topic-nav-btn {
   display: grid;

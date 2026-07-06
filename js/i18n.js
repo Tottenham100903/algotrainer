@@ -1,6 +1,5 @@
 const translations = {
   de: {
-    "common.new": "Neu",
     "common.interactive": "Interaktiv",
     "common.viewSection": "Bereich ansehen",
     "common.openSection": "Bereich öffnen",
@@ -98,7 +97,6 @@ const translations = {
     "exam.expired": "Zeit abgelaufen",
   },
   en: {
-    "common.new": "New",
     "common.interactive": "Interactive",
     "common.viewSection": "View section",
     "common.openSection": "Open section",
@@ -196,7 +194,6 @@ const translations = {
     "exam.expired": "Time is up",
   },
   fr: {
-    "common.new": "Nouveau",
     "common.interactive": "Interactif",
     "common.viewSection": "Voir la section",
     "common.openSection": "Ouvrir la section",
@@ -294,7 +291,6 @@ const translations = {
     "exam.expired": "Temps écoulé",
   },
   es: {
-    "common.new": "Nuevo",
     "common.interactive": "Interactivo",
     "common.viewSection": "Ver sección",
     "common.openSection": "Abrir sección",

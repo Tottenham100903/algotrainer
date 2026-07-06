@@ -2979,15 +2979,19 @@ const state = {
   runtimeQuestion: null,
   basicsTopic: subjectLearningAreas.basics.defaultTopic,
   basicsMode: "learn",
+  basicsDetailOpen: false,
   basicsQuestion: null,
   programmingTopic: subjectLearningAreas.programming.defaultTopic,
   programmingMode: "learn",
+  programmingDetailOpen: false,
   programmingQuestion: null,
   dataScienceTopic: subjectLearningAreas.dataScience.defaultTopic,
   dataScienceMode: "learn",
+  dataScienceDetailOpen: false,
   dataScienceQuestion: null,
   informationManagementTopic: subjectLearningAreas.informationManagement.defaultTopic,
   informationManagementMode: "learn",
+  informationManagementDetailOpen: false,
   informationManagementQuestion: null,
   masterQuestion: null,
   showMasterHelp: false,
@@ -3409,10 +3413,7 @@ document.querySelectorAll("[data-back-home]").forEach((button) => {
 document.querySelectorAll("[data-back-algorithmics]").forEach((button) => {
   button.addEventListener("click", () => setActiveView("algorithmics"));
 });
-el.moduleTiles.forEach((tile) => {
-  tile.addEventListener("pointermove", updateTilePointerMotion);
-  tile.addEventListener("pointerleave", () => resetTileMotion(tile));
-});
+refreshModuleTiles();
 window.addEventListener("scroll", queueScrollTileMotion, { passive: true });
 window.addEventListener("resize", () => {
   queueScrollTileMotion();
@@ -3666,6 +3667,7 @@ function localizedStaticText(text) {
 
 function setActiveView(viewName) {
   closeSettingsMenu();
+  const previousView = state.currentView;
   if (viewName !== "sorting") {
     stopSortPlayback();
   }
@@ -3704,14 +3706,12 @@ function setActiveView(viewName) {
     renderSortStep();
     renderSortInfo();
   }
-  const subjectViewMap = {
-    basics: "basics",
-    programming: "programming",
-    "data-science": "dataScience",
-    "information-management": "informationManagement",
-  };
-  if (subjectViewMap[viewName]) {
-    renderSubjectLearningArea(subjectViewMap[viewName]);
+  const areaKey = subjectAreaForView(viewName);
+  if (areaKey) {
+    if (previousView !== viewName) {
+      state[`${areaKey}DetailOpen`] = false;
+    }
+    renderSubjectLearningArea(areaKey);
   }
   if (viewName === "master") {
     setMasterSection(state.masterSection);
@@ -3730,6 +3730,15 @@ function setActiveView(viewName) {
   queueScrollTileMotion();
   playLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function subjectAreaForView(viewName) {
+  return {
+    basics: "basics",
+    programming: "programming",
+    "data-science": "dataScience",
+    "information-management": "informationManagement",
+  }[viewName] || "";
 }
 
 function openSettingsMenu() {
@@ -4161,15 +4170,13 @@ const staticEnglishText = new Map([
   ["Zurück zur Startseite", "Back to home"],
   ["Zurück zu Algorithmik", "Back to Algorithms"],
   ["Fachbereich", "Subject area"],
-  ["Modul 1", "Module 1"],
-  ["Modul 2", "Module 2"],
-  ["Modul 3", "Module 3"],
-  ["Modul 4", "Module 4"],
   ["Algorithmik", "Algorithms"],
   ["Informatik-Grundlagen", "Computer Science Basics"],
   ["Programmieren", "Programming"],
   ["Informationsmanagement", "Information Management"],
   ["Data Science & Datenbanken", "Data Science & Databases"],
+  ["Daten", "Data"],
+  ["Prozesse", "Processes"],
   ["Wähle ein Thema und starte direkt mit dem Training.", "Choose a topic and start practicing right away."],
   ["Baue ein Gefühl für die Informatik auf: Begriffe, Modelle und Denkweisen, bevor es tief in einzelne Werkzeuge geht.", "Build intuition for computer science: terms, models and ways of thinking before going deep into individual tools."],
   ["Lies Code bewusst, erkenne Sprachunterschiede und trainiere Konzepte, die in Python, Java, C++, HTML und JavaScript wiederkehren.", "Read code deliberately, recognize language differences and practice concepts shared by Python, Java, C++, HTML and JavaScript."],
@@ -4265,7 +4272,6 @@ const staticEnglishText = new Map([
   ["Wörterbücher", "Dictionaries"],
   ["Graphen", "Graphs"],
   ["Stacks & Queues", "Stacks & Queues"],
-  ["Neu", "New"],
   ["Startseite", "Home"],
   ["Lernpfad", "Learning path"],
   ["Fachbereiche", "Subject areas"],
@@ -4556,6 +4562,18 @@ function resetTileMotion(tile) {
   setTileFocus(tile);
 }
 
+function refreshModuleTiles() {
+  el.moduleTiles = [...document.querySelectorAll(".module-tile")];
+  el.moduleTiles.forEach((tile) => {
+    if (tile.dataset.tileMotionBound === "true") {
+      return;
+    }
+    tile.dataset.tileMotionBound = "true";
+    tile.addEventListener("pointermove", updateTilePointerMotion);
+    tile.addEventListener("pointerleave", () => resetTileMotion(tile));
+  });
+}
+
 function updateTilePointerMotion(event) {
   if (!supportsPointerHover() || prefersReducedMotion()) {
     return;
@@ -4589,7 +4607,10 @@ function queueScrollTileMotion() {
 }
 
 function updateScrollTileMotion() {
-  const tileViewActive = state.currentView === "home" || state.currentView === "algorithmics";
+  const subjectArea = subjectAreaForView(state.currentView);
+  const tileViewActive = state.currentView === "home"
+    || state.currentView === "algorithmics"
+    || (subjectArea && !state[`${subjectArea}DetailOpen`]);
   if (!tileViewActive || supportsPointerHover() || prefersReducedMotion()) {
     el.moduleTiles.forEach((tile) => {
       tile.classList.remove("is-scroll-active");
@@ -4670,6 +4691,11 @@ function setupSubjectLearningArea(areaKey) {
   bindDelegatedPress(refs.nav, "[data-subject-topic]", (button) => {
     state[`${areaKey}Topic`] = button.dataset.subjectTopic;
     state[`${areaKey}Mode`] = state[`${areaKey}Mode`] || "learn";
+    state[`${areaKey}DetailOpen`] = true;
+    renderSubjectLearningArea(areaKey);
+  });
+  bindDelegatedPress(refs.modeNav, "[data-subject-back]", () => {
+    state[`${areaKey}DetailOpen`] = false;
     renderSubjectLearningArea(areaKey);
   });
   bindDelegatedPress(refs.modeNav, "[data-subject-mode]", (button) => {
@@ -5090,6 +5116,7 @@ function algorithmHtml(html) {
 function renderSubjectLearningArea(areaKey) {
   const area = getSubjectArea(areaKey);
   const refs = getSubjectRefs(areaKey);
+  const detailOpen = Boolean(state[`${areaKey}DetailOpen`]);
   let topicKey = state[`${areaKey}Topic`] || area.defaultTopic;
   if (!area.topics[topicKey]) {
     topicKey = area.defaultTopic;
@@ -5097,18 +5124,36 @@ function renderSubjectLearningArea(areaKey) {
   }
   const mode = state[`${areaKey}Mode`] || "learn";
   const topic = area.topics[topicKey] || area.topics[area.defaultTopic];
+  const contentGrid = refs.title.closest(".subject-learning-grid");
 
   refs.nav.innerHTML = Object.entries(area.topics).map(([key, item]) => `
-    <button class="topic-nav-btn${key === topicKey ? " is-active" : ""}" type="button" data-subject-topic="${key}" aria-pressed="${key === topicKey}">
+    <button class="${detailOpen ? "topic-nav-btn" : `module-tile subject-module-tile subject-module-tile-${subjectDomId(areaKey)}`}${key === topicKey ? " is-active" : ""}" type="button" data-subject-topic="${key}" aria-pressed="${key === topicKey}">
       <strong>${item.nav}</strong>
       <span>${formatInlineMathLabel(item.copy || item.title)}</span>
+      ${detailOpen ? "" : `<span class="module-cta">${isEnglish() ? "Open module" : "Modul öffnen"} <span aria-hidden="true">→</span></span>`}
     </button>
   `).join("");
-  refs.modeNav.innerHTML = subjectModes.map((item) => `
+  refreshModuleTiles();
+  refs.nav.classList.toggle("subject-module-grid", !detailOpen);
+  refs.nav.classList.toggle("subject-detail-nav", detailOpen);
+  refs.modeNav.classList.toggle("is-hidden", !detailOpen);
+  contentGrid?.classList.toggle("is-hidden", !detailOpen);
+
+  if (!detailOpen) {
+    refs.modeNav.innerHTML = "";
+    return;
+  }
+
+  refs.modeNav.innerHTML = `
+    <button class="section-tab-btn subject-back-btn" type="button" data-subject-back>
+      ${isEnglish() ? "← Modules" : "← Module"}
+    </button>
+    ${subjectModes.map((item) => `
     <button class="section-tab-btn${item.key === mode ? " is-active" : ""}" type="button" data-subject-mode="${item.key}" aria-pressed="${item.key === mode}">
       ${localized(item.label)}
     </button>
-  `).join("");
+  `).join("")}
+  `;
   refs.title.textContent = topic.title;
   refs.copy.textContent = topic.copy;
   refs.learningGoals.innerHTML = (topic.learningGoals || []).map((goal) => `<li>${formatInlineMathLabel(goal)}</li>`).join("");
