@@ -5456,16 +5456,17 @@ function renderSubjectLearningArea(areaKey) {
   const topic = area.topics[topicKey] || area.topics[area.defaultTopic];
   const contentGrid = refs.title.closest(".subject-learning-grid");
 
-  refs.nav.innerHTML = Object.entries(area.topics).map(([key, item]) => `
-    <button class="${detailOpen ? "topic-nav-btn" : `module-tile subject-module-tile subject-module-tile-${subjectDomId(areaKey)}`}${key === topicKey ? " is-active" : ""}" type="button" data-subject-topic="${key}" aria-pressed="${key === topicKey}">
+  refs.nav.innerHTML = detailOpen ? "" : Object.entries(area.topics).map(([key, item]) => `
+    <button class="module-tile subject-module-tile subject-module-tile-${subjectDomId(areaKey)}${key === topicKey ? " is-active" : ""}" type="button" data-subject-topic="${key}" aria-pressed="${key === topicKey}">
       <strong>${item.nav}</strong>
       <span>${formatInlineMathLabel(item.copy || item.title)}</span>
-      ${detailOpen ? "" : `<span class="module-cta">${isEnglish() ? "Open module" : "Modul öffnen"} <span aria-hidden="true">→</span></span>`}
+      <span class="module-cta">${isEnglish() ? "Open module" : "Modul öffnen"} <span aria-hidden="true">→</span></span>
     </button>
   `).join("");
   refreshModuleTiles();
   refs.nav.classList.toggle("subject-module-grid", !detailOpen);
   refs.nav.classList.toggle("subject-detail-nav", detailOpen);
+  refs.nav.classList.toggle("is-hidden", detailOpen);
   refs.modeNav.classList.toggle("is-hidden", !detailOpen);
   contentGrid?.classList.toggle("is-hidden", !detailOpen);
 
