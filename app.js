@@ -3341,6 +3341,7 @@ const state = {
   logoRideTimer: null,
   logoIntroPlayed: false,
   tileScrollFrame: null,
+  tileTypographyFrame: null,
   pathDemoTimer: null,
   pathDemoIndex: 0,
   learningBookTimer: null,
@@ -3725,6 +3726,7 @@ refreshModuleTiles();
 window.addEventListener("scroll", queueScrollTileMotion, { passive: true });
 window.addEventListener("resize", () => {
   queueScrollTileMotion();
+  queueTileTypographyFit();
   if (state.currentView === "learning-path" && !el.learningRoute.classList.contains("is-hidden")) {
     movePathAvatar(state.pathDemoIndex, true);
   }
@@ -4026,6 +4028,7 @@ function setActiveView(viewName) {
   }
 
   queueScrollTileMotion();
+  queueTileTypographyFit();
   playLogoIntro();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -4688,6 +4691,7 @@ function syncLocalizedContent() {
   ["basics", "programming", "dataScience", "informationManagement"].forEach(renderSubjectLearningArea);
   syncAlgorithmLocalizedContent();
   applyStaticTextLanguage();
+  queueTileTypographyFit();
 }
 
 function syncAlgorithmLocalizedContent() {
@@ -4869,6 +4873,34 @@ function refreshModuleTiles() {
     tile.dataset.tileMotionBound = "true";
     tile.addEventListener("pointermove", updateTilePointerMotion);
     tile.addEventListener("pointerleave", () => resetTileMotion(tile));
+  });
+  queueTileTypographyFit();
+}
+
+function queueTileTypographyFit() {
+  if (state.tileTypographyFrame) {
+    return;
+  }
+  state.tileTypographyFrame = window.requestAnimationFrame(() => {
+    state.tileTypographyFrame = null;
+    fitModuleTileTypography();
+  });
+}
+
+function fitModuleTileTypography() {
+  document.querySelectorAll(".module-tile strong").forEach((title) => {
+    const tile = title.closest(".module-tile");
+    if (!tile) {
+      return;
+    }
+    tile.style.setProperty("--tile-title-fit", "1");
+    const available = Math.max(1, title.clientWidth);
+    const overflowRatio = title.scrollWidth / available;
+    const lineOverflow = title.scrollHeight > (title.clientHeight + 2);
+    const fit = overflowRatio > 1 || lineOverflow
+      ? Math.max(0.68, Math.min(1, 1 / Math.max(overflowRatio, 1)))
+      : 1;
+    tile.style.setProperty("--tile-title-fit", fit.toFixed(3));
   });
 }
 
