@@ -4965,6 +4965,24 @@ body.theme-dark .language-options button.is-active {
   background: rgba(33, 110, 57, 0.72);
 }
 
+.sort-bar.is-gap {
+  border: 2px dashed rgba(217, 95, 67, 0.58);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(217, 95, 67, 0.18),
+      rgba(217, 95, 67, 0.18) 8px,
+      rgba(217, 95, 67, 0.06) 8px,
+      rgba(217, 95, 67, 0.06) 16px
+    );
+  color: var(--secondary);
+  transform: translateY(-2px);
+}
+
+.sort-bar.is-gap span {
+  color: var(--secondary);
+}
+
 .sort-bar span {
   padding-bottom: 0.45rem;
   color: white;

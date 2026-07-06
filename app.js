@@ -1932,12 +1932,109 @@ function normalizeProgrammingArea(area, language) {
     ],
   };
 
+  if (!area.topics.web) {
+    area.topics.web = isEn ? {
+      nav: "HTML/JS",
+      title: "HTML, JavaScript and small interactions",
+      copy: "Web basics in this app stay practical: read semantic HTML, connect buttons with JavaScript and understand simple DOM changes.",
+      learningGoals: ["Use semantic HTML", "Read event handlers", "Change DOM text deliberately"],
+      explanation: "HTML gives the page structure. JavaScript reacts to events such as clicks and updates state or visible text. Typical mistake: a button alone does nothing until JavaScript binds behavior to it.",
+      concepts: [
+        ["HTML element", "Semantic building block such as button, input or section."],
+        ["Event listener", "Function that runs when an event such as click occurs."],
+        ["DOM", "The document tree that JavaScript can read and change."],
+      ],
+      visualization: {
+        title: "Tiny interaction flow",
+        type: "pipeline",
+        steps: ["button in HTML", "click event", "listener runs", "textContent changes"],
+      },
+      guidedTasks: [
+        {
+          type: "code",
+          level: 3,
+          title: "Wire a button",
+          snippet: asCode(["<button id=\"save\">Save</button>", "<p id=\"status\"></p>"]),
+          question: "Write the JavaScript core that sets status to 'Saved' when the button is clicked.",
+          answer: ["addEventListener", "click", "textContent", "Saved"],
+          hint: "Select both elements, then bind a click listener to the button.",
+          explanation: "The button needs a listener; inside it the status element can be updated.",
+          solution: asCode(["const button = document.getElementById(\"save\");", "const status = document.getElementById(\"status\");", "button.addEventListener(\"click\", () => {", "  status.textContent = \"Saved\";", "});"]),
+        },
+      ],
+      examTasks: [
+        {
+          type: "text",
+          level: 4,
+          title: "Analyze DOM behavior",
+          snippet: asCode(["let count = 0;", "button.addEventListener(\"click\", () => {", "  count += 1;", "  output.textContent = count;", "});"]),
+          question: "What is shown after three clicks and why?",
+          answer: ["3", "count", "click"],
+          hint: "The variable is increased once per click.",
+          explanation: "Each click adds one to count and writes the current value to output.",
+          solution: "After three clicks, output shows 3 because the click handler ran three times.",
+        },
+      ],
+    } : {
+      nav: "HTML/JS",
+      title: "HTML, JavaScript und kleine Interaktionen",
+      copy: "Web-Grundlagen bleiben hier praktisch: semantisches HTML lesen, Buttons mit JavaScript verbinden und einfache DOM-Änderungen verstehen.",
+      learningGoals: ["Semantisches HTML nutzen", "Event-Handler lesen", "DOM-Text gezielt ändern"],
+      explanation: "HTML gibt der Seite Struktur. JavaScript reagiert auf Ereignisse wie Klicks und verändert Zustand oder sichtbaren Text. Typischer Fehler: Ein Button allein macht noch nichts, solange kein JavaScript-Verhalten gebunden ist.",
+      concepts: [
+        ["HTML-Element", "Semantischer Baustein wie button, input oder section."],
+        ["Event Listener", "Funktion, die bei einem Ereignis wie click ausgeführt wird."],
+        ["DOM", "Dokumentbaum, den JavaScript lesen und verändern kann."],
+      ],
+      visualization: {
+        title: "Mini-Interaktionsfluss",
+        type: "pipeline",
+        steps: ["Button in HTML", "Klick-Ereignis", "Listener läuft", "textContent ändert sich"],
+      },
+      guidedTasks: [
+        {
+          type: "code",
+          level: 3,
+          title: "Button verdrahten",
+          snippet: asCode(["<button id=\"save\">Speichern</button>", "<p id=\"status\"></p>"]),
+          question: "Schreibe den JavaScript-Kern, der bei Klick auf den Button den Status auf 'Gespeichert' setzt.",
+          answer: ["addEventListener", "click", "textContent", "Gespeichert"],
+          hint: "Wähle beide Elemente aus und binde einen click-Listener an den Button.",
+          explanation: "Der Button braucht einen Listener; darin kann das Status-Element aktualisiert werden.",
+          solution: asCode(["const button = document.getElementById(\"save\");", "const status = document.getElementById(\"status\");", "button.addEventListener(\"click\", () => {", "  status.textContent = \"Gespeichert\";", "});"]),
+        },
+      ],
+      examTasks: [
+        {
+          type: "text",
+          level: 4,
+          title: "DOM-Verhalten analysieren",
+          snippet: asCode(["let count = 0;", "button.addEventListener(\"click\", () => {", "  count += 1;", "  output.textContent = count;", "});"]),
+          question: "Was steht nach drei Klicks im output und warum?",
+          answer: ["3", "count", "click"],
+          hint: "Die Variable wird pro Klick einmal erhöht.",
+          explanation: "Jeder Klick erhöht count und schreibt den aktuellen Wert in output.",
+          solution: "Nach drei Klicks steht 3 im output, weil der click-Handler dreimal ausgeführt wurde.",
+        },
+      ],
+    };
+  }
+
   delete area.topics.javaOop;
   delete area.topics.javaReferences;
 }
 
 function addAppliedSubjectTasks(areaSet, language) {
   const isEn = language === "en";
+  const pickTopic = (topics, ...keys) => keys.map((key) => topics[key]).find(Boolean);
+  const appendGuidedTasks = (topic, tasks) => {
+    if (!topic) return;
+    topic.guidedTasks = [...(topic.guidedTasks || topic.questions || []), ...tasks];
+  };
+  const appendExamTasks = (topic, tasks) => {
+    if (!topic) return;
+    topic.examTasks = [...(topic.examTasks || []), ...tasks];
+  };
   const programming = areaSet.programming?.topics || {};
   if (programming.python) {
     programming.python.guidedTasks = [
@@ -1990,9 +2087,10 @@ function addAppliedSubjectTasks(areaSet, language) {
     ];
   }
 
-  if (dataScience.normalformen) {
-    dataScience.normalformen.guidedTasks = [
-      ...(dataScience.normalformen.guidedTasks || []),
+  const normalFormsTopic = dataScience.normalformen || dataScience.normalForms;
+  if (normalFormsTopic) {
+    normalFormsTopic.guidedTasks = [
+      ...(normalFormsTopic.guidedTasks || []),
       isEn ? {
         type: "text",
         level: 3,
@@ -2016,9 +2114,10 @@ function addAppliedSubjectTasks(areaSet, language) {
   }
 
   const basics = areaSet.basics?.topics || {};
-  if (basics.boolean) {
-    basics.boolean.guidedTasks = [
-      ...(basics.boolean.guidedTasks || []),
+  const booleanTopic = basics.boolesch || basics.boolean;
+  if (booleanTopic) {
+    booleanTopic.guidedTasks = [
+      ...(booleanTopic.guidedTasks || []),
       isEn ? {
         type: "text",
         level: 3,
@@ -2066,6 +2165,215 @@ function addAppliedSubjectTasks(areaSet, language) {
       },
     ];
   }
+
+  appendGuidedTasks(programming.java, [
+    isEn ? {
+      type: "code",
+      level: 3,
+      title: "Add interface implementation",
+      snippet: asCode(["interface Printable {", "  void print();", "}", "", "class Invoice ____ Printable {", "  public void ____() {", "    System.out.println(\"Invoice\");", "  }", "}"]),
+      question: "Fill the two Java gaps so that Invoice implements Printable correctly.",
+      answer: ["implements", "print"],
+      hint: "A class implements an interface and must provide the method signature.",
+      explanation: "implements connects the class to the interface. The required method is print().",
+      solution: asCode(["class Invoice implements Printable {", "  public void print() {", "    System.out.println(\"Invoice\");", "  }", "}"]),
+    } : {
+      type: "code",
+      level: 3,
+      title: "Interface implementieren",
+      snippet: asCode(["interface Druckbar {", "  void drucke();", "}", "", "class Rechnung ____ Druckbar {", "  public void ____() {", "    System.out.println(\"Rechnung\");", "  }", "}"]),
+      question: "Fülle die zwei Java-Lücken, damit Rechnung das Interface korrekt implementiert.",
+      answer: ["implements", "drucke"],
+      hint: "Eine Klasse implementiert ein Interface und muss die Methodensignatur bereitstellen.",
+      explanation: "implements verbindet die Klasse mit dem Interface. Die geforderte Methode heißt drucke().",
+      solution: asCode(["class Rechnung implements Druckbar {", "  public void drucke() {", "    System.out.println(\"Rechnung\");", "  }", "}"]),
+    },
+  ]);
+  appendExamTasks(programming.java, [
+    isEn ? {
+      type: "text",
+      level: 5,
+      title: "Overriding or overloading",
+      snippet: asCode(["class A { void f(int x) {} }", "class B extends A { void f(String x) {} }"]),
+      question: "Is B.f overriding A.f? Explain briefly.",
+      answer: ["overload", "parameter", "not"],
+      hint: "Compare the parameter list, not only the method name.",
+      explanation: "The parameter type changes from int to String. That is overloading, not overriding.",
+      solution: "No. The signature is different, so B overloads f instead of overriding A.f(int).",
+    } : {
+      type: "text",
+      level: 5,
+      title: "Überschreiben oder Überladen",
+      snippet: asCode(["class A { void f(int x) {} }", "class B extends A { void f(String x) {} }"]),
+      question: "Überschreibt B.f die Methode A.f? Begründe kurz.",
+      answer: ["überladen", "parameter", "nicht"],
+      hint: "Vergleiche die Parameterliste, nicht nur den Methodennamen.",
+      explanation: "Der Parametertyp wechselt von int zu String. Das ist Überladen, nicht Überschreiben.",
+      solution: "Nein. Die Signatur ist anders, also überlädt B die Methode f und überschreibt A.f(int) nicht.",
+    },
+  ]);
+
+  appendGuidedTasks(programming.cpp, [
+    isEn ? {
+      type: "code",
+      level: 3,
+      title: "Complete vector maximum",
+      snippet: asCode(["int maxValue(vector<int> xs) {", "  int best = xs[0];", "  for (int x : xs) {", "    // complete comparison", "  }", "  return best;", "}"]),
+      question: "Complete the loop so that best stores the largest value.",
+      answer: ["if", "x > best", "best = x"],
+      hint: "Compare every x with best and update best only if x is larger.",
+      explanation: "The algorithm scans the vector once and keeps the best value seen so far.",
+      solution: asCode(["if (x > best) {", "  best = x;", "}"]),
+    } : {
+      type: "code",
+      level: 3,
+      title: "Vektor-Maximum ergänzen",
+      snippet: asCode(["int maxValue(vector<int> xs) {", "  int best = xs[0];", "  for (int x : xs) {", "    // Vergleich ergänzen", "  }", "  return best;", "}"]),
+      question: "Ergänze die Schleife so, dass best den größten Wert speichert.",
+      answer: ["if", "x > best", "best = x"],
+      hint: "Vergleiche jedes x mit best und aktualisiere best nur bei größerem Wert.",
+      explanation: "Der Algorithmus läuft einmal über den Vektor und merkt sich den bisher besten Wert.",
+      solution: asCode(["if (x > best) {", "  best = x;", "}"]),
+    },
+  ]);
+
+  const relationTopic = pickTopic(dataScience, "relationen", "relations");
+  appendGuidedTasks(relationTopic, [
+    isEn ? {
+      type: "text",
+      level: 3,
+      title: "Compute attribute closure",
+      question: "Given R(A,B,C,D) with A -> B and B -> C. What is A+ and why is D not included?",
+      answer: ["a,b,c", "d", "not determined"],
+      hint: "Apply only dependencies whose left side is already known.",
+      explanation: "A gives B, B gives C. No dependency derives D.",
+      solution: "A+ = {A,B,C}. D is missing because no dependency has D on the right-hand side.",
+    } : {
+      type: "text",
+      level: 3,
+      title: "Attributabschluss berechnen",
+      question: "Gegeben R(A,B,C,D) mit A -> B und B -> C. Was ist A+ und warum fehlt D?",
+      answer: ["a,b,c", "d", "nicht bestimmt"],
+      hint: "Wende nur Abhängigkeiten an, deren linke Seite schon bekannt ist.",
+      explanation: "A liefert B, B liefert C. Keine Abhängigkeit leitet D her.",
+      solution: "A+ = {A,B,C}. D fehlt, weil keine Abhängigkeit D auf der rechten Seite hat.",
+    },
+  ]);
+
+  const erTopic = pickTopic(dataScience, "ermodellierung", "erModeling");
+  appendExamTasks(erTopic, [
+    isEn ? {
+      type: "text",
+      level: 4,
+      title: "Model from text",
+      question: "A lecturer supervises many theses; each thesis has exactly one lecturer. Name entity types and cardinality.",
+      answer: ["lecturer", "thesis", "1:n"],
+      hint: "One lecturer can be connected to several theses.",
+      explanation: "Lecturer and Thesis are entity types. The relationship is Lecturer 1:n Thesis.",
+      solution: "Entities: Lecturer, Thesis. Relationship: Lecturer supervises Thesis with cardinality 1:n.",
+    } : {
+      type: "text",
+      level: 4,
+      title: "Aus Text modellieren",
+      question: "Ein Dozent betreut viele Abschlussarbeiten; jede Abschlussarbeit hat genau einen Dozenten. Nenne Entitätstypen und Kardinalität.",
+      answer: ["dozent", "abschlussarbeit", "1:n"],
+      hint: "Ein Dozent kann mit mehreren Abschlussarbeiten verbunden sein.",
+      explanation: "Dozent und Abschlussarbeit sind Entitätstypen. Die Beziehung ist Dozent 1:n Abschlussarbeit.",
+      solution: "Entitäten: Dozent, Abschlussarbeit. Beziehung: Dozent betreut Abschlussarbeit mit Kardinalität 1:n.",
+    },
+  ]);
+
+  const numberTopic = pickTopic(basics, "zahlensysteme", "numberSystems");
+  appendGuidedTasks(numberTopic, [
+    isEn ? {
+      type: "text",
+      level: 3,
+      title: "Convert binary",
+      question: "Convert 101101₂ to decimal and show the place values.",
+      answer: ["45", "32", "8"],
+      hint: "Use 32 + 0 + 8 + 4 + 0 + 1.",
+      explanation: "The set bits are 2^5, 2^3, 2^2 and 2^0.",
+      solution: "101101₂ = 32 + 8 + 4 + 1 = 45.",
+    } : {
+      type: "text",
+      level: 3,
+      title: "Binärzahl umrechnen",
+      question: "Rechne 101101₂ ins Dezimalsystem um und zeige die Stellenwerte.",
+      answer: ["45", "32", "8"],
+      hint: "Nutze 32 + 0 + 8 + 4 + 0 + 1.",
+      explanation: "Gesetzte Bits sind 2^5, 2^3, 2^2 und 2^0.",
+      solution: "101101₂ = 32 + 8 + 4 + 1 = 45.",
+    },
+  ]);
+
+  const automataTopic = pickTopic(basics, "automaten", "automata");
+  appendExamTasks(automataTopic, [
+    isEn ? {
+      type: "text",
+      level: 4,
+      title: "Trace an automaton",
+      question: "Trace q0 --a--> q1, q1 --b--> q2 where q2 is accepting. Is ab accepted?",
+      answer: ["accepted", "q2", "yes"],
+      hint: "Follow one transition for each input symbol.",
+      explanation: "After a the automaton is in q1, after b it reaches accepting state q2.",
+      solution: "Yes. q0 --a--> q1 --b--> q2, and q2 is accepting.",
+    } : {
+      type: "text",
+      level: 4,
+      title: "Automat nachverfolgen",
+      question: "Verfolge q0 --a--> q1, q1 --b--> q2; q2 ist Endzustand. Wird ab akzeptiert?",
+      answer: ["akzeptiert", "q2", "ja"],
+      hint: "Folge pro Eingabezeichen genau einem Übergang.",
+      explanation: "Nach a ist der Automat in q1, nach b erreicht er den Endzustand q2.",
+      solution: "Ja. q0 --a--> q1 --b--> q2, und q2 ist Endzustand.",
+    },
+  ]);
+
+  const imTopic = pickTopic(information, "im");
+  appendGuidedTasks(imTopic, [
+    isEn ? {
+      type: "text",
+      level: 3,
+      title: "Classify information source",
+      question: "Classify 'monthly sales report from the ERP system' as internal/external and formal/informal.",
+      answer: ["internal", "formal"],
+      hint: "Ask where it comes from and whether it follows a defined structure.",
+      explanation: "The ERP system is internal, and a monthly report is a formal source.",
+      solution: "Internal and formal information source.",
+    } : {
+      type: "text",
+      level: 3,
+      title: "Informationsquelle einordnen",
+      question: "Ordne 'monatlicher Vertriebsbericht aus dem ERP-System' als intern/extern und formal/informell ein.",
+      answer: ["intern", "formal"],
+      hint: "Frage nach Herkunft und danach, ob die Quelle einer festen Struktur folgt.",
+      explanation: "Das ERP-System ist intern, und ein monatlicher Bericht ist eine formale Quelle.",
+      solution: "Interne und formale Informationsquelle.",
+    },
+  ]);
+
+  const systemSelectionTopic = pickTopic(information, "systemauswahl", "systemSelection");
+  appendGuidedTasks(systemSelectionTopic, [
+    isEn ? {
+      type: "text",
+      level: 3,
+      title: "Compute utility value",
+      question: "System A gets 4 points for cost with weight 30% and 3 points for usability with weight 20%. What partial utility value results?",
+      answer: ["1.8", "0.3", "0.2"],
+      hint: "Multiply points by weights and add: 4*0.3 + 3*0.2.",
+      explanation: "Utility analysis uses weighted scores.",
+      solution: "4*0.3 + 3*0.2 = 1.2 + 0.6 = 1.8.",
+    } : {
+      type: "text",
+      level: 3,
+      title: "Nutzwert berechnen",
+      question: "System A erhält 4 Punkte bei Kosten mit Gewicht 30% und 3 Punkte bei Usability mit Gewicht 20%. Welcher Teilnutzwert entsteht?",
+      answer: ["1,8", "0,3", "0,2"],
+      hint: "Multipliziere Punkte mit Gewichten und addiere: 4*0,3 + 3*0,2.",
+      explanation: "Die Nutzwertanalyse nutzt gewichtete Punktwerte.",
+      solution: "4*0,3 + 3*0,2 = 1,2 + 0,6 = 1,8.",
+    },
+  ]);
 }
 
 const masterTrainingConfigs = {
@@ -3435,15 +3743,15 @@ el.learningPointsToggle.addEventListener("click", () => {
   el.learningPointsToggle.setAttribute("aria-expanded", String(!expanded));
   el.learningPointsPanel.classList.toggle("is-hidden", expanded);
 });
-document.getElementById("new-runtime").addEventListener("click", createRuntimeQuestion);
-document.getElementById("check-runtime").addEventListener("click", checkRuntimeQuestion);
+bindPress(document.getElementById("new-runtime"), createRuntimeQuestion);
+bindPress(document.getElementById("check-runtime"), checkRuntimeQuestion);
 setupSubjectLearningArea("basics");
 setupSubjectLearningArea("programming");
 setupSubjectLearningArea("dataScience");
 setupSubjectLearningArea("informationManagement");
-document.getElementById("new-master").addEventListener("click", createMasterQuestion);
-document.getElementById("check-master").addEventListener("click", checkMasterQuestion);
-el.solveCustomRecurrence.addEventListener("click", solveCustomRecurrence);
+bindPress(document.getElementById("new-master"), createMasterQuestion);
+bindPress(document.getElementById("check-master"), checkMasterQuestion);
+bindPress(el.solveCustomRecurrence, solveCustomRecurrence);
 el.customRecurrenceExamples.addEventListener("click", (event) => {
   const button = event.target.closest("[data-custom-recurrence]");
   if (!button) {
@@ -3457,10 +3765,8 @@ el.customRecurrenceInput.addEventListener("keydown", (event) => {
     solveCustomRecurrence();
   }
 });
-el.masterHelpToggle.addEventListener("click", toggleMasterHelp);
-document.querySelectorAll("[data-master-section]").forEach((button) => {
-  button.addEventListener("click", () => setMasterSection(button.dataset.masterSection));
-});
+bindPress(el.masterHelpToggle, toggleMasterHelp);
+bindDelegatedPress(document, "[data-master-section]", (button) => setMasterSection(button.dataset.masterSection));
 bindDelegatedPress(document.querySelector("[data-master-learn-options]"), "[data-master-learn-case]", (button) => {
   setMasterChoice(el.masterLearnCase, "[data-master-learn-case]", button.dataset.masterLearnCase);
   state.masterLearnLesson = 0;
@@ -3470,68 +3776,60 @@ bindDelegatedPress(document.querySelector("[data-master-learn-options]"), "[data
 bindDelegatedPress(document.querySelector("[data-master-training-options]"), "[data-master-training-topic]", (button) => {
   setMasterTrainingTopic(button.dataset.masterTrainingTopic);
 });
-el.masterLearnPrev.addEventListener("click", () => changeMasterLearningStep(-1));
-el.masterLearnNext.addEventListener("click", () => changeMasterLearningStep(1));
+bindPress(el.masterLearnPrev, () => changeMasterLearningStep(-1));
+bindPress(el.masterLearnNext, () => changeMasterLearningStep(1));
 el.sortAlgorithm.addEventListener("change", rebuildSortSteps);
-document.getElementById("shuffle-sort").addEventListener("click", resetSortValues);
+bindPress(document.getElementById("shuffle-sort"), resetSortValues);
 el.heapSortMode.addEventListener("change", () => {
   state.heapSortMode = el.heapSortMode.value;
   rebuildSortSteps();
 });
-el.heapSortApply.addEventListener("click", applyHeapSortList);
-el.heapSortExample.addEventListener("click", loadHeapSortExample);
+bindPress(el.heapSortApply, applyHeapSortList);
+bindPress(el.heapSortExample, loadHeapSortExample);
 el.heapSortList.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     applyHeapSortList();
   }
 });
-el.sortPrev.addEventListener("click", previousSortStep);
-el.sortNext.addEventListener("click", nextSortStep);
-el.sortPlay.addEventListener("click", toggleSortPlayback);
-document.getElementById("new-sort-question").addEventListener("click", createSortQuestion);
-document.getElementById("check-sort-question").addEventListener("click", checkSortQuestion);
-document.querySelectorAll("[data-sort-section]").forEach((button) => {
-  button.addEventListener("click", () => setSortSection(button.dataset.sortSection));
-});
+bindPress(el.sortPrev, previousSortStep);
+bindPress(el.sortNext, nextSortStep);
+bindPress(el.sortPlay, toggleSortPlayback);
+bindPress(document.getElementById("new-sort-question"), createSortQuestion);
+bindPress(document.getElementById("check-sort-question"), checkSortQuestion);
+bindDelegatedPress(document, "[data-sort-section]", (button) => setSortSection(button.dataset.sortSection));
 el.searchAlgorithm.addEventListener("change", rebuildSearchSteps);
 el.searchTarget.addEventListener("change", rebuildSearchSteps);
-document.getElementById("search-new-values").addEventListener("click", resetSearchValues);
-el.searchPrev.addEventListener("click", previousSearchStep);
-el.searchNext.addEventListener("click", nextSearchStep);
-el.searchPlay.addEventListener("click", toggleSearchPlayback);
-document.getElementById("tree-family-insert").addEventListener("click", insertTreeFamilyValue);
-document.getElementById("tree-family-reset").addEventListener("click", resetTreeFamily);
-document.querySelectorAll("[data-traversal]").forEach((button) => {
-  button.addEventListener("click", () => showTreeTraversal(button.dataset.traversal));
-});
-document.getElementById("new-ds-question").addEventListener("click", createDataStructureQuestion);
-document.getElementById("check-ds-question").addEventListener("click", checkDataStructureQuestion);
-document.querySelectorAll("[data-ds-topic]").forEach((button) => {
-  button.addEventListener("click", () => setDataStructureTopic(button.dataset.dsTopic));
-});
-document.querySelectorAll("[data-ds-section]").forEach((button) => {
-  button.addEventListener("click", () => setDataStructureSection(button.dataset.dsSection));
-});
+bindPress(document.getElementById("search-new-values"), resetSearchValues);
+bindPress(el.searchPrev, previousSearchStep);
+bindPress(el.searchNext, nextSearchStep);
+bindPress(el.searchPlay, toggleSearchPlayback);
+bindPress(document.getElementById("tree-family-insert"), insertTreeFamilyValue);
+bindPress(document.getElementById("tree-family-reset"), resetTreeFamily);
+bindDelegatedPress(document, "[data-traversal]", (button) => showTreeTraversal(button.dataset.traversal));
+bindPress(document.getElementById("new-ds-question"), createDataStructureQuestion);
+bindPress(document.getElementById("check-ds-question"), checkDataStructureQuestion);
+bindDelegatedPress(el.dataStructureTopicNav, "[data-ds-topic]", (button) => setDataStructureTopic(button.dataset.dsTopic));
+bindDelegatedPress(document.querySelector("[aria-label='Datenstruktur-Modus']"), "[data-ds-section]", (button) => setDataStructureSection(button.dataset.dsSection));
 el.stackQueueMode.addEventListener("change", changeStackQueueMode);
-document.getElementById("sq-add").addEventListener("click", addStackQueueItem);
-document.getElementById("sq-remove").addEventListener("click", removeStackQueueItem);
-document.getElementById("sq-reset").addEventListener("click", resetStackQueue);
-document.getElementById("graph-next").addEventListener("click", nextGraphStep);
-document.getElementById("graph-reset").addEventListener("click", resetGraphVisualization);
+bindPress(document.getElementById("sq-add"), addStackQueueItem);
+bindPress(document.getElementById("sq-remove"), removeStackQueueItem);
+bindPress(document.getElementById("sq-reset"), resetStackQueue);
+bindPress(document.getElementById("graph-next"), nextGraphStep);
+bindPress(document.getElementById("graph-reset"), resetGraphVisualization);
 el.graphAlgorithm.addEventListener("change", resetGraphVisualization);
 el.heapMode.addEventListener("change", changeHeapMode);
-document.getElementById("heap-add").addEventListener("click", addHeapValue);
-document.getElementById("heap-extract").addEventListener("click", extractHeapRoot);
-document.getElementById("heap-reset").addEventListener("click", resetHeap);
-document.getElementById("new-avl").addEventListener("click", createAVLQuestion);
-document.getElementById("check-avl").addEventListener("click", applyAVLAnswer);
-el.avlHelpToggle.addEventListener("click", toggleAVLHelp);
+bindPress(document.getElementById("heap-add"), addHeapValue);
+bindPress(document.getElementById("heap-extract"), extractHeapRoot);
+bindPress(document.getElementById("heap-reset"), resetHeap);
+bindPress(document.getElementById("new-avl"), createAVLQuestion);
+bindPress(document.getElementById("check-avl"), applyAVLAnswer);
+bindPress(el.avlHelpToggle, toggleAVLHelp);
 el.avlOptions.addEventListener("change", () => previewAVLRotation(true));
-document.getElementById("sandbox-insert").addEventListener("click", () => mutateSandbox("insert"));
-el.sandboxClear.addEventListener("click", clearSandbox);
-document.getElementById("reset-sandbox").addEventListener("click", () => resetSandbox(false));
-el.sandboxUndo.addEventListener("click", undoSandbox);
-el.sandboxRedo.addEventListener("click", redoSandbox);
+bindPress(document.getElementById("sandbox-insert"), () => mutateSandbox("insert"));
+bindPress(el.sandboxClear, clearSandbox);
+bindPress(document.getElementById("reset-sandbox"), () => resetSandbox(false));
+bindPress(el.sandboxUndo, undoSandbox);
+bindPress(el.sandboxRedo, redoSandbox);
 el.sandboxValue.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     mutateSandbox("insert");
@@ -6370,12 +6668,13 @@ function buildSortSteps(algorithm, values) {
     : builders[algorithm](values);
 }
 
-function pushSortStep(steps, array, note, active = [], sorted = []) {
+function pushSortStep(steps, array, note, active = [], sorted = [], extra = {}) {
   steps.push({
     array: [...array],
     note,
     active: new Set(active),
     sorted: new Set(sorted),
+    ...extra,
   });
 }
 
@@ -6476,13 +6775,20 @@ function buildInsertionSortSteps(values) {
     pushSortStep(steps, arr, localizedAlgorithmText(
       `Füge ${key} in den sortierten linken Bereich ein.`,
       `Insert ${key} into the sorted section on the left.`,
-    ), [i], range(0, i));
+    ), [i], range(0, i), { heldValue: key });
     while (j >= 0 && arr[j] > key) {
+      const movedValue = arr[j];
       arr[j + 1] = arr[j];
+      const displayArray = [...arr];
+      displayArray[j] = null;
       pushSortStep(steps, arr, localizedAlgorithmText(
-        `${arr[j]} ist größer als ${key}; verschiebe nach rechts.`,
-        `${arr[j]} is greater than ${key}; shift it to the right.`,
-      ), [j, j + 1], range(0, i + 1));
+        `${movedValue} ist größer als ${key}; verschiebe ${movedValue} nach rechts und halte links eine Lücke frei.`,
+        `${movedValue} is greater than ${key}; shift ${movedValue} to the right and keep a gap on the left.`,
+      ), [j, j + 1], range(0, i + 1), {
+        displayArray,
+        gapIndex: j,
+        heldValue: key,
+      });
       j -= 1;
     }
     arr[j + 1] = key;
@@ -6750,15 +7056,17 @@ function renderSortStep() {
 
   el.sortBars.className = "sort-bars";
   el.sortBars.innerHTML = "";
-  const max = Math.max(...step.array);
-  step.array.forEach((value, index) => {
+  const visualArray = step.displayArray || step.array;
+  const max = Math.max(...step.array.filter((value) => Number.isFinite(value)));
+  visualArray.forEach((value, index) => {
+    const isGap = value === null || value === undefined;
     const slot = document.createElement("div");
     slot.className = "sort-slot";
 
     const bar = document.createElement("div");
-    bar.className = `sort-bar${step.active.has(index) ? " active" : ""}${step.sorted.has(index) ? " sorted" : ""}`;
-    bar.style.height = `${Math.max(14, (value / max) * 100)}%`;
-    bar.innerHTML = `<span>${value}</span>`;
+    bar.className = `sort-bar${step.active.has(index) ? " active" : ""}${step.sorted.has(index) ? " sorted" : ""}${isGap ? " is-gap" : ""}`;
+    bar.style.height = isGap ? "16%" : `${Math.max(14, (value / max) * 100)}%`;
+    bar.innerHTML = `<span>${isGap ? (isEnglish() ? "gap" : "Lücke") : value}</span>`;
 
     const indexLabel = document.createElement("span");
     indexLabel.className = "sort-index";
@@ -6772,11 +7080,18 @@ function renderSortStep() {
   el.sortNote.textContent = algorithmText(step.note);
   el.sortStepCount.textContent = `${isEnglish() ? "Step" : "Schritt"} ${state.sortStepIndex + 1} / ${state.sortSteps.length}`;
   const algorithm = sortAlgorithms[el.sortAlgorithm.value];
-  const activeValues = [...step.active].map((index) => step.array[index]);
+  const activeValues = [...step.active]
+    .map((index) => visualArray[index])
+    .filter((value) => value !== null && value !== undefined);
+  const heldText = step.heldValue !== undefined
+    ? (isEnglish()
+      ? ` The value ${step.heldValue} is held temporarily until the gap is found.`
+      : ` Der Wert ${step.heldValue} wird kurz gehalten, bis die passende Lücke gefunden ist.`)
+    : "";
   const activeText = activeValues.length
     ? (isEnglish()
-      ? `Currently considered: ${activeValues.join(", ")}. Orange marks the involved values; green values are already marked as sorted.`
-      : `Gerade betrachtet: ${activeValues.join(", ")}. Orange markiert die beteiligten Werte; grüne Werte sind bereits als sortiert markiert.`)
+      ? `Currently considered: ${activeValues.join(", ")}. Orange marks the involved values; green values are already marked as sorted.${heldText}`
+      : `Gerade betrachtet: ${activeValues.join(", ")}. Orange markiert die beteiligten Werte; grüne Werte sind bereits als sortiert markiert.${heldText}`)
     : (isEnglish()
       ? "No single value is being compared right now. Green values are already considered sorted."
       : "Gerade wird kein einzelner Wert verglichen. Grün markierte Werte gelten bereits als sortiert.");
@@ -8202,6 +8517,25 @@ function setFeedback(node, text, type = "") {
 function getSelectedValue(name) {
   const selected = document.querySelector(`input[name="${name}"]:checked`);
   return selected ? selected.value : "";
+}
+
+function bindPress(element, handler) {
+  if (!element) {
+    return;
+  }
+
+  let lastPointerPress = 0;
+  element.addEventListener("pointerup", (event) => {
+    lastPointerPress = Date.now();
+    event.preventDefault();
+    handler(event);
+  });
+  element.addEventListener("click", (event) => {
+    if (Date.now() - lastPointerPress < 450) {
+      return;
+    }
+    handler(event);
+  });
 }
 
 function bindDelegatedPress(container, selector, handler) {
