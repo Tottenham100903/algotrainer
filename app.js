@@ -28,6 +28,7 @@ import {
   languageNames,
   t,
 } from "./js/i18n.js?v=20260705-exam-difficulty";
+import { createPythonGame } from "./js/python-game.js?v=20260706-python-game";
 
 function asCode(lines) {
   return lines.join("\n");
@@ -3360,6 +3361,8 @@ const state = {
   examExpired: false,
 };
 
+let pythonGame = null;
+
 const el = {
   globalSearch: document.getElementById("global-search"),
   globalSearchToggle: document.getElementById("global-search-toggle"),
@@ -3614,6 +3617,10 @@ function initializeApp() {
 initializeTheme();
 initializeLearningProgress();
 updateLanguageMenu(initializeLanguage());
+pythonGame = createPythonGame({
+  root: el.programmingView,
+  getLanguage: currentLanguage,
+});
 initializeKrugoWelcome();
 renderGlobalSearchResults("");
 el.globalSearchToggle.addEventListener("click", () => {
@@ -3683,6 +3690,7 @@ window.addEventListener("infotrain:languagechange", (event) => {
   renderGlobalSearchResults(el.globalSearchInput.value);
   el.examSimulationStatus.textContent = t(state.examExpired ? "exam.expired" : "exam.running");
   updateExamDifficultyDisplay();
+  pythonGame?.render();
   if (!el.basicsStory.classList.contains("is-hidden")) {
     state.basicsLessons = null;
     openBasicsStory();
@@ -3860,13 +3868,17 @@ resetSandbox(true);
 syncMasterHelpVisibility();
 syncAVLPreviewVisibility();
 syncLocalizedContent();
-const requestedView = new URLSearchParams(window.location.search).get("view");
+const initialParams = new URLSearchParams(window.location.search);
+const requestedView = initialParams.get("view");
 const initialView = [
   "home", "learning-path", "algorithmics", "basics", "programming",
   "data-science", "information-management", "runtime", "master",
   "sorting", "search", "avl",
 ].includes(requestedView) ? requestedView : "home";
 setActiveView(initialView);
+if (initialView === "programming" && initialParams.get("game") === "python") {
+  pythonGame?.open();
+}
 }
 
 function normalizeSearchText(value) {

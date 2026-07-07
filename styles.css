@@ -9426,3 +9426,1027 @@ body.theme-dark .exam-difficulty-option {
     height: 62px;
   }
 }
+
+/* Python game: a self-contained, mobile-first learning journey. */
+.python-game-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: min(var(--content-width), calc(100% - 3rem));
+  margin: 0 auto 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(72, 185, 174, 0.3);
+  border-radius: 28px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  color: #f6f0e5;
+  text-align: left;
+  background:
+    radial-gradient(circle at 82% 12%, rgba(217, 95, 67, 0.24), transparent 27%),
+    radial-gradient(circle at 10% 100%, rgba(72, 185, 174, 0.25), transparent 35%),
+    linear-gradient(135deg, #153638, #0b2024 72%);
+  box-shadow: 0 24px 55px rgba(10, 49, 48, 0.2);
+  cursor: pointer;
+  isolation: isolate;
+  transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+}
+
+.python-game-entry::after {
+  position: absolute;
+  right: 13%;
+  bottom: -3.5rem;
+  z-index: -1;
+  width: 13rem;
+  height: 13rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2rem rgba(255, 255, 255, 0.025),
+    0 0 0 4rem rgba(255, 255, 255, 0.02);
+  content: "";
+}
+
+.python-game-entry-number {
+  display: grid;
+  width: 4.4rem;
+  aspect-ratio: 1;
+  place-items: center;
+  align-self: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  color: #0e2b2c;
+  background: linear-gradient(145deg, #a8ead7, #48b9ae);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.75), 0 12px 30px rgba(0, 0, 0, 0.24);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.python-game-entry-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.28rem;
+}
+
+.python-game-entry-copy small {
+  color: #86d9c9;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.python-game-entry-copy strong {
+  color: #fff9ee;
+  font-size: clamp(1.55rem, 3vw, 2.6rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.python-game-entry-copy > span {
+  max-width: 54ch;
+  color: rgba(246, 240, 229, 0.74);
+  line-height: 1.5;
+}
+
+.python-game-entry-cta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  align-self: center;
+  border-radius: 999px;
+  padding: 0.85rem 1.1rem;
+  color: #0b292b;
+  background: #f4e8d2;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: transform 240ms ease, background 240ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .python-game-entry:hover {
+    border-color: rgba(72, 185, 174, 0.72);
+    box-shadow: 0 34px 72px rgba(10, 49, 48, 0.3);
+    transform: translateY(-7px);
+  }
+
+  .python-game-entry:hover .python-game-entry-cta {
+    background: #fff9ee;
+    transform: translateX(0.35rem);
+  }
+}
+
+.python-game-active #programming-topic-nav,
+.python-game-active #programming-mode-nav,
+.python-game-active .subject-learning-grid {
+  display: none;
+}
+
+.python-game-panel {
+  width: min(var(--shell-width), calc(100% - 3rem));
+  margin: 0 auto 3rem;
+  border: 1px solid rgba(72, 185, 174, 0.24);
+  border-radius: 34px;
+  padding: clamp(1rem, 3vw, 2rem);
+  color: #f6f0e5;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(72, 185, 174, 0.16), transparent 26%),
+    radial-gradient(circle at 88% 2%, rgba(217, 95, 67, 0.15), transparent 24%),
+    linear-gradient(145deg, #143235, #091b20);
+  box-shadow: 0 32px 80px rgba(8, 35, 37, 0.3);
+}
+
+.python-game-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.python-game-header > div {
+  min-width: 0;
+}
+
+.python-game-header h2 {
+  margin: 0;
+  color: #fff8ec;
+  font-size: clamp(1.65rem, 4vw, 3.4rem);
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.python-game-header .section-label,
+.python-game-guide .section-label,
+.python-game-stage .section-label {
+  color: #63c9bb;
+}
+
+.python-game-score {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.python-game-score > span {
+  display: grid;
+  min-width: 6rem;
+  gap: 0.12rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 0.65rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.python-game-score small {
+  color: rgba(246, 240, 229, 0.64);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.python-game-score strong {
+  color: #ffe5a8;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.15rem;
+}
+
+.python-game-progress-track {
+  height: 0.7rem;
+  margin: 1.4rem 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.python-game-progress-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #48b9ae, #f0a35f);
+  box-shadow: 0 0 20px rgba(72, 185, 174, 0.36);
+  transition: width 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.python-game-layout {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.68fr) minmax(0, 1.7fr);
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.python-game-guide,
+.python-game-stage {
+  min-width: 0;
+}
+
+.python-game-guide {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.python-game-krugo-card {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: end;
+  min-height: 11rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(72, 185, 174, 0.22), transparent 42%),
+    rgba(255, 255, 255, 0.055);
+}
+
+.python-game-krugo {
+  position: relative;
+  width: 7rem;
+  height: 9.4rem;
+  margin-inline: auto;
+  transform-style: preserve-3d;
+  animation: python-krugo-float 3.4s ease-in-out infinite;
+}
+
+.python-game-krugo-shadow {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0;
+  left: 0.7rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.34);
+  filter: blur(5px);
+}
+
+.python-game-krugo-head {
+  position: absolute;
+  top: 1.25rem;
+  left: 50%;
+  z-index: 3;
+  width: 5.2rem;
+  height: 4.2rem;
+  border: 0.35rem solid #ded5c4;
+  border-radius: 42% 42% 48% 48%;
+  background: linear-gradient(145deg, #fff9ed, #bfb4a2);
+  box-shadow: inset 0.2rem 0.15rem rgba(255, 255, 255, 0.75), 0 0.65rem 1rem rgba(0, 0, 0, 0.26);
+  transform: translateX(-50%) rotateY(-5deg);
+}
+
+.python-game-krugo-face {
+  position: absolute;
+  inset: 0.48rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 38% 38% 46% 46%;
+  background: linear-gradient(145deg, #163b3c, #071d22);
+}
+
+.python-game-krugo-face i {
+  width: 0.65rem;
+  height: 0.82rem;
+  border-radius: 50%;
+  background: #79e5cc;
+  box-shadow: 0 0 0.55rem rgba(121, 229, 204, 0.72);
+  animation: python-krugo-blink 4.8s infinite;
+}
+
+.python-game-krugo-face b {
+  position: absolute;
+  bottom: 0.55rem;
+  width: 1.25rem;
+  height: 0.55rem;
+  border-bottom: 0.16rem solid #f3b267;
+  border-radius: 50%;
+}
+
+.python-game-krugo-antenna {
+  position: absolute;
+  top: 0.1rem;
+  left: 50%;
+  z-index: 2;
+  width: 0.25rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: #c6bba9;
+  transform: translateX(-50%);
+}
+
+.python-game-krugo-antenna i {
+  position: absolute;
+  top: -0.25rem;
+  left: 50%;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  background: #e56d50;
+  box-shadow: 0 0 0.75rem rgba(229, 109, 80, 0.65);
+  transform: translateX(-50%);
+}
+
+.python-game-krugo-body {
+  position: absolute;
+  bottom: 0.65rem;
+  left: 50%;
+  z-index: 2;
+  width: 4.6rem;
+  height: 3.9rem;
+  border-radius: 38% 38% 28% 28%;
+  background: linear-gradient(145deg, #eee5d5, #a79d8f);
+  box-shadow: inset 0.2rem 0.15rem rgba(255, 255, 255, 0.7), 0 0.7rem 1rem rgba(0, 0, 0, 0.22);
+  transform: translateX(-50%);
+}
+
+.python-game-krugo-body i {
+  position: absolute;
+  top: 1.1rem;
+  left: 50%;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: #48b9ae;
+  box-shadow: inset 0.12rem 0.12rem rgba(255, 255, 255, 0.42), 0 0 0.75rem rgba(72, 185, 174, 0.52);
+  transform: translateX(-50%);
+}
+
+.python-game-krugo-arm {
+  position: absolute;
+  bottom: 1.35rem;
+  z-index: 1;
+  width: 1.25rem;
+  height: 3.1rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a99f91, #e8dece);
+  transform-origin: top;
+}
+
+.python-game-krugo-arm-left {
+  left: 0.6rem;
+  transform: rotate(18deg);
+}
+
+.python-game-krugo-arm-right {
+  right: 0.55rem;
+  transform: rotate(-30deg);
+  animation: python-krugo-wave 1.6s ease-in-out infinite alternate;
+}
+
+.python-game-dialogue {
+  position: relative;
+  align-self: start;
+  border-radius: 18px 18px 18px 5px;
+  padding: 0.85rem;
+  color: #183135;
+  background: #fff8e9;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.python-game-dialogue::before {
+  position: absolute;
+  bottom: 0.7rem;
+  left: -0.7rem;
+  border-width: 0.45rem 0.75rem 0.45rem 0;
+  border-style: solid;
+  border-color: transparent #fff8e9 transparent transparent;
+  content: "";
+}
+
+.python-game-dialogue.is-hinting {
+  background: #ffe5a8;
+  animation: python-dialogue-pop 260ms ease;
+}
+
+.python-game-dialogue.is-hinting::before {
+  border-right-color: #ffe5a8;
+}
+
+.python-game-dialogue.is-celebrating {
+  background: #b9ead6;
+  animation: python-dialogue-pop 360ms ease;
+}
+
+.python-game-dialogue.is-celebrating::before {
+  border-right-color: #b9ead6;
+}
+
+.python-game-levels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.python-game-level {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  min-width: 0;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 14px;
+  padding: 0.65rem;
+  color: rgba(246, 240, 229, 0.7);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.python-game-level > span {
+  display: grid;
+  width: 2rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 10px;
+  color: #91d9cc;
+  background: rgba(72, 185, 174, 0.14);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.73rem;
+  font-weight: 800;
+}
+
+.python-game-level small {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.python-game-level.is-current {
+  border-color: #5bc8b8;
+  color: #fff8ec;
+  background: rgba(72, 185, 174, 0.16);
+  box-shadow: 0 0 0 2px rgba(72, 185, 174, 0.08);
+}
+
+.python-game-level.is-complete > span {
+  color: #173335;
+  background: #80d9c7;
+}
+
+.python-game-level:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.55);
+  opacity: 0.42;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .python-game-level:not(:disabled):hover {
+    border-color: rgba(72, 185, 174, 0.55);
+    background: rgba(72, 185, 174, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.python-game-stage {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 26px;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  color: #233136;
+  background:
+    radial-gradient(circle at 100% 0, rgba(244, 215, 161, 0.72), transparent 30%),
+    #f7f0e2;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.24);
+}
+
+.python-game-stage-header {
+  display: flex;
+  gap: 1rem;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.python-game-stage-header > div {
+  min-width: 0;
+}
+
+.python-game-stage h3 {
+  margin: 0;
+  color: #162a2f;
+  font-size: clamp(1.55rem, 3vw, 2.45rem);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.python-game-difficulty {
+  flex: 0 0 auto;
+  border: 1px solid rgba(13, 107, 95, 0.17);
+  border-radius: 999px;
+  padding: 0.42rem 0.7rem;
+  color: #0a544b;
+  background: rgba(13, 107, 95, 0.08);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.python-game-objective {
+  max-width: 68ch;
+  margin: 0;
+  color: #566267;
+  line-height: 1.6;
+}
+
+.python-game-code-wrap {
+  overflow: hidden;
+  border: 1px solid rgba(126, 216, 199, 0.22);
+  border-radius: 18px;
+  background: #0c2025;
+  box-shadow: 0 14px 30px rgba(8, 31, 34, 0.18);
+}
+
+.python-game-code-head {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.65rem 0.9rem;
+  color: rgba(240, 246, 241, 0.58);
+  background: rgba(255, 255, 255, 0.035);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+}
+
+.python-game-code {
+  display: grid;
+  min-height: 9rem;
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem 0;
+  color: #f7efe1;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(0.84rem, 2vw, 1rem);
+  line-height: 2.2;
+  tab-size: 4;
+}
+
+.python-game-code-line {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(max-content, 1fr);
+  min-width: max-content;
+  padding-right: 1rem;
+  white-space: pre;
+}
+
+.python-game-line-number {
+  padding-right: 0.8rem;
+  color: rgba(240, 246, 241, 0.26);
+  text-align: right;
+  user-select: none;
+}
+
+.python-game-dropzone {
+  min-width: 5.4rem;
+  min-height: 2.2rem;
+  border: 1px dashed rgba(122, 224, 202, 0.72);
+  border-radius: 8px;
+  padding: 0.2rem 0.55rem;
+  color: #8ce3d1;
+  background: rgba(72, 185, 174, 0.12);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.python-game-dropzone.is-active {
+  border-color: #ffe0a0;
+  background: rgba(240, 163, 95, 0.17);
+  box-shadow: 0 0 0 3px rgba(240, 163, 95, 0.08);
+}
+
+.python-game-dropzone.is-filled {
+  border-style: solid;
+  color: #132b2e;
+  background: #8ce3d1;
+}
+
+.python-game-token-area,
+.python-game-input-area {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.python-game-token-area > p,
+.python-game-input-area > label {
+  margin: 0;
+  color: #566267;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.python-game-token-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.python-game-token {
+  min-height: 3rem;
+  border: 1px solid rgba(13, 107, 95, 0.18);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  color: #0c4d47;
+  background: #fffaf0;
+  box-shadow: 0 7px 16px rgba(63, 55, 37, 0.1);
+  cursor: grab;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.python-game-token code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.python-game-token.is-used {
+  opacity: 0.35;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .python-game-token:not(:disabled):hover,
+  .python-game-keyboard button:hover {
+    border-color: rgba(13, 107, 95, 0.52);
+    box-shadow: 0 11px 22px rgba(63, 55, 37, 0.16);
+    transform: translateY(-3px);
+  }
+
+  .python-game-dropzone:hover {
+    border-color: #ffe0a0;
+    transform: translateY(-1px);
+  }
+}
+
+.python-game-keyboard {
+  display: flex;
+  gap: 0.38rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.python-game-keyboard button {
+  flex: 0 0 auto;
+  min-width: 2.6rem;
+  min-height: 2.5rem;
+  border: 1px solid rgba(13, 107, 95, 0.17);
+  border-radius: 10px;
+  padding: 0.45rem 0.65rem;
+  color: #0a544b;
+  background: #fffaf0;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+#python-game-input {
+  width: 100%;
+  min-height: 10rem;
+  resize: vertical;
+  border: 1px solid rgba(13, 107, 95, 0.22);
+  border-radius: 14px;
+  padding: 0.9rem;
+  color: #eaf8f2;
+  background: #10282d;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  tab-size: 4;
+}
+
+#python-game-input:focus {
+  border-color: #48b9ae;
+  outline: 3px solid rgba(72, 185, 174, 0.16);
+}
+
+.python-game-console {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+  border-radius: 13px;
+  padding: 0.78rem 0.9rem;
+  color: #c6f2e4;
+  background: #173136;
+}
+
+.python-game-console > span {
+  color: rgba(198, 242, 228, 0.58);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.python-game-console code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.python-game-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.python-game-actions button {
+  flex: 1 1 9rem;
+  min-width: 0;
+  white-space: normal;
+}
+
+.python-game-feedback {
+  min-height: 1.5rem;
+  border-radius: 14px;
+  padding: 0;
+  color: #566267;
+  line-height: 1.5;
+}
+
+.python-game-feedback.correct,
+.python-game-feedback.wrong {
+  border: 1px solid;
+  padding: 0.8rem 0.9rem;
+}
+
+.python-game-feedback.correct {
+  border-color: rgba(33, 110, 57, 0.22);
+  color: #175b31;
+  background: rgba(81, 173, 108, 0.12);
+}
+
+.python-game-feedback.wrong {
+  border-color: rgba(163, 50, 11, 0.2);
+  color: #8d2c0d;
+  background: rgba(217, 95, 67, 0.1);
+}
+
+@keyframes python-krugo-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-0.35rem) rotate(1deg);
+  }
+}
+
+@keyframes python-krugo-wave {
+  from {
+    transform: rotate(-24deg);
+  }
+
+  to {
+    transform: rotate(-52deg);
+  }
+}
+
+@keyframes python-krugo-blink {
+  0%,
+  44%,
+  48%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  46% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes python-dialogue-pop {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.94);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+body.theme-dark .python-game-stage {
+  color: #e5edeb;
+  background:
+    radial-gradient(circle at 100% 0, rgba(72, 185, 174, 0.12), transparent 30%),
+    #182a2f;
+}
+
+body.theme-dark .python-game-stage h3 {
+  color: #f7f2e9;
+}
+
+body.theme-dark .python-game-objective,
+body.theme-dark .python-game-token-area > p,
+body.theme-dark .python-game-input-area > label,
+body.theme-dark .python-game-feedback {
+  color: #b8c6c4;
+}
+
+body.theme-dark .python-game-token,
+body.theme-dark .python-game-keyboard button {
+  border-color: rgba(72, 185, 174, 0.28);
+  color: #a7eadc;
+  background: #21383c;
+}
+
+body.theme-dark .python-game-feedback.correct {
+  color: #9ce4b0;
+}
+
+body.theme-dark .python-game-feedback.wrong {
+  color: #ffad91;
+}
+
+@media (max-width: 900px) {
+  .python-game-header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .python-game-score {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .python-game-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .python-game-guide {
+    position: static;
+  }
+
+  .python-game-levels {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .python-game-level {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 680px) {
+  .python-game-entry {
+    grid-template-columns: auto minmax(0, 1fr);
+    width: min(var(--content-width), calc(100% - 2rem));
+    border-radius: 22px;
+  }
+
+  .python-game-entry-cta {
+    grid-column: 1 / -1;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .python-game-panel {
+    width: calc(100% - 1rem);
+    border-radius: 24px;
+    padding: 0.75rem;
+  }
+
+  .python-game-header {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0.35rem;
+  }
+
+  .python-game-header > .secondary-btn {
+    justify-self: start;
+  }
+
+  .python-game-score {
+    grid-column: auto;
+    justify-content: stretch;
+  }
+
+  .python-game-score > span {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .python-game-krugo-card {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+  }
+
+  .python-game-krugo {
+    scale: 0.86;
+    transform-origin: bottom center;
+  }
+
+  .python-game-levels {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.2rem 0.1rem 0.5rem;
+    scroll-snap-type: x proximity;
+  }
+
+  .python-game-level {
+    flex: 0 0 5.3rem;
+    scroll-snap-align: start;
+  }
+
+  .python-game-level small {
+    width: 100%;
+  }
+
+  .python-game-stage {
+    border-radius: 20px;
+    padding: 0.85rem;
+  }
+
+  .python-game-stage-header {
+    display: grid;
+  }
+
+  .python-game-difficulty {
+    justify-self: start;
+  }
+
+  .python-game-code {
+    font-size: 0.78rem;
+  }
+
+  .python-game-code-line {
+    grid-template-columns: 2.1rem minmax(max-content, 1fr);
+  }
+
+  .python-game-dropzone {
+    min-width: 4.4rem;
+  }
+
+  .python-game-console {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .python-game-entry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .python-game-entry-number {
+    width: 3.7rem;
+    justify-self: start;
+  }
+
+  .python-game-krugo-card {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .python-game-dialogue {
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .python-game-dialogue::before {
+    top: -0.65rem;
+    bottom: auto;
+    left: 50%;
+    border-width: 0 0.5rem 0.7rem;
+    border-color: transparent transparent #fff8e9;
+    transform: translateX(-50%);
+  }
+
+  .python-game-dialogue.is-hinting::before {
+    border-right-color: transparent;
+    border-bottom-color: #ffe5a8;
+  }
+
+  .python-game-dialogue.is-celebrating::before {
+    border-right-color: transparent;
+    border-bottom-color: #b9ead6;
+  }
+
+  .python-game-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .python-game-actions button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .python-game-krugo,
+  .python-game-krugo-arm-right,
+  .python-game-krugo-face i,
+  .python-game-dialogue {
+    animation: none;
+  }
+}

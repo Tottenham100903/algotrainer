@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260706-layout-stability">
+  <link rel="stylesheet" href="styles.css?v=20260706-python-game">
 </head>
 <body>
   <section id="krugo-welcome" class="krugo-welcome is-hidden" aria-labelledby="krugo-welcome-title" aria-modal="true" role="dialog">
@@ -428,6 +428,105 @@ queue: [A, C, D]</pre>
             <p class="hero-copy">Lies Code bewusst, erkenne Sprachunterschiede und trainiere Konzepte, die in Python, Java, C++, HTML und JavaScript wiederkehren.</p>
           </div>
         </header>
+
+        <button id="python-game-entry" class="python-game-entry" type="button">
+          <span class="python-game-entry-number" aria-hidden="true">10</span>
+          <span class="python-game-entry-copy">
+            <small id="python-game-entry-kicker">Neu im Programmierbereich</small>
+            <strong id="python-game-entry-title">Python-Reise mit Krugo</strong>
+            <span id="python-game-entry-description">Beginne ganz leicht und programmiere dich durch zehn Level.</span>
+          </span>
+          <span class="python-game-entry-cta">
+            <span id="python-game-entry-action">Spiel starten</span>
+            <span aria-hidden="true">→</span>
+          </span>
+        </button>
+
+        <section id="python-game-panel" class="python-game-panel is-hidden" aria-labelledby="python-game-title">
+          <header class="python-game-header">
+            <button id="python-game-close" class="secondary-btn" type="button">← Programmiermodule</button>
+            <div>
+              <p id="python-game-kicker" class="section-label">Deine Python-Reise</p>
+              <h2 id="python-game-title">Code-Abenteuer mit Krugo</h2>
+            </div>
+            <div class="python-game-score" aria-label="Spielfortschritt">
+              <span><small id="python-game-score-label">Punkte</small><strong id="python-game-score">0</strong></span>
+              <span><small id="python-game-progress-label">Geschafft</small><strong id="python-game-progress-count">0/10</strong></span>
+            </div>
+          </header>
+
+          <div class="python-game-progress-track" aria-hidden="true">
+            <span id="python-game-progress-bar"></span>
+          </div>
+
+          <div class="python-game-layout">
+            <aside class="python-game-guide">
+              <div class="python-game-krugo-card">
+                <div class="python-game-krugo" aria-hidden="true">
+                  <span class="python-game-krugo-shadow"></span>
+                  <span class="python-game-krugo-antenna"><i></i></span>
+                  <span class="python-game-krugo-head">
+                    <span class="python-game-krugo-face"><i></i><i></i><b></b></span>
+                  </span>
+                  <span class="python-game-krugo-body"><i></i></span>
+                  <span class="python-game-krugo-arm python-game-krugo-arm-left"></span>
+                  <span class="python-game-krugo-arm python-game-krugo-arm-right"></span>
+                </div>
+                <div id="python-game-dialogue" class="python-game-dialogue"></div>
+              </div>
+
+              <div>
+                <p id="python-game-levels-label" class="section-label">Levelkarte</p>
+                <div id="python-game-levels" class="python-game-levels" aria-label="Python-Level"></div>
+              </div>
+            </aside>
+
+            <article class="python-game-stage">
+              <header class="python-game-stage-header">
+                <div>
+                  <p id="python-game-level-label" class="section-label">Level 1 von 10</p>
+                  <h3 id="python-game-level-title"></h3>
+                </div>
+                <span id="python-game-difficulty" class="python-game-difficulty"></span>
+              </header>
+
+              <p id="python-game-objective" class="python-game-objective"></p>
+
+              <div class="python-game-code-wrap">
+                <div class="python-game-code-head">
+                  <span id="python-game-file-label">main.py</span>
+                  <span id="python-game-task-type"></span>
+                </div>
+                <pre id="python-game-code" class="python-game-code" aria-label="Python-Code"></pre>
+              </div>
+
+              <section id="python-game-token-area" class="python-game-token-area">
+                <p id="python-game-token-instruction"></p>
+                <div id="python-game-token-bank" class="python-game-token-bank"></div>
+              </section>
+
+              <section id="python-game-input-area" class="python-game-input-area is-hidden">
+                <label for="python-game-input" id="python-game-input-label">Dein Python-Code</label>
+                <div id="python-game-keyboard" class="python-game-keyboard" aria-label="Python-Sonderzeichen"></div>
+                <textarea id="python-game-input" rows="7" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+              </section>
+
+              <div class="python-game-console">
+                <span id="python-game-console-label">Ausgabe</span>
+                <code id="python-game-console-output">Noch nicht ausgeführt.</code>
+              </div>
+
+              <div class="python-game-actions">
+                <button id="python-game-hint" class="secondary-btn" type="button">Krugos Hinweis</button>
+                <button id="python-game-reset" class="secondary-btn" type="button">Zurücksetzen</button>
+                <button id="python-game-check" class="primary-btn" type="button">Code prüfen</button>
+                <button id="python-game-next" class="primary-btn is-hidden" type="button">Nächstes Level →</button>
+              </div>
+
+              <div id="python-game-feedback" class="python-game-feedback" aria-live="polite"></div>
+            </article>
+          </div>
+        </section>
 
         <nav id="programming-topic-nav" class="topic-nav learning-topic-nav" aria-label="Programmier-Themen auswählen"></nav>
         <nav id="programming-mode-nav" class="section-tabs subject-mode-tabs" aria-label="Programmier-Lernmodus auswählen"></nav>
@@ -1423,6 +1522,6 @@ queue: [A, C, D]</pre>
     </div>
   </aside>
 
-  <script type="module" src="app.js?v=20260705-exam-difficulty"></script>
+  <script type="module" src="app.js?v=20260706-python-game"></script>
 </body>
 </html>

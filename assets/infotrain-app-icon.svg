@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">InfoTrain App Icon</title>
+  <desc id="desc">The cream and teal InfoTrain wordmark on a dark background.</desc>
+  <defs>
+    <linearGradient id="pageBackground" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#122b2d"/>
+      <stop offset="0.48" stop-color="#102427"/>
+      <stop offset="1" stop-color="#09181d"/>
+    </linearGradient>
+    <radialGradient id="tealGlow" cx="0" cy="0" r="1" gradientTransform="translate(225 290) rotate(40) scale(650)">
+      <stop offset="0" stop-color="#1a6a62" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#1a6a62" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="trainGradient" x1="210" y1="0" x2="892" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#48b9ae"/>
+      <stop offset="0.42" stop-color="#22a292"/>
+      <stop offset="0.7" stop-color="#24998b"/>
+      <stop offset="1" stop-color="#899b7f"/>
+    </linearGradient>
+    <clipPath id="iconClip">
+      <rect width="1024" height="1024" rx="220"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#iconClip)">
+    <rect width="1024" height="1024" fill="url(#pageBackground)"/>
+    <rect width="1024" height="1024" fill="url(#tealGlow)"/>
+
+    <g font-family="'Space Grotesk', 'Avenir Next', sans-serif" font-weight="700" letter-spacing="-18">
+      <text x="82" y="490" fill="#f3eee5" font-size="330">Info</text>
+      <text x="228" y="765" fill="url(#trainGradient)" font-size="300">Train</text>
+    </g>
+    <circle cx="868" cy="729" r="31" fill="#aaa288"/>
+  </g>
+</svg>
